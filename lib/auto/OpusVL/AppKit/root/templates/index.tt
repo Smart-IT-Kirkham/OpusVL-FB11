@@ -1,0 +1,92 @@
+<h1> Welcome to the OpusVL::AppKit </h1>
+
+<p>
+    This Catalyst Application is intended to be inherited via CatalystX::AppBuilder
+</p>
+
+[% IF c.status_msg %]
+    <div style='background-color:green;'>
+        [% c.status_msg %]
+    </div>
+[% END %]
+[% IF c.error_msg %]
+    <div style='background-color:read;'>
+        [% c.error_msg %]
+    </div>
+[% END %]
+
+<ul>
+    <li> 
+        AppKit Controllers
+    </li> 
+[% FOR myc IN c.appkit_controllers  %]
+    <li> 
+        [% myc.appkit_name %]
+
+        [% IF myc.home_action %]
+            [% IF c.can_access( myc.home_action ) %]
+            <a href='[% c.uri_for( myc.home_action ) %]'>
+                Home
+            </a>
+            [% END %] 
+        [% END %] 
+    </li>
+[% END %]
+</ul>
+
+<ul>
+    <li> 
+        AppKit Navigation
+    </li> 
+[% FOR nav IN navigation %]
+    <li>
+        <a href='[% nav.uri %]'>
+            [% nav.text %]
+        </a>
+    </li>
+[% END %]
+</ul>
+
+<ul>
+    <li> 
+        PORTLETS
+    </li> 
+[% FOR port IN portlets %]
+    <li> 
+        [% port.html %]
+    </li>
+[% END %]
+</ul>
+
+<ul>
+[% IF c.user %]
+
+    <li> 
+        <p>
+            User logged in: [% c.user.id %]  
+            <br>
+            Has the following roles:
+        </p>
+    </li>
+
+    [% FOR r IN c.user.roles %]
+        <li> [% r %] </li>
+    [% END %]
+
+    <li>
+        <a href='/logout'>
+            Logout
+        </a>
+    </li>
+
+[% ELSE %]
+
+    <li>
+        <a href='/login'>
+            Login
+        </a>
+    </li>
+
+[% END %]
+</ul>
+

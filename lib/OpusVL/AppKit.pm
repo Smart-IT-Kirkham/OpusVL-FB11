@@ -1,0 +1,89 @@
+package OpusVL::AppKit;
+
+=head1 NAME
+
+    OpusVL::AppKit - Catalyst based application
+
+=head1 SYNOPSIS
+
+    You use inherite the OpusVL::AppKit by making the following files to your MyApp.
+
+    F<MyApp.pm>:
+
+        package MyApp;
+        use strict;
+        use warnings;
+        use MyApp::Builder; 
+
+    F<MyApp/Builder.pm>:
+
+        package MyApp::Builder;
+        use Moose;
+        extends 'OpusVL::AppKit::Builder';
+        override _build_superclasses => sub 
+        {
+            return [ 'OpusVL::AppKit' ]
+        };
+
+    F<myapp.conf>:
+    
+        <OpusVL::AppKit::Plugin::AppKit>
+            access_denied   "access_notallowed"
+            <acl_rules>
+                somecontroller/someaction       "somerole"
+                somecontroller/someaction       "someotherrole"
+                somecontroller/someotheraction  "somerole"
+            </acl_rules>
+        </OpusVL::AppKit::Plugin::AppKit>
+  
+
+
+=head1 DESCRIPTION
+
+    This is a Catalyst Application that was built with the intention of being inherited by using AppBuilder.
+
+    You can do 2 things with thie application:
+        1. Enable your catalyst app to use it.
+        2. Add your catalyst to it.
+
+    The SYNOPSIS above shows how your can enable your catalyst app to use it.
+
+=head1 SEE ALSO
+
+    L<OpusVL::AppKit::Plugin::AppKit>,
+    L<OpusVL::AppKit::Base::Controller::GUI>,
+    L<OpusVL::AppKit::Controller::Root>, 
+    L<Catalyst>
+
+=head1 AUTHOR
+
+    OpusVL - www.opusvl.com
+
+=head1 LICENSE
+
+    This library is free software. You can redistribute it and/or modify it under the same terms as Perl itself.
+
+=cut
+
+##################################################################################################################################
+# use lines #
+##################################################################################################################################
+
+use strict;
+use warnings;
+use OpusVL::AppKit::Builder;
+our $VERSION = '0.01';
+
+##################################################################################################################################
+# main #
+##################################################################################################################################
+
+# Make the Builder object and run the ->bootstrap so this becomes a AppBuilder inheritable application.. see: 
+#   OpusVL::AppKit::Builder 
+#   CatalystX::AppBuilder
+
+my $builder = OpusVL::AppKit::Builder->new( appname => __PACKAGE__ );
+$builder->bootstrap;
+
+##################################################################################################################################
+1;

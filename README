@@ -1,0 +1,16 @@
+
+This Catalyst Application is to be inherited via AppBuilder
+
+Please see any POD documentation for details of how to use/test.
+
+Start by having a read of lib/OpusVL::AppKit.pm, trying running:
+  bash$ perldoc ./lib/OpusVL/AppKit.pm
+  bash$ perldoc ./lib/OpusVL/AppKit/Builder.pm
+  bash$ perldoc ./lib/OpusVL/AppKit/Base/Controller/GUI.pm
+  bash$ perldoc ./lib/OpusVL/AppKit/Controller/Root.pm
+  bash$ perldoc ./lib/OpusVL/AppKit/Plugin/AppKit.pm
+
+I have started a TestApp in the ./t/ directory. You can run this up like so:
+
+    PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d
+
