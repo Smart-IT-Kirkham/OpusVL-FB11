@@ -135,6 +135,8 @@ sub _build_portlet_actions
     {
         next unless $self->_appkit_action_info->{$_}->{enabled_portlet};
 
+        my $key     = $self->_appkit_action_info->{$_}->{portlet_name} ;
+        my $val   = $self->_appkit_action_info->{$_}->{action_name};
         $portlets{ $self->_appkit_action_info->{$_}->{portlet_name} } = $self->action_for( $self->_appkit_action_info->{$_}->{action_name} );
     }
     return \%portlets;
@@ -182,7 +184,7 @@ sub _build__appkit_action_info
             elsif ( $attr eq 'PortletName' )            # check for any Portlet actions.
             {   
                 $appkit_action_info{enabled_portlet}    = 1;
-                $appkit_action_info{portlet_name}        = $@{ $action->attributes->{$attr} };
+                ( $appkit_action_info{portlet_name} )   = @{ $action->attributes->{$attr} };
             }
         }
         

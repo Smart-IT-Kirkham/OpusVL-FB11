@@ -8,25 +8,16 @@ use Test::More;
 use FindBin qw($Bin);
 use lib "$Bin/lib";
 
-BEGIN { $ENV{TESTAPP_DSN} = 'dbi:SQLite:t/lib/testapp.db'; }
-
 # make sure testapp works
 use ok 'TestApp';
 
-# a live test against TestApp, the test application
-use Test::WWW::Mechanize::Catalyst 'TestApp';
+# Build the command that should request pages from the TestApp and the return the content...
+my $test_cmd = "perl $Bin/lib/script/testapp_test.pl ";
 
-my $mech = Test::WWW::Mechanize::Catalyst->new;
-$mech->get_ok('http://localhost/', 'get main page');
-$mech->content_like(qr/TestApp for SimpleCMS works/i, 'see if it has our text');
+diag("Running test calls for pages in TestApp, using: $test_cmd");
 
-$mech->get_ok('http://localhost/testurl', 'cms is up on the default namespace');
-$mech->content_like(qr/TestApp for SimpleCMS testurl works/, 'can access TestApp Root controller page');
+like (`$test_cmd /`,                qr/Welcome to the OpusVL::AppKit/,     "Can Request the TestApp index page"    );
 
-$mech->get_ok('http://localhost/simplecms', 'cms is up on the default namespace');
-$mech->content_like(qr/Tag groups/i, 'looks like main CMS admin page');
-
-$mech->get_ok('http://localhost/AboutUs', 'cms content being server by the default method in the TestApp::Root controller');
-$mech->content_like(qr/About Us/i, 'looks like CMS page');
+like (`$test_cmd /test/user`,       qr/denied/,                            "No Access to Restricted Area"          );
 
 done_testing;

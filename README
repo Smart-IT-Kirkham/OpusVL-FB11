@@ -10,7 +10,11 @@ Start by having a read of lib/OpusVL::AppKit.pm, trying running:
   bash$ perldoc ./lib/OpusVL/AppKit/Controller/Root.pm
   bash$ perldoc ./lib/OpusVL/AppKit/Plugin/AppKit.pm
 
-I have started a TestApp in the ./t/ directory. You can run this up like so:
+Run the tests by running this:
 
-    PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d
+  bash$ prove -l
+
+You can start the TestApp in the ./t/ directory like so:
+
+  bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d
 

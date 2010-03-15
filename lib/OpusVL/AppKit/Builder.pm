@@ -10,7 +10,6 @@ package OpusVL::AppKit::Builder;
 
     Inheriting this app using AppBuilder will give your application the following:
 
-        Catalyst::Plugin::ConfigLoader
         Catalyst::Plugin::Static::Simple
         Catalyst::Plugin::Unicode
         Catalyst::Plugin::CustomErrorMessage
@@ -58,7 +57,6 @@ package OpusVL::AppKit::Builder;
     see. L<File::ShareDir>
 
     This creates a catalyst app with the following Plugins loaded:
-        L<Catalyst::Plugin::ConfigLoader>
         L<Catalyst::Plugin::Static::Simple>
         L<Catalyst::Plugin::Unicode>
         L<Catalyst::Plugin::CustomErrorMessage>
@@ -125,7 +123,6 @@ override _build_plugins => sub
     my $plugins = super();
 
     push @$plugins, qw(
-        ConfigLoader
         Static::Simple
         Unicode
         CustomErrorMessage
