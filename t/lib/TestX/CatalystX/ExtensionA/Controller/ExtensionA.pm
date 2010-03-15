@@ -13,7 +13,6 @@ __PACKAGE__->config
 sub home
     :Path
     :Args(0)
-    :NavigationName("Home")
     :NavigationHome
 {
     my ($self, $c) = @_;

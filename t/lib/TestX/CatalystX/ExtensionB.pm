@@ -23,7 +23,6 @@ after 'setup_components' => sub
     my $config = $class->config;
 
     # .. get the path for this name space..
-    use FindBin;
     my $path = File::ShareDir::module_dir( __PACKAGE__ );
 
     # .. add template dir into the config for View::TT...
@@ -33,8 +32,7 @@ after 'setup_components' => sub
     
     # .. add static dir into the config for Static::Simple..
     my $static_dirs = $config->{static}->{include_path};
-    my $extensionb_path = $FindBin::Bin . '/../../../' . $path . '/root';
-    push(@$static_dirs, $extensionb_path );
+    push(@$static_dirs, $path . '/root' );
     $config->{static}->{include_path} = $static_dirs;
 
 
