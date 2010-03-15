@@ -147,20 +147,33 @@ override _build_config => sub
     my $self   = shift;
     my $config = super(); # Get what CatalystX::AppBuilder gives you
 
+    # .. get the path for this name space..
+    my $path = File::ShareDir::module_dir( 'OpusVL::AppKit' );
+
     $config->{'default_view'}                                       = 'TT';
+
     $config->{'custom-error-message'}                               = { 'error-template' => 'error.tt' };
-    $config->{'static'}->{dirs}                                     = [ $self->inherited_path_to('root','static') ];
+
+    # Configure AppKit Plugin..
     $config->{'OpusVL::AppKit::Plugin::AppKit'}->{access_denied}    = "access_notallowed";
-    $config->{'View::TT'} = 
-    {
-        INCLUDE_PATH       => 
-        [ 
-            $self->inherited_path_to('root','templates'),
-            File::ShareDir::module_dir('OpusVL::AppKit') . '/root/templates',
-        ],
-        TEMPLATE_EXTENSION => '.tt',
-        WRAPPER            => 'wrapper.tt',
-    };
+
+    # .. add static dir into the config for Static::Simple..
+    my $static_dirs = $config->{static}->{include_path};
+    push(@$static_dirs, $path . '/root' );
+    $config->{static}->{include_path} = $static_dirs;
+
+    # .. add template dir into the config for View::TT...
+    my $inc_path = $config->{'View::TT'}->{'INCLUDE_PATH'};
+    push(@$inc_path, $path . '/root/templates' );
+
+    # Configure View::TT...
+    my $tt_dirs = $config->{'View::TT'}->{'INCLUDE_PATH'};
+    # ...(add to include_path)..
+    push(@$tt_dirs, $self->inherited_path_to('root','templates') );
+    push(@$tt_dirs, $path . '/root/templates' );
+    $config->{'View::TT'}->{'INCLUDE_PATH'}         = $inc_path;
+    $config->{'View::TT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
+    $config->{'View::TT'}->{'WRAPPER'}              = 'wrapper.tt';
 
     $config->{'Plugin::Authentication'} =
     {

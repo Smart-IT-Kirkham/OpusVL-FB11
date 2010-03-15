@@ -6,7 +6,7 @@ BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
 
 __PACKAGE__->config
 (
-    appkit_name                 => 'Custom Controller (within JJ::Extended)',
+    appkit_name                 => 'Custom Controller (within TestApp)',
 );
 
 sub custom 
@@ -16,7 +16,7 @@ sub custom
     :NavigationHome
 { 
     my ($self, $c) = @_;
-    $c->res->body('Hello .. this is the Custom Controller from JJ::Extended' );
+    $c->res->body('Hello .. this is the Custom Controller from TestApp' );
 }
 
 sub custom_link
@@ -24,7 +24,7 @@ sub custom_link
     : NavigationName("Customer - Link")
 { 
     my ($self, $c) = @_;
-    $c->res->body('Hello .. this is the Custom Controller from JJ::Extended -- this is the link' );
+    $c->res->body('Hello .. this is the Custom Controller from TestApp -- this is the link' );
 }
 
 sub custom_access_denied

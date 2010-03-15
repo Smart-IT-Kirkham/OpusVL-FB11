@@ -44,9 +44,11 @@ package OpusVL::AppKit;
 
     You can do 2 things with thie application:
         1. Enable your catalyst app to use it.
-        2. Add your catalyst to it.
+        2. Add your catalyst app to it.
 
-    The SYNOPSIS above shows how your can enable your catalyst app to use it.
+    The SYNOPSIS above shows how your can enable your catalyst app to use it (option 1).
+
+    For option 2 .. Add your catalyst app to it.. see OpusVL::AppKit::Base::Controller::GUI.
 
 =head1 SEE ALSO
 

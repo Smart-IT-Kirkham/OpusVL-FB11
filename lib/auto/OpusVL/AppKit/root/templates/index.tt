@@ -19,7 +19,7 @@
     <li> 
         AppKit Controllers
     </li> 
-[% FOR myc IN c.appkit_controllers  %]
+[% FOR myc IN c.appkit_controllers.sort  %]
     <li> 
         [% myc.appkit_name %]
 
@@ -28,6 +28,9 @@
             <a href='[% c.uri_for( myc.home_action ) %]'>
                 Home
             </a>
+                [% IF myc.appkit_icon %]
+                    <img src='[% myc.appkit_icon %]'>
+                [% END %] 
             [% END %] 
         [% END %] 
     </li>

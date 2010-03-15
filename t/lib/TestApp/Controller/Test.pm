@@ -1,4 +1,4 @@
-package OpusVL::AppKit::Controller::Test;
+package TestApp::Controller::Test;
 
 use Moose;
 use namespace::autoclean;
@@ -6,7 +6,7 @@ BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
 
 __PACKAGE__->config
 (
-    appkit_name                 => 'Test Controller (within AppKit)',
+    appkit_name                 => 'Test Controller (within TestApp)',
 );
 
 =head1 NAME
