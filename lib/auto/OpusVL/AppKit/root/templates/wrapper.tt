@@ -18,6 +18,8 @@
   
     </head>
     <body>
+        <h1>OpusVL::AppKit wrapper</h1>
+        <hr>
 
         [% IF status_msg.defined %]
             <div style='background-color:green;color:white;'>

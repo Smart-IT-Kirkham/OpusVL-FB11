@@ -172,6 +172,12 @@ override _build_config => sub
     $config->{'View::TT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::TT'}->{'WRAPPER'}              = 'wrapper.tt';
 
+    # Configure session handling
+    $config->{'session'} =
+    {
+        flash_to_stash => 1,
+    };
+
     $config->{'Plugin::Authentication'} =
     {
         default_realm   => 'default',
