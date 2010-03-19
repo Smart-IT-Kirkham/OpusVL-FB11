@@ -13,7 +13,9 @@ package OpusVL::AppKit;
         package MyApp;
         use strict;
         use warnings;
-        use MyApp::Builder; 
+        use MyApp::Builder;
+        
+        MyApp::Builder->new(appname => __PACKAGE__)->bootstrap;
 
     F<MyApp/Builder.pm>:
 
