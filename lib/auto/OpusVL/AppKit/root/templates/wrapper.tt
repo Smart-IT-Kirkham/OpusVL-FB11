@@ -1,38 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
-
         <title>[% header.title %]</title>
+        <link href="/static/css/layout.css" rel="stylesheet" rev="stylesheet" type="text/css">
+        <link href="/static/css/skin.css" rel="stylesheet" rev="stylesheet" type="text/css">
+        <link href="/static/css/appnav.css" rel="stylesheet" rev="stylesheet" type="text/css">
+        <link href="/static/css/overrides.css" rel="stylesheet" rev="stylesheet" type="text/css">
 
         [% IF header.favicon %]
             <link rel="shortcut icon" href="[% header.favicon %]" type="image/png" />
         [% END %]
 
-        [% FOR css IN header.css %]
+        [% FOR css IN c.controller.appkit_css %]
             <link rel="stylesheet" href="[% css %]" type="text/css" media="all" />
         [% END %]
+
+        <script language="JavaScript" type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
+        <script language="JavaScript" type="text/javascript" src="/static/js/appkit.js"></script>
 
         [% FOR js IN header.js %]
             <script type="text/javascript" src="[% js %]"></script>
         [% END %]
-
-  
     </head>
     <body>
-        <h1>OpusVL::AppKit wrapper</h1>
-        <hr>
-
-        [% IF status_msg.defined %]
-            <div style='background-color:green;color:white;'>
-                [% status_msg %]
+        <div id="page">
+            <div id="header">
+                <div id="header_logo">
+                    <a href="/"></a>
+                </div>
+                <div id="header_nav">
+                    <ul>
+                        <li id="header_home"><a href="/">Home</a>
+                        <li id="header_applications"><a href="#" id="appList_anchor">Applications</a>
+                    </ul>
+                </div>
             </div>
+            <div id="body">
+                <div id="user_nav">
+                    <ul>
+                        <li id="user_settings"><a href="#">Settings</a>
+                        <li id="user_logout"><a href="#">Logout</a>
+                    </ul>
+                </div>
+                <div class="appname" id="appname_[% c.controller.appkit_name | lower %]">
+                    [% c.controller.appkit_name %]
+                </div>
+                <div id="breadcrumbs">
+                    [% IF breadcrumbs %]
+                        <a href="/">Home</a> &gt;
+                        [% FOREACH crumb IN breadcrumbs %]
+                            [% IF loop.last %]
+                                [% crumb.name %]
+                            [% ELSE %]
+                                <a href="[% crumb.url %]">[% crumb.name %]</a> &gt;
+                            [% END %]
+                        [% END %]
+                    [% ELSE %]
+                        Home
+                    [% END %]
+                </div>
+                <div id="application">
+                    <div id="application_nav">
+                    </div>
+                    <div id="application_body">
+                        [% IF status_msg.defined %]
+                            <div class="alert status">
+                                [% status_msg %]
+                            </div>
+                        [% END %]
+                        [% IF error_msg.defined %]
+                            <div class="alert error">
+                                [% error_msg %]
+                            </div>
+                        [% END %]
+                        
+                        [% content %]
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                <div id="appList">
+                    <div id="appList_top">
+                        <div id="appList_tl"></div>
+                        <div id="appList_tr"></div>
+                    </div>
+                    <div id="appList_mid">
+                        <div id="appList_ml">
+                            <p>Applications</p>
+                            <ul class="appList_l1">
+                                    [% USE Math %]
+                                    [% x = Math.sqrt(c.appkit_controllers.size) %]
+                                    [% appList_cols = ((x - Math.int(x)) > 0) ? (Math.int(x)) + 1 : x %]
+                                    [% FOREACH appList_col IN [1 .. appList_cols] %]
+                                <li>
+                                        <ul class="appList_l2" id="appList_col[% appList_col %]">
+                                        </ul>
+                                    [% END %]
+<script language="JavaScript">
+    $(function() {
+        var col_id = 1;
+        [% FOR myc IN c.appkit_controllers.sort  %]
+            [% IF (myc.home_action && c.can_access( myc.home_action )) %]
+                $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for(myc.home_action) %]">[% myc.appkit_name %]</a>');
+                col_id++;
+                if (col_id > [% appList_cols %]) {
+                    col_id = 1;
+                }
+            [% END %]
         [% END %]
-        [% IF error_msg.defined %]
-            <div style='background-color:red;'>
-                [% error_msg %]
+    });
+</script>
+                            </ul>
+                        </div>
+                        <div id="appList_mr"></div>
+                    </div>
+                <div id="appList_bot">
+                    <div id="appList_bl"></div>
+                    <div id="appList_br"></div>
+                </div>
             </div>
-        [% END %]
-
-        [% content %]
-
+        </div>
+   <!--     <script language="JavaScript" type="text/javascript" src="js/appkit.js"></script>
+        <script language="JavaScript">
+            explorePerl.addEvents('explore_anchor', 'explorePerl');  
+        </script>   -->
     </body>
 </html>

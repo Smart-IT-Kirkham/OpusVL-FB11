@@ -1,0 +1,246 @@
+/* @override http://localhost:3000/static/css/layout.css */
+
+/* @override http://localhost:3000/static/css/layout.css */
+
+body {
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+.clear {
+	clear: both;
+}
+
+/* @group Page */
+
+div#page {
+	width: 960px;
+	margin: 20px auto;
+}
+
+/* @end */
+
+/* @group Header */
+
+div#header {
+	position: relative;
+	height: 53px;
+}
+
+/* @group Logo */
+
+div#header_logo {
+	width: 70px;
+	height: 44px;
+	position: absolute;
+	left: 18px;
+	top: 5px;
+	overflow: none;
+}
+
+div#header_logo a {
+	display: block;
+	height: 50px;
+}
+
+/* @end */
+
+/* @group Navigation */
+
+div#header_nav {
+	position: absolute;
+	right: 20px;
+}
+
+div#header_nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+div#header_nav ul li {
+	float: left;
+	margin: 0;
+	height: 35px;
+	padding-left: 20px;
+}
+
+div#header_nav a {
+	display: block;
+	padding-top: 16px;
+	padding-bottom: 20px;
+}
+
+/* @end */
+
+/* @end */
+
+/* @group Body */
+
+div#body {
+	position: relative;
+	padding: 75px 40px 40px;
+}
+
+div.appname {
+	position: absolute;
+	left: 40px;
+	top: 14px;
+	padding-top: 2px;
+	padding-bottom: 20px;
+}
+
+/* @group User Nav */
+
+div#user_nav {
+	position: absolute;
+	right: 42px;
+	top: 21px;
+}
+
+div#user_nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+div#user_nav ul li {
+	float: left;
+	margin: 0;
+	height: 35px;
+	padding-left: 20px;
+}
+
+div#user_nav a {
+	display: block;
+	padding-top: 6px;
+	padding-bottom: 10px;
+}
+
+/* @end */
+
+/* @group Breadcrumbs */
+
+div#breadcrumbs {
+	position: absolute;
+	left: 91px;
+	top: 43px;
+}
+
+/* @end */
+
+
+
+/* @end */
+
+/* @group Application */
+
+/* @group Controls */
+
+
+/* @group Action menu */
+
+li.control-edit-small {
+	position: relative;
+}
+
+li.control-edit-small ul.dropdown {
+	top: 18px;
+	background-color: #eaeaea;
+	border: 1px solid #b4b4b4;
+	position: absolute;
+	padding-right: 4px;
+	z-index: 9;
+	display: none;
+	-webkit-box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
+}
+
+li.control-edit-small ul.dropdown li {
+	padding-top: 0;
+	margin-bottom: -1px;
+	width: 100%;
+	margin-left: 0;
+	padding-left: 0;
+	padding-right: 14px;
+	margin-right: 0;
+}
+
+li.control-edit-small ul.dropdown li a {
+	text-decoration: none;
+	color: #515151;
+	display: block;
+	padding-left: 0;
+	margin-right: 0;
+	padding-left: 4px;
+	padding-bottom: 2px;
+	padding-top: 3px;
+	white-space: nowrap;
+}
+
+li.control-edit-small ul.dropdown li a:hover {
+	background-color: #cacaca;
+}
+
+/* @end */
+
+
+
+/* @end */
+
+/* @group Alerts */
+
+div.alert {
+	margin-right: 100px;
+	margin-left: 100px;
+	margin-bottom: 7px;
+	text-align: center;
+	-webkit-border-radius: 10px;
+	font-size: .9em;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+div.error {
+	color: #d81e00;
+	background-color: #fff;
+	font-weight: bold;
+}
+
+div.status {
+	color: #006d06;
+	background-color: #fefffe;
+}
+
+/* @end */
+
+/* @group Body */
+
+div#application_body {
+	padding: 20px 25px;
+}
+
+div.content_block {
+	background-color: #fefffe;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	padding: 8px 17px 20px;
+	box-shadow: 0 0 3px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	-moz-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	margin-bottom: 11px;
+	position: relative;
+	color: #414141;
+}
+
+p {
+	font-size: .9em;
+}
+
+/* @end */
+
+
+
+/* @end */
+

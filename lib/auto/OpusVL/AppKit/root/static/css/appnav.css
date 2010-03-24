@@ -1,0 +1,183 @@
+
+
+/* @group Explore */
+
+div#appList {
+	opacity: 1;
+	Xfilter:alpha(opacity=1);
+	position: absolute;
+	z-index: 1;
+	font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+	top: -17px;
+	right: -5px;
+	display: none;
+}
+
+div#appList_top {
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
+	background-image: url(../images/explore_tm.png);
+	margin-right: 83px;
+	margin-left: 11px;
+	height: 27px;
+}
+
+div#appList_tl {
+	width: 11px;
+	height: 27px;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
+	background-image: url(../images/explore_tl.png);
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+div#appList_tr {
+	width: 83px;
+	height: 27px;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
+	background-image: url(../images/explore_tr.png);
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+div#appList_mid {
+	overflow: hidden;
+}
+
+div#appList_ml {
+	float: left;
+	background-image: url(../images/explore_c.png);
+	Xfilter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
+}
+
+div#appList_mr {
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
+	background-image: url(../images/explore_mr.png);
+	width: 24px;
+	float: left;
+	padding-bottom: 2000px;
+	margin-bottom: -2000px;
+}
+
+div#appList_bot {
+	height: 31px;
+	margin-left: 26px;
+	margin-right: 31px;
+	background-image: url(../images/explore_bm.png);
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
+	clear: both;
+}
+
+div#appList_bl {
+	width: 26px;
+	height: 31px;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='scale');
+	background-image: url(../images/explore_bl.png);
+	position: absolute;
+	left: 0;
+	bottom: 0;
+}
+
+div#appList_br {
+	width: 31px;
+	height: 31px;
+	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='scale');
+	background-image: url(../images/explore_br.png);
+	position: absolute;
+	right: 0;
+	bottom: 0;
+}
+
+/* @group Links */
+
+/* @group Icons */
+
+li#app_footfall {
+	Xbackground: url(../images/icons/footfall-med.png) no-repeat 6px 6px;
+}
+
+li#app_documents {
+	Xbackground: url(../images/icons/documents-med.png) no-repeat 6px 6px;
+}
+
+li#app_complaints {
+	Xbackground: url(../images/icons/complaints-med.png) no-repeat 6px 7px;
+}
+
+li#app_links {
+	Xbackground: url(../images/icons/links-med.png) no-repeat 6px 9px;
+}
+
+/* @end */
+
+ul.appList_l1 {
+	list-style-type: none;
+	margin: 0;
+	Xfloat: left;
+	font-size: .9em;
+	padding: 0 0 4px 17px;
+	Xborder: 2px solid lime;
+}
+
+div#appList_ml p {
+	margin: 2px 16px 4px 17px;
+	padding: 0 0 2px;
+	border-bottom: 1px solid #515151;
+	color: #cacaca;
+	font-size: 0.8em;
+}
+
+ul.appList_l1 li {
+	float: left;
+	color: #e4e4e4;
+	text-align: left;
+	font-weight: bold;
+	padding-right: 4px;
+	padding-bottom: 0;
+}
+
+ul.appList_l1 li span.appList_heading {
+	margin-bottom: 4px;
+	display: block;
+	padding-bottom: 3px;
+	border-bottom: 1px solid #515151;
+}
+
+ul.appList_l2 {
+	list-style-type: none;
+	text-align: left;
+	margin: 3px 12px 0 0;
+	padding: 0;
+}
+
+ul.appList_l2 li {
+	float: none;
+	font-size: 0.9em;
+	margin: 0;
+	padding: 0;
+	font-weight: 500;
+	font-style: normal;
+}
+
+ul.appList_l2 li a {
+	text-decoration: none;
+	color: #e1e2e1;
+	display: block;
+	margin-bottom: 9px;
+	margin-top: 5px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	padding: 11px 11px 12px 38px;
+	background-position: 0;
+}
+
+ul.appList_l2 li a:hover {
+	color: #e0e0e0;
+	background-color: rgba(202,202,202,0.18);
+}
+
+/* @end */
+
+/* @end */

@@ -1,0 +1,283 @@
+/* @override http://localhost:3000/static/css/skin.css */
+
+/* @override http://localhost:3000/static/css/skin.css */
+
+/* @group Base */
+
+body {
+	background-color: #fefffe;
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
+
+
+/* @end */
+
+
+
+/* @group Page */
+
+div#page {
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* @end */
+
+/* @group Header */
+
+/* @group Navigation */
+
+div#header_nav a {
+	color: #d6d6d6;
+	text-decoration: none;
+	font-size: .9em;
+	text-shadow: #272727 2px 1px 8px;
+	font-weight: 500;
+}
+
+div#header_nav a:hover {
+	color: #fefffe;
+}
+
+/* @group Icons */
+
+#header_applications a {
+	background: url(../images/icons/applications-med.png) no-repeat 2px 11px;
+	padding-left: 38px;
+}
+
+#header_addressbook a {
+	background: url(../images/icons/addressbook-med.png) no-repeat 2px 11px;
+	padding-left: 42px;
+}
+
+#header_home a {
+	background: url(../images/icons/home-med.png) no-repeat 2px 12px;
+	padding-left: 36px;
+}
+/* @end */
+
+
+
+/* @end */
+
+div#header {
+	background-color: #414141;
+}
+
+/* @group Logo */
+
+div#header_logo {
+	background-image: url(../images/client-logo.png);
+}
+
+/* @end */
+
+
+
+/* @end */
+
+/* @group Body */
+
+div#body {
+	background-color: #919191;
+	border-left: 1px solid #666;
+	border-right: 1px solid #666;
+	border-bottom: 1px solid #666;
+}
+
+/* @group App name */
+
+/* @group Icons */
+
+
+/* @end */
+
+div.appname {
+	font-size: 1.4em;
+	font-weight: bold;
+	color: #fefffe;
+	text-shadow: #323232 3px 2px 3px;
+}
+
+/* @end */
+
+/* @group Breadcrumbs */
+
+div#breadcrumbs {
+	font-size: .75em;
+	color: #dbdbdb;
+	text-shadow: #484848 2px 1px 5px;
+	font-weight: 500;
+}
+
+div#breadcrumbs a {
+	color: #eaeaea;
+	font-weight: 600;
+}
+
+div#breadcrumbs a:hover {
+	color: #fff;
+}
+
+/* @end */
+
+/* @group User Nav */
+
+/* @group Icons */
+
+#user_logout a {
+	background: url(../images/icons/logout-med.png) no-repeat 2px 6px;
+	padding-left: 27px;
+}
+
+#user_settings a {
+	background: url(../images/icons/settings-med.png) no-repeat 1px 3px;
+	padding-left: 27px;
+}
+/* @end */
+
+div#user_nav a {
+	color: #eaeaea;
+	text-decoration: none;
+	font-size: .8em;
+	text-shadow: #484848 2px 1px 5px;
+	font-weight: 500;
+}
+
+div#user_nav a:hover {
+	color: #fefffe;
+}
+
+
+
+/* @end */
+
+
+
+/* @end */
+
+/* @group Application */
+
+/* @group Link buttons */
+
+a.link_button {
+	background-color: white;
+	display: inline-block;
+	font-size: .9em;
+	color: #515151;
+	font-weight: bold;
+	text-decoration: none;
+	padding: 14px 15px 16px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+}
+
+a:hover.link_button {
+	color: #222;
+}
+
+a.link_button_add {
+	background: url(/static/images/controls/add-med.png) no-repeat -4px -4px;
+	padding-left: 45px;
+}
+
+a.link_button_back {
+	background: url(/static/images/controls/back-button-med.png) no-repeat -4px -4px;
+	padding-left: 45px;
+}
+
+a.link_button_delete {
+	background: url(/static/images/controls/delete-button-med.png) no-repeat -4px -4px;
+	padding-left: 45px;
+}
+
+/* @end */
+
+/* @group Controls */
+
+/* @group Submit buttons */
+
+input.submit {
+	background-color: white;
+	display: inline-block;
+	font-size: .9em;
+	color: #515151;
+	font-weight: bold;
+	text-decoration: none;
+	padding: 12px 15px 14px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+	float: left;
+	margin-right: 11px;
+	border-style: none;
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+	margin-left: 0;
+}
+
+input:hover.submit {
+	color: #222;
+}
+
+input.submit_ok {
+	background: url(/static/images/controls/ok-button-med.png) no-repeat -4px -4px;
+	padding-left: 38px;	
+}
+
+input.submit_cancel {
+	background: url(/static/images/controls/cancel-button-med.png) no-repeat -4px -4px;
+	padding-left: 38px;	
+}
+
+/* @end */
+
+.control-add-small {
+	width: 21px;
+	height: 21px;
+	background: url(/static/images/controls/add-small.png) no-repeat;
+}
+
+.control-edit-small {
+	width: 38px;
+	height: 21px;
+	background: url(/static/images/controls/action-small.png) no-repeat;
+}
+
+/* @end */
+
+/* @group Body */
+
+div#application_body {
+	background-color: #eaeaea;
+	border: 1px none #747474;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-webkit-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
+	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+h1 {
+	text-transform: capitalize;
+	margin: 0 0 15px;
+	padding: 0;
+	color: #2d2d2d;
+	font-size: 1.5em;
+	border-bottom: 1px solid #cacaca;
+	text-shadow: #fefffe 4px 4px 10px;
+}
+
+/* @end */
+
+
+
+/* @end */
+
+
