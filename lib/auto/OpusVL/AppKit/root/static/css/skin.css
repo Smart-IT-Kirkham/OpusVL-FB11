@@ -2,6 +2,8 @@
 
 /* @override http://localhost:3000/static/css/skin.css */
 
+/* @override http://localhost:3000/static/css/skin.css */
+
 /* @group Base */
 
 body {
@@ -100,6 +102,10 @@ div.appname {
 	font-weight: bold;
 	color: #fefffe;
 	text-shadow: #323232 3px 2px 3px;
+}
+
+div#appname_home {
+	background: url(/static/images/icons/home-big.png) no-repeat 0 3px;
 }
 
 /* @end */

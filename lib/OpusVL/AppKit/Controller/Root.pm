@@ -34,6 +34,7 @@ sub index :Path :Args(0)
     my ( $self, $c ) = @_;
     $c->forward('stash_portlets');
     $c->stash->{template} = 'index.tt';
+    $c->stash->{homepage} = 1;
 }
 
 =head2 access_notallowed
@@ -63,7 +64,7 @@ sub default :Path
 sub end : ActionClass('RenderView') 
 {
     my ( $self, $c ) = @_;
-    $c->forward('stash_navigation');
+    #$c->forward('stash_navigation');
 }
 
 =head1 AUTHOR

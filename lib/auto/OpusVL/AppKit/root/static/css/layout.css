@@ -2,6 +2,10 @@
 
 /* @override http://localhost:3000/static/css/layout.css */
 
+/* @override http://localhost:3000/static/css/layout.css */
+
+/* @override http://localhost:3000/static/css/layout.css */
+
 body {
 	margin: 0;
 	padding: 0;
@@ -89,6 +93,7 @@ div.appname {
 	top: 14px;
 	padding-top: 2px;
 	padding-bottom: 20px;
+	padding-left: 50px;
 }
 
 /* @group User Nav */
@@ -138,14 +143,36 @@ div#breadcrumbs {
 
 /* @group Controls */
 
+/* @group Buttons */
+
+div#button_group_right {
+	clear: both;
+	text-align: right;
+}
+
+div#button_group_right a.link_button {
+	margin-left: 8px;
+}
+
+/* @end */
+
 
 /* @group Action menu */
 
-li.control-edit-small {
+.control-edit-small {
 	position: relative;
+	display: inline-block;
 }
 
-li.control-edit-small ul.dropdown {
+.control-edit-small a {
+	display: block;
+	width: 100%;
+	height: 100%;
+	font-weight: normal;
+	font-style: normal;
+}
+
+.control-edit-small ul.dropdown {
 	top: 18px;
 	background-color: #eaeaea;
 	border: 1px solid #b4b4b4;
@@ -154,10 +181,15 @@ li.control-edit-small ul.dropdown {
 	z-index: 9;
 	display: none;
 	-webkit-box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
+	list-style-type: none;
+	padding-left: 0;
+	font-size: 9pt;
+	background-image: none;
 }
 
-li.control-edit-small ul.dropdown li {
+.control-edit-small ul.dropdown li {
 	padding-top: 0;
+	background-image: none;
 	margin-bottom: -1px;
 	width: 100%;
 	margin-left: 0;
@@ -166,7 +198,7 @@ li.control-edit-small ul.dropdown li {
 	margin-right: 0;
 }
 
-li.control-edit-small ul.dropdown li a {
+.control-edit-small ul.dropdown li a {
 	text-decoration: none;
 	color: #515151;
 	display: block;
@@ -178,7 +210,7 @@ li.control-edit-small ul.dropdown li a {
 	white-space: nowrap;
 }
 
-li.control-edit-small ul.dropdown li a:hover {
+.control-edit-small ul.dropdown li a:hover {
 	background-color: #cacaca;
 }
 

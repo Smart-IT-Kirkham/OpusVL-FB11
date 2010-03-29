@@ -93,21 +93,7 @@ div#appList_br {
 
 /* @group Icons */
 
-li#app_footfall {
-	Xbackground: url(../images/icons/footfall-med.png) no-repeat 6px 6px;
-}
 
-li#app_documents {
-	Xbackground: url(../images/icons/documents-med.png) no-repeat 6px 6px;
-}
-
-li#app_complaints {
-	Xbackground: url(../images/icons/complaints-med.png) no-repeat 6px 7px;
-}
-
-li#app_links {
-	Xbackground: url(../images/icons/links-med.png) no-repeat 6px 9px;
-}
 
 /* @end */
 
