@@ -243,13 +243,13 @@ input.submit_cancel {
 
 /* @end */
 
-.control-add-small {
+ul.control-container li.control-add-small {
 	width: 21px;
 	height: 21px;
 	background: url(/static/images/controls/add-small.png) no-repeat;
 }
 
-.control-edit-small {
+ul.control-container li.control-edit-small {
 	width: 38px;
 	height: 21px;
 	background: url(/static/images/controls/action-small.png) no-repeat;

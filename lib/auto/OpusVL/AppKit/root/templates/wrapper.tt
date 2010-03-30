@@ -107,7 +107,7 @@
         var col_id = 1;
         [% FOR myc IN c.appkit_controllers.sort  %]
             [% IF (myc.home_action && c.can_access( myc.home_action )) %]
-                $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for(myc.home_action) %]">[% myc.appkit_name %]</a>');
+                $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]">[% myc.appkit_name %]</a>');
                 col_id++;
                 if (col_id > [% appList_cols %]) {
                     col_id = 1;

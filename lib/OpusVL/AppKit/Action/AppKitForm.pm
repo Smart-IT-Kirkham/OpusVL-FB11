@@ -78,6 +78,10 @@ sub execute
     {
         # .. load it..
         $form->load_config_file ( $form_file );
+        
+        # .. process it..
+        $form->process;
+        
         # .. stash it..
         $c->stash->{ 'form' } = $form;
     }

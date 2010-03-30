@@ -159,12 +159,21 @@ div#button_group_right a.link_button {
 
 /* @group Action menu */
 
-.control-edit-small {
-	position: relative;
+ul.control-container {
+	margin: 0;
+	padding: 0;
 	display: inline-block;
+	position: relative;
 }
 
-.control-edit-small a {
+ul.control-container li.control-edit-small {
+	position: relative;
+	display: inline-block;
+	padding: 0;
+	margin: 0;
+}
+
+ul.control-container li.control-edit-small a {
 	display: block;
 	width: 100%;
 	height: 100%;
@@ -172,7 +181,7 @@ div#button_group_right a.link_button {
 	font-style: normal;
 }
 
-.control-edit-small ul.dropdown {
+ul.control-container li.control-edit-small ul.dropdown {
 	top: 18px;
 	background-color: #eaeaea;
 	border: 1px solid #b4b4b4;
@@ -187,7 +196,7 @@ div#button_group_right a.link_button {
 	background-image: none;
 }
 
-.control-edit-small ul.dropdown li {
+ul.control-container li.control-edit-small ul.dropdown li {
 	padding-top: 0;
 	background-image: none;
 	margin-bottom: -1px;
@@ -198,7 +207,7 @@ div#button_group_right a.link_button {
 	margin-right: 0;
 }
 
-.control-edit-small ul.dropdown li a {
+ul.control-container li.control-edit-small ul.dropdown li a {
 	text-decoration: none;
 	color: #515151;
 	display: block;
@@ -210,7 +219,7 @@ div#button_group_right a.link_button {
 	white-space: nowrap;
 }
 
-.control-edit-small ul.dropdown li a:hover {
+ul.control-container li.control-edit-small ul.dropdown li a:hover {
 	background-color: #cacaca;
 }
 
