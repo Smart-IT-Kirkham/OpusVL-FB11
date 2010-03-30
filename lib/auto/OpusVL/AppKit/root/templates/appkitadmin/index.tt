@@ -1,0 +1,10 @@
+
+<h1> AppKit Administration </h1>
+
+<ul>
+    <li>
+        <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('index') ) %]'>
+            Access Control
+        </a>
+    </li>
+</ul>

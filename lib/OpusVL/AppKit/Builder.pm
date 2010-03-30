@@ -24,7 +24,7 @@ package OpusVL::AppKit::Builder;
 
         Controller::Root
 
-        View::TT
+        View::AppKitTT
         View::Email
         View::Download
         View::JSON
@@ -43,7 +43,7 @@ package OpusVL::AppKit::Builder;
 
     Views
 
-    Currently only the TT view is used and this is to create the GUI... the view is configured for the GUI, but it could be reused (i think).
+    Currently only the AppKitTT view is used and this is to create the GUI... the view is configured for the GUI, but it could be reused (i think).
     The other views are available to be utilised in furture development.
 
 
@@ -71,11 +71,11 @@ package OpusVL::AppKit::Builder;
 
     This also configures the application in the following way:
 
-        default_view                    - Set to TT
+        default_view                    - Set to 'AppKitTT'
         custom-error-message            - enable customer error msg.
         static                          - set static to auto dir
         OpusVL::AppKit::Plugin::AppKit  - used to config ACL rules.
-        View::TT                        - set include paths, wrapper, etc.
+        View::AppKitTT                  - set include paths, wrapper, etc.
         Plugin::Authentication          - used to authenicate users.
         View::Email                     - use to send any emails
      
@@ -147,7 +147,7 @@ override _build_config => sub
     # .. get the path for this name space..
     my $path = File::ShareDir::module_dir( 'OpusVL::AppKit' );
 
-    $config->{'default_view'}                                       = 'TT';
+    $config->{'default_view'}                                       = 'AppKitTT';
 
     $config->{'custom-error-message'}                               = { 'error-template' => 'error.tt' };
 
@@ -159,18 +159,18 @@ override _build_config => sub
     push(@$static_dirs, $path . '/root' );
     $config->{static}->{include_path} = $static_dirs;
 
-    # .. add template dir into the config for View::TT...
-    my $inc_path = $config->{'View::TT'}->{'INCLUDE_PATH'};
+    # .. add template dir into the config for View::AppKitTT...
+    my $inc_path = $config->{'View::AppKitTT'}->{'INCLUDE_PATH'};
     push(@$inc_path, $path . '/root/templates' );
 
-    # Configure View::TT...
-    my $tt_dirs = $config->{'View::TT'}->{'INCLUDE_PATH'};
+    # Configure View::AppKitTT...
+    my $tt_dirs = $config->{'View::AppKitTT'}->{'INCLUDE_PATH'};
     # ...(add to include_path)..
     push(@$tt_dirs, $self->inherited_path_to('root','templates') );
     push(@$tt_dirs, $path . '/root/templates' );
-    $config->{'View::TT'}->{'INCLUDE_PATH'}         = $inc_path;
-    $config->{'View::TT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
-    $config->{'View::TT'}->{'WRAPPER'}              = 'wrapper.tt';
+    $config->{'View::AppKitTT'}->{'INCLUDE_PATH'}         = $inc_path;
+    $config->{'View::AppKitTT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
+    $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
 
     # Configure session handling
     $config->{'session'} =
@@ -180,38 +180,13 @@ override _build_config => sub
 
     $config->{'Plugin::Authentication'} =
     {
-        default_realm   => 'default',
-        default         => 
-        {
-            credential      => 
+            default_realm   => 'appkit',
+            appkit          => 
             {
-                class           => 'Password',
-                password_field  => 'password',
-                password_type   => 'clear'
+                class           => 'SimpleDB',
+                user_model      => 'AppKitAuthDB::User',
+                password_type   => 'clear',
             },
-            store       => 
-            {
-                class       => 'Minimal',
-                users       => 
-                {
-                    ben         => 
-                    {
-                        password    => "benjamin",
-                        roles       => [qw/admin user/],
-                    },
-                    will        => 
-                    {
-                        password    => "william",
-                        roles       => [qw/admin/],
-                    },
-                    pat         => 
-                    {
-                        password    => "paterick",
-                        roles       => [qw/user/],
-                    },
-                }
-            }
-        }
     };
     $config->{'View::Email'} =
     {

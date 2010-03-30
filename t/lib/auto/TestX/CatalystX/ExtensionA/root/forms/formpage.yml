@@ -1,0 +1,13 @@
+
+auto_fieldset: 1
+elements:
+  - type: Text
+    name: foo
+    label: Foo
+
+  - type: Text
+    name: bar
+    label: Bar
+
+  - type: Submit
+    name: submitbutton

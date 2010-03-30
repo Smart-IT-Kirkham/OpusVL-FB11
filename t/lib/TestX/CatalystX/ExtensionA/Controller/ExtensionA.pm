@@ -8,6 +8,7 @@ __PACKAGE__->config
 (
     appkit_name                 => 'ExtensionA',
     appkit_icon                 => 'static/images/flagA.jpg',
+    appkit_mynamespace          => 'TestX::CatalystX::ExtensionA',
 );
 
 sub home
@@ -16,8 +17,18 @@ sub home
     :NavigationHome
 {
     my ($self, $c) = @_;
-
     $c->stash->{template} = 'extensiona.tt';
+}
+
+sub formpage
+    :Local
+    :Args(0)
+    :NavigationName('Form Page')
+    :AppKitForm
+{
+    my ($self, $c) = @_;
+
+    $c->stash->{template} = 'formpage.tt';
 }
 
 __END__

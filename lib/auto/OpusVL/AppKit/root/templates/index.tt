@@ -24,14 +24,19 @@
         [% myc.appkit_name %]
 
         [% IF myc.home_action %]
+
             [% IF c.can_access( myc.home_action ) %]
-            <a href='[% c.uri_for( myc.home_action ) %]'>
-                Home
-            </a>
+
+                <a href='[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]'>
+                    Home
+                </a>
+
                 [% IF myc.appkit_icon %]
                     <img src='[% myc.appkit_icon %]'>
                 [% END %] 
+
             [% END %] 
+
         [% END %] 
     </li>
 [% END %]

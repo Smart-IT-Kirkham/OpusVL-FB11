@@ -7,6 +7,7 @@ all_from 'lib/OpusVL/AppKit.pm';
 
 requires 'Moose';
 requires 'File::ShareDir';
+requires 'File::Spec';
 requires 'List::Util';
 
 requires 'Catalyst::Runtime' => '5.8002';

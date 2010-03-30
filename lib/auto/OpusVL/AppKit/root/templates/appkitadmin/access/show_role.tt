@@ -1,0 +1,46 @@
+
+<h1> [% role.role %] </h1>
+
+<h2> Action Access </h2>
+[% access_control_role_tree.expandAll %]
+
+<h2> Users </h2>
+<ul>
+[% FOR thisuser IN role.users %]
+    <li>
+        [% thisuser.username %]
+
+        [% UNLESS thisuser.username == c.user.username %]
+            <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('user_delete_from_role'), [ role.role, thisuser.id ] ) %]'> Remove </a>
+        [% END %]
+    </li>
+[% END %]
+</ul>
+<form method='POST' action='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('user_add_to_role'), [ role.role ] ) %]'>
+    <select name='user_id'>
+    [% FOR thisuser IN c.model('AppKitAuthDB::User').search %]
+        <option value='[% thisuser.id %]'>[% thisuser.username %]</option>
+    [% END %]
+    </select>
+    <input type='submit' name='add_user_to_role' value='Add User to Role'>
+</form>
+
+
+<h2> Parameters </h2>
+<ul>
+[% FOR rp IN role.role_parameters %]
+    <li>
+        [% rp.parameter.parameter %] = [% rp.value %]
+        <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('parameter_delete_from_role'), [ role.role, rp.parameter.id ] )  %]'> Remove </a>
+    </li>
+[% END %]
+</ul>
+<form method='POST' action='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('parameter_add_to_role'), [ role.role ] )  %]'>
+    <select name='parameter_id'>
+    [% FOR param IN c.model('AppKitAuthDB::Parameter').search %]
+        <option value='[% param.id %]'>[% param.parameter %]</option>
+    [% END %]
+    </select>
+    <input type='text' name='parameter_value' value=''>
+    <input type='submit' name='add_parameter' value='Add/Update Value'>
+</form>

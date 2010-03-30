@@ -1,20 +1,38 @@
 
-This Catalyst Application is to be inherited via AppBuilder
+---------------------------------------------------------------------------------------------------------------------
+                    OpusVL::AppKit
+---------------------------------------------------------------------------------------------------------------------
 
-Please see any POD documentation for details of how to use/test.
 
-Start by having a read of lib/OpusVL::AppKit.pm, trying running:
-  bash$ perldoc ./lib/OpusVL/AppKit.pm
-  bash$ perldoc ./lib/OpusVL/AppKit/Builder.pm
-  bash$ perldoc ./lib/OpusVL/AppKit/Base/Controller/GUI.pm
-  bash$ perldoc ./lib/OpusVL/AppKit/Controller/Root.pm
-  bash$ perldoc ./lib/OpusVL/AppKit/Plugin/AppKit.pm
+---------------------------------------------------------------------------------------------------------------------
+    !! This Catalyst Application is to be inherited using AppBuilder. !!
+---------------------------------------------------------------------------------------------------------------------
 
-Run the tests by running this:
+---------------------------------------------------------------------------------------------------------------------
+ Using this for the 1st time?
+---------------------------------------------------------------------------------------------------------------------
 
-  bash$ prove -l
+    Please see any POD documentation for details of how to use/test.
+    
+    Start by having a read of lib/OpusVL::AppKit.pm, trying running:
+      bash$ perldoc ./lib/OpusVL/AppKit.pm
+      bash$ perldoc ./lib/OpusVL/AppKit/Builder.pm
+      bash$ perldoc ./lib/OpusVL/AppKit/Base/Controller/GUI.pm
+      bash$ perldoc ./lib/OpusVL/AppKit/Controller/Root.pm
+      bash$ perldoc ./lib/OpusVL/AppKit/Plugin/AppKit.pm
+    
+    Run the tests by running this:
+    
+      bash$ prove -l
+    
+    You can start the TestApp in the ./t/ directory like so:
+    
+      bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d
 
-You can start the TestApp in the ./t/ directory like so:
+---------------------------------------------------------------------------------------------------------------------
+ Authenication Details
+---------------------------------------------------------------------------------------------------------------------
+    To populate the authenication db I have done this before:
 
-  bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d
-
+        bash$ rm t/lib/auto/TestApp/root/db/appkit_auth.db
+        bash$ sqlite3 t/lib/auto/TestApp/root/db/appkit_auth.db < lib/auto/OpusVL/AppKit/root/db/appkit_auth.sql

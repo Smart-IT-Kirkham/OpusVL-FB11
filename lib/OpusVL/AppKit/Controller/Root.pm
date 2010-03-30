@@ -4,7 +4,7 @@ use Moose;
 use namespace::autoclean;
 BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI' };
 
-__PACKAGE__->config->{namespace} = '';
+__PACKAGE__->config->{namespace}    = '';
 
   use File::ShareDir ':ALL';
   
@@ -32,7 +32,7 @@ __PACKAGE__->config->{namespace} = '';
 sub index :Path :Args(0) 
 {
     my ( $self, $c ) = @_;
-    $c->forward('stash_portlets');
+    $c->_appkit_stash_portlets;
     $c->stash->{template} = 'index.tt';
     $c->stash->{homepage} = 1;
 }
@@ -64,7 +64,7 @@ sub default :Path
 sub end : ActionClass('RenderView') 
 {
     my ( $self, $c ) = @_;
-    #$c->forward('stash_navigation');
+    $c->_appkit_stash_navigation;
 }
 
 =head1 AUTHOR

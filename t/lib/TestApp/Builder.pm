@@ -1,5 +1,7 @@
 package TestApp::Builder;
+
 use Moose;
+use File::ShareDir;
 
 extends 'OpusVL::AppKit::Builder';
 
@@ -24,13 +26,20 @@ override _build_config => sub
     my $self   = shift;
     my $config = super(); # Get what CatalystX::AppBuilder gives you
 
-    $config->{'OpusVL::AppKit::Plugin::AppKit'}->{'access_denied'}                              = 'custom/custom_access_denied';
-    $config->{'OpusVL::AppKit::Plugin::AppKit'}->{'acl_rules'}->{"test/access_admin"}           = [qw/admin/];
-    $config->{'OpusVL::AppKit::Plugin::AppKit'}->{'acl_rules'}->{"test/access_user"}            = [qw/user/];
-    $config->{'OpusVL::AppKit::Plugin::AppKit'}->{'acl_rules'}->{"test/access_user_or_admin"}   = [qw/admin user/];
+
+    # point the AppKitAuth Model to the correct DB file....
+    $config->{'Model::AppKitAuthDB'} = 
+    {
+        schema_class => 'OpusVL::AppKit::Schema::AppKitAuthDB',
+        connect_info =>
+        {   
+            dsn         => 'dbi:SQLite:' . File::ShareDir::module_dir( 'TestApp' ) . '/root/db/appkit_auth.db',
+            user        => '',
+            password    => '',
+        }
+    };
 
     return $config;
-
 };
 
 __END__

@@ -10,7 +10,9 @@ package OpusVL::AppKit::Base::Controller::GUI;
     use Moose
     BEGIN{ extends 'OpusVL::AppKit::Base::Controller::GUI' };
 
-    __PACKAGE__->config( appkit_name => 'My Funky App' );
+    __PACKAGE__->config( appkit_name        => 'My Funky App' );
+    __PACKAGE__->config( appkit_icon        => 'static/funkster/me.gif' );
+    __PACKAGE__->config( appkit_myclass     => 'MyApp' );
     
     sub index
         :Path
@@ -18,6 +20,7 @@ package OpusVL::AppKit::Base::Controller::GUI;
         :NavigationHome
         :NavigationName("Funky Home")
         :PortletName("Funky Portlet")
+        :AppKitForm
     {   
         # .. do some funky stuff .. 
     }
@@ -44,6 +47,10 @@ package OpusVL::AppKit::Base::Controller::GUI;
         PortletName
             Tells the GUI this action is a portlet action, so calling is only garented to fill
             out the 'portlet' stash key.
+
+        AppKitForm
+            Behaves like FormConfig option in FormFu Controller, except it loads form from the 
+            ShareDir of namespace passed in 'appkit_myclass'
     
 
 =head1 SEE ALSO
@@ -72,204 +79,93 @@ use namespace::autoclean;
 # moose calls.
 ##################################################################################################################################
 
-BEGIN { extends 'Catalyst::Controller'; }
+BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; }
 
 has appkit                  => ( is => 'ro',    isa => 'Int',                       default => 1 );
 has appkit_name             => ( is => 'ro',    isa => 'Str',                       default => 'AppKit' );
+has appkit_myclass          => ( is => 'ro',    isa => 'Str',                       );
 
 =head2 home_action
-
-    This should return undef or the Catalyst::Action that related to the Home action for GUI.
-
-    It knows which action to return by looking through all the available AppKit actions
-    and returning the ones marked with a 'NavigationHome' action method attribute.
-    
+    This should be the hash of action details that pertain the the 'home action' of a controller.
+    If there is none defined for a controller, it should be undef.
 =cut
-has home_action             => ( is => 'ro',    isa => 'Catalyst::Action|Undef',    lazy_build => 1 );
-sub _build_home_action
-{
-    my $self  = shift;
-    my $home_action;
-    foreach ( keys %{ $self->_appkit_action_info } )
-    {
-        next unless $self->_appkit_action_info->{$_}->{enabled_home};
+has home_action             => ( is => 'rw',    isa => 'HashRef'        );
 
-        $home_action = $self->action_for( $self->_appkit_action_info->{$_}->{action_name} );
-        last;
-    }
-    return $home_action;
-}
 =head2 navigation_actions
-
-    This should return a HashRef,  keyed by the action_name with a value of the Catalyst::Action
-
-    This hash ref is built by parseing the '_appkit_action_info' for all action method marked with a
-    'NavigationName' attribute.
-    
+    This should be an Array Ref of HashRef's pertaining the actions that make up the navigation
 =cut
-has navigation_actions      => ( is => 'ro',    isa => 'HashRef',                   lazy_build => 1 );
-sub _build_navigation_actions
-{
-    my $self  = shift;
-    my %navigations;
-    foreach ( keys %{ $self->_appkit_action_info } )
-    {
-        next unless $self->_appkit_action_info->{$_}->{enabled_navigation};
-        $navigations{ $self->_appkit_action_info->{$_}->{navigation_name} } = $self->action_for( $self->_appkit_action_info->{$_}->{action_name} );
-    }
-    return \%navigations;
-}
+has navigation_actions      => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
+
 =head2 portlet_actions
-
-    This should return a HashRef of portlet name and actions.
-
-    This hash ref is built by parseing the '_appkit_action_info' for all action method marked with a
-    'PortletName' attribute.
+    This should be an Array Ref of HashRef's pertaining the actions that are Portlet's
 =cut
-has portlet_actions         => ( is => 'ro',    isa => 'HashRef',                   lazy_build => 1 );
-sub _build_portlet_actions
-{
-    my $self  = shift;
-    my %portlets;
-    foreach ( keys %{ $self->_appkit_action_info } )
+has portlet_actions         => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
+
+=head2 create_action
+    Hook into the creation of the actions.
+    Here we read the action attributes and act accordingly.
+=cut
+before create_action  => sub 
+{ 
+    my $self = shift;
+    my %args = @_;
+
+    if ( defined $args{attributes}{AppKitForm} )
     {
-        next unless $self->_appkit_action_info->{$_}->{enabled_portlet};
-
-        my $key     = $self->_appkit_action_info->{$_}->{portlet_name} ;
-        my $val   = $self->_appkit_action_info->{$_}->{action_name};
-        $portlets{ $self->_appkit_action_info->{$_}->{portlet_name} } = $self->action_for( $self->_appkit_action_info->{$_}->{action_name} );
+        # add an ActionClass this this action.. so when it is called, some extra code is excuted....
+        push @{ $args{attributes}{ActionClass} }, "OpusVL::AppKit::Action::AppKitForm";
     }
-    return \%portlets;
-}
 
-=head2 _build__appkit_action_info
-    _appkit_action_info is a var used to hold information from the parsing of all AppKit contollers and actions.
-    This var is used internally to enable quick access to controller/action based data.
-=cut
-has _appkit_action_info     => ( is => 'ro',    isa => 'HashRef',       lazy_build => 1 );
-sub _build__appkit_action_info
-{
-    my ( $self ) = shift;
-    
-    my %action_info;
-
-    # Loop through all this controllers actionmethods...
-    foreach my $action_method ( $self->get_action_methods )
-    {   
-        next if $action_method->name =~ /^_/;
-        my $action = $self->action_for( $action_method->name );
-        next unless defined $action;
-
-        my %appkit_action_info = 
-        (
-            action_name         => $action->name,
-
-            enabled_navigation  => 0,
-            enabled_portlet     => 0,
-            enabled_home        => 0,
+    if ( defined $args{attributes}{NavigationHome} )
+    {
+        # This action has been identified as a Home action...
+        $self->home_action
+        ( 
+            {
+                actionpath  => $args{reverse},
+                actionname  => $args{name},
+            }
         );
+    }
 
-        # .. check all attributes against this action..
-        foreach my $attr ( keys %{ $action->attributes } )
-        {   
-            if ( $attr eq 'NavigationName' )            # check for a NavigationName action
-            {   
-                $appkit_action_info{enabled_navigation}     = 1;
-                ( $appkit_action_info{navigation_name} )    = @{ $action->attributes->{$attr} };
+    if ( defined $args{attributes}{NavigationName} )
+    {
+        # This action has been identified as a Navigation item..
+        my $array = $self->navigation_actions;
+        $array = [] unless defined $array;
+        push 
+        ( 
+            @$array,
+            {
+                value       => $args{attributes}{NavigationName}->[0],
+                actionpath  => $args{reverse},
+                actionname  => $args{name},
             }
-            elsif ( $attr eq 'NavigationHome' )        # check for a Home action
-            {   
-                $appkit_action_info{enabled_home}     = 1;
-            }
-            elsif ( $attr eq 'PortletName' )            # check for any Portlet actions.
-            {   
-                $appkit_action_info{enabled_portlet}    = 1;
-                ( $appkit_action_info{portlet_name} )   = @{ $action->attributes->{$attr} };
-            }
-        }
-        
-        # put information into list..
-        $action_info{ $action_method->name } = \%appkit_action_info; 
-    } 
+        );
+        $self->navigation_actions( $array );
+    }
 
-    # set the _appkit_action_info hash ref..
-    return \%action_info; 
-}
+    if ( defined $args{attributes}{PortletName} )
+    {
+        # This action has been identified as a Portlet action...
+        my $array = $self->portlet_actions;
+        $array = [] unless defined $array;
+        push 
+        ( 
+            @$array,
+            {
+                value       => $args{attributes}{PortletName}->[0],
+                actionpath  => $args{reverse},
+                actionname  => $args{name},
+            }
+        );
+        $self->portlet_actions ( $array );
+    }
+};
 
 ##################################################################################################################################
 # controller actions.
 ##################################################################################################################################
-=head2 stash_navigation
-    Put all the AppKit Controller Navigation data in the stash
-    If you forward to this action, you should end up with a stash value keyed by 'navigation'.
-        eg. $c->forward('stash_navigation');
-    The value of 'navigation' is an ArrayRef of HashRefs.
-    The HashRefs contain 2 keys:
-        text    = The text of the navigation item
-        uri     = The uri if the action the navigation relates to.
-=cut
-sub stash_navigation :Private
-{
-    my ( $self, $c ) = @_;
-    my @navigations;
-    foreach my $apc ( @{ $c->appkit_controllers } )
-    {
-        foreach my $nav_name ( keys %{ $apc->navigation_actions } )
-        {
-            my $nav_action = $apc->navigation_actions->{$nav_name};
-
-            # test we can access this action..
-            next unless $c->can_access( $nav_action->reverse );
-
-            # build an array of navigation information...
-            push
-            (
-                @navigations,
-                {
-                    text    => $nav_name,
-                    uri     => $c->uri_for( $nav_action ),
-                }
-            );
-        }
-    }
-    $c->stash->{navigation} = \@navigations;
-}
-
-=head2 stash_portlets
-    Put all the AppKit Controller Portlets data in the stash
-    If you forward to this action, you should end up with a stash value keyed by 'portlets'.
-        eg. $c->forward('stash_portlets');
-    The value of 'portlets' is an ArrayRef of HashRefs.
-    The HashRefs contain 2 keys:
-        name    = The name of the portlet
-        html    = The HTML content of the portlet
-=cut
-sub stash_portlets :Private
-{   
-    my ( $self, $c ) = @_;
-    my @portlets;
-    foreach my $apc ( @{ $c->appkit_controllers } )
-    {   
-        foreach my $portlet_name ( keys %{ $apc->portlet_actions } )
-        {   
-            my $portlet_action = $apc->portlet_actions->{$portlet_name};
-
-            # forward to the portlet action..
-            $c->forward( $portlet_action );
-
-            # take things from the stash (that the action should have just filled out)
-            push
-            (
-                @portlets,
-                {
-                    name    => $portlet_name,
-                    html    => $c->stash->{portlet}->{html}
-                }
-            );
-        }
-    }
-    $c->stash->{portlets} = \@portlets;
-}
 
 ##
 1;
