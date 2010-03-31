@@ -25,7 +25,7 @@
 
         [% IF myc.home_action %]
 
-            [% IF c.can_access( myc.home_action ) %]
+            [% IF c.can_access( myc.home_action.actionpath ) %]
 
                 <a href='[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]'>
                     Home

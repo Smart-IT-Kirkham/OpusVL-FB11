@@ -44,6 +44,7 @@ sub _build_appkit_controllers
                 ( $comp->isa('Catalyst::Controller')    )               &&
                 ( $comp->isa('OpusVL::AppKit::Base::Controller::GUI') ) &&
                 ( $comp->can('appkit_name')             )               &&
+                ( defined $comp->appkit_name            )               &&
                 ( $comp->appkit_name ne 'AppKit'        )               
             )
         {   
@@ -165,8 +166,7 @@ sub _build_appkit_actiontree
 # catalyst hook.
 ###########################################################################################################################
 =head2 execute
-    The method that hooks into the catalyst despatch path.
-
+    The method hooks into the catalyst despatch path.
     If the current logged in used is denied access to the action this will detach to the 'access_denied' action.
 =cut
 sub execute 
@@ -202,8 +202,9 @@ sub execute
             if ( my $handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
             {
                 (my $path = $handler->reverse) =~ s!^/?!/!;
-                $c->log->debug("AppKit - Not Allowed Access - Detaching to - $path ") if $c->debug;
-                $c->detach( $path, [$action, "Access Denied"] );
+                #$c->log->debug("AppKit - Not Allowed Access - Detaching to - $path ") if $c->debug;
+                eval { $c->detach( $path, [$action, "Access Denied"] ) };
+                die $@ || $Catalyst::DETACH;
             }
         }
     }
@@ -230,6 +231,8 @@ sub can_access
     my $c               = shift;
     my ($action_path)   = @_;
 
+    $c->log->warn("can_access called with a non-string action path: $action_path ") if ( ref $action_path );
+
     # find all allowed roles for this action path...
     my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
 
@@ -251,8 +254,8 @@ sub _appkit_allowed_roles
     my @action_path     = grep { $_ ne "" } split( "/", $action_path );
     my $action_name     = pop @action_path;
 
-    # we can always access _INTERNAL methods..
-    return undef if $action_name =~ /^\_/;
+    # always allow to method starting with underscore (_) ... typically they are internal methods..
+    return undef if $action_name =~ /^_/;
 
     my $matched_rules;
     RULE: foreach my $aclrule ( $c->model('AppKitAuthDB::Aclrule')->search )
@@ -282,7 +285,6 @@ sub _appkit_allowed_roles
     # return array ref of roles..
     return $allowed_roles;
 }
-
 
 =head2 _appkit_stash_portlets
     Put all the AppKit Controller Portlets data in the stash

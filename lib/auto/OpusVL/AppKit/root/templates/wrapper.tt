@@ -30,17 +30,28 @@
                 </div>
                 <div id="header_nav">
                     <ul>
-                        <li id="header_home"><a href="/">Home</a>
-                        <li id="header_admin"><a href="[% c.uri_for( c.controller('AppKitAdmin').action_for('index') ) %]">Administration</a>
-                        <li id="header_applications"><a href="#" id="appList_anchor">Applications</a>
+                        <li id="header_home"><a href="/">Home</a></li>
+                        <li id="header_applications">
+                                <a href="#" id="appList_anchor">Applications</a>
+                        </li>
                     </ul>
                 </div>
             </div>
             <div id="body">
                 <div id="user_nav">
                     <ul>
-                        <li id="user_settings"><a href="#">Settings</a>
-                        <li id="user_logout"><a href="#">Logout</a>
+                        <li id="user_settings">
+                            [% IF c.can_access( 'appkitadmin' ) %]
+                                <a href="[% c.uri_for( c.controller('AppKitAdmin').action_for('index') ) %]">Settings</a>
+                            [% END %]
+                        </li>
+                        <li id="user_logout">
+                            [% IF c.user %]
+                                <a href="[% c.uri_for( c.controller('Login').action_for('logout') ) %]">Logout</a>
+                            [% ELSE %]
+                                <a href="[% c.uri_for( c.controller('Login').action_for('login') ) %]">Login</a>
+                            [% END %]
+                        </li>
                     </ul>
                 </div>
                 [% IF homepage %]
@@ -101,17 +112,24 @@
                                 <li>
                                         <ul class="appList_l2" id="appList_col[% appList_col %]">
                                         </ul>
+                                </li>
                                     [% END %]
 <script language="JavaScript">
     $(function() {
         var col_id = 1;
         [% FOR myc IN c.appkit_controllers.sort  %]
-            [% IF (myc.home_action && c.can_access( myc.home_action )) %]
+
+            [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
+
                 $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]">[% myc.appkit_name %]</a>');
+
                 col_id++;
-                if (col_id > [% appList_cols %]) {
+
+                if (col_id > [% appList_cols %] ) 
+                {
                     col_id = 1;
                 }
+
             [% END %]
         [% END %]
     });

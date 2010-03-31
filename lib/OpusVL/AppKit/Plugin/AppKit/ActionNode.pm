@@ -13,6 +13,15 @@ has action_path     => ( is => 'rw'       , isa => 'Str'                     );
 # Array of roles that can access this node..
 has access_only     => ( is => 'rw'       , isa => 'ArrayRef'                );
 
+
+
+
+
+
+
+
+
+
 # maybe for future use?.... currently being delt with in the Base::Controller::GUI...
 #   has navigation      => ( is => 'rw'       , isa => 'Int'                     , default  => 0 );
 #   has navigation_name => ( is => 'rw'       , isa => 'Str'                     );

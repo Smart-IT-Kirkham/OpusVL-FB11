@@ -41,20 +41,21 @@ CREATE TABLE role_parameter (
         PRIMARY KEY (role_id, parameter_id)
 );
 
---
--- Load up some initial test data
---
-INSERT INTO user VALUES (1, 'benjamin', 'ben',  'ben1@opusvl.com', 'Benjamin', 'Martin',  1);
-INSERT INTO user VALUES (2, 'william',  'will', 'will@opusvl.com', 'William',  'Hodgins', 1);
-INSERT INTO user VALUES (3, 'paterick', 'pat',  'pat@opusvl.com',  'Paterick', 'Neenan',  0);
+-------------------------------------
+-- Load up some initial test data  --
+-------------------------------------
 
-INSERT INTO aclrule VALUES (1, 'admin/access');
+INSERT INTO user VALUES (1, 'appkitadmin',  'password', 'appkit@opusvl.com',    'Applications', 'Kit',      1);
+INSERT INTO user VALUES (2, 'william',      'will',     'will@opusvl.com',      'William',      'Hodgins',  1);
+INSERT INTO user VALUES (3, 'paterick',     'pat',      'pat@opusvl.com',       'Paterick',     'Neenan',   0);
+
+INSERT INTO aclrule VALUES (1, 'appkitadmin');
 INSERT INTO aclrule VALUES (2, 'test/access_admin');
 INSERT INTO aclrule VALUES (3, 'test/access_user');
 INSERT INTO aclrule VALUES (4, 'test/access_user_or_admin');
 
-INSERT INTO role VALUES (1, 'admin');
-INSERT INTO role VALUES (2, 'user');
+INSERT INTO role VALUES (1, 'administrator');
+INSERT INTO role VALUES (2, 'normal user');
 
 INSERT INTO parameter VALUES (1,'Attribute 1' );
 INSERT INTO parameter VALUES (2,'Attribute 2' );

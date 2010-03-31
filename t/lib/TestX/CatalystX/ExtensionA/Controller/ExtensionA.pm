@@ -8,7 +8,7 @@ __PACKAGE__->config
 (
     appkit_name                 => 'ExtensionA',
     appkit_icon                 => 'static/images/flagA.jpg',
-    appkit_mynamespace          => 'TestX::CatalystX::ExtensionA',
+    appkit_myclass              => 'TestX::CatalystX::ExtensionA',
 );
 
 sub home

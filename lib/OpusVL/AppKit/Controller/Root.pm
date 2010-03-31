@@ -2,11 +2,11 @@ package OpusVL::AppKit::Controller::Root;
 
 use Moose;
 use namespace::autoclean;
+use File::ShareDir ':ALL';
 BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI' };
 
 __PACKAGE__->config->{namespace}    = '';
 
-  use File::ShareDir ':ALL';
   
 =head1 NAME
 
@@ -26,13 +26,33 @@ __PACKAGE__->config->{namespace}    = '';
 
 =cut
 
+=head2 auto
+    This is where i might apply the login logic!?... so far does not seem to be call 'auto' .. but why? 
+=cut
+sub auto : Private
+{
+    my ($self, $c) = @_;
+
+    if ( ! $c->user )
+    {
+        $c->detach('login/login');
+        $c->log->debug("******************> wAZ in <*********************".$c->user ."***");
+    }
+    else
+    {
+        $c->log->debug("******************> wAZ off <*********************".$c->user ."***");
+    }
+}
+
 =head2 index
     This is intended to be seen as the AppKit home page.
 =cut
 sub index :Path :Args(0) 
 {
     my ( $self, $c ) = @_;
+
     $c->_appkit_stash_portlets;
+
     $c->stash->{template} = 'index.tt';
     $c->stash->{homepage} = 1;
 }
@@ -69,7 +89,7 @@ sub end : ActionClass('RenderView')
 
 =head1 AUTHOR
 
-    OpusVL
+    OpusVL - www.opusvl.com
 
 =head1 LICENSE
 
