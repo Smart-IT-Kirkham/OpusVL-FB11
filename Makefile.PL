@@ -27,7 +27,7 @@ requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 
-requires 'CatalystX::CatalystX::AppBuilder';
+requires 'CatalystX::AppBuilder';
 requires 'CatalystX::VirtualComponents';
 requires 'CatalystX::SimpleLogin';
 
