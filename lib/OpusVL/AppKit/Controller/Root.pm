@@ -3,7 +3,8 @@ package OpusVL::AppKit::Controller::Root;
 use Moose;
 use namespace::autoclean;
 use File::ShareDir ':ALL';
-BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI' };
+
+BEGIN { extends 'Catalyst::Controller::ActionRole',  };
 
 __PACKAGE__->config->{namespace}    = '';
 
@@ -29,25 +30,28 @@ __PACKAGE__->config->{namespace}    = '';
 =head2 auto
     This is where i might apply the login logic!?... so far does not seem to be call 'auto' .. but why? 
 =cut
-sub auto : Private
+sub auto :Private 
 {
     my ($self, $c) = @_;
 
-    if ( ! $c->user )
+    if (! $c->user && ! $c->controller->can('login_redirect') ) 
     {
-        $c->detach('login/login');
-        $c->log->debug("******************> wAZ in <*********************".$c->user ."***");
+        # use the simplelogin code...
+        $c->controller('Login')->login_redirect($c, 'Please login to go any further' );
+        $c->detach;
     }
     else
     {
-        $c->log->debug("******************> wAZ off <*********************".$c->user ."***");
+        $c->log->debug("User " . $c->user . " logged in and accessing the AppKit");
     }
 }
 
 =head2 index
     This is intended to be seen as the AppKit home page.
 =cut
-sub index :Path :Args(0) 
+sub index 
+    :Path 
+    :Args(0) 
 {
     my ( $self, $c ) = @_;
 
@@ -67,7 +71,7 @@ sub index :Path :Args(0)
 sub access_notallowed : Private
 {
     my ( $self, $c ) = @_;
-    $c->stash->{status_msg} = "Access denied";
+    $c->stash->{status_msg} = "Access denied - Please login with an account that has permissions to access the requested area";
     $c->go('index');
 }
 
