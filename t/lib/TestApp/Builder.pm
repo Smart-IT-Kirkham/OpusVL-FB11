@@ -26,18 +26,25 @@ override _build_config => sub
     my $self   = shift;
     my $config = super(); # Get what CatalystX::AppBuilder gives you
 
+    # .. get the path for this name space..
+    my $path = File::ShareDir::module_dir( 'TestApp' );
 
-    # point the AppKitAuth Model to the correct DB file....
+    # .. point the AppKitAuth Model to the correct DB file....
     $config->{'Model::AppKitAuthDB'} = 
     {
         schema_class => 'OpusVL::AppKit::Schema::AppKitAuthDB',
         connect_info =>
         {   
-            dsn         => 'dbi:SQLite:' . File::ShareDir::module_dir( 'TestApp' ) . '/root/db/appkit_auth.db',
+            dsn         => 'dbi:SQLite:' . $path . '/root/db/appkit_auth.db',
             user        => '',
             password    => '',
         }
     };
+
+    # .. add static dir into the config for Static::Simple..
+    my $static_dirs = $config->{static}->{include_path};
+    push(@$static_dirs, $path . '/root' );
+    $config->{static}->{include_path} = $static_dirs;
 
     return $config;
 };

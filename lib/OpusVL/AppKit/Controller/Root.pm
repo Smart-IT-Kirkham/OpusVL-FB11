@@ -42,7 +42,7 @@ sub auto :Private
     }
     else
     {
-        $c->log->debug("User " . $c->user . " logged in and accessing the AppKit");
+        $c->log->debug("User " . $c->user->username . " logged in and accessing the AppKit");
     }
 }
 
