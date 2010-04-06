@@ -78,9 +78,16 @@
                     [% END %]
                 </div>
                 <div id="application">
-                    <div id="application_nav">
-                    </div>
-                    <div id="application_body">
+                    [% IF c.controller.navigation_actions %]
+                        <div id="application_nav">
+                            <ul>
+                                [% FOREACH nav IN c.controller.navigation_actions %]
+                                    <li><a href="[% c.uri_for(c.controller.action_for(nav.actionname)) %]">[% nav.value %]</a>
+                                [% END %]
+                            </ul>
+                        </div>
+                    [% END %]
+                    <div id="application_body"[% IF c.controller.navigation_actions %] class="app_body_with_nav"[% END %]>
                         [% IF status_msg.defined %]
                             <div class="alert status">
                                 [% status_msg %]

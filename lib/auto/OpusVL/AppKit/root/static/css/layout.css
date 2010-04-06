@@ -6,6 +6,8 @@
 
 /* @override http://localhost:3000/static/css/layout.css */
 
+/* @override http://localhost:3000/static/css/layout.css */
+
 body {
 	margin: 0;
 	padding: 0;
@@ -257,8 +259,16 @@ div.status {
 
 /* @group Body */
 
+div#application_nav {
+	float: left;
+}
+
 div#application_body {
 	padding: 20px 25px;
+}
+
+div.app_body_with_nav {
+	margin-left: 160px;
 }
 
 div.content_block {
