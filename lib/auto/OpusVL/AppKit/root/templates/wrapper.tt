@@ -6,6 +6,7 @@
         <link href="/static/css/skin.css" rel="stylesheet" rev="stylesheet" type="text/css">
         <link href="/static/css/appnav.css" rel="stylesheet" rev="stylesheet" type="text/css">
         <link href="/static/css/overrides.css" rel="stylesheet" rev="stylesheet" type="text/css">
+        <link href="/static/css/vader/jquery-ui-1.8.custom.css" rel="stylesheet" rev="stylesheet" type="text/css">
 
         [% IF header.favicon %]
             <link rel="shortcut icon" href="[% header.favicon %]" type="image/png" />
@@ -16,6 +17,7 @@
         [% END %]
 
         <script language="JavaScript" type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
+        <script language="JavaScript" type="text/javascript" src="/static/js/jquery-ui-1.8.custom.min.js"></script>
         <script language="JavaScript" type="text/javascript" src="/static/js/ZeroClipboard.js"></script>
         <script language="JavaScript" type="text/javascript" src="/static/js/appkit.js"></script>
 
