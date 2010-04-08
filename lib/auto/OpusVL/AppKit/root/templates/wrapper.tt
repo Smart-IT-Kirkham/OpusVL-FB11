@@ -16,6 +16,7 @@
         [% END %]
 
         <script language="JavaScript" type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
+        <script language="JavaScript" type="text/javascript" src="/static/js/ZeroClipboard.js"></script>
         <script language="JavaScript" type="text/javascript" src="/static/js/appkit.js"></script>
 
         [% FOR js IN header.js %]

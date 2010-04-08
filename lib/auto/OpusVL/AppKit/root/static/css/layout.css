@@ -8,6 +8,8 @@
 
 /* @override http://localhost:3000/static/css/layout.css */
 
+/* @override http://localhost:3000/static/css/layout.css */
+
 body {
 	margin: 0;
 	padding: 0;
@@ -222,6 +224,10 @@ ul.control-container li.control-edit-small ul.dropdown li a {
 }
 
 ul.control-container li.control-edit-small ul.dropdown li a:hover {
+	background-color: #cacaca;
+}
+
+ul.control-container li.control-edit-small ul.dropdown li a.hover {
 	background-color: #cacaca;
 }
 
