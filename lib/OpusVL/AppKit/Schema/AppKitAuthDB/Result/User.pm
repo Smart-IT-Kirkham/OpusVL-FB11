@@ -23,10 +23,12 @@ __PACKAGE__->add_columns(
   },
   "password",
   {
-    data_type => "TEXT",
-    default_value => undef,
-    is_nullable => 1,
-    size => undef,
+    data_type     => 'TEXT',
+    size          => undef,
+    encode_column => 1,
+    encode_class  => 'Crypt::Eksblowfish::Bcrypt',
+    encode_args   => { key_nul => 0, cost => 8 },
+    encode_check_method => 'check_password',
   },
   "email_address",
   {

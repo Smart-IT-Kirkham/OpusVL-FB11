@@ -4,7 +4,12 @@
 <ul>
     <li>
         <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('index') ) %]'>
-            Access Control
+            Roles
+        </a>
+    </li>
+    <li>
+        <a href='[% c.uri_for( c.controller('AppKitAdmin::Users').action_for('index') ) %]'>
+            Users
         </a>
     </li>
 </ul>

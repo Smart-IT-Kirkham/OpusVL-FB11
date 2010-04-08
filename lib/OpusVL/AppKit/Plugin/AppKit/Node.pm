@@ -1,4 +1,4 @@
-package OpusVL::AppKit::Plugin::AppKit::ActionNode;
+package OpusVL::AppKit::Plugin::AppKit::Node;
 
 use Moose;
 
@@ -12,13 +12,6 @@ has action_path     => ( is => 'rw'       , isa => 'Str'                     );
 
 # Array of roles that can access this node..
 has access_only     => ( is => 'rw'       , isa => 'ArrayRef'                );
-
-
-
-
-
-
-
 
 
 

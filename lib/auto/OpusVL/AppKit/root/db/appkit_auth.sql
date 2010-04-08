@@ -45,9 +45,9 @@ CREATE TABLE role_parameter (
 -- Load up some initial test data  --
 -------------------------------------
 
-INSERT INTO user VALUES (1, 'appkitadmin',  'password', 'appkit@opusvl.com',    'Applications', 'Kit',      1);
-INSERT INTO user VALUES (2, 'william',      'will',     'will@opusvl.com',      'William',      'Hodgins',  1);
-INSERT INTO user VALUES (3, 'paterick',     'pat',      'pat@opusvl.com',       'Paterick',     'Neenan',   0);
+INSERT INTO user VALUES (1, 'appkitadmin',  '$2a$05$abcdefghijklmnopqrstuuVXLGLH0YYn303cB/t9gc8ACq9MtEwAm', 'appkit@opusvl.com',    'Applications', 'Kit',      1);
+INSERT INTO user VALUES (2, 'william',      '$2a$05$abcdefghijklmnopqrstuuVXLGLH0YYn303cB/t9gc8ACq9MtEwAm', 'will@opusvl.com',      'William',      'Hodgins',  1);
+INSERT INTO user VALUES (3, 'paterick',     '$2a$05$abcdefghijklmnopqrstuuVXLGLH0YYn303cB/t9gc8ACq9MtEwAm', 'pat@opusvl.com',       'Paterick',     'Neenan',   0);
 
 INSERT INTO aclrule VALUES (1, 'appkitadmin');
 INSERT INTO aclrule VALUES (2, 'test/access_admin');

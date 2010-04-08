@@ -1,3 +1,14 @@
 
 
-This is ExtensionA TestX::CatalystX - template file extensiona.tt (in auto/TestX/CatalystX/ExtensionA/root/templates/extensiona.tt)
+<p>
+    This is ExtensionA TestX::CatalystX - template file extensiona.tt (in auto/TestX/CatalystX/ExtensionA/root/templates/extensiona.tt)
+</p>
+
+
+<p>
+    Below you might see a custom bit of text:
+    <br>
+    [% custom_string %]
+</p>
+
+

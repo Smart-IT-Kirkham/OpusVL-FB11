@@ -1,0 +1,55 @@
+
+<h1> Users  </h1>
+
+    <div>
+
+        <div>
+
+            <div style="width: 200px; float:left; clear:left;">
+
+                <fieldset>
+                    <legend>
+                        Available Users
+                    </legend>
+
+                    [% FOR user IN c.stash.users %]
+                        [% user.username %]
+                        <a href='[% c.uri_for( c.controller('AppKitAdmin::Users').action_for('show_user'),    [ user.id ] ) %] '>edit</a>
+                        <a href='[% c.uri_for( c.controller('AppKitAdmin::Users').action_for('delete_user'),   [ user.id ] ) %] '>del</a>
+                        <br>
+                    [% END %]
+
+                </fieldset>
+
+            </div>
+
+            <div style="float:left; clear:right;">
+
+                [% IF c.stash.user %]
+
+                    <fieldset>
+                        <legend>
+                            Roles for [% c.stash.user.username %]
+                        </legend>
+
+                    <form method='POST' action='[% c.uri_for( c.controller('AppKitAdmin::Users').action_for('show_user'), [ c.stash.user.id ] )  %]'>
+
+                    [% FOR role IN c.stash.roles %]
+
+                        [% role.input %]
+                        [% role.role %]
+                        <br>
+
+                    [% END %]
+
+                        <input type='submit' name='savebutton'      value='Save'>
+                        <input type='submit' name='cancelbutton'    value='Cancel'>
+                    </form>
+
+                    </fieldset>
+
+                [% END %]
+
+            </div>
+        </div>
+    </div>

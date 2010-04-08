@@ -22,7 +22,7 @@ use namespace::autoclean;
 use Moose;
 use List::Util 'first';
 use Tree::Simple;
-use OpusVL::AppKit::Plugin::AppKit::ActionNode;
+use OpusVL::AppKit::Plugin::AppKit::Node;
 
 ###########################################################################################################################
 # moose calls.
@@ -36,16 +36,13 @@ sub _build_appkit_controllers
 
     my @controllers;
 
-    # Get all the components for this app...
-    foreach my $comp ( values %{ $c->components } )
+    # Get all the components for this app... sorted by length of the name of the componant so they are in hierarchical order (bit hacky, but think it should work)
+    foreach my $comp ( sort { length($a) <=> length($b) } values %{ $c->components } )
     {   
         # Check this is a controller..
         if  (
                 ( $comp->isa('Catalyst::Controller')    )               &&
-                ( $comp->isa('OpusVL::AppKit::Base::Controller::GUI') ) &&
-                ( $comp->can('appkit_name')             )               &&
-                ( defined $comp->appkit_name            )               &&
-                ( $comp->appkit_name ne 'AppKit'        )               
+                ( $comp->isa('OpusVL::AppKit::Base::Controller::GUI') )
             )
         {   
             push( @controllers, $comp );
@@ -59,11 +56,16 @@ sub _build_appkit_actiontree
 {   
     my ( $c ) = shift;
 
+    # used to find nodes..
+    my $visitor = Tree::Simple::Visitor::FindByPath->new;
+    $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
+
     # make a tree root (based on code from Catalyst::Plugin::Authorization::ACL::Engine)
     my $root = Tree::Simple->new('AppKit', Tree::Simple->ROOT);
 
     AKCONTROLLERS: foreach my $cont ( @{ $c->appkit_controllers } )
     {   
+
         # Loop through all this AppKit controllers actionmethods...
         AKACTIONS: foreach my $action_method ( $cont->get_action_methods )
         {   
@@ -77,8 +79,8 @@ sub _build_appkit_actiontree
             my @path = split '/', $action_path;
             my $name = pop @path;
 
-            # build AppKit::ActionNode object...
-            my $appkit_action_object = OpusVL::AppKit::Plugin::AppKit::ActionNode->new
+            # build AppKit::Node object...
+            my $appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
             (
                 node_name   => $name,
                 controller  => $cont,
@@ -97,13 +99,11 @@ sub _build_appkit_actiontree
             if (@path)
             {   
 
-                # Need to check this!!.. we have changed from building the tree from strings (string/string) to 
-                # a tree of objects... probably need to create a custom Visitor...
-                my $by_path = Tree::Simple::Visitor::FindByPath->new;
-                $by_path->setSearchPath(@path);
-                $root->accept($by_path);
+                $visitor->setResults; # clear any results.
+                $visitor->setSearchPath(@path);
+                $root->accept($visitor);
 
-                if ( my $namespace_node = $by_path->getResult )
+                if ( my $namespace_node = $visitor->getResult )
                 {   
 
                     # final 'belt and braches' check to see if we have already added it..
@@ -121,6 +121,7 @@ sub _build_appkit_actiontree
                     next;
                 }
             }
+
             # here we add all of the required path for the action we are adding to the tree..
             my $node = $root;
             for my $path_part ( @path )
@@ -142,8 +143,8 @@ sub _build_appkit_actiontree
                 else
                 {
 
-                    # build AppKit::ActionNode object...(this is not an action, so is pretty minimal)...
-                    my $branch_appkit_action_object = OpusVL::AppKit::Plugin::AppKit::ActionNode->new
+                    # build AppKit::Node object...(this is not an action, so is pretty minimal)...
+                    my $branch_appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
                     (
                         node_name   => $path_part,
                         controller  => $cont,
@@ -238,6 +239,9 @@ sub can_access
 
     # if none found.. allow access..
     return 1 unless defined $allowed_roles;
+
+    # if we found a rule, but no roles applied, let deny access..
+    return 0 if $#$allowed_roles < 0;
 
     # return a test that will check for the roles
     return $c->check_user_roles( @$allowed_roles );

@@ -14,9 +14,8 @@
             [% role %]
         </td>
         <td>
-            <a href='[% c.uri_for( c.controller('Admin::Access').action_for('show_role'), [ role ] ) %] '>show</a>
-
-            <a href='[% c.uri_for( c.controller('Admin::Access').action_for('delete_role'), [ role ] ) %] '>del</a>
+            <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('show_role'),     [ role ] ) %] '>show</a>
+            <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('delete_role'),   [ role ] ) %] '>del</a>
         </td>
     </tr>
 

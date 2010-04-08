@@ -40,9 +40,13 @@ sub auto :Private
         $c->controller('Login')->login_redirect($c, 'Please login to go any further' );
         $c->detach;
     }
-    else
+    elsif ( $c->user )
     {
         $c->log->debug("User " . $c->user . " logged in and accessing the AppKit");
+    }
+    else
+    {
+        $c->log->debug("User viewing the controller that deals with logging in");
     }
 }
 

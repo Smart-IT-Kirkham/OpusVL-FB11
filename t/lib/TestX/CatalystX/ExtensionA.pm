@@ -15,6 +15,12 @@ after 'setup_components' => sub
         component   => 'TestX::CatalystX::ExtensionA::Controller::ExtensionA',
         as          => 'Controller::ExtensionA'
     );
+    CatalystX::InjectComponent->inject
+    (
+        into        => $class,
+        component   => 'TestX::CatalystX::ExtensionA::Controller::ExtensionA::ExpansionAA',
+        as          => 'Controller::ExtensionA::ExpansionAA'
+    );
 
     
     my $config = $class->config;

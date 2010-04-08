@@ -9,6 +9,11 @@ requires 'Moose';
 requires 'File::ShareDir';
 requires 'File::Spec';
 requires 'List::Util';
+requires 'Getopt::Compact';
+requires 'Tree::Simple';
+requires 'Tree::Simple::VisitorFactory';
+requires 'Crypt::Eksblowfish::Bcrypt';
+requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
 
 requires 'Catalyst::Runtime' => '5.8002';
 requires 'Catalyst::Action::RenderView';

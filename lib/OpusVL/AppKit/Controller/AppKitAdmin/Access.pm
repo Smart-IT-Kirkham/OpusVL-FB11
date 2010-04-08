@@ -3,6 +3,7 @@ package OpusVL::AppKit::Controller::AppKitAdmin::Access;
 use Moose;
 use namespace::autoclean;
 use Tree::Simple::View::HTML;
+use Tree::Simple::VisitorFactory;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -16,6 +17,7 @@ sub auto
 
     # add to the bread crumb..
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Access', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('index') ) } );
+
 }
 
 =head2 index
@@ -26,6 +28,7 @@ sub index
     : Args(0)
 {
     my ( $self, $c ) = @_;
+    $c->stash->{template} = 'appkitadmin/access/show_role.tt';
 }
 
 =head2 addrole
@@ -38,10 +41,21 @@ sub addrole
 
     if ( $c->req->method eq 'POST' )
     {
-        my $rolename     = $c->req->param('rolename');
-        my $role = $c->user->add_to_roles( { role => $rolename } );
+        my $rolename    = $c->req->param('rolename');
+        my $role        = $c->user->add_to_roles( { role => $rolename } );
+
+        if ( $role )
+        {
+            $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $rolename ] ) );
+        }
+        else
+        {
+            $c->stash->{error_msg} = 'Role not added';
+        }
     }
-    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('index') ) );
+
+    # basically run the action for the index for this page..
+    $c->go( $c->controller('AppKitAdmin::Access')->action_for('index') );
 }
 
 =head2 role_specific
@@ -227,66 +241,89 @@ sub show_role
     # stash the tree..
     $c->stash->{action_tree} = $c->appkit_actiontree;
 
-    # set the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Role Access', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) } );
-
     # get role to show from stash..
     my $show_role = $c->stash->{role}->role;
 
-    # mix the CSS properties and CSS classes
+    # build my visitor to get the path to the root..
+    my $path2root_visitor = Tree::Simple::VisitorFactory->getVisitor("PathToRoot");
+    $path2root_visitor->setNodeFilter(sub { my ($t) = @_; return $t->getNodeValue()->node_name });
+
+    # test if need to process some rules submission...
+    if ( $c->req->method eq 'POST' )
+    {
+        # now we run traverse the tree finding if we are allowing access or not...
+
+        my $allowed = [];
+        my $denied  = [];
+        $c->stash->{action_tree}->traverse
+        (
+            sub 
+            {
+                my ($_tree) = @_;
+                $_tree->accept($path2root_visitor);
+                my $path = $path2root_visitor->getPathAsString("/");
+                if ( $c->req->params->{$path} )
+                {
+                    push ( @$allowed, $path );
+                }
+                else
+                {
+                    push ( @$denied, $path );
+                }
+            },
+        );
+
+        foreach my $path ( @$allowed )
+        {
+            $c->log->debug("***************ALLOWING:" . $path . "\n");
+            my $aclrule = $c->model('AppKitAuthDB::Aclrule')->find_or_create( { actionpath => $path } );
+            $c->stash->{role}->update_or_create_related('aclrule_roles', { aclrule_id => $aclrule->id } );
+        }
+        foreach my $path ( @$denied )
+        {
+            $c->log->debug("****************DENYING:" . $path . "\n");
+            my $aclrule = $c->model('AppKitAuthDB::Aclrule')->find_or_create( { actionpath => $path } );
+            $c->stash->{role}->search_related('aclrule_roles', { aclrule_id => $aclrule->id } )->delete;
+        }
+
+        # now we have allowed and denied access to the different parts of the tree... we need to rebuild it..z
+        $c->clear_appkit_actiontree;
+        $c->stash->{action_tree} = $c->appkit_actiontree;
+
+    }
+
+    # create the tree view...
     my $tree_view = Tree::Simple::View::HTML->new
     (
         $c->stash->{action_tree} => 
         (
             list_css                => "list-style: circle;",
             list_item_css           => "font-family: courier;",
-            expanded_item_css_class => "myExpandedListItemClass",                                                         
             node_formatter          => sub 
             {
                 my ($tree) = @_;
                 my $node_string = $tree->getNodeValue()->node_name;
-                if ( defined $tree->getNodeValue->action_path )
+
+                $tree->accept($path2root_visitor);
+                my $checkbox_name = $path2root_visitor->getPathAsString("/");
+
+                my $checked             = 'checked';
+                my $color               = 'green';
+
+                if ( my $roles = $tree->getNodeValue->access_only )
                 {
-                    my $color    = 'blue';
-
-                    if ( my $roles = $tree->getNodeValue->access_only )
-                    {
-                        my $matched_role = 0;
-                        foreach my $allowed_role ( @{ $tree->getNodeValue->access_only } )
-                        {
-                            $matched_role = 1 if ( $allowed_role eq $show_role );
-                        }
-                        $color = 'red'      unless $matched_role;
-                        $color = 'green'    if $matched_role;
-
-                    }
-                    else
-                    {
-                        $color    = 'yellow';
-                    }
-
-                    if ( $color )
-                    {
-                        # decide what links to draw..
-                        my $links='';
-                        if ( $color eq 'yellow' )
-                        {
-                            $links.="<a href='" . $c->uri_for($c->controller('AppKitAdmin::Access')->action_for( 'action_rule_for_role' ), [ $show_role ], 'deny',  $tree->getNodeValue->action_path ) . "'>D</a>  ";
-                            $links.="<a href='" . $c->uri_for($c->controller('AppKitAdmin::Access')->action_for( 'action_rule_for_role' ), [ $show_role ], 'allow',  $tree->getNodeValue->action_path ) . "'>A</a> ";
-                        }
-                        elsif ( $color eq 'green' )
-                        {
-                            $links.="<a href='" . $c->uri_for($c->controller('AppKitAdmin::Access')->action_for( 'action_rule_for_role' ), [ $show_role ], 'revoke',  $tree->getNodeValue->action_path ) . "'>R</a> ";
-                            $links.="<a href='" . $c->uri_for($c->controller('AppKitAdmin::Access')->action_for( 'action_rule_for_role' ), [ $show_role ], 'deny',  $tree->getNodeValue->action_path ) . "'>D</a>   ";
-                        }
-                        elsif ( $color eq 'red' )
-                        {
-                            $links.="<a href='" . $c->uri_for($c->controller('AppKitAdmin::Access')->action_for( 'action_rule_for_role' ), [ $show_role ], 'revoke',  $tree->getNodeValue->action_path ) . "'>R</a> ";
-                            $links.="<a href='" . $c->uri_for($c->controller('AppKitAdmin::Access')->action_for( 'action_rule_for_role' ), [ $show_role ], 'allow',  $tree->getNodeValue->action_path ) . "'>A</a>  ";
-                        }
-                        $node_string = "<font color='$color'>" . $node_string . "</font>" . $links;
-                    }
+                   my $matched_role = 0;
+                   foreach my $allowed_role ( @{ $tree->getNodeValue->access_only } )
+                   {
+                       $matched_role = 1 if ( $allowed_role eq $show_role );
+                   }
+                   unless ( $matched_role ) # rules, but not matched.. therefore, no access..
+                   {
+                       $checked    = '';
+                       $color      = 'red';
+                   }
                 }
+                $node_string = "<input type='checkbox' name='$checkbox_name' value='allow' $checked><font color='$color'>" . $node_string . "</font>";
                 return $node_string;
             }
         )

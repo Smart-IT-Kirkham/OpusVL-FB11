@@ -21,13 +21,17 @@
       bash$ perldoc ./lib/OpusVL/AppKit/Controller/Root.pm
       bash$ perldoc ./lib/OpusVL/AppKit/Plugin/AppKit.pm
     
-    Run the tests by running this:
+    Run the tests as detailed below, a high level, will-it-complete test might be:
     
       bash$ prove -l
     
-    You can start the TestApp in the ./t/ directory like so:
+    You can start the TestApp in the like so:
     
       bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d
+
+    The above command will be enough, to run a test server for browsing, development and the all important testing:
+
+      bash$ CATALYST_SERVER="http://localhost:3006" prove -l ./t/02-testapp-toplevel.t
 
 ---------------------------------------------------------------------------------------------------------------------
  Authenication Details
@@ -36,3 +40,6 @@
 
         bash$ rm t/lib/auto/TestApp/root/db/appkit_auth.db
         bash$ sqlite3 t/lib/auto/TestApp/root/db/appkit_auth.db < lib/auto/OpusVL/AppKit/root/db/appkit_auth.sql
+
+    As the passwords are now encrypted there is a script to help set the passwords in the TestApp
+        bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_setpassword.pl --user appkitadmin --password password

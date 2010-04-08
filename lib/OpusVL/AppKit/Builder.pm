@@ -181,13 +181,31 @@ override _build_config => sub
     $config->{'Plugin::Authentication'} =
     {
             default_realm   => 'appkit',
+
+            #appkit          => 
+            #{
+            #    class           => 'SimpleDB',
+            #    user_model      => 'AppKitAuthDB::User',
+            #    password_type   => 'clear',
+            #},
+
             appkit          => 
             {
-                class           => 'SimpleDB',
-                user_model      => 'AppKitAuthDB::User',
-                password_type   => 'clear',
+                credential => 
+                {
+                   class              => 'Password',
+                   password_type      => 'self_check',
+                },
+                store => 
+                {
+                   class                    => 'DBIx::Class',
+                   user_model               => 'AppKitAuthDB::User',   
+                   role_relation            => 'roles',
+                   role_field               => 'role',
+                }
             },
     };
+
     $config->{'View::Email'} =
     {
         stash_key   => 'email',
