@@ -181,14 +181,6 @@ override _build_config => sub
     $config->{'Plugin::Authentication'} =
     {
             default_realm   => 'appkit',
-
-            #appkit          => 
-            #{
-            #    class           => 'SimpleDB',
-            #    user_model      => 'AppKitAuthDB::User',
-            #    password_type   => 'clear',
-            #},
-
             appkit          => 
             {
                 credential => 
@@ -198,10 +190,10 @@ override _build_config => sub
                 },
                 store => 
                 {
-                   class                    => 'DBIx::Class',
-                   user_model               => 'AppKitAuthDB::User',   
-                   role_relation            => 'roles',
-                   role_field               => 'role',
+                   class              => 'DBIx::Class',
+                   user_model         => 'AppKitAuthDB::User',   
+                   role_relation      => 'roles',
+                   role_field         => 'role',
                 }
             },
     };

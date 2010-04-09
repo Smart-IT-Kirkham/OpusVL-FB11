@@ -1,8 +1,8 @@
-
----------------------------------------------------------------------------------------------------------------------
-                    OpusVL::AppKit
----------------------------------------------------------------------------------------------------------------------
-
+#####################################################################################################################
+#-------------------------------------------------------------------------------------------------------------------#
+#                   OpusVL::AppKit                                                                                  #
+#-------------------------------------------------------------------------------------------------------------------#
+#####################################################################################################################
 
 ---------------------------------------------------------------------------------------------------------------------
     !! This Catalyst Application is to be inherited using AppBuilder. !!
@@ -22,22 +22,18 @@
       bash$ perldoc ./lib/OpusVL/AppKit/Plugin/AppKit.pm
     
     Run the tests as detailed below, a high level, will-it-complete test might be:
-    
       bash$ prove -l
     
     You can start the TestApp in the like so:
-    
       bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d
 
     The above command will be enough, to run a test server for browsing, development and the all important testing:
-
       bash$ CATALYST_SERVER="http://localhost:3006" prove -l ./t/02-testapp-toplevel.t
 
 ---------------------------------------------------------------------------------------------------------------------
  Authenication Details
 ---------------------------------------------------------------------------------------------------------------------
     To populate the authenication db I have done this before:
-
         bash$ rm t/lib/auto/TestApp/root/db/appkit_auth.db
         bash$ sqlite3 t/lib/auto/TestApp/root/db/appkit_auth.db < lib/auto/OpusVL/AppKit/root/db/appkit_auth.sql
 
@@ -50,5 +46,12 @@
     Alot of development has been done using a TestApp to test against. So here are some notes about it.
 
     Set up the TestApp/TextX::ExtensionB BookDB sqlite database:
+        bash$ rm t/lib/auto/TestX/CatalystX/ExtensionB/root/db/bookdb.db
+        bash$ sqlite3 t/lib/auto/TestX/CatalystX/ExtensionB/root/db/bookdb.db < t/lib/auto/TestX/CatalystX/ExtensionB/root/db/bookdb.sql
 
-      bash$ sqlite3 t/lib/auto/TestX/CatalystX/ExtensionB/root/db/bookdb.db < t/lib/auto/TestX/CatalystX/ExtensionB/root/db/bookdb.sql
+    To display a chart of the TestApp componants to help you see how an app is built, try this:
+        bash$ perl ./t/lib/script/display_componant_chart.pl
+    (you can give 'dot' as the first argument to the above command to produce TestApp.png chart)
+
+
+
