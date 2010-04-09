@@ -17,7 +17,14 @@ after 'setup_components' => sub
         as          => 'Controller::ExtensionB'
     );
 
-    # Now we have injected the Controller... lets alter the config to add paths for static
+    CatalystX::InjectComponent->inject
+    (   
+        into        => $class,
+        component   => 'TestX::CatalystX::ExtensionB::Model::BookDB',
+        as          => 'Model::BookDB'
+    );
+
+    # Now we have injected the Controller & Model... lets alter the config to add paths for static
     # and template paths.
 
     my $config = $class->config;
@@ -34,8 +41,6 @@ after 'setup_components' => sub
     my $static_dirs = $config->{static}->{include_path};
     push(@$static_dirs, $path . '/root' );
     $config->{static}->{include_path} = $static_dirs;
-
-
 
 };
 

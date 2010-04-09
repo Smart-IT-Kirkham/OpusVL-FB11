@@ -34,6 +34,18 @@ if ( $ENV{CATALYST_SERVER} )
     $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to the OpusVL::AppKit", "Logged in, showing index page");
 
+    # can we see the admin..
+    $mech->get_ok( '/appkitadmin', "Can see the admin index");
+    $mech->content_contains("Administration", "Showing admin page");
+
+    # can we see the ExtensionA chained actoin
+    $mech->get_ok( '/start/mid/end', "Can see the ExtensionA chained action page");
+    $mech->content_contains('Start Chained actions...Middle of Chained actions...End of Chained actions.', "Chained content");
+
+    # can we see the ExtensionB formpage
+    $mech->get_ok( '/extensionb/formpage', "Can see the ExtensionB form page");
+    $mech->content_contains('<option value="1">Greg Bastien</option>', "Showing select option with content from the BookDB model");
+
 }
 else 
 {

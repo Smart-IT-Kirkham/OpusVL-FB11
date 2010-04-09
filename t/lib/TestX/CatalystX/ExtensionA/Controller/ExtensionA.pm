@@ -20,15 +20,4 @@ sub home
     $c->stash->{template} = 'extensiona.tt';
 }
 
-sub formpage
-    :Local
-    :Args(0)
-    :NavigationName('Form Page')
-    :AppKitForm
-{
-    my ($self, $c) = @_;
-
-    $c->stash->{template} = 'formpage.tt';
-}
-
 __END__

@@ -112,7 +112,7 @@ before create_action  => sub
 
     if ( defined $args{attributes}{AppKitForm} )
     {
-        # add an ActionClass this this action.. so when it is called, some extra code is excuted....
+        # add an ActionClass to this action.. so when it is called, some extra code is excuted....
         push @{ $args{attributes}{ActionClass} }, "OpusVL::AppKit::Action::AppKitForm";
     }
 

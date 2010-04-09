@@ -13,7 +13,7 @@ sub auto
     my ( $self, $c ) = @_;
 
     # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Admin', url => $c->uri_for( $c->controller('AppKitAdmin')->action_for('index') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Settings', url => $c->uri_for( $c->controller('AppKitAdmin')->action_for('index') ) } );
 }
 
 =head2 index

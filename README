@@ -43,3 +43,12 @@
 
     As the passwords are now encrypted there is a script to help set the passwords in the TestApp
         bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_setpassword.pl --user appkitadmin --password password
+
+---------------------------------------------------------------------------------------------------------------------
+ TestApp
+---------------------------------------------------------------------------------------------------------------------
+    Alot of development has been done using a TestApp to test against. So here are some notes about it.
+
+    Set up the TestApp/TextX::ExtensionB BookDB sqlite database:
+
+      bash$ sqlite3 t/lib/auto/TestX/CatalystX/ExtensionB/root/db/bookdb.db < t/lib/auto/TestX/CatalystX/ExtensionB/root/db/bookdb.sql

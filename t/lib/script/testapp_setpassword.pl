@@ -5,11 +5,10 @@ use Getopt::Compact;
 use TestApp;
 use OpusVL::AppKit::Schema::AppKitAuthDB;
 
-
 my $username;
 my $password;
 
-# .. get the arguments..
+# .. set option the arguments prefs..
 my $go = new Getopt::Compact
 (
     name => 'TestApp Users admin script', 
@@ -20,7 +19,8 @@ my $go = new Getopt::Compact
      ]
 );
 
-die ( $go->usage() ) unless $username && $password; # it is gay we have to do this.. but Getopt::Compact seems to ignore the '=s'!
+# test we have something..it is gay we have to do this.. but Getopt::Compact seems to ignore the '=s'!
+die ( $go->usage() ) unless $username && $password; 
 
 # .. get the path for this name space..
 my $path = File::ShareDir::module_dir( 'TestApp' );
