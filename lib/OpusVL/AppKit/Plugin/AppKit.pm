@@ -69,8 +69,13 @@ sub _build_appkit_actiontree
         # Loop through all this AppKit controllers actionmethods...
         AKACTIONS: foreach my $action_method ( $cont->get_action_methods )
         {   
-            next if $action_method->name =~ /^_/;
 
+            # skip internal type action names...
+            next if $action_method->name =~ /^_/;
+            next if $action_method->name eq 'auto';
+            next if $action_method->name eq 'begin';
+            next if $action_method->name eq 'end';
+    
             my $action = $cont->action_for( $action_method->name );
             next unless defined $action;
 
@@ -244,7 +249,7 @@ sub can_access
     return 0 if $#$allowed_roles < 0;
 
     # return a test that will check for the roles
-    return $c->check_user_roles( @$allowed_roles );
+    return $c->check_any_user_role( @$allowed_roles );
 }
 
 =head2 _appkit_allowed_roles

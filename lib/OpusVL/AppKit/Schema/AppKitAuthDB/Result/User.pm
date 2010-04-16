@@ -30,21 +30,21 @@ __PACKAGE__->add_columns(
     encode_args   => { key_nul => 0, cost => 8 },
     encode_check_method => 'check_password',
   },
-  "email_address",
+  "email",
   {
     data_type => "TEXT",
     default_value => undef,
     is_nullable => 1,
     size => undef,
   },
-  "first_name",
+  "name",
   {
     data_type => "TEXT",
     default_value => undef,
     is_nullable => 1,
     size => undef,
   },
-  "last_name",
+  "tel",
   {
     data_type => "TEXT",
     default_value => undef,
@@ -60,14 +60,39 @@ __PACKAGE__->add_columns(
   },
 );
 __PACKAGE__->set_primary_key("id");
+
+
 __PACKAGE__->has_many(
   "user_roles",
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserRole",
   { "foreign.user_id" => "self.id" },
 );
 
-
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role_id');
+
+
+
+__PACKAGE__->has_many(
+  "user_parameters",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserParameter",
+  { "foreign.user_id" => "self.id" },
+);
+__PACKAGE__->many_to_many( parameters => 'user_parameters', 'parameter_id');
+
+
+sub params_hash
+{
+    my $self = shift;
+
+    my %hash;
+    foreach my $rp ( $self->user_parameters )
+    {   
+        $hash{  $rp->parameter->parameter } = $rp->value;
+    }
+
+    return \%hash;
+}
+
 
 1;
 __END__

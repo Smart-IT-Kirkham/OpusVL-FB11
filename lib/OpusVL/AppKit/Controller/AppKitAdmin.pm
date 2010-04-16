@@ -3,7 +3,7 @@ package OpusVL::AppKit::Controller::AppKitAdmin;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller' }
+BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
 
 =head2 auto
 =cut

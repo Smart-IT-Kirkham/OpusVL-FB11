@@ -3,7 +3,11 @@ package OpusVL::AppKit::Controller::AppKitAdmin::Users;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller' }
+BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+__PACKAGE__->config
+(
+    appkit_myclass              => 'OpusVL::AppKit',
+);
 
 =head2 auto
     Default action for this controller.
@@ -14,7 +18,7 @@ sub auto
     my ( $self, $c ) = @_;
 
     # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('index') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('AppKitAdmin::Users')->action_for('index') ) } );
 
     # stash all users..
     my $users_rs = $c->model('AppKitAuthDB::User')->search;
@@ -33,6 +37,26 @@ sub index
 {
     my ( $self, $c ) = @_;
     $c->stash->{template} = 'appkitadmin/users/show_user.tt';
+}
+
+=head2 user_add_form
+=cut
+sub adduser
+    : Local
+    : Args(0)
+    : AppKitForm("appkitadmin/users/user_form.yml")
+{
+    my ( $self, $c ) = @_;
+
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('adduser') ) } );
+
+    if ( $c->stash->{form}->submitted_and_valid )
+    {
+        my $user = $c->model('AppKitAuthDB::User')->new_result( {} );
+        $c->stash->{form}->model->update( $user );
+        $c->stash->{status_msg} = "User added";
+    }
+    $c->stash->{template} = "appkitadmin/users/user_form.tt";
 }
 
 =head2 user_specific
@@ -57,6 +81,8 @@ sub show_user
     : Args(0)
 {
     my ( $self, $c ) = @_;
+
+    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{user}->username, url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_user'), [ $c->stash->{user}->id ] ) } );
 
     # test if need to process user submission...
     if ( $c->req->method eq 'POST' )
@@ -87,6 +113,32 @@ sub show_user
     $c->stash->{roles} = \@roles;
 }
 
+=head2 edit_user
+    End of chain.
+    Display a users details.
+=cut
+sub edit_user
+    : Chained('user_specific')
+    : PathPart('form')
+    : Args(0)
+    : AppKitForm("appkitadmin/users/user_form.yml")
+{
+    my ( $self, $c ) = @_;
+
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('edit_user'), [ $c->stash->{user}->id ] ) } );
+
+    if ( $c->stash->{form}->submitted_and_valid )
+    {
+        # update the user from the form..
+        $c->stash->{form}->model->update( $c->stash->{user} );
+        $c->stash->{status_msg} = "User updated";
+    }
+
+    # set default values..
+    $c->stash->{form}->model->default_values( $c->stash->{user} );
+    $c->stash->{template} = "appkitadmin/users/user_form.tt";
+}
+
 =head2 delete_user
     End of chain.
 =cut
@@ -100,27 +152,43 @@ sub delete_user
     $c->res->redirect( $c->uri_for( $c->controller->action_for('index') ) );
 }
 
-=head2 user_add_to_role
+=head2 delete_parameter
     End of chain.
-    Adds a user to a role
 =cut
-sub user_add_to_role
+sub delete_parameter
     : Chained('user_specific')
-    : PathPart('adduser')
+    : PathPart('deleteparameter')
+    : Args(1)
+{
+    my ( $self, $c, $param_id ) = @_;
+
+    $c->stash->{user}->delete_related('user_parameters', { parameter_id => $param_id } );
+    $c->stash->{status_msg} = "Parameter deleted";
+    $c->go( $c->controller->action_for('index') );
+}
+
+=head2 add_parameter
+    End of chain.
+=cut
+sub add_parameter
+    : Chained('user_specific')
+    : PathPart('addparameter')
     : Args(0)
 {
     my ( $self, $c ) = @_;
 
     if ( $c->req->method eq 'POST' )
     {
-        # create the look up..
-        my $user_id        = $c->req->param('user_id');
-        $c->stash->{role}->update_or_create_related('user_roles', { user_id => $user_id } );
+        my $parameter_id        = $c->req->param('parameter_id');
+        my $parameter_value     = $c->req->param('parameter_value');
+        $c->stash->{user}->update_or_create_related('user_parameters', { parameter_id => $parameter_id, value => $parameter_value } );
+        $c->stash->{status_msg} = "Parameter updated";
     }
 
     # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
+    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::User')->action_for('show_user'), [ $c->stash->{user}->id ] ) ) ;
 }
+
 
 1;
 __END__

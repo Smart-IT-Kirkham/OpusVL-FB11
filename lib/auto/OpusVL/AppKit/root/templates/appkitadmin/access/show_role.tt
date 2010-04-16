@@ -14,7 +14,7 @@
 
                     [% FOR role IN c.user.roles %]
                         [% role %]
-                        <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('show_role'),     [ role ] ) %] '>edit</a>
+                        <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('show_role'),     [ role ] ) %] '>access</a>
                         <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('delete_role'),   [ role ] ) %] '>del</a>
                         <br>
                     [% END %]
@@ -51,32 +51,6 @@
                     </form>
 
                 </fieldset>
-
-                <fieldset>
-                    <legend>
-                        Parameters for [% c.stash.role.role %]
-                    </legend>
-
-                    <ul>
-                    [% FOR rp IN c.stash.role.role_parameters %]
-                        <li>
-                            [% rp.parameter.parameter %] = [% rp.value %]
-                            <a href='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('parameter_delete_from_role'), [ c.stash.role.role, rp.parameter.id ] )  %]'> Remove </a>
-                        </li>
-                    [% END %]
-                    </ul>
-
-                    <form method='POST' action='[% c.uri_for( c.controller('AppKitAdmin::Access').action_for('parameter_add_to_role'), [ c.stash.role.role ] )  %]'>
-                        <select name='parameter_id'>
-                        [% FOR param IN c.model('AppKitAuthDB::Parameter').search %]
-                            <option value='[% param.id %]'>[% param.parameter %]</option>
-                        [% END %]
-                        </select>
-                        <input type='text' name='parameter_value' value=''>
-                        <input type='submit' name='add_parameter' value='Add/Update Value'>
-                    </form>
-                </fieldset>
-
 
             [% END %]
 

@@ -39,27 +39,6 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many( aclrules => 'aclrule_roles', 'aclrule_id');
 
 
-__PACKAGE__->has_many(
-  "role_parameters",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleParameter",
-  { "foreign.role_id" => "self.id" },
-);
-__PACKAGE__->many_to_many( parameters => 'role_parameters', 'parameter_id');
-
-
-sub params_hash
-{
-    my $self = shift;
-
-    my %hash;
-    foreach my $rp ( $self->role_parameters )
-    {
-        $hash{  $rp->parameter->parameter } = $rp->value;
-    }
-
-    return \%hash;     
-}
-
 1;
 
 __END__
