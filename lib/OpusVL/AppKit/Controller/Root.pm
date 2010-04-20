@@ -40,44 +40,16 @@ sub auto :Private
         $c->controller('Login')->login_redirect($c, 'Please login to go any further' );
         $c->detach;
     }
+    elsif ( $c->controller->can('login_redirect') ) 
+    {
+        $c->log->debug("User viewing the controller that deals with logging in and out");
+    }
     elsif ( $c->user )
     {
-        if ( $c->controller eq $c->controller('AppKit::ValidateLogin') )
-        {   
-            $c->log->debug(" Logged in user " . $c->user->username  . " currently using the Login Validator" );
-        }
-        else
-        {   
-            my $validation_method = 0;
-            if ( $c->user->params_hash->{'SMS Security'} && ! $c->session->{validated_sms} )
-            {   
-                $validation_method = 'sms';
-            }
-            if ( $c->user->params_hash->{'Token Security'} && ! $c->session->{validated_token} )
-            {
-                $validation_method = 'token';
-            }
-
-            # do we require validation of the logged in user?...
-            if ( $validation_method )
-            {   
-                $c->log->debug("Sending user " . $c->user->username . " to be validated via $validation_method");
-
-                $c->stash->{status_msg} = "You require validation of your login via: " . $validation_method;
-
-                $c->res->redirect( $c->uri_for( $c->controller('AppKit::ValidateLogin')->action_for( $validation_method ) ) ) ;
-                $c->detach;
-            }
-            else
-            {
-                $c->log->debug("User " . $c->user . " logged in and validated");
-            }
-        }
-
+        $c->controller('AppKit::ValidateLogin')->validation_check($c);
     }
     else
     {
-        $c->log->debug("User viewing the controller that deals with logging in");
     }
 }
 

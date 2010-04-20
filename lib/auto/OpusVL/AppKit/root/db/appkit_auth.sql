@@ -24,6 +24,12 @@ CREATE TABLE parameter (
         data_type           TEXT,
         parameter           TEXT
 );
+CREATE TABLE user_validation_data (
+        id                  INTEGER PRIMARY KEY,
+        user_id             INTEGER REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        key                 TEXT,
+        value               TEXT
+);
 
 CREATE TABLE user_role (
         user_id             INTEGER REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,

@@ -71,6 +71,12 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role_id');
 
 
+__PACKAGE__->has_many(
+  "validation_data",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserValidationData",
+  { "foreign.user_id" => "self.id" },
+);
+
 
 __PACKAGE__->has_many(
   "user_parameters",

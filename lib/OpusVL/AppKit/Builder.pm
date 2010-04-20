@@ -134,6 +134,7 @@ override _build_plugins => sub
         +CatalystX::SimpleLogin
         +CatalystX::VirtualComponents
         +OpusVL::AppKit::Plugin::AppKit
+        +OpusVL::AppKit::Plugin::ValidateLogin
     );
 
     return $plugins;
@@ -171,6 +172,9 @@ override _build_config => sub
     $config->{'View::AppKitTT'}->{'INCLUDE_PATH'}         = $inc_path;
     $config->{'View::AppKitTT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
+
+    # testing..
+    $config->{'validators'} = [ 'SMS', 'TestX::CatalystX::Validator::Token' ];
 
     # Configure session handling
     $config->{'session'} =
