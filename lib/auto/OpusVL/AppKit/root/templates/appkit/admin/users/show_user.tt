@@ -1,0 +1,119 @@
+
+<h1> Users  </h1>
+
+    <div>
+
+        <div>
+
+            <div style="width: 200px; float:left; clear:left;">
+
+                <fieldset>
+                    <legend>
+                        Available Users
+                    </legend>
+
+                        <table>
+
+                    [% FOR user IN c.stash.users %]
+                            <tr>
+                                <td> 
+                        [% user.username %]
+                                </td> 
+                                <td> 
+                        <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('show_user'),    [ user.id ] ) %] '>details</a>
+                                </td> 
+                                <td> 
+                        <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('delete_user'),   [ user.id ] ) %] '>del</a>
+                                </td> 
+                            </tr>
+                    [% END %]
+
+                            <tr>
+                                <td colspan=3> 
+                                    <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('adduser'))  %]'>add</a>   
+                                </td> 
+                            </tr>
+                        </table>
+
+                </fieldset>
+
+            </div>
+
+            <div style="float:left; clear:right;">
+
+                [% IF c.stash.user %]
+
+                    <fieldset>
+                        <legend>
+                            Roles for [% c.stash.user.username %]
+                        </legend>
+
+                    <form method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('show_user'), [ c.stash.user.id ] )  %]'>
+
+                    [% FOR role IN c.stash.roles %]
+
+                        [% role.input %]
+                        [% role.role %]
+                        <br>
+
+                    [% END %]
+
+                        <input type='submit' name='savebutton'      value='Save'>
+                        <input type='submit' name='cancelbutton'    value='Cancel'>
+                    </form>
+
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>
+                           Details for [% c.stash.user.username %]
+                        </legend>
+                        <table>
+                            <tr>
+                                <td> [% c.stash.user.email %]   </td>
+                            </tr>
+                            <tr>
+                                <td> [% c.stash.user.name %]      </td>
+                            </tr>
+                            <tr>
+                                <td> [% c.stash.user.tel %]       </td>
+                            </tr>
+                            <tr>
+                                <td> 
+                                    <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('edit_user'), [ c.stash.user.id ] )  %]'>edit</a>   
+                                </td> 
+                            </tr>
+                        </table>
+                    </fieldset>
+
+
+                    <fieldset>
+                        <legend>
+                            Parameters for [% c.stash.user.username %]
+                        </legend>
+
+                        <ul>
+                        [% FOR up IN c.stash.user.user_parameters %]
+                            <li>
+                                [% up.parameter.parameter %] = [% up.value %]
+                                <a href='[% c.uri_for( c.controller('AppKit::Admin::User').action_for('delete_parameter'), [ c.stash.user.id ] ) _ "/" _ up.parameter.id  %]'> Remove </a>
+                            </li>
+                        [% END %]
+                        </ul>
+
+                        <form method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::User').action_for('add_parameter'), [ c.stash.user.id ] )  %]'>
+                            <select name='parameter_id'>
+                            [% FOR param IN c.model('AppKitAuthDB::Parameter').search %]
+                                <option value='[% param.id %]'>[% param.parameter %]</option>
+                            [% END %]
+                            </select>
+                            <input type='text' name='parameter_value' value=''>
+                            <input type='submit' name='add_parameter' value='Add/Update Value'>
+                        </form>
+                    </fieldset>
+
+                [% END %]
+
+            </div>
+        </div>
+    </div>
