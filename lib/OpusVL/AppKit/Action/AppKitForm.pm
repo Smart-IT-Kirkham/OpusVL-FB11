@@ -53,7 +53,7 @@ use File::ShareDir;
 ############################################################################################################################
 
 =head2 execute
-    Method called when called when an action is requested that has the 'AppKitForm' attribute.
+    Method called when an action is requested that has the 'AppKitForm' attribute.
 =cut 
 sub execute 
 {
@@ -83,6 +83,9 @@ sub execute
     {
         $path .= $self->reverse . '.yml';
     }
+
+    $c->log->debug("****************************** AppKitForm - Loading config: $path \n" );
+
     # .. now get the full path...
     my $form_file = File::Spec->rel2abs( $path );
 

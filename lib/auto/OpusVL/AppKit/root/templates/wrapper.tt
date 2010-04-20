@@ -44,8 +44,8 @@
                 <div id="user_nav">
                     <ul>
                         <li id="user_settings">
-                            [% IF c.can_access( 'appkitadmin' ) %]
-                                <a href="[% c.uri_for( c.controller('AppKitAdmin').action_for('index') ) %]">Settings</a>
+                            [% IF c.can_access( 'appkit/admin/index' ) %]
+                                <a href="[% c.uri_for( c.controller('AppKit::Admin').action_for('index') ) %]">Settings</a>
                             [% END %]
                         </li>
                         <li id="user_logout">

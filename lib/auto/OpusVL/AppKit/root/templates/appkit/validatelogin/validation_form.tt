@@ -1,0 +1,11 @@
+
+<h1> Validate Login </h1>
+
+<p>
+    You are required to validate your login with an additional security check. 
+</p>
+
+******************************* <br>
+[% form %]
+[% c.controller.appkit_myclass %]
+******************************* <br>

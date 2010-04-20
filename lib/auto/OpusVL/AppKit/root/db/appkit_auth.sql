@@ -21,6 +21,7 @@ CREATE TABLE role (
 );
 CREATE TABLE parameter (
         id                  INTEGER PRIMARY KEY,
+        data_type           TEXT,
         parameter           TEXT
 );
 
@@ -57,8 +58,9 @@ INSERT INTO aclrule VALUES (4, 'test/access_user_or_admin');
 INSERT INTO role VALUES (1, 'administrator');
 INSERT INTO role VALUES (2, 'normal user');
 
-INSERT INTO parameter VALUES (1,'client_id' );
-INSERT INTO parameter VALUES (2,'Attribute 2' );
+INSERT INTO parameter VALUES (1,'integer','client_id' );
+INSERT INTO parameter VALUES (2,'boolean','SMS Security' );
+INSERT INTO parameter VALUES (3,'boolean','Token Security' );
 
 INSERT INTO user_role VALUES (1, 1);
 INSERT INTO user_role VALUES (1, 2);
@@ -66,9 +68,10 @@ INSERT INTO user_role VALUES (2, 2);
 INSERT INTO user_role VALUES (3, 2);
 
 INSERT INTO user_parameter VALUES (1, 1, '%');
-INSERT INTO user_parameter VALUES (1, 2, 'Admin Value 2');
+INSERT INTO user_parameter VALUES (1, 2, '1');
 INSERT INTO user_parameter VALUES (2, 1, '1');
-INSERT INTO user_parameter VALUES (2, 2, 'User Value 2');
+INSERT INTO user_parameter VALUES (2, 2, '1');
+INSERT INTO user_parameter VALUES (2, 3, '1');
 
 INSERT INTO aclrule_role VALUES (1, 1);
 INSERT INTO aclrule_role VALUES (2, 1);

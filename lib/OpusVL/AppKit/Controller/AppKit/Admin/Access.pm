@@ -1,4 +1,4 @@
-package OpusVL::AppKit::Controller::AppKitAdmin::Access;
+package OpusVL::AppKit::Controller::AppKit::Admin::Access;
 
 use Moose;
 use namespace::autoclean;
@@ -16,7 +16,7 @@ sub auto
     my ( $self, $c ) = @_;
 
     # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Access', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('index') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Access', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('index') ) } );
 
 }
 
@@ -28,7 +28,7 @@ sub index
     : Args(0)
 {
     my ( $self, $c ) = @_;
-    $c->stash->{template} = 'appkitadmin/access/show_role.tt';
+    $c->stash->{template} = 'appkit/admin/access/show_role.tt';
 }
 
 =head2 addrole
@@ -46,7 +46,7 @@ sub addrole
 
         if ( $role )
         {
-            $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $rolename ] ) );
+            $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $rolename ] ) );
         }
         else
         {
@@ -55,7 +55,7 @@ sub addrole
     }
 
     # basically run the action for the index for this page..
-    $c->go( $c->controller('AppKitAdmin::Access')->action_for('index') );
+    $c->go( $c->controller('AppKit::Admin::Access')->action_for('index') );
 }
 
 =head2 role_specific
@@ -99,7 +99,7 @@ sub user_delete_from_role
     # delete user/role lookup..
     $c->stash->{role}->delete_related('user_roles', { user_id => $c->stash->{roleuser}->id } );
     # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
+    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
 }
 
 =head2 user_add_to_role
@@ -121,7 +121,7 @@ sub user_add_to_role
     }
 
     # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
+    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
 }
 
 =head2 action_rule_for_role
@@ -159,7 +159,7 @@ sub action_rule_for_role
     }
 
     # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
+    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
 }
 
 =head2 delete_role
@@ -173,7 +173,7 @@ sub delete_role
     my ( $self, $c ) = @_;
 
     $c->stash->{role}->delete;
-    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('index') ) );
+    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('index') ) );
 }
 
 =head2 show_role
@@ -187,7 +187,7 @@ sub show_role
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{role}->role, url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_role'), [ $c->stash->{role}->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{role}->role, url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->id ] ) } );
 
     # stash the tree..
     $c->stash->{action_tree} = $c->appkit_actiontree;
@@ -290,7 +290,7 @@ sub show_role
     $c->stash->{access_control_role_tree} = $tree_view;
 
     # manually set (as we may forward to this action).
-    $c->stash->{template} = 'appkitadmin/access/show_role.tt';
+    $c->stash->{template} = 'appkit/admin/access/show_role.tt';
 }
 
 1;

@@ -1,0 +1,38 @@
+
+---
+indicator: submitbutton
+auto_fieldset: 1
+
+elements:
+
+  - type: Text
+    name: username
+    label: Username
+
+  - type: Password
+    name: password
+    label: Password
+
+  - type: Text
+    name: name
+    label: Name
+
+  - type: Text
+    name: email
+    label: Email
+
+  - type: Text
+    name: tel
+    label: Telephone
+
+  - type: Checkbox
+    name: active
+
+  - type: Submit
+    value: Submit
+    name: submitbutton
+
+constraints:
+  - SingleValue
+  - Required
+

@@ -1,4 +1,4 @@
-package OpusVL::AppKit::Controller::AppKitAdmin::Users;
+package OpusVL::AppKit::Controller::AppKit::Admin::Users;
 
 use Moose;
 use namespace::autoclean;
@@ -18,7 +18,7 @@ sub auto
     my ( $self, $c ) = @_;
 
     # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('AppKitAdmin::Users')->action_for('index') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('AppKit::Admin::Users')->action_for('index') ) } );
 
     # stash all users..
     my $users_rs = $c->model('AppKitAuthDB::User')->search;
@@ -36,27 +36,29 @@ sub index
     : Args(0)
 {
     my ( $self, $c ) = @_;
-    $c->stash->{template} = 'appkitadmin/users/show_user.tt';
+    $c->stash->{template} = 'appkit/admin/users/show_user.tt';
 }
 
-=head2 user_add_form
+=head2 adduser
 =cut
 sub adduser
     : Local
     : Args(0)
-    : AppKitForm("appkitadmin/users/user_form.yml")
+    : AppKitForm("appkit/admin/users/user_form.yml")
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('adduser') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('adduser') ) } );
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
         my $user = $c->model('AppKitAuthDB::User')->new_result( {} );
         $c->stash->{form}->model->update( $user );
         $c->stash->{status_msg} = "User added";
+        $c->stash->{user} = $user;
+        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{user}->id ] ) ) ;
     }
-    $c->stash->{template} = "appkitadmin/users/user_form.tt";
+    $c->stash->{template} = "appkit/admin/users/user_form.tt";
 }
 
 =head2 user_specific
@@ -82,21 +84,25 @@ sub show_user
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{user}->username, url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('show_user'), [ $c->stash->{user}->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{user}->username, url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_user'), [ $c->stash->{user}->id ] ) } );
 
     # test if need to process user submission...
     if ( $c->req->method eq 'POST' )
     {   
+        # add related user lookup for the submitted roles...
         my $user_roles = $c->req->params->{user_role};
         $user_roles = [ $user_roles ] if defined $user_roles && ! ref $user_roles;
-
         foreach my $role_id ( @$user_roles )
         {
             $c->stash->{user}->find_or_create_related('user_roles', { role_id => $role_id } );
         }
 
-        $c->log->debug("************************** SUBMITTED ROLES: $#$user_roles :" . join('|', @$user_roles) );
+        #$c->log->debug("************************** SUBMITTED ROLES: $#$user_roles :" . join('|', @$user_roles) );
+
+        #.. delete any roles not required..
         $c->stash->{user}->search_related('user_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
+
+        $c->stash->{status_msg} = "User Roles updated";
     }
 
     # capture and stash role information for the user..
@@ -121,11 +127,11 @@ sub edit_user
     : Chained('user_specific')
     : PathPart('form')
     : Args(0)
-    : AppKitForm("appkitadmin/users/user_form.yml")
+    : AppKitForm("appkit/admin/users/user_form.yml")
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('AppKitAdmin::Access')->action_for('edit_user'), [ $c->stash->{user}->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('edit_user'), [ $c->stash->{user}->id ] ) } );
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
@@ -136,7 +142,7 @@ sub edit_user
 
     # set default values..
     $c->stash->{form}->model->default_values( $c->stash->{user} );
-    $c->stash->{template} = "appkitadmin/users/user_form.tt";
+    $c->stash->{template} = "appkit/admin/users/user_form.tt";
 }
 
 =head2 delete_user
@@ -146,10 +152,27 @@ sub delete_user
     : Chained('user_specific')
     : PathPart('delete')
     : Args(0)
+    : AppKitForm("appkit/admin/confirm.yml")
 {
     my ( $self, $c ) = @_;
-    $c->stash->{user}->delete;
-    $c->res->redirect( $c->uri_for( $c->controller->action_for('index') ) );
+
+    $c->stash->{question} = "Are you sure you want to delete the user:" . $c->stash->{user}->username;
+    $c->stash->{template} = 'appkit/admin/confirm.tt';
+
+    if ( $c->stash->{form}->submitted_and_valid )
+    {
+        if ( $c->req->params->{yesbutton} )
+        {
+            $c->stash->{user}->delete;
+            $c->stash->{status_msg} = "User deleted";
+        }
+        else
+        {
+            $c->stash->{status_msg} = "User NOT deleted";
+        }
+        $c->go( $c->controller->action_for('index') );
+    }
+
 }
 
 =head2 delete_parameter
@@ -186,7 +209,7 @@ sub add_parameter
     }
 
     # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('AppKitAdmin::User')->action_for('show_user'), [ $c->stash->{user}->id ] ) ) ;
+    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{user}->id ] ) ) ;
 }
 
 

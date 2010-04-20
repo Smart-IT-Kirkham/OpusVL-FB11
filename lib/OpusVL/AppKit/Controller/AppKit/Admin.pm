@@ -1,4 +1,4 @@
-package OpusVL::AppKit::Controller::AppKitAdmin;
+package OpusVL::AppKit::Controller::AppKit::Admin;
 
 use Moose;
 use namespace::autoclean;
@@ -13,7 +13,7 @@ sub auto
     my ( $self, $c ) = @_;
 
     # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Settings', url => $c->uri_for( $c->controller('AppKitAdmin')->action_for('index') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Settings', url => $c->uri_for( $c->controller('AppKit::Admin')->action_for('index') ) } );
 }
 
 =head2 index
@@ -24,6 +24,7 @@ sub index
     : Args(0)
 {
     my ( $self, $c ) = @_;
+
 }
 
 1;

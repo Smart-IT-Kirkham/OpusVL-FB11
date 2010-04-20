@@ -4,7 +4,7 @@ use Moose;
 use namespace::autoclean;
 use File::ShareDir ':ALL';
 
-BEGIN { extends 'Catalyst::Controller::ActionRole',  };
+BEGIN { extends 'Catalyst::Controller::ActionRole' };
 
 __PACKAGE__->config->{namespace}    = '';
 
@@ -42,7 +42,38 @@ sub auto :Private
     }
     elsif ( $c->user )
     {
-        $c->log->debug("User " . $c->user . " logged in and accessing the AppKit");
+        if ( $c->controller eq $c->controller('AppKit::ValidateLogin') )
+        {   
+            $c->log->debug(" Logged in user " . $c->user->username  . " currently using the Login Validator" );
+        }
+        else
+        {   
+            my $validation_method = 0;
+            if ( $c->user->params_hash->{'SMS Security'} && ! $c->session->{validated_sms} )
+            {   
+                $validation_method = 'sms';
+            }
+            if ( $c->user->params_hash->{'Token Security'} && ! $c->session->{validated_token} )
+            {
+                $validation_method = 'token';
+            }
+
+            # do we require validation of the logged in user?...
+            if ( $validation_method )
+            {   
+                $c->log->debug("Sending user " . $c->user->username . " to be validated via $validation_method");
+
+                $c->stash->{status_msg} = "You require validation of your login via: " . $validation_method;
+
+                $c->res->redirect( $c->uri_for( $c->controller('AppKit::ValidateLogin')->action_for( $validation_method ) ) ) ;
+                $c->detach;
+            }
+            else
+            {
+                $c->log->debug("User " . $c->user . " logged in and validated");
+            }
+        }
+
     }
     else
     {

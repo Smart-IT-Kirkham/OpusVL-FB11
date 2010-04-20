@@ -1,0 +1,19 @@
+
+---
+indicator: submitbutton
+auto_fieldset: 1
+
+elements:
+
+  - type: Text
+    label: Validation Code
+    name: validation_code
+
+  - type: Submit
+    value: Validate My Login
+    name: submitbutton
+
+constraints:
+  - SingleValue
+  - Required
+

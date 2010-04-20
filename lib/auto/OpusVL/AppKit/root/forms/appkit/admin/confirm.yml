@@ -1,0 +1,18 @@
+
+---
+auto_fieldset: 1
+
+elements:
+
+  - type: Submit
+    value: Yes
+    name: yesbutton
+
+  - type: Submit
+    value: No
+    name: nobutton
+
+constraints:
+  - SingleValue
+  - Required
+
