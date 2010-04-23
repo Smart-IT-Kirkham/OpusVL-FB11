@@ -49,6 +49,9 @@ override _build_config => sub
     # .. allow access regardless of ACL rules...
     $config->{'appkit_can_access_actionpaths'} = ['custom/custom'];
 
+    # .. send the users to a common action (which decides what there home page is)...
+    $config->{'appkit_login_redirect'} = "index";
+
     return $config;
 };
 

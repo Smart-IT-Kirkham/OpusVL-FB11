@@ -42,6 +42,10 @@ if ( $ENV{CATALYST_SERVER} )
     $mech->get_ok( '/start/mid/end', "Can see the ExtensionA chained action page");
     $mech->content_contains('Start Chained actions...Middle of Chained actions...End of Chained actions.', "Chained content");
 
+    # Request a page (from ExtensionB) we should NOT have access to..
+    $mech->get_ok( '/extensionb', "Get Access Denied" );
+    $mech->content_contains("Access denied", "Can see Access denied message");
+
     # can we see the ExtensionB formpage
     $mech->get_ok( '/extensionb/formpage', "Can see the ExtensionB form page");
     $mech->content_contains('<option value="1">Greg Bastien</option>', "Showing select option with content from the BookDB model");

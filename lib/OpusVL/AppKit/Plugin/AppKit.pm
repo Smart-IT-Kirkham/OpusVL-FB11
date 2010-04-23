@@ -210,7 +210,7 @@ sub execute
     #  to check roles we need the plugin
     $c->isa("Catalyst::Plugin::Authorization::Roles") or die "Please use the Authorization::Roles plugin.";
 
-    my $access_denied_action_path = $c->config->{'OpusVL::AppKit::Plugin::AppKit'}->{'access_denied'};
+    my $access_denied_action_path = $c->config->{'appkit_access_denied'};
     #$c->log->debug("************** AppKit - Access Denied Path - " . $access_denied_action_path );
 
     if  ( 
@@ -226,24 +226,37 @@ sub execute
         }
         else
         {
-            my @ad_path = split('/', $access_denied_action_path );
-            my $ad_action_name = pop @ad_path; 
-            my $ad_namespace = '';
-            $ad_namespace = join('/', @ad_path) if @ad_path;
-
-            #$c->log->debug("**** $ad_namespace **** $ad_action_name ****** AppKit - NO! Access - " . $action->reverse . " - Detaching to:" . $access_denied_action_path);
-
-            if ( my $ad_handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
-            {
-                (my $ad_path = $ad_handler->reverse) =~ s!^/?!/!;
-                $c->log->debug("AppKit - Not Allowed Access to " . $action->reverse . " - Detaching to - $ad_path ") if $c->debug;
-                eval { $c->detach( $ad_path, [$action, "Access Denied"] ) };
-                die $@ || $Catalyst::DETACH;
-            }
+            $c->log->debug("AppKit - Not Allowed Access to " . $action->reverse . " - Detaching to - $access_denied_action_path ") if $c->debug;
+            $c->detach_to_appkit_access_denied( $action );
         }
     }
 
     $c->maybe::next::method( $class, $action );
+}
+
+
+
+sub detach_to_appkit_access_denied
+{
+    my ( $c, $denied_access_to_action ) = @_;
+
+    my $access_denied_action_path = $c->config->{'appkit_access_denied'};
+
+    my @ad_path = split('/', $access_denied_action_path );
+    my $ad_action_name = pop @ad_path; 
+    my $ad_namespace = '';
+    $ad_namespace = join('/', @ad_path) if @ad_path;
+
+    if ( my $ad_handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
+    {
+        (my $ad_path = $ad_handler->reverse) =~ s!^/?!/!;
+        eval { $c->detach( $ad_path, [$denied_access_to_action, "Access Denied"] ) };
+        die $@ || $Catalyst::DETACH;
+    }
+    else
+    {
+        die "AppKit Configration Issue!: You could configure a valid 'appkit_access_denied' key... I have '$access_denied_action_path'";
+    }
 }
 
 ###########################################################################################################################
@@ -283,7 +296,7 @@ sub can_access
     }
 
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
-    if ( $action_path eq $c->config->{'OpusVL::AppKit::Plugin::AppKit'}->{'access_denied'} )
+    if ( $action_path eq $c->config->{'appkit_access_denied'} )
     {
         # matches.. better allow the user to run the access denied action...
         return 1

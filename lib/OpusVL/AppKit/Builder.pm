@@ -152,8 +152,6 @@ override _build_config => sub
 
     $config->{'custom-error-message'}                               = { 'error-template' => 'error.tt' };
 
-    # Configure AppKit Plugin..
-    $config->{'OpusVL::AppKit::Plugin::AppKit'}->{access_denied}    = "access_notallowed";
 
     # .. add static dir into the config for Static::Simple..
     my $static_dirs = $config->{static}->{include_path};
@@ -227,6 +225,9 @@ override _build_config => sub
 
     # we can turn off access controller... but ONLY FOR DEBUGGIN!
     $config->{'appkit_can_access_everything'} = 0;
+
+    # Configure AppKit Plugin access denied..
+    $config->{'appkit_access_denied'}    = "access_notallowed";
 
     return $config;
 };
