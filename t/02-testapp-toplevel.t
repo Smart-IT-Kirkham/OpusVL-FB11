@@ -46,6 +46,10 @@ if ( $ENV{CATALYST_SERVER} )
     $mech->get_ok( '/extensionb/formpage', "Can see the ExtensionB form page");
     $mech->content_contains('<option value="1">Greg Bastien</option>', "Showing select option with content from the BookDB model");
 
+    # Request a page (we should not have an ACL rule for this action)...
+    $mech->get_ok( '/custom', "Get Custom page" );
+    $mech->content_contains("Custom Controller from TestApp", "Can see custom controller action .. this should not have an ACL rule (but be allowed via the 'appkit_can_access_actionpaths' config var. ");
+
     # can we logout.
     $mech->get_ok( '/logout', "Can logout");
 
@@ -64,6 +68,8 @@ if ( $ENV{CATALYST_SERVER} )
     # Validate the login and hopefully view the home page..
     $mech->post_ok( '/appkit/validatelogin/SMS', { submitbutton => 'Validate My Login', validation_code => $sms_code }, "Validated Login" );
     $mech->content_contains("Welcome to", "Logged in, showing index page");
+
+
 
 
 }

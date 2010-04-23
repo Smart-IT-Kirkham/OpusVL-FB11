@@ -273,6 +273,15 @@ sub can_access
         return 1;
     }
 
+    # check if we have list of actionpath to allow (regardless of rules)...
+    if ( $c->config->{'appkit_can_access_actionpaths'} )
+    {
+        foreach my $allowed_path ( @{ $c->config->{'appkit_can_access_actionpaths'} } )
+        {
+            return 1 if $action_path eq $allowed_path;
+        }
+    }
+
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
     if ( $action_path eq $c->config->{'OpusVL::AppKit::Plugin::AppKit'}->{'access_denied'} )
     {
