@@ -173,8 +173,8 @@ override _build_config => sub
     $config->{'View::AppKitTT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
 
-    # testing..
-    $config->{'validators'} = [ 'SMS', 'TestX::CatalystX::Validator::Token' ];
+    # Login Validators available..
+    $config->{'validators'} = [ 'SMS' ];
 
     # Configure session handling
     $config->{'session'} =
@@ -221,6 +221,12 @@ override _build_config => sub
             }
         }
     };
+
+    # set the appkit_friendly_name..
+    $config->{'appkit_friendly_name'} = "OpusVL::AppKit";
+
+    # we can turn off access controller... but ONLY FOR DEBUGGIN!
+    $config->{'appkit_can_access_everything'} = 0;
 
     return $config;
 };

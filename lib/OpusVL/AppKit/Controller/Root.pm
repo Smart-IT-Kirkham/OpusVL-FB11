@@ -4,8 +4,7 @@ use Moose;
 use namespace::autoclean;
 use File::ShareDir ':ALL';
 
-BEGIN { extends 'Catalyst::Controller::ActionRole' };
-
+BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI', 'Catalyst::Controller::ActionRole' };
 __PACKAGE__->config->{namespace}    = '';
 
   
@@ -30,9 +29,9 @@ __PACKAGE__->config->{namespace}    = '';
 =head2 auto
     This is where i might apply the login logic!?... so far does not seem to be call 'auto' .. but why? 
 =cut
-sub auto :Private 
+sub auto : Private
 {
-    my ($self, $c) = @_;
+    my ( $self, $c ) = @_;
 
     if (! $c->user && ! $c->controller->can('login_redirect') ) 
     {
@@ -48,9 +47,8 @@ sub auto :Private
     {
         $c->controller('AppKit::ValidateLogin')->validation_check($c);
     }
-    else
-    {
-    }
+
+    return 1;
 }
 
 =head2 index
@@ -79,7 +77,11 @@ sub access_notallowed : Private
 {
     my ( $self, $c ) = @_;
     $c->stash->{status_msg} = "Access denied - Please login with an account that has permissions to access the requested area";
-    $c->go('index');
+
+    #.. could just call another action... but what if the user does not have access to that action!?, answer, you get deep recursion!
+    #$c->go('index');
+    #.. instead we will just show the access denied page..
+    $c->stash->{template} = 'access_denied.tt';
 }
 
 sub default :Path 

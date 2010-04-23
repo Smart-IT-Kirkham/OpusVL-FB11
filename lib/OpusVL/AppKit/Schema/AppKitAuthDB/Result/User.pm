@@ -66,6 +66,7 @@ __PACKAGE__->has_many(
   "user_roles",
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserRole",
   { "foreign.user_id" => "self.id" },
+  { cascade_delete => 1 },
 );
 
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role_id');
@@ -75,6 +76,7 @@ __PACKAGE__->has_many(
   "validation_data",
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserValidationData",
   { "foreign.user_id" => "self.id" },
+  { cascade_delete => 1 },
 );
 
 
@@ -82,10 +84,14 @@ __PACKAGE__->has_many(
   "user_parameters",
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserParameter",
   { "foreign.user_id" => "self.id" },
+  { cascade_delete => 1 },
 );
 __PACKAGE__->many_to_many( parameters => 'user_parameters', 'parameter_id');
 
 
+=head2 params_hash
+    Finds all a users parameters, matches them with the value and returns a nice Hash ref.
+=cut
 sub params_hash
 {
     my $self = shift;
@@ -93,12 +99,35 @@ sub params_hash
     my %hash;
     foreach my $rp ( $self->user_parameters )
     {   
+        next unless defined $rp;
+        next unless defined $rp->parameter;
         $hash{  $rp->parameter->parameter } = $rp->value;
     }
 
     return \%hash;
 }
 
+=head2 set_param_by_name
+    Sets a users parameter by the parameter name.
+    Returns:
+        undef   - if the param could be found by name.
+        1       - if the param was set successfullt.
+=cut
+sub set_param_by_name
+{
+    my $self  = shift;
+    my ( $param_name, $param_value ) = @_;
 
+    # find the param..
+    my $param = $self->result_source->schema->resultset('Parameter')->find( { parameter => $param_name } );
+
+    # return undef, if we could find the param..
+    return undef unless $param;
+
+    # add to users parameter...
+    $self->find_or_create_related( 'user_parameters', { value => $param_value, parameter_id => $param->id   } );
+
+    return 1; 
+}
 1;
 __END__

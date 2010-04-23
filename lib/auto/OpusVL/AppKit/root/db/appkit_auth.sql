@@ -52,21 +52,39 @@ CREATE TABLE aclrule_role (
 -- Load up some initial test data  --
 -------------------------------------
 
-INSERT INTO user VALUES (1, 'appkitadmin',  '$2a$05$abcdefghijklmnopqrstuuVXLGLH0YYn303cB/t9gc8ACq9MtEwAm', 'appkit@opusvl.com',    'Applications', '07720061678',  1);
-INSERT INTO user VALUES (2, 'william',      '$2a$05$abcdefghijklmnopqrstuuVXLGLH0YYn303cB/t9gc8ACq9MtEwAm', 'will@opusvl.com',      'William',      '07720061678',  1);
-INSERT INTO user VALUES (3, 'paterick',     '$2a$05$abcdefghijklmnopqrstuuVXLGLH0YYn303cB/t9gc8ACq9MtEwAm', 'pat@opusvl.com',       'Paterick',     '07720061678',  0);
+INSERT INTO user VALUES (1, 'appkitadmin',  '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'appkit@opusvl.com',    'Applications', '07720061678',  1);
+INSERT INTO user VALUES (2, 'william',      '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'will@opusvl.com',      'William',      '07720061678',  1);
+INSERT INTO user VALUES (3, 'paterick',     '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'pat@opusvl.com',       'Paterick',     '07720061678',  0);
 
-INSERT INTO aclrule VALUES (1, 'appkitadmin');
-INSERT INTO aclrule VALUES (2, 'test/access_admin');
-INSERT INTO aclrule VALUES (3, 'test/access_user');
-INSERT INTO aclrule VALUES (4, 'test/access_user_or_admin');
+INSERT INTO aclrule VALUES (1, 'index');
+INSERT INTO aclrule VALUES (2, 'appkit/validatelogin');
+INSERT INTO aclrule VALUES (3, 'appkit/admin');
+INSERT INTO aclrule VALUES (4, 'appkit/admin/access');
+INSERT INTO aclrule VALUES (5, 'appkit/admin/access/addrole');
+INSERT INTO aclrule VALUES (6, 'appkit/admin/access/role_specific');
+INSERT INTO aclrule VALUES (7, 'appkit/admin/access/delete_role');
+INSERT INTO aclrule VALUES (8, 'appkit/admin/access/show_role');
+INSERT INTO aclrule VALUES (9, 'appkit/admin/access/user_add_to_role');
+INSERT INTO aclrule VALUES (10, 'appkit/admin/access/user_for_role');
+INSERT INTO aclrule VALUES (11, 'appkit/admin/access/user_delete_from_role');
+
+
+INSERT INTO aclrule VALUES (12, 'test/access_admin');
+INSERT INTO aclrule VALUES (13, 'test/access_user_or_admin');
+INSERT INTO aclrule VALUES (14, 'test/access_user');
+
+INSERT INTO aclrule VALUES (15, 'extensiona/expansionaa/startchain');
+INSERT INTO aclrule VALUES (16, 'extensiona/expansionaa/midchain');
+INSERT INTO aclrule VALUES (17, 'extensiona/expansionaa/endchain');
+
+INSERT INTO aclrule VALUES (18, 'extensionb/formpage');
+
 
 INSERT INTO role VALUES (1, 'administrator');
 INSERT INTO role VALUES (2, 'normal user');
 
 INSERT INTO parameter VALUES (1,'integer','client_id' );
-INSERT INTO parameter VALUES (2,'boolean','SMS Security' );
-INSERT INTO parameter VALUES (3,'boolean','Token Security' );
+INSERT INTO parameter VALUES (2,'boolean','Login Validation via SMS' );
 
 INSERT INTO user_role VALUES (1, 1);
 INSERT INTO user_role VALUES (1, 2);
@@ -74,14 +92,34 @@ INSERT INTO user_role VALUES (2, 2);
 INSERT INTO user_role VALUES (3, 2);
 
 INSERT INTO user_parameter VALUES (1, 1, '%');
-INSERT INTO user_parameter VALUES (1, 2, '1');
 INSERT INTO user_parameter VALUES (2, 1, '1');
 INSERT INTO user_parameter VALUES (2, 2, '1');
-INSERT INTO user_parameter VALUES (2, 3, '1');
+INSERT INTO user_parameter VALUES (3, 3, '1');
 
+-- ..apply the rules to the 'administrator' role...
 INSERT INTO aclrule_role VALUES (1, 1);
 INSERT INTO aclrule_role VALUES (2, 1);
-INSERT INTO aclrule_role VALUES (3, 2);
+INSERT INTO aclrule_role VALUES (3, 1);
 INSERT INTO aclrule_role VALUES (4, 1);
-INSERT INTO aclrule_role VALUES (4, 2);
+INSERT INTO aclrule_role VALUES (5, 1);
+INSERT INTO aclrule_role VALUES (6, 1);
+INSERT INTO aclrule_role VALUES (7, 1);
+INSERT INTO aclrule_role VALUES (8, 1);
+INSERT INTO aclrule_role VALUES (9, 1);
+INSERT INTO aclrule_role VALUES (10, 1);
+INSERT INTO aclrule_role VALUES (11, 1);
+
+INSERT INTO aclrule_role VALUES (12, 1);
+INSERT INTO aclrule_role VALUES (13, 1);
+
+INSERT INTO aclrule_role VALUES (15, 1);
+INSERT INTO aclrule_role VALUES (16, 1);
+INSERT INTO aclrule_role VALUES (17, 1);
+INSERT INTO aclrule_role VALUES (18, 1);
+
+-- ..apply the rules to the 'user' role...
+INSERT INTO aclrule_role VALUES (1, 2);
+INSERT INTO aclrule_role VALUES (2, 2);
+INSERT INTO aclrule_role VALUES (13, 2);
+INSERT INTO aclrule_role VALUES (14, 2);
 

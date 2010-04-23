@@ -1,4 +1,4 @@
-<h1> Welcome to the OpusVL::AppKit </h1>
+<h1> Welcome to [% c.config.appkit_friendly_name %] </h1>
 
 <p>
     This Catalyst Application is intended to be inherited via CatalystX::AppBuilder

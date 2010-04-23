@@ -258,11 +258,12 @@ sub show_role
                 $tree->accept($path2root_visitor);
                 my $checkbox_name = $path2root_visitor->getPathAsString("/");
 
-                my $checked             = 'checked';
-                my $color               = 'green';
+                my $checked             = '';
+                my $color               = 'yellow';
 
                 if ( defined $tree->getNodeValue->action_path )
                 {
+                    $color = 'red';
                     if ( my $roles = $tree->getNodeValue->access_only )
                     {
                        my $matched_role = 0;
@@ -270,17 +271,17 @@ sub show_role
                        {
                            $matched_role = 1 if ( $allowed_role eq $show_role );
                        }
-                       unless ( $matched_role ) # rules, but not matched.. therefore, no access..
+                       if ( $matched_role ) # rules and a matched.. therefore, access :)..
                        {
-                           $checked    = '';
-                           $color      = 'red';
+                           $checked = 'checked';
+                           $color   = 'green';
                        }
                     }
                     $node_string = "<input type='checkbox' name='$checkbox_name' value='allow' $checked>" . $node_string;
                 }
                 else
                 {
-                    $node_string = "<input type='checkbox' name='$checkbox_name' value='allow' $checked>" . $node_string;
+                    $node_string = $node_string;
                 }
                 $node_string = "<font color='$color'>" . $node_string . "</font>";
                 return $node_string;

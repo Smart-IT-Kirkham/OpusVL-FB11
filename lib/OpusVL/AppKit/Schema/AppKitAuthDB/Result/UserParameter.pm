@@ -30,7 +30,7 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("user_id", "parameter_id");
 
-__PACKAGE__->has_one( "parameter", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::Parameter", { 'foreign.id' => 'self.parameter_id' });
+__PACKAGE__->has_one( "parameter", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::Parameter", { 'foreign.id' => 'self.parameter_id' },  { cascade_delete => 0 });
 
 __PACKAGE__->belongs_to("user_id", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::User", { id => "user_id" });
 __PACKAGE__->belongs_to("parameter_id", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::Parameter", { id => "parameter_id" });

@@ -68,7 +68,13 @@ override pre_validate => sub
     # .. if no code, generate it...
     $code = $self->generate_code( $c->user ) unless ( $code );
 
-    $c->stash->{status_msg} = "We have sent you an SMS message to: " . $c->user->tel . " .. not really, I'm just testing, so here it is: $code";
+    $c->stash->{status_msg} = "We have sent you an SMS message to: " . $c->user->tel;
+
+    if ( $c->debug )
+    {
+        $c->stash->{status_msg} .= " .. not really, I am in debug mode, so here it is:::" . $code . ":::";
+    }
+
 };
 
 override post_validate => sub 

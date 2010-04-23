@@ -26,7 +26,7 @@ sub validation_check
         my $validation_method = 0;
         foreach ( keys %{ $c->user->params_hash } )
         {
-            if ( $_ =~ m/^(.+?) Security$/ )
+            if ( $_ =~ m/^Login Validation via (.+?)$/ )
             {
                 $validation_method = $1;
             }
@@ -45,6 +45,10 @@ sub validation_check
 
             $c->res->redirect( $c->uri_for( $c->controller('AppKit::ValidateLogin')->action_for( 'validate'), $validation_method ) ) ;
             $c->detach();
+        }
+        else
+        {
+            $c->log->debug("User " . $c->user->username . " requires no validation");
         }
     }
 }
@@ -80,10 +84,17 @@ sub validate
     $form->process();
     $c->stash->{form} = $form;
 
-    if ( $c->stash->{form}->submitted_and_valid && $validator_object->validate( $c ) )
+    if ( $c->stash->{form}->submitted_and_valid )
     {
-        $validator_object->post_validate( $c );
-        $self->post_validation_redirect( $c, $validator );
+        if ( $validator_object->validate( $c ) )
+        {
+            $validator_object->post_validate( $c );
+            $self->post_validation_redirect( $c, $validator );
+        }
+        else
+        {
+            $c->stash->{error_msg} = "Sorry, your validation data was incorrect";
+        }
     }
     elsif ( $c->stash->{form}->submitted )
     {

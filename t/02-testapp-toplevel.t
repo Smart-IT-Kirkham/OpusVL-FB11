@@ -32,10 +32,10 @@ if ( $ENV{CATALYST_SERVER} )
 
     # Send some login information..
     $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
-    $mech->content_contains("Welcome to the OpusVL::AppKit", "Logged in, showing index page");
+    $mech->content_contains("Welcome to", "Logged in, showing index page");
 
     # can we see the admin..
-    $mech->get_ok( '/appkitadmin', "Can see the admin index");
+    $mech->get_ok( '/appkit/admin', "Can see the admin index");
     $mech->content_contains("Administration", "Showing admin page");
 
     # can we see the ExtensionA chained actoin
@@ -45,6 +45,26 @@ if ( $ENV{CATALYST_SERVER} )
     # can we see the ExtensionB formpage
     $mech->get_ok( '/extensionb/formpage', "Can see the ExtensionB form page");
     $mech->content_contains('<option value="1">Greg Bastien</option>', "Showing select option with content from the BookDB model");
+
+    # can we logout.
+    $mech->get_ok( '/logout', "Can logout");
+
+    # request the home page .. (which should redirect to login)..
+    $mech->get_ok("/");
+
+    # Send some login using an acount that requires SMS login..
+    $mech->post_ok( '/login', { username => 'william', password => 'password' }, "Submit to login page");
+    $mech->content_contains("Validate Login", "Logged in, now need to validate login");
+
+    #.. pull out the code from the page.. it 'should' be here as we 'should' be in debug mode..
+    $mech->content =~ m/I am in debug mode, so here it is\:\:\:(.+?)\:\:\:/;
+    my $sms_code = $1;
+    ok($sms_code, "Pulled SMS code from the page (as we should be in debug mode)" );
+
+    # Validate the login and hopefully view the home page..
+    $mech->post_ok( '/appkit/validatelogin/SMS', { submitbutton => 'Validate My Login', validation_code => $sms_code }, "Validated Login" );
+    $mech->content_contains("Welcome to", "Logged in, showing index page");
+
 
 }
 else 

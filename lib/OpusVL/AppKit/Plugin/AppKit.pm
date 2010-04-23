@@ -51,6 +51,11 @@ sub _build_appkit_controllers
     return \@controllers;
 }
 
+=head2 appkit_actiontree
+    This is a Tree::Simple of OpusVL::AppKit::Plugin::AppKit::Node's.
+    Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
+    This attribute is used to define access to an action.
+=cut
 has appkit_actiontree => ( is => 'ro',    isa => 'Tree::Simple',  lazy_build => 1 );
 sub _build_appkit_actiontree
 {   
@@ -69,13 +74,9 @@ sub _build_appkit_actiontree
         # Loop through all this AppKit controllers actionmethods...
         AKACTIONS: foreach my $action_method ( $cont->get_action_methods )
         {   
-
             # skip internal type action names...
-            next if $action_method->name =~ /^_/;
-            next if $action_method->name eq 'auto';
-            next if $action_method->name eq 'begin';
-            next if $action_method->name eq 'end';
-    
+            next if $c->is_unrestricted_action_name->( $action_method->name );
+
             my $action = $cont->action_for( $action_method->name );
             next unless defined $action;
 
@@ -90,9 +91,10 @@ sub _build_appkit_actiontree
                 node_name   => $name,
                 controller  => $cont,
                 action_path => $action_path,
+                access_only => [],  # default to "no roles allowed"
             );
 
-            # look for any ACL rules for this action_path...
+            ## look for any ACL rules for this action_path...
             if ( my $allowed_roles = $c->_appkit_allowed_roles( $action_path ) )
             {
                 $appkit_action_object->access_only( $allowed_roles );
@@ -168,6 +170,32 @@ sub _build_appkit_actiontree
     # finished :) 
     return $root;
 }
+
+=head2 is_unrestricted_action_name
+    Little helper to ascertain if an action's name is one we dont apply access control to.
+=cut
+has is_unrestricted_action_name => 
+( 
+    is          => 'ro',    
+    isa         => 'CodeRef',  
+    default     => sub 
+    { 
+        sub 
+        {
+        my ($name) = @_;
+        return 1 if $name =~ /_/;
+        return 1 if $name =~ /auto$/;
+        return 1 if $name =~ /begin$/;
+        return 1 if $name =~ /end$/;
+        return 1 if $name =~ /default$/;
+        return 1 if $name =~ /login$/;
+        return 1 if $name =~ /logout$/;
+        return 1 if $name =~ /View\:\:/;
+        return 0;
+        } 
+    } 
+);
+
 ###########################################################################################################################
 # catalyst hook.
 ###########################################################################################################################
@@ -205,11 +233,11 @@ sub execute
 
             #$c->log->debug("**** $ad_namespace **** $ad_action_name ****** AppKit - NO! Access - " . $action->reverse . " - Detaching to:" . $access_denied_action_path);
 
-            if ( my $handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
+            if ( my $ad_handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
             {
-                (my $path = $handler->reverse) =~ s!^/?!/!;
-                #$c->log->debug("AppKit - Not Allowed Access - Detaching to - $path ") if $c->debug;
-                eval { $c->detach( $path, [$action, "Access Denied"] ) };
+                (my $ad_path = $ad_handler->reverse) =~ s!^/?!/!;
+                $c->log->debug("AppKit - Not Allowed Access to " . $action->reverse . " - Detaching to - $ad_path ") if $c->debug;
+                eval { $c->detach( $ad_path, [$action, "Access Denied"] ) };
                 die $@ || $Catalyst::DETACH;
             }
         }
@@ -229,7 +257,7 @@ sub execute
     Used like so:
         if ( $c->can_access( 'controller/action/path' ) )
         {
-            # $c->user must have the correct roles (or the action is not under ACL)..
+            # $c->user must have the correct roles.
         }
 =cut
 sub can_access
@@ -239,10 +267,27 @@ sub can_access
 
     $c->log->warn("can_access called with a non-string action path: $action_path ") if ( ref $action_path );
 
+    # check if we have told this app to allow everything...
+    if ( $c->config->{'appkit_can_access_everything'} )
+    {
+        return 1;
+    }
+
+    # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
+    if ( $action_path eq $c->config->{'OpusVL::AppKit::Plugin::AppKit'}->{'access_denied'} )
+    {
+        # matches.. better allow the user to run the access denied action...
+        return 1
+    }
+    return 1 if $c->is_unrestricted_action_name->( $action_path );
+
     # find all allowed roles for this action path...
     my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
 
-    # if none found.. allow access..
+    # if none found.. do NOT allow access..
+    return 0 unless defined $allowed_roles;
+
+    # if none found.. do allow access..
     return 1 unless defined $allowed_roles;
 
     # if we found a rule, but no roles applied, let deny access..
@@ -253,7 +298,7 @@ sub can_access
 }
 
 =head2 _appkit_allowed_roles
-    Returns ArrayRef of roles that can can access the passed action path.
+    Returns ArrayRef of roles that can access the passed action path.
 =cut
 sub _appkit_allowed_roles
 {   
