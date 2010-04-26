@@ -79,6 +79,7 @@ INSERT INTO aclrule VALUES (17, 'extensiona/expansionaa/endchain');
 
 INSERT INTO aclrule VALUES (18, 'extensionb/formpage');
 
+INSERT INTO aclrule VALUES (19, 'test/portlet_test ');
 
 INSERT INTO role VALUES (1, 'administrator');
 INSERT INTO role VALUES (2, 'normal user');
@@ -116,6 +117,8 @@ INSERT INTO aclrule_role VALUES (15, 1);
 INSERT INTO aclrule_role VALUES (16, 1);
 INSERT INTO aclrule_role VALUES (17, 1);
 INSERT INTO aclrule_role VALUES (18, 1);
+
+INSERT INTO aclrule_role VALUES (19, 1);
 
 -- ..apply the rules to the 'user' role...
 INSERT INTO aclrule_role VALUES (1, 2);

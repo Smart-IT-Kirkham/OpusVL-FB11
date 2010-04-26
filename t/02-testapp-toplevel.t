@@ -71,7 +71,7 @@ if ( $ENV{CATALYST_SERVER} )
 
     # Validate the login and hopefully view the home page..
     $mech->post_ok( '/appkit/validatelogin/SMS', { submitbutton => 'Validate My Login', validation_code => $sms_code }, "Validated Login" );
-    $mech->content_contains("Welcome to", "Logged in, showing index page");
+    $mech->content_contains("Welcome to", "Logged (with SMS validation), showing index page");
 
 
 
