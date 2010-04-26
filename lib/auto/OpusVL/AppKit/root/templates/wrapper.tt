@@ -116,7 +116,13 @@
                             <p>Applications</p>
                             <ul class="appList_l1">
                                     [% USE Math %]
-                                    [% x = Math.sqrt(c.appkit_controllers.size) %]
+                                    [% application_count = 0 %]
+                                    [% FOR myc IN c.appkit_controllers.sort  %]
+                                        [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
+                                            [% application_count = application_count + 1 %]
+                                        [% END %]
+                                    [% END %]
+                                    [% x = Math.sqrt(application_count) %]
                                     [% appList_cols = ((x - Math.int(x)) > 0) ? (Math.int(x)) + 1 : x %]
                                     [% FOREACH appList_col IN [1 .. appList_cols] %]
                                 <li>
