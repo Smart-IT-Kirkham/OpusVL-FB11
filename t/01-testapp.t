@@ -12,7 +12,7 @@ use Test::More;
 use ok 'TestApp';
 
 # build the command that should request pages from the TestApp and the return the content...
-my $test_cmd = "perl $Bin/lib/script/testapp_test.pl ";
+my $test_cmd = "$^X $Bin/lib/script/testapp_test.pl ";
 
 diag("Running test calls for pages in TestApp, using: $test_cmd");
 like (`$test_cmd /login`,                qr/login_form/,     "Can Request the TestApp login page"    );
