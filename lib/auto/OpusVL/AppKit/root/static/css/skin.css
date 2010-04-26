@@ -1,3 +1,5 @@
+/* @override http://localhost:3333/static/css/skin.css */
+
 /* @override http://localhost:3000/static/css/skin.css */
 
 /* @override http://localhost:3000/static/css/skin.css */
@@ -256,6 +258,42 @@ ul.control-container li.control-edit-small {
 }
 
 /* @end */
+
+/* @group Side navigation */
+
+div#application_nav ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+div#application_nav ul li {
+	font-size: .8em;
+	background-position: 0;
+}
+
+div#application_nav ul li a {
+	display: block;
+	width: 150px;
+	padding-top: 12px;
+	padding-bottom: 18px;
+	padding-left: 10px;
+	background: url(/static/images/app_side_menu.png) no-repeat;
+	color: #515151;
+	text-decoration: none;
+}
+
+div#application_nav ul li a:hover {
+	background: url(/static/images/app_side_menu_hover.png) no-repeat;	
+}
+
+div#application_nav ul li a.active {
+	background: url(/static/images/app_side_menu_selected.png) no-repeat;	
+}
+
+/* @end */
+
+
 
 /* @group Body */
 

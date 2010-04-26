@@ -62,7 +62,7 @@
                         [% c.config.application_name %]
                     </div>
                 [% ELSE %]
-                    <div class="appname" id="appname_[% c.controller.appkit_name | lower %]">
+                    <div class="appname" id="appname_[% c.controller.appkit_name | replace('\s+','_') | lower %]">
                         [% c.controller.appkit_name %]
                     </div>
                 [% END %]
@@ -85,7 +85,7 @@
                         <div id="application_nav">
                             <ul>
                                 [% FOREACH nav IN c.controller.navigation_actions %]
-                                    <li><a href="[% c.uri_for(c.controller.action_for(nav.actionname)) %]">[% nav.value %]</a>
+                                    <li><a href="[% c.uri_for(c.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
                                 [% END %]
                             </ul>
                         </div>
