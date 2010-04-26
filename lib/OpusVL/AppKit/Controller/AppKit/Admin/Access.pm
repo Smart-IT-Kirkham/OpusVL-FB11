@@ -5,7 +5,12 @@ use namespace::autoclean;
 use Tree::Simple::View::HTML;
 use Tree::Simple::VisitorFactory;
 
-BEGIN { extends 'Catalyst::Controller' }
+BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+__PACKAGE__->config
+(
+    appkit_myclass              => 'OpusVL::AppKit',
+);
+
 
 =head2 auto
     Default action for this controller.

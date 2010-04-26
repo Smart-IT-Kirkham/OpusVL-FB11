@@ -70,7 +70,6 @@ sub _build_appkit_actiontree
 
     AKCONTROLLERS: foreach my $cont ( @{ $c->appkit_controllers } )
     {   
-
         # Loop through all this AppKit controllers actionmethods...
         AKACTIONS: foreach my $action_method ( $cont->get_action_methods )
         {   
@@ -84,6 +83,7 @@ sub _build_appkit_actiontree
             my $action_path = $action->reverse;
             my @path = split '/', $action_path;
             my $name = pop @path;
+
 
             # build AppKit::Node object...
             my $appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
@@ -183,13 +183,14 @@ has is_unrestricted_action_name =>
         sub 
         {
         my ($name) = @_;
-        return 1 if $name =~ /_/;
+        return 1 if $name =~ /(^|\/)_/;
         return 1 if $name =~ /auto$/;
         return 1 if $name =~ /begin$/;
         return 1 if $name =~ /end$/;
         return 1 if $name =~ /default$/;
         return 1 if $name =~ /login$/;
         return 1 if $name =~ /logout$/;
+        return 1 if $name =~ /login\/not_required$/;
         return 1 if $name =~ /View\:\:/;
         return 0;
         } 
