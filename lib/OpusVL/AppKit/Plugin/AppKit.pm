@@ -383,6 +383,9 @@ sub _appkit_stash_portlets
         {   
             my $portlet_action = $apc->action_for( $portlet->{actionname} );
 
+            # dont stash if we can't access it..
+            next unless $c->can_access( $portlet_action->reverse );
+
             # forward to the portlet action..
             $c->forward( $portlet_action );
 

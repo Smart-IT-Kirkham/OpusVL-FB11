@@ -29,6 +29,9 @@ after 'setup_finalize' => sub
         {
             $val_mod = 'OpusVL::AppKit::LoginValidator::' . $val_mod
         }
+
+        # TODO: check we have the  parameters in the AppKitAuthDB for these validators..
+
         Catalyst::Utils::ensure_class_loaded( $val_mod );
     }
 };
