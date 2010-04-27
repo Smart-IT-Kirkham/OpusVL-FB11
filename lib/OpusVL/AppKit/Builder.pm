@@ -134,7 +134,6 @@ override _build_plugins => sub
         +CatalystX::SimpleLogin
         +CatalystX::VirtualComponents
         +OpusVL::AppKit::Plugin::AppKit
-        +OpusVL::AppKit::Plugin::ValidateLogin
     );
 
     return $plugins;
@@ -151,7 +150,6 @@ override _build_config => sub
     $config->{'default_view'}                                       = 'AppKitTT';
 
     $config->{'custom-error-message'}                               = { 'error-template' => 'error.tt' };
-
 
     # .. add static dir into the config for Static::Simple..
     my $static_dirs = $config->{static}->{include_path};
@@ -170,9 +168,6 @@ override _build_config => sub
     $config->{'View::AppKitTT'}->{'INCLUDE_PATH'}         = $inc_path;
     $config->{'View::AppKitTT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
-
-    # Login Validators available..
-    $config->{'validators'} = [ 'SMS' ];
 
     # Configure session handling
     $config->{'session'} =
@@ -221,7 +216,7 @@ override _build_config => sub
     };
 
     # set the appkit_friendly_name..
-    $config->{'appkit_friendly_name'} = "OpusVL::AppKit";
+    $config->{'application_name'} = "OpusVL::AppKit";
 
     # we can turn off access controller... but ONLY FOR DEBUGGIN!
     $config->{'appkit_can_access_everything'} = 0;

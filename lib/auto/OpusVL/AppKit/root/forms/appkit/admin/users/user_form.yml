@@ -25,8 +25,12 @@ elements:
     name: tel
     label: Telephone
 
-  - type: Checkbox
-    name: active
+  - type: Radiogroup
+    name: status
+    options:
+       - [ 'enabled',   'Enabled' ]
+       - [ 'disabled',  'Disabled' ]
+       - [ 'deleted',   'Deleted' ]
 
   - type: Submit
     value: Submit

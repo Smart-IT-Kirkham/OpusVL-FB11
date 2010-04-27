@@ -4,6 +4,11 @@ use Moose;
 use namespace::autoclean;
 
 BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+__PACKAGE__->config
+(
+    appkit_myclass              => 'OpusVL::AppKit',
+);
+
 
 =head2 auto
 =cut

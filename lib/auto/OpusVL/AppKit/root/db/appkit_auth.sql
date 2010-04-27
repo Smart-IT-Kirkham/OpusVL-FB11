@@ -9,7 +9,7 @@ CREATE TABLE user (
         email               TEXT,
         name                TEXT,
         tel                 TEXT,
-        active              INTEGER
+        status              INTEGER
 );
 CREATE TABLE aclrule (
         id                  INTEGER PRIMARY KEY,
@@ -24,7 +24,7 @@ CREATE TABLE parameter (
         data_type           TEXT,
         parameter           TEXT
 );
-CREATE TABLE user_validation_data (
+CREATE TABLE user_data (
         id                  INTEGER PRIMARY KEY,
         user_id             INTEGER REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
         key                 TEXT,
@@ -52,12 +52,11 @@ CREATE TABLE aclrule_role (
 -- Load up some initial test data  --
 -------------------------------------
 
-INSERT INTO user VALUES (1, 'appkitadmin',  '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'appkit@opusvl.com',    'Applications', '07720061678',  1);
-INSERT INTO user VALUES (2, 'william',      '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'will@opusvl.com',      'William',      '07720061678',  1);
-INSERT INTO user VALUES (3, 'paterick',     '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'pat@opusvl.com',       'Paterick',     '07720061678',  0);
+INSERT INTO user VALUES (1, 'appkitadmin',  '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'appkit@opusvl.com',    'Applications', '07720061678',  'enabled');
+INSERT INTO user VALUES (2, 'william',      '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'will@opusvl.com',      'William',      '07720061678',  'enabled');
+INSERT INTO user VALUES (3, 'paterick',     '$2$08$pJiwUlPDkRd9Pg3OLT2h2O5EbboOKtKi9r/Yu94Tw4ocP4py8RWh.', 'pat@opusvl.com',       'Paterick',     '07720061678',  'enabled');
 
 INSERT INTO aclrule VALUES (1, 'index');
-INSERT INTO aclrule VALUES (2, 'appkit/validatelogin');
 INSERT INTO aclrule VALUES (3, 'appkit/admin');
 INSERT INTO aclrule VALUES (4, 'appkit/admin/access');
 INSERT INTO aclrule VALUES (5, 'appkit/admin/access/addrole');
@@ -79,7 +78,8 @@ INSERT INTO aclrule VALUES (17, 'extensiona/expansionaa/endchain');
 
 INSERT INTO aclrule VALUES (18, 'extensionb/formpage');
 
-INSERT INTO aclrule VALUES (19, 'test/portlet_test ');
+INSERT INTO aclrule VALUES (19, 'test/portlet_test');
+INSERT INTO aclrule VALUES (20, 'appkit/change_password');
 
 INSERT INTO role VALUES (1, 'administrator');
 INSERT INTO role VALUES (2, 'normal user');
@@ -119,10 +119,12 @@ INSERT INTO aclrule_role VALUES (17, 1);
 INSERT INTO aclrule_role VALUES (18, 1);
 
 INSERT INTO aclrule_role VALUES (19, 1);
+INSERT INTO aclrule_role VALUES (20, 1);
 
 -- ..apply the rules to the 'user' role...
 INSERT INTO aclrule_role VALUES (1, 2);
 INSERT INTO aclrule_role VALUES (2, 2);
 INSERT INTO aclrule_role VALUES (13, 2);
 INSERT INTO aclrule_role VALUES (14, 2);
+INSERT INTO aclrule_role VALUES (20, 2);
 

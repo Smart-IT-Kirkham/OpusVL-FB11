@@ -1,10 +1,10 @@
-package OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserValidationData;
+package OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserData;
 
 use Moose;
 BEGIN{ extends 'DBIx::Class'; }
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
-__PACKAGE__->table("user_validation_data");
+__PACKAGE__->table("user_data");
 __PACKAGE__->add_columns(
   "id",
   {

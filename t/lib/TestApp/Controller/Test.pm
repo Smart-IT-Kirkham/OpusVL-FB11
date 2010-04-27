@@ -47,7 +47,7 @@ sub portlet_test
         $portlet_content .= "<li> $_ </li>";
     }
 
-    $c->stash->{portlet}->{html} = <<PORTLET
+    my $portlet_body = <<PORTLET
 <div class='portlet-wrapper'>
     <div class='portlet-header'>
         Test Base Portlet
@@ -61,7 +61,7 @@ sub portlet_test
 PORTLET
     ;
 
-    return 1;
+    $c->res->body( $portlet_body );
 };
 
 =head2 index

@@ -51,10 +51,10 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => undef,
   },
-  "active",
+  "status",
   {
-    data_type => "INTEGER",
-    default_value => undef,
+    data_type => "TEXT",
+    default_value => "enabled",
     is_nullable => 1,
     size => undef,
   },
@@ -68,17 +68,15 @@ __PACKAGE__->has_many(
   { "foreign.user_id" => "self.id" },
   { cascade_delete => 1 },
 );
-
 __PACKAGE__->many_to_many( roles => 'user_roles', 'role_id');
 
 
 __PACKAGE__->has_many(
-  "validation_data",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserValidationData",
+  "user_data",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserData",
   { "foreign.user_id" => "self.id" },
   { cascade_delete => 1 },
 );
-
 
 __PACKAGE__->has_many(
   "user_parameters",
@@ -111,7 +109,7 @@ sub params_hash
     Sets a users parameter by the parameter name.
     Returns:
         undef   - if the param could be found by name.
-        1       - if the param was set successfullt.
+        1       - if the param was set successfully.
 =cut
 sub set_param_by_name
 {
@@ -126,6 +124,28 @@ sub set_param_by_name
 
     # add to users parameter...
     $self->find_or_create_related( 'user_parameters', { value => $param_value, parameter_id => $param->id   } );
+
+    return 1; 
+}
+=head2 delete_param_by_name
+    Deltes a users parameter by the parameter name.
+    Returns:
+        undef   - if the param could be found by name.
+        1       - if the param was deleted successfully.
+=cut
+sub delete_param_by_name
+{
+    my $self  = shift;
+    my ( $param_name ) = @_;
+
+    # find the param..
+    my $param = $self->result_source->schema->resultset('Parameter')->find( { parameter => $param_name } );
+
+    # return undef, if we could find the param..
+    return undef unless $param;
+
+    # delete to users parameter...
+    $self->delete_related( 'user_parameters', { parameter_id => $param->id } );
 
     return 1; 
 }

@@ -43,10 +43,6 @@ sub auto : Private
     {
         $c->log->debug("User viewing the controller that deals with logging in and out");
     }
-    elsif ( $c->user )
-    {
-        $c->controller('AppKit::ValidateLogin')->validation_check($c);
-    }
 
     return 1;
 }
