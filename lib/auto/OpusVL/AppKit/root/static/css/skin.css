@@ -349,6 +349,7 @@ div.portlet {
 	border-radius: 5px;
 	background-color: #fefffe;
 	padding: 8px;
+	margin-bottom: 16px;
 }
 
 div.portlet_name {
@@ -363,6 +364,16 @@ div.portlet_content {
 	font-size: .8em;
 	color: #515151;
 	padding: 4px 10px 6px;
+}
+
+div.portlet ul {
+	margin-top: 5px;
+	margin-bottom: 0;
+	padding-left: 18px;
+}
+
+div.portlet ul li {
+	padding-bottom: 3px;
 }
 
 /* @end */

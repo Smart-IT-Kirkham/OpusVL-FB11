@@ -387,7 +387,11 @@ sub _appkit_stash_portlets
             next unless $c->can_access( $portlet_action->reverse );
 
             # forward to the portlet action..
-            $c->forward( $portlet_action );
+            {
+                local $c->stash->{breadcrumbs};
+                local $c->stash->{output_type} = 'plain';
+                $c->visit( $portlet_action );
+            }
 
             # take things from the stash (that the action should have just filled out)
             push
@@ -395,9 +399,10 @@ sub _appkit_stash_portlets
                 @portlets,
                 {   
                     name    => $portlet->{value},
-                    html    => $c->stash->{portlet}->{html}
+                    html    => $c->res->body,
                 }
             );
+            $c->res->body(undef);
         }
     }
     $c->stash->{portlets} = \@portlets;

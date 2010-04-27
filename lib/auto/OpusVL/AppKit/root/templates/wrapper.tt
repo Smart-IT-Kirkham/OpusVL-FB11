@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+[% UNLESS (output_type == 'plain') %]<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
         <title>[% header.title %]</title>
@@ -102,7 +102,7 @@
                             </div>
                         [% END %]
                         
-                        [% content %]
+                        [% END %][% content %][% UNLESS (output_type == 'plain') %]
                         <div class="clear"></div>
                     </div>
                 </div>
@@ -166,3 +166,4 @@
         </script>   -->
     </body>
 </html>
+[% END %]
