@@ -279,9 +279,10 @@ sub can_access
     my $c               = shift;
     my ($action_path)   = @_;
 
+    # did we get passed a path?...
+    return undef unless defined $action_path;
+
     $c->log->warn("can_access called with a non-string action path: $action_path ") if ( ref $action_path );
-
-
 
     # -- below here we see if we are blindly allowing access --- 
     # ... thinking this should be wrapped up in a nice rouinte!..
@@ -371,6 +372,9 @@ sub _appkit_allowed_roles
     my $c               = shift;
     my ($action_path)   = @_;
 
+    # did we get passed a path?...
+    return undef unless defined $action_path;
+
     my @action_path     = grep { $_ ne "" } split( "/", $action_path );
     my $action_name     = pop @action_path;
 
@@ -382,6 +386,7 @@ sub _appkit_allowed_roles
     {
         # see if this rule, matches the action we a checking??...
         my $rule_action_path = $aclrule->actionpath;
+      
         if ( $action_path =~ /^$rule_action_path/ )
         {
             # it does match!.. (store it with its length)
