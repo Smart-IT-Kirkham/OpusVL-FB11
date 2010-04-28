@@ -171,6 +171,150 @@ div#user_nav a:hover {
 
 /* @group Application */
 
+/* @group Forms */
+
+fieldset {
+	margin-bottom: 10px;
+	background-color: #f4f4f4;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	border-style: solid;
+	border-color: #a7a7a7;
+	padding-top: 10px;
+	padding-bottom: 12px;
+	margin-top: 10px;
+}
+
+fieldset + fieldset {
+	margin-top: 20px;
+}
+
+fieldset legend {
+	color: #515151;
+	border: 1px solid #a3a3a3;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	background-color: #fefffe;
+	font-size: 0.9em;
+	font-weight: bold;
+	padding: 2px 40px 3px 6px;
+}
+
+fieldset legend + p {
+	margin-top: 0;
+}
+
+fieldset.radiogroup {
+	border-style: none;
+	margin: 2px 0 0;
+	padding: 0;
+}
+
+fieldset.radiogroup legend {
+	border-style: none;
+	background-color: transparent;
+	float: left;
+	font-weight: normal;
+	font-style: normal;
+	font-size: .8em;
+	width: 132px;
+	margin-top: 2px;
+}
+
+fieldset.radiogroup label {
+	width: auto;
+	padding-right: 11px;
+	font-size: .9em;
+	padding-left: 0;
+}
+
+div.label {
+	font-size: .8em;
+	padding-top: 3px;
+	padding-bottom: 4px;
+}
+
+label {
+	display: inline-block;
+	width: 170px;
+	padding-left: 7px;
+}
+
+span.elements label {
+	width: auto;
+	padding-left: 0;
+}
+
+form div.error {
+	margin-bottom: 7px;
+	background-color: #e5e5e5;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+form div.error label {
+	color: #515151;
+	font-weight: normal;
+	font-style: normal;
+}
+
+span.error_message {
+	display: block;
+	padding-left: 7px;
+	padding-top: 4px;
+}
+
+span.comment {
+	display: block;
+	margin-left: 181px;
+	font-size: .9em;
+}
+
+form div.has_focus {
+	background-color: #d8c8dc;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+}
+
+form div.has_focus label {
+	color: #2f2f2f;
+	font-weight: bold;
+}
+
+div.text input {
+	font-size: 1.0em;
+	width: 300px;
+}
+
+div.text input:focus {
+  outline:0 none;
+}
+
+div.textarea textarea:focus {
+  outline:0 none;
+}
+
+div.text input.hasDatepicker {
+	width: 100px;
+}
+
+div.ui-widget {
+	font-size: .9em;
+}
+
+textarea {
+	width: 300px;
+	height: 100px;
+	border-style: ridge;
+	border-width: 2px;
+}
+
+/* @end */
+
 /* @group Link buttons */
 
 a.link_button {
@@ -367,8 +511,6 @@ div.portlet_content {
 }
 
 div.portlet ul {
-	margin-top: 5px;
-	margin-bottom: 0;
 	padding-left: 18px;
 }
 

@@ -85,7 +85,9 @@
                         <div id="application_nav">
                             <ul>
                                 [% FOREACH nav IN c.controller.navigation_actions %]
-                                    <li><a href="[% c.uri_for(c.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
+                                    [% IF c.can_access(c.controller.action_for(nav.actionname)) %]
+                                        <li><a href="[% c.uri_for(c.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
+                                    [% END %]
                                 [% END %]
                             </ul>
                         </div>
