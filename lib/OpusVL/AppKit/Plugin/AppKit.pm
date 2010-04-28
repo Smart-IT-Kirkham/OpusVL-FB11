@@ -343,8 +343,22 @@ sub who_can_access
     my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
     return undef unless defined $allowed_roles;
 
+    # get an resultset of user_id's...
+    my $inside_rs = $c->model('AppKitAuthDB::UserRole')->search
+    (
+        {
+            'role_id.role' => { 'IN' => $allowed_roles },
+        },
+        {
+            select  => ['user_id'],
+            as      => ['user_id'],
+            join    => ['role_id']
+        }
+    );
+
     # return all users with the roles..
-    return $c->model('AppKitAuthDB::User')->search( { 'role_id.role' => { 'IN' => $allowed_roles } }, { join => { 'user_roles' => 'role_id' } } );
+    return $c->model('AppKitAuthDB::User')->search( { 'id' => { 'IN' => $inside_rs->get_column('user_id')->as_query } }, { distinct => 1 } );
+
 }
 
 
