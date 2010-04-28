@@ -60,25 +60,6 @@ if ( $ENV{CATALYST_SERVER} )
     # request the home page .. (which should redirect to login)..
     $mech->get_ok("/");
 
-
-
-    ## NO LONGER HAS loginValidation... 
-    ## # Send some login using an acount that requires SMS login..
-    ## $mech->post_ok( '/login', { username => 'william', password => 'password' }, "Submit to login page");
-    ## $mech->content_contains("Validate Login", "Logged in, now need to validate login");
-
-    ## #.. pull out the code from the page.. it 'should' be here as we 'should' be in debug mode..
-    ## $mech->content =~ m/I am in debug mode, so here it is\:\:\:(.+?)\:\:\:/;
-    ## my $sms_code = $1;
-    ## ok($sms_code, "Pulled SMS code from the page (as we should be in debug mode)" );
-
-    ## # Validate the login and hopefully view the home page..
-    ## $mech->post_ok( '/appkit/validatelogin/SMS', { submitbutton => 'Validate My Login', validation_code => $sms_code }, "Validated Login" );
-    ## $mech->content_contains("Welcome to", "Logged (with SMS validation), showing index page");
-
-
-
-
 }
 else 
 {

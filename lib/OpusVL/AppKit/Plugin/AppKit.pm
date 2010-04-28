@@ -281,6 +281,11 @@ sub can_access
 
     $c->log->warn("can_access called with a non-string action path: $action_path ") if ( ref $action_path );
 
+
+
+    # -- below here we see if we are blindly allowing access --- 
+    # ... thinking this should be wrapped up in a nice rouinte!..
+
     # check if we have told this app to allow everything...
     if ( $c->config->{'appkit_can_access_everything'} )
     {
@@ -304,6 +309,9 @@ sub can_access
     }
     return 1 if $c->is_unrestricted_action_name->( $action_path );
 
+    # -- above here we see if we are blindly allowing access --- 
+
+
     # find all allowed roles for this action path...
     my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
 
@@ -319,6 +327,27 @@ sub can_access
     # return a test that will check for the roles
     return $c->check_any_user_role( @$allowed_roles );
 }
+
+=head2 who_can_access
+    Checks the ACL structure to see who can access a passed action_path.
+    Returns:
+         undef      - if not allowed roles
+        resultset   - of users that can access the otherwise returns a resultset
+=cut
+sub who_can_access
+{   
+    my $c               = shift;
+    my ($action_path)   = @_;
+
+    # find all allowed roles for this action path...
+    my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
+    return undef unless defined $allowed_roles;
+
+    # return all users with the roles..
+    return $c->model('AppKitAuthDB::User')->search( { 'role_id.role' => { 'IN' => $allowed_roles } }, { join => { 'user_roles' => 'role_id' } } );
+}
+
+
 
 =head2 _appkit_allowed_roles
     Returns ArrayRef of roles that can access the passed action path.

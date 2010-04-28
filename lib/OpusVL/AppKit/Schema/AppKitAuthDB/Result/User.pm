@@ -87,6 +87,22 @@ __PACKAGE__->has_many(
 __PACKAGE__->many_to_many( parameters => 'user_parameters', 'parameter_id');
 
 
+
+=head2 disable
+    Disables a user account.
+=cut
+sub disable
+{
+    my $self = shift;
+
+    if ( $self->status )
+    {
+        $self->update( { status => 'disabled' } );
+        return 1;
+    } 
+    return 0;
+}
+
 =head2 params_hash
     Finds all a users parameters, matches them with the value and returns a nice Hash ref.
 =cut

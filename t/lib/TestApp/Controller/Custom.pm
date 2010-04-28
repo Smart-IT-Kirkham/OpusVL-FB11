@@ -35,4 +35,20 @@ sub custom_access_denied
     $c->go('/index');
 }
 
+sub who_can_access_stuff
+    :Path('whocan')
+    :Args(0)
+    :NavigationName("Who Can Access")
+{ 
+    my ($self, $c) = @_;
+
+    my $string = '';
+    foreach my $user ( $c->who_can_access( 'custom/custom' ) )
+    {
+        $string .= "--" . $user->username;
+    }
+    $c->res->body("Who: $string");
+}
+
+
 1;
