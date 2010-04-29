@@ -60,6 +60,14 @@ if ( $ENV{CATALYST_SERVER} )
     # request the home page .. (which should redirect to login)..
     $mech->get_ok("/");
 
+
+    ## NEED TO ADD MANY MORE TESTS!!... think about all things that could and could not happen with the TestApp..
+    # .. things I can think of now:
+    #       
+    #       access controll (adding, removing, allow, deny)
+    #       roles (adding, removing, allow, deny)
+    #       users (adding, removing, change password)
+
 }
 else 
 {
