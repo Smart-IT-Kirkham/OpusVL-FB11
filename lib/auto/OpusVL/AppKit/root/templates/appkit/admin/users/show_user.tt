@@ -96,7 +96,7 @@
                         [% FOR up IN c.stash.user.users_parameters %]
                             <li>
                                 [% up.parameter.parameter %] = [% up.value %]
-                                <a href='[% c.uri_for( c.controller('AppKit::Admin::User').action_for('delete_parameter'), [ c.stash.user.id ] ) _ "/" _ up.parameter.id  %]'> Remove </a>
+                                <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('delete_parameter'), [ c.stash.user.id ] ) _ "/" _ up.parameter.id  %]'> Remove </a>
                             </li>
                         [% END %]
                         </ul>
