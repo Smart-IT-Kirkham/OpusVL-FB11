@@ -101,9 +101,9 @@
                         [% END %]
                         </ul>
 
-                        <form method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::User').action_for('add_parameter'), [ c.stash.user.id ] )  %]'>
+                        <form method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('add_parameter'), [ c.stash.user.id ] )  %]'>
                             <select name='parameter_id'>
-                            [% FOR param IN c.model('AppKitAuthDB::Parameter').search %]
+                            [% FOR param IN c.model('AppKitAuthDB::Parameter').all %]
                                 <option value='[% param.id %]'>[% param.parameter %]</option>
                             [% END %]
                             </select>

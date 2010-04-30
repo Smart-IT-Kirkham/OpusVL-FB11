@@ -21,7 +21,7 @@ sub auto
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('AppKit::Admin::Users')->action_for('index') ) } );
 
     # stash all users..
-    my $users_rs = $c->model('AppKitAuthDB::User')->search;
+    my $users_rs = $c->model('AppKitAuthDB::Users')->search;
     $users_rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     my @users = $users_rs->all;
     $c->stash->{users} = \@users;
@@ -52,7 +52,7 @@ sub adduser
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
-        my $user = $c->model('AppKitAuthDB::User')->new_result( {} );
+        my $user = $c->model('AppKitAuthDB::Users')->new_result( {} );
         $c->stash->{form}->model->update( $user );
         $c->stash->{status_msg} = "User added";
         $c->stash->{user} = $user;
@@ -70,7 +70,7 @@ sub user_specific
     : CaptureArgs(1)
 {
     my ( $self, $c, $user_id ) = @_;
-    ( $c->stash->{user} ) = $c->model('AppKitAuthDB::User')->find( $user_id );
+    ( $c->stash->{user} ) = $c->model('AppKitAuthDB::Users')->find( $user_id );
 }
 
 =head2 show_user
@@ -94,13 +94,13 @@ sub show_user
         $user_roles = [ $user_roles ] if defined $user_roles && ! ref $user_roles;
         foreach my $role_id ( @$user_roles )
         {
-            $c->stash->{user}->find_or_create_related('user_roles', { role_id => $role_id } );
+            $c->stash->{user}->find_or_create_related('users_roles', { role_id => $role_id } );
         }
 
         #$c->log->debug("************************** SUBMITTED ROLES: $#$user_roles :" . join('|', @$user_roles) );
 
         #.. delete any roles not required..
-        $c->stash->{user}->search_related('user_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
+        $c->stash->{user}->search_related('users_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
 
         $c->stash->{status_msg} = "User Roles updated";
     }
@@ -110,7 +110,7 @@ sub show_user
     foreach my $role_rs ( $c->model('AppKitAuthDB::Role')->search )
     {
         my $checked = '';
-        if ( $c->stash->{user}->search_related('user_roles', { role_id => $role_rs->id } )->count > 0 )
+        if ( $c->stash->{user}->search_related('users_roles', { role_id => $role_rs->id } )->count > 0 )
         {
             $checked = 'checked';
         }
@@ -185,7 +185,7 @@ sub delete_parameter
 {
     my ( $self, $c, $param_id ) = @_;
 
-    $c->stash->{user}->delete_related('user_parameters', { parameter_id => $param_id } );
+    $c->stash->{user}->delete_related('users_parameters', { parameter_id => $param_id } );
     $c->stash->{status_msg} = "Parameter deleted";
     $c->go( $c->controller->action_for('index') );
 }
@@ -204,7 +204,7 @@ sub add_parameter
     {
         my $parameter_id        = $c->req->param('parameter_id');
         my $parameter_value     = $c->req->param('parameter_value');
-        $c->stash->{user}->update_or_create_related('user_parameters', { parameter_id => $parameter_id, value => $parameter_value } );
+        $c->stash->{user}->update_or_create_related('users_parameters', { parameter_id => $parameter_id, value => $parameter_value } );
         $c->stash->{status_msg} = "Parameter updated";
     }
 
