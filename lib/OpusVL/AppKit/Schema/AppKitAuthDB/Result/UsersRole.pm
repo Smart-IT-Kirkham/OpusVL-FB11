@@ -1,12 +1,12 @@
-package OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserRole;
+package OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersRole;
 
 use Moose;
 BEGIN{ extends 'DBIx::Class'; }
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
-__PACKAGE__->table("user_role");
+__PACKAGE__->table("users_role");
 __PACKAGE__->add_columns(
-  "user_id",
+  "users_id",
   {
     data_type => "INTEGER",
     default_value => undef,
@@ -21,8 +21,8 @@ __PACKAGE__->add_columns(
     size => undef,
   },
 );
-__PACKAGE__->set_primary_key("user_id", "role_id");
-__PACKAGE__->belongs_to("user_id", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::User", { id => "user_id" } );
+__PACKAGE__->set_primary_key("users_id", "role_id");
+__PACKAGE__->belongs_to("users_id", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::Users", { id => "users_id" } );
 __PACKAGE__->belongs_to("role_id", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::Role", { id => "role_id" } );
 
 

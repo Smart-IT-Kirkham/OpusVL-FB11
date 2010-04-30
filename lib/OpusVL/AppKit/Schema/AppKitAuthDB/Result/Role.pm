@@ -25,11 +25,11 @@ __PACKAGE__->set_primary_key("id");
 
 
 __PACKAGE__->has_many(
-  "user_roles",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserRole",
+  "users_roles",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersRole",
   { "foreign.role_id" => "self.id" },
 );
-__PACKAGE__->many_to_many( users => 'user_roles', 'user_id');
+__PACKAGE__->many_to_many( users => 'users_roles', 'users_id');
 
 __PACKAGE__->has_many(
   "aclrule_roles",

@@ -1,11 +1,11 @@
-package OpusVL::AppKit::Schema::AppKitAuthDB::Result::User;
+package OpusVL::AppKit::Schema::AppKitAuthDB::Result::Users;
 
 use Moose;
 
 BEGIN{ extends 'DBIx::Class'; }
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
-__PACKAGE__->table("user");
+__PACKAGE__->table("users");
 __PACKAGE__->add_columns(
   "id",
   {
@@ -63,33 +63,33 @@ __PACKAGE__->set_primary_key("id");
 
 
 __PACKAGE__->has_many(
-  "user_roles",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserRole",
-  { "foreign.user_id" => "self.id" },
+  "users_roles",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersRole",
+  { "foreign.users_id" => "self.id" },
   { cascade_delete => 1 },
 );
-__PACKAGE__->many_to_many( roles => 'user_roles', 'role_id');
+__PACKAGE__->many_to_many( roles => 'users_roles', 'role_id');
 
 
 __PACKAGE__->has_many(
-  "user_data",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserData",
-  { "foreign.user_id" => "self.id" },
+  "users_data",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersData",
+  { "foreign.users_id" => "self.id" },
   { cascade_delete => 1 },
 );
 
 __PACKAGE__->has_many(
-  "user_parameters",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserParameter",
-  { "foreign.user_id" => "self.id" },
+  "users_parameters",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersParameter",
+  { "foreign.users_id" => "self.id" },
   { cascade_delete => 1 },
 );
-__PACKAGE__->many_to_many( parameters => 'user_parameters', 'parameter_id');
+__PACKAGE__->many_to_many( parameters => 'users_parameters', 'parameter_id');
 
 
 
 =head2 disable
-    Disables a user account.
+    Disables a users account.
 =cut
 sub disable
 {
@@ -103,6 +103,21 @@ sub disable
     return 0;
 }
 
+=head2 enable
+    Enables a users account.
+=cut
+sub enable
+{
+    my $self = shift;
+
+    if ( $self->status )
+    {
+        $self->update( { status => 'enabled' } );
+        return 1;
+    } 
+    return 0;
+}
+
 =head2 params_hash
     Finds all a users parameters, matches them with the value and returns a nice Hash ref.
 =cut
@@ -111,7 +126,7 @@ sub params_hash
     my $self = shift;
 
     my %hash;
-    foreach my $rp ( $self->user_parameters )
+    foreach my $rp ( $self->users_parameters )
     {   
         next unless defined $rp;
         next unless defined $rp->parameter;
@@ -139,7 +154,7 @@ sub set_param_by_name
     return undef unless $param;
 
     # add to users parameter...
-    $self->find_or_create_related( 'user_parameters', { value => $param_value, parameter_id => $param->id   } );
+    $self->find_or_create_related( 'users_parameters', { value => $param_value, parameter_id => $param->id   } );
 
     return 1; 
 }
@@ -161,7 +176,7 @@ sub delete_param_by_name
     return undef unless $param;
 
     # delete to users parameter...
-    $self->delete_related( 'user_parameters', { parameter_id => $param->id } );
+    $self->delete_related( 'users_parameters', { parameter_id => $param->id } );
 
     return 1; 
 }

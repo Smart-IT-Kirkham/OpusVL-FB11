@@ -1,10 +1,10 @@
-package OpusVL::AppKit::Schema::AppKitAuthDB::Result::UserData;
+package OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersData;
 
 use Moose;
 BEGIN{ extends 'DBIx::Class'; }
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
-__PACKAGE__->table("user_data");
+__PACKAGE__->table("users_data");
 __PACKAGE__->add_columns(
   "id",
   {
@@ -13,7 +13,7 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     size => undef,
   },
-  "user_id",
+  "users_id",
   {
     data_type => "INTEGER",
     default_value => undef,
@@ -37,7 +37,7 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->belongs_to("user_id", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::User", { id => "user_id" });
+__PACKAGE__->belongs_to("users_id", "OpusVL::AppKit::Schema::AppKitAuthDB::Result::Users", { id => "users_id" });
 
 
 1;
