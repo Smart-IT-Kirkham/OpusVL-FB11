@@ -32,19 +32,19 @@ CREATE TABLE users_data (
 );
 
 CREATE TABLE users_role (
-        users_id             INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-        role_id             INTEGER REFERENCES role(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        users_id            INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+        role_id             INTEGER REFERENCES role(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
         PRIMARY KEY (users_id, role_id)
 );
 CREATE TABLE users_parameter (
-        users_id             INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-        parameter_id        INTEGER REFERENCES parameter(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        users_id            INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+        parameter_id        INTEGER REFERENCES parameter(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
         value               TEXT,
         PRIMARY KEY (users_id, parameter_id)
 );
 CREATE TABLE aclrule_role (
-        aclrule_id          INTEGER REFERENCES aclrule(id) ON DELETE CASCADE ON UPDATE CASCADE,
-        role_id             INTEGER REFERENCES role(id) ON DELETE CASCADE ON UPDATE CASCADE,
+        aclrule_id          INTEGER REFERENCES aclrule(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+        role_id             INTEGER REFERENCES role(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
         PRIMARY KEY (aclrule_id, role_id)
 );
 
