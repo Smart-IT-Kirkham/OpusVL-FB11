@@ -1,4 +1,7 @@
-[% UNLESS (output_type == 'plain') %]<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+[%- IF ( output_type == 'plain' or c.stash.no_wrapper ) -%]
+    [% content %]
+[%- ELSE -%]
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
         <title>[% header.title %]</title>
@@ -104,7 +107,8 @@
                             </div>
                         [% END %]
                         
-                        [% END %][% content %][% UNLESS (output_type == 'plain') %]
+                        [% content %]
+
                         <div class="clear"></div>
                     </div>
                 </div>
@@ -168,4 +172,4 @@
         </script>   -->
     </body>
 </html>
-[% END %]
+[%- END -%]

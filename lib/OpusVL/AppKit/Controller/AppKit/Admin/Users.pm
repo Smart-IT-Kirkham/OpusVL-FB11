@@ -70,7 +70,7 @@ sub user_specific
     : CaptureArgs(1)
 {
     my ( $self, $c, $user_id ) = @_;
-    ( $c->stash->{user} ) = $c->model('AppKitAuthDB::Users')->find( $user_id );
+    ( $c->stash->{thisuser} ) = $c->model('AppKitAuthDB::Users')->find( $user_id );
 }
 
 =head2 show_user
@@ -84,7 +84,7 @@ sub show_user
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{user}->username, url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_user'), [ $c->stash->{user}->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{thisuser}->username, url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) } );
 
     # test if need to process user submission...
     if ( $c->req->method eq 'POST' )
@@ -94,13 +94,13 @@ sub show_user
         $user_roles = [ $user_roles ] if defined $user_roles && ! ref $user_roles;
         foreach my $role_id ( @$user_roles )
         {
-            $c->stash->{user}->find_or_create_related('users_roles', { role_id => $role_id } );
+            $c->stash->{thisuser}->find_or_create_related('users_roles', { role_id => $role_id } );
         }
 
         #$c->log->debug("************************** SUBMITTED ROLES: $#$user_roles :" . join('|', @$user_roles) );
 
         #.. delete any roles not required..
-        $c->stash->{user}->search_related('users_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
+        $c->stash->{thisuser}->search_related('users_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
 
         $c->stash->{status_msg} = "User Roles updated";
     }
@@ -110,7 +110,7 @@ sub show_user
     foreach my $role_rs ( $c->model('AppKitAuthDB::Role')->search )
     {
         my $checked = '';
-        if ( $c->stash->{user}->search_related('users_roles', { role_id => $role_rs->id } )->count > 0 )
+        if ( $c->stash->{thisuser}->search_related('users_roles', { role_id => $role_rs->id } )->count > 0 )
         {
             $checked = 'checked';
         }
@@ -131,17 +131,17 @@ sub edit_user
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('edit_user'), [ $c->stash->{user}->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('edit_user'), [ $c->stash->{thisuser}->id ] ) } );
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
         # update the user from the form..
-        $c->stash->{form}->model->update( $c->stash->{user} );
+        $c->stash->{form}->model->update( $c->stash->{thisuser} );
         $c->stash->{status_msg} = "User updated";
     }
 
     # set default values..
-    $c->stash->{form}->model->default_values( $c->stash->{user} );
+    $c->stash->{form}->model->default_values( $c->stash->{thisuser} );
     $c->stash->{template} = "appkit/admin/users/user_form.tt";
 }
 
@@ -156,14 +156,14 @@ sub delete_user
 {
     my ( $self, $c ) = @_;
 
-    $c->stash->{question} = "Are you sure you want to delete the user:" . $c->stash->{user}->username;
+    $c->stash->{question} = "Are you sure you want to delete the user:" . $c->stash->{thisuser}->username;
     $c->stash->{template} = 'appkit/admin/confirm.tt';
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
         if ( $c->req->params->{yesbutton} )
         {
-            $c->stash->{user}->delete;
+            $c->stash->{thisuser}->delete;
             $c->stash->{status_msg} = "User deleted";
         }
         else
@@ -185,7 +185,7 @@ sub delete_parameter
 {
     my ( $self, $c, $param_id ) = @_;
 
-    $c->stash->{user}->delete_related('users_parameters', { parameter_id => $param_id } );
+    $c->stash->{thisuser}->delete_related('users_parameters', { parameter_id => $param_id } );
     $c->stash->{status_msg} = "Parameter deleted";
     $c->go( $c->controller->action_for('index') );
 }
@@ -204,14 +204,53 @@ sub add_parameter
     {
         my $parameter_id        = $c->req->param('parameter_id');
         my $parameter_value     = $c->req->param('parameter_value');
-        $c->stash->{user}->update_or_create_related('users_parameters', { parameter_id => $parameter_id, value => $parameter_value } );
+        $c->stash->{thisuser}->update_or_create_related('users_parameters', { parameter_id => $parameter_id, value => $parameter_value } );
         $c->stash->{status_msg} = "Parameter updated";
     }
 
     # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{user}->id ] ) ) ;
+    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
 }
 
+=head2 get_parameter_input
+    End of chain.
+    Returns the input for a parameter.
+=cut
+sub get_parameter_input
+    : Chained('user_specific')
+    : PathPart('addparaminput')
+    : Args(1)
+{
+    my ( $self, $c, $param_id ) = @_;
+
+    my $param = $c->model('AppKitAuthDB::Parameter')->find( $param_id );
+    return undef unless $param;
+
+    # get and values ther might be (for the user in the stash)...
+    my $up = $c->stash->{thisuser}->find_related('users_parameters', { parameter_id => $param_id } );
+    my $value = $up->value if ( $up );
+
+print STDERR "************> $param_id - $up - $value \n";
+
+    my $html = '';
+    if ( $param->data_type eq 'boolean' )
+    {
+        $html .= "<label for='parameter_value_true'>True</label><input type='radio' name='parameter_value' value='1' id='parameter_value_true' " . ( $value ? "checked='1'" : '') . ">";
+        $html .= "<label for='parameter_value_false'>False</label><input type='radio' name='parameter_value' value='0' id='parameter_value_false' " . ( $value ? '' : "checked='1'") . ">";
+    }
+    elsif ( $param->data_type eq 'integer' )
+    {
+        $html .= "<input type='text' name='parameter_value' value='$value' id='parameter_value' size='5'>";
+    }
+    else 
+    {
+        $html .= "<input type='text' name='parameter_value' value='$value' id='parameter_value'>";
+    }
+
+    $c->stash->{no_wrapper} = 1;
+    $c->stash->{html} = $html;
+
+}
 
 1;
 __END__

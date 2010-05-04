@@ -33,6 +33,8 @@ sub auto : Private
 {
     my ( $self, $c ) = @_;
 
+    # lets add some essential css and js files..
+
     if (! $c->user && ! $c->controller->can('login_redirect') ) 
     {
         # use the simplelogin code...
