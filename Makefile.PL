@@ -11,6 +11,7 @@ requires 'File::Spec';
 requires 'List::Util';
 requires 'Getopt::Compact';
 requires 'Tree::Simple';
+requires 'Tree::Simple::View';
 requires 'Tree::Simple::VisitorFactory';
 requires 'Crypt::Eksblowfish::Bcrypt';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
