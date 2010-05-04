@@ -345,20 +345,20 @@ sub who_can_access
     return undef unless defined $allowed_roles;
 
     # get an resultset of user_id's...
-    my $inside_rs = $c->model('AppKitAuthDB::UserRole')->search
+    my $inside_rs = $c->model('AppKitAuthDB::UsersRole')->search
     (
         {
             'role_id.role' => { 'IN' => $allowed_roles },
         },
         {
-            select  => ['user_id'],
-            as      => ['user_id'],
+            select  => ['users_id'],
+            as      => ['users_id'],
             join    => ['role_id']
         }
     );
 
     # return all users with the roles..
-    return $c->model('AppKitAuthDB::User')->search( { 'id' => { 'IN' => $inside_rs->get_column('user_id')->as_query } }, { distinct => 1 } );
+    return $c->model('AppKitAuthDB::Users')->search( { 'id' => { 'IN' => $inside_rs->get_column('users_id')->as_query } }, { distinct => 1 } );
 
 }
 
