@@ -389,6 +389,16 @@ input.submit_cancel {
 	padding-left: 38px;	
 }
 
+input.submit_back {
+	background: url(/static/images/controls/back-button-med.png) no-repeat -4px -6px;
+	padding-left: 46px;	
+}
+
+input.submit_add {
+	background: url(/static/images/controls/add-med.png) no-repeat -4px -6px;
+	padding-left: 46px;	
+}
+
 /* @end */
 
 ul.control-container li.control-add-small {

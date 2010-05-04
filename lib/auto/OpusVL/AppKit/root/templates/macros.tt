@@ -1,0 +1,3 @@
+[% MACRO date_long(dt) BLOCK %]
+    [% dt.day_name %], [% dt.day | format('%02d') %] [% dt.month_name %] [% dt.year %]
+[% END %]

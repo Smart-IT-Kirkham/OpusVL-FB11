@@ -167,5 +167,17 @@ before create_action  => sub
 # controller actions.
 ##################################################################################################################################
 
+sub date_long {
+    my ($self, $dt) = @_;
+    
+    return join '',
+        $dt->day_name,
+        ', ',
+        sprintf("%02d ",$dt->day),
+        $dt->month_name,
+        ' ',
+        $dt->year;
+}
+
 ##
 1;
