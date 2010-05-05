@@ -79,7 +79,7 @@
 
 <form method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('user_add_to_role'), [ role.role ] ) %]'>
     <select name='user_id'>
-    [% FOR thisuser IN c.model('AppKitAuthDB::User').search %]
+    [% FOR thisuser IN c.model('AppKitAuthDB::Users').search %]
         <option value='[% thisuser.id %]'>[% thisuser.username %]</option>
     [% END %]
     </select>
