@@ -230,8 +230,6 @@ sub get_parameter_input
     my $up = $c->stash->{thisuser}->find_related('users_parameters', { parameter_id => $param_id } );
     my $value = $up->value if ( $up );
 
-print STDERR "************> $param_id - $up - $value \n";
-
     my $html = '';
     if ( $param->data_type eq 'boolean' )
     {
@@ -251,6 +249,18 @@ print STDERR "************> $param_id - $up - $value \n";
     $c->stash->{html} = $html;
 
 }
+
+=head2 formfu_callback_username
+    Check to see if a username has been taken (or not)
+    Returns 1 or 0;
+=cut
+sub formfu_callback_username : Private
+{   
+    my $username = shift;
+    my $result = OpusVL::AppKit->model('AppKitAuthDB::Users')->find( { username => $username } );
+    return $result ? 1 : 0;
+}
+
 
 1;
 __END__

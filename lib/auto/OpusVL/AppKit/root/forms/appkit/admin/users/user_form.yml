@@ -8,6 +8,11 @@ elements:
   - type: Text
     name: username
     label: Username
+    constraints:
+      - type: Callback
+        callback: 'OpusVL::AppKit::Controller::AppKit::Admin::Users::formfu_callback_username'
+        message: "Username already taken"
+
 
   - type: Password
     name: password
