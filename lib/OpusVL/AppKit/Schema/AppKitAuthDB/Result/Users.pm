@@ -61,7 +61,7 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("id");
 
-__PACKAGE__->add_unique_constraint("users_username_key", ["username"]);
+__PACKAGE__->add_unique_constraint(["username"]);
 
 __PACKAGE__->has_many(
   "users_roles",

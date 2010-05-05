@@ -53,23 +53,24 @@ sub adduser
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
-        my $user = $c->model('AppKitAuthDB::Users')->new_result( {} );
 
-        # here we use eval, as using a normal FormFu 'callback' wont work (due to inheritance)
-        #.. so to get round the issue the following is done..
-
-        eval { $c->stash->{form}->model->update( $user ) };
-
-        if ( $@ =~ m/column username is not unique/i ) 
+        # we have to check here to see if the user exists...
+        # .. using a normal FormFu 'callback' wont work (due to AppBuilder changing namespaces)
+        # .. can't do an eval and error msg check, as different databases return different messages..
+        my $founduser = $c->model('AppKitAuthDB::Users')->find( { username => $c->stash->{form}->param_value('username') } );
+        if ( $founduser )
         {
             $c->stash->{form}->get_field('username')->get_constraint({ type => 'Callback' })->force_errors(1);
             $c->stash->{form}->process;
         }
         else
         {
+            my $newuser = $c->model('AppKitAuthDB::Users')->new_result( {} );
+            $c->stash->{form}->model->update( $newuser );
+
             $c->stash->{status_msg} = "User added";
-            $c->stash->{newuser} = $user;
-            $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{user}->id ] ) ) ;
+            $c->stash->{thisuser}   = $newuser;
+            $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
         }
     }
     $c->stash->{template} = "appkit/admin/users/user_form.tt";
