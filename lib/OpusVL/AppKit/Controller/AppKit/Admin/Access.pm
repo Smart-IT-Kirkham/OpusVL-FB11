@@ -264,7 +264,7 @@ sub show_role
                 my $checkbox_name = $path2root_visitor->getPathAsString("/");
 
                 my $checked             = '';
-                my $color               = 'yellow';
+                my $color               = 'blue';
 
                 if ( defined $tree->getNodeValue->action_path )
                 {
