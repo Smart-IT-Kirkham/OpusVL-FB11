@@ -10,7 +10,6 @@ elements:
     label: Username
     constraints:
       - type: Callback
-        callback: 'OpusVL::AppKit::Controller::AppKit::Admin::Users::formfu_callback_username'
         message: "Username already taken"
 
 

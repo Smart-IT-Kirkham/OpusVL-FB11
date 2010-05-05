@@ -9,7 +9,8 @@ CREATE TABLE users (
         email               TEXT,
         name                TEXT,
         tel                 TEXT,
-        status              INTEGER
+        status              INTEGER,
+    UNIQUE(username)
 );
 CREATE TABLE aclrule (
         id                  INTEGER PRIMARY KEY,
