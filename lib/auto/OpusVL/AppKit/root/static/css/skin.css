@@ -1,5 +1,7 @@
 /* @override http://localhost:3000/static/css/skin.css */
 
+/* @override http://localhost:3000/static/css/skin.css */
+
 /* @override http://localhost:3333/static/css/skin.css */
 
 /* @override http://localhost:3000/static/css/skin.css */
@@ -522,10 +524,16 @@ div.portlet_content {
 
 div.portlet ul {
 	padding-left: 18px;
+	margin-bottom: 4px;
 }
 
 div.portlet ul li {
 	padding-bottom: 3px;
+}
+
+div.portlet_content > ul:first-child {
+	margin-top: 4px;
+	margin-bottom: 0;
 }
 
 /* @end */
