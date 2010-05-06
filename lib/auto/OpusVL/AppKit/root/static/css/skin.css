@@ -352,6 +352,16 @@ a.link_button_delete {
 	padding-left: 45px;
 }
 
+a.link_button_ok {
+	background: url(/static/images/controls/ok-button-med.png) no-repeat -4px -4px;
+	padding-left: 38px;	
+}
+
+a.link_button_cancel {
+	background: url(/static/images/controls/cancel-button-med.png) no-repeat -4px -4px;
+	padding-left: 38px;	
+}
+
 /* @end */
 
 /* @group Controls */

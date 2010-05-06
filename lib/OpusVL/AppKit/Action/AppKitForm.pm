@@ -63,7 +63,10 @@ sub execute
     # get the FormFu object ...
     my $form = $controller->form;
     die("Failed to pull form from controller... did you 'extend' the OpusVL::AppKit::Base::Controller::GUI (which extends HTML::FormFu)???") unless defined $form;
-
+    
+    # Configure the form to generate IDs automatically
+    $form->auto_id("formfield_%n_%r_%c");
+    
     # The action attribute should point the path of the config file...
     my $config_file = $self->attributes->{AppKitForm}->[0];
 
