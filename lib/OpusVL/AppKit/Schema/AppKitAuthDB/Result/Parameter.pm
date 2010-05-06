@@ -36,7 +36,9 @@ __PACKAGE__->has_many(
 );
 
 
-__PACKAGE__->many_to_many( roles => 'role_parameters', 'role_id');
+use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Parameter;
+with 'OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Parameter';
+__PACKAGE__->setup_authdb;
 
 
 1;

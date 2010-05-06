@@ -29,7 +29,10 @@ __PACKAGE__->has_many(
   { "foreign.aclrule_id" => "self.id" },
 );
 
-__PACKAGE__->many_to_many( roles => 'aclrule_roles', 'role_id');
+
+use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Aclrule;
+with 'OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Aclrule';
+__PACKAGE__->setup_authdb;
 
 
 1;

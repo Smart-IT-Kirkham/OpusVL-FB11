@@ -29,14 +29,20 @@ __PACKAGE__->has_many(
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersRole",
   { "foreign.role_id" => "self.id" },
 );
-__PACKAGE__->many_to_many( users => 'users_roles', 'users_id');
 
 __PACKAGE__->has_many(
   "aclrule_roles",
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::AclruleRole",
   { "foreign.role_id" => "self.id" },
 );
-__PACKAGE__->many_to_many( aclrules => 'aclrule_roles', 'aclrule_id');
+
+
+
+
+use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Role;
+with 'OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Role';
+__PACKAGE__->setup_authdb;
+
 
 
 1;
