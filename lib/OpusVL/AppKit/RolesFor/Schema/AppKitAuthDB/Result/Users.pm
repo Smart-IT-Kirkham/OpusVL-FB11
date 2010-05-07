@@ -9,6 +9,21 @@ use Moose::Role;
 sub setup_authdb
 {
     my $class = shift;
+
+    $class->load_components("EncodedColumn");
+   
+    # Alter the password column to enable encoded password.. 
+    $class->add_columns
+    (
+        "password",
+        {
+            encode_column => 1,
+            encode_class  => 'Crypt::Eksblowfish::Bcrypt',
+            encode_args   => { key_nul => 0, cost => 8 },
+            encode_check_method => 'check_password',
+        }
+    );
+
     $class->many_to_many( roles         => 'users_roles',       'role_id'       );
     $class->many_to_many( parameters    => 'users_parameters',  'parameter_id'  );
 }

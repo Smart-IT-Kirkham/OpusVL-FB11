@@ -1,9 +1,11 @@
 package OpusVL::AppKit::Schema::AppKitAuthDB::Result::Parameter;
 
-use Moose;
-BEGIN{ extends 'DBIx::Class'; }
+use strict;
+use warnings;
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
+use base 'DBIx::Class';
+
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "Core");
 __PACKAGE__->table("parameter");
 __PACKAGE__->add_columns(
   "id",
@@ -30,17 +32,21 @@ __PACKAGE__->add_columns(
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->has_many(
-  "role_parameters",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleParameter",
+  "users_parameters",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersParameter",
   { "foreign.parameter_id" => "self.id" },
 );
 
 
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2010-05-07 15:50:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:rxrqX2nvE5IT1Dxz/wTl1Q
+
+
+use Moose;
 use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Parameter;
 with 'OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Parameter';
 __PACKAGE__->setup_authdb;
 
 
+# You can replace this text with custom content, and it will be preserved on regeneration
 1;
-
-__END__

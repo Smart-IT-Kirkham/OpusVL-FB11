@@ -87,7 +87,7 @@ sub execute
         $path .= $self->reverse . '.yml';
     }
 
-    $c->log->debug("****************************** AppKitForm - Loading config: $path \n" );
+    $c->log->debug("AppKitForm Loading config: $path \n" ) if $c->debug;
 
     # .. now get the full path...
     my $form_file = File::Spec->rel2abs( $path );
@@ -96,7 +96,7 @@ sub execute
     {
         # .. load it..
         $form->load_config_file ( $form_file );
-        
+    
         # .. process it..
         $form->process;
         

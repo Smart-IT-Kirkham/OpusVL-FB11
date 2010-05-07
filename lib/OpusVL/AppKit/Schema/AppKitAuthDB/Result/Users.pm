@@ -1,10 +1,11 @@
 package OpusVL::AppKit::Schema::AppKitAuthDB::Result::Users;
 
-use Moose;
+use strict;
+use warnings;
 
-BEGIN{ extends 'DBIx::Class'; }
+use base 'DBIx::Class';
 
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedColumn", "Core");
+__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "Core");
 __PACKAGE__->table("users");
 __PACKAGE__->add_columns(
   "id",
@@ -23,12 +24,10 @@ __PACKAGE__->add_columns(
   },
   "password",
   {
-    data_type     => 'TEXT',
-    size          => undef,
-    encode_column => 1,
-    encode_class  => 'Crypt::Eksblowfish::Bcrypt',
-    encode_args   => { key_nul => 0, cost => 8 },
-    encode_check_method => 'check_password',
+    data_type => "TEXT",
+    default_value => undef,
+    is_nullable => 1,
+    size => undef,
   },
   "email",
   {
@@ -53,42 +52,39 @@ __PACKAGE__->add_columns(
   },
   "status",
   {
-    data_type => "TEXT",
-    default_value => "enabled",
+    data_type => "INTEGER",
+    default_value => undef,
     is_nullable => 1,
     size => undef,
   },
 );
 __PACKAGE__->set_primary_key("id");
-
-__PACKAGE__->add_unique_constraint(["username"]);
-
+__PACKAGE__->add_unique_constraint("username_unique", ["username"]);
+__PACKAGE__->has_many(
+  "users_datas",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersData",
+  { "foreign.users_id" => "self.id" },
+);
 __PACKAGE__->has_many(
   "users_roles",
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersRole",
   { "foreign.users_id" => "self.id" },
-  { cascade_delete => 1 },
 );
-
-__PACKAGE__->has_many(
-  "users_data",
-  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersData",
-  { "foreign.users_id" => "self.id" },
-  { cascade_delete => 1 },
-);
-
 __PACKAGE__->has_many(
   "users_parameters",
   "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersParameter",
   { "foreign.users_id" => "self.id" },
-  { cascade_delete => 1 },
 );
 
 
+# Created by DBIx::Class::Schema::Loader v0.04006 @ 2010-05-07 15:50:48
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:uODQ/T9wZvqMrHZi3V6fnA
+
+
+use Moose;
 use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Users;
 with 'OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Users';
 __PACKAGE__->setup_authdb;
 
-
+# You can replace this text with custom content, and it will be preserved on regeneration
 1;
-__END__
