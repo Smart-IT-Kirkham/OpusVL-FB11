@@ -163,7 +163,13 @@ div#user_nav a:hover {
 	color: #fefffe;
 }
 
-
+li#user_details {
+	color: #e3e3e3;
+	font-weight: 2200;
+	font-size: .75em;
+	text-align: right;
+	padding-top: 1px;
+}
 
 /* @end */
 

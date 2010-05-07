@@ -15,6 +15,7 @@ requires 'Tree::Simple::View';
 requires 'Tree::Simple::VisitorFactory';
 requires 'Crypt::Eksblowfish::Bcrypt';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
+requires 'Template::Plugin::DateTime';
 
 requires 'Catalyst::Runtime' => '5.8002';
 requires 'Catalyst::Action::RenderView';

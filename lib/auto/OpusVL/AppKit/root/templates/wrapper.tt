@@ -1,9 +1,8 @@
-[%- IF ( output_type == 'plain' or c.stash.no_wrapper ) -%]
-    [% content %]
-[%- ELSE -%]
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+[%- IF ( output_type == 'plain' or c.stash.no_wrapper ) -%][% content %][%- ELSE -%]<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
     <head>
+        [% PROCESS macros.tt %]
+        [% USE today = DateTime(today = 1) %]
         <title>[% header.title %]</title>
         <link href="/static/css/layout.css" rel="stylesheet" rev="stylesheet" type="text/css">
         <link href="/static/css/skin.css" rel="stylesheet" rev="stylesheet" type="text/css">
@@ -46,11 +45,17 @@
             <div id="body">
                 <div id="user_nav">
                     <ul>
-                        <li id="user_settings">
-                            [% IF c.can_access( 'appkit/admin/index' ) %]
+                        [% IF c.user %]
+                            <li id="user_details">
+                                Welcome, [% c.user.name %]<br>
+                                [% date_long(today) %]
+                            </li>
+                        [% END %]
+                        [% IF c.can_access( 'appkit/admin/index' ) %]
+                            <li id="user_settings">
                                 <a href="[% c.uri_for( c.controller('AppKit::Admin').action_for('index') ) %]">Settings</a>
-                            [% END %]
-                        </li>
+                            </li>
+                        [% END %]
                         <li id="user_logout">
                             [% IF c.user %]
                                 <a href="[% c.uri_for( c.controller('Login').action_for('logout') ) %]">Logout</a>
