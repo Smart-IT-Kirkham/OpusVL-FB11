@@ -20,8 +20,51 @@
 
         <script language="JavaScript" type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
         <script language="JavaScript" type="text/javascript" src="/static/js/jquery-ui-1.8.custom.min.js"></script>
-        <script language="JavaScript" type="text/javascript" src="/static/js/ZeroClipboard.js"></script>
         <script language="JavaScript" type="text/javascript" src="/static/js/appkit.js"></script>
+        
+        [% IF c.controller.appkit_features.list.grep('htmleditor') %]
+            <script language="JavaScript" type="text/javascript" src="/static/js/wymeditor/jquery.wymeditor.min.js"></script>
+            <script language="JavaScript" type="text/javascript">
+                $(function() {
+                    $(':submit').addClass('wymupdate');
+                    $('.htmleditor').wymeditor({
+                        skin: 'silver'
+                    });      
+                });
+            </script>
+        [% END %]
+        
+        [% IF c.controller.appkit_features.list.grep('clipboard') %]
+            <script language="JavaScript" type="text/javascript" src="/static/js/ZeroClipboard.js"></script>
+            <script language="JavaScript" type="text/javascript">
+                $(function() {
+                  ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
+                  
+                  $(".copy_to_clipboard").click(function() {
+                    return false;
+                  });
+                  
+                  $(".copy_to_clipboard").mouseover(function() {
+                    var element = $(this);
+                    var clip    = new ZeroClipboard.Client();
+                    
+                    clip.addEventListener('onMouseOut', function(myClip) {
+                      setTimeout(function(){myClip.destroy()},0);
+                    });
+                    
+                    clip.addEventListener('onComplete', function(myClip) {
+                      setTimeout(function() {
+                        myClip.destroy();
+                        element.removeClass('hover');
+                      },0);
+                    });
+                
+                    clip.setText(element.attr('href'));
+                    clip.glue(this);
+                  });  
+                });
+            </script>
+        [% END %]
 
         [% FOR js IN header.js %]
             <script type="text/javascript" src="[% js %]"></script>

@@ -154,7 +154,8 @@ override _build_config => sub
     # .. add static dir into the config for Static::Simple..
     my $static_dirs = $config->{static}->{include_path};
     push(@$static_dirs, $path . '/root' );
-    $config->{static}->{include_path} = $static_dirs;
+    $config->{static}->{include_path}      = $static_dirs;
+    $config->{static}->{ignore_extensions} = [qw/tt tt2/];
 
     # .. add template dir into the config for View::AppKitTT...
     my $inc_path = $config->{'View::AppKitTT'}->{'INCLUDE_PATH'};

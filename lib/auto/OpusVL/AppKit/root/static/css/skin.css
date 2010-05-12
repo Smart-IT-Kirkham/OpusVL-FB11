@@ -393,6 +393,12 @@ input.submit {
 	margin-left: 0;
 }
 
+div#button_group_right input.submit {
+	float: right;
+	margin-right: 0;
+	margin-left: 11px;
+}
+
 input:hover.submit {
 	color: #222;
 }
