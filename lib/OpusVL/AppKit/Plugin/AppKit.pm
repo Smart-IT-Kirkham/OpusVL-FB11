@@ -358,7 +358,7 @@ sub who_can_access
     );
 
     # return all users with the roles..
-    return $c->model('AppKitAuthDB::Users')->search( { 'id' => { 'IN' => $inside_rs->get_column('users_id')->as_query } }, { distinct => 1 } );
+    return $c->model('AppKitAuthDB::User')->search( { 'id' => { 'IN' => $inside_rs->get_column('users_id')->as_query } }, { distinct => 1 } );
 
 }
 

@@ -189,7 +189,7 @@ override _build_config => sub
                 store => 
                 {
                    class              => 'DBIx::Class',
-                   user_model         => 'AppKitAuthDB::Users',   
+                   user_model         => 'AppKitAuthDB::User',   
                    role_relation      => 'roles',
                    role_field         => 'role',
                 }

@@ -21,7 +21,7 @@ sub auto
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('AppKit::Admin::Users')->action_for('index') ) } );
 
     # stash all users..
-    my $users_rs = $c->model('AppKitAuthDB::Users')->search;
+    my $users_rs = $c->model('AppKitAuthDB::User')->search;
     $users_rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     my @users = $users_rs->all;
     $c->stash->{users} = \@users;
@@ -57,7 +57,7 @@ sub adduser
         # we have to check here to see if the user exists...
         # .. using a normal FormFu 'callback' wont work (due to AppBuilder changing namespaces)
         # .. can't do an eval and error msg check, as different databases return different messages..
-        my $founduser = $c->model('AppKitAuthDB::Users')->find( { username => $c->stash->{form}->param_value('username') } );
+        my $founduser = $c->model('AppKitAuthDB::User')->find( { username => $c->stash->{form}->param_value('username') } );
         if ( $founduser )
         {
             $c->stash->{form}->get_field('username')->get_constraint({ type => 'Callback' })->force_errors(1);
@@ -65,7 +65,7 @@ sub adduser
         }
         else
         {
-            my $newuser = $c->model('AppKitAuthDB::Users')->new_result( {} );
+            my $newuser = $c->model('AppKitAuthDB::User')->new_result( {} );
             $c->stash->{form}->model->update( $newuser );
 
             $c->stash->{status_msg} = "User added";
@@ -85,7 +85,7 @@ sub user_specific
     : CaptureArgs(1)
 {
     my ( $self, $c, $user_id ) = @_;
-    ( $c->stash->{thisuser} ) = $c->model('AppKitAuthDB::Users')->find( $user_id );
+    ( $c->stash->{thisuser} ) = $c->model('AppKitAuthDB::User')->find( $user_id );
 }
 
 =head2 show_user

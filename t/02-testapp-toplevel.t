@@ -43,7 +43,7 @@ if ( $ENV{CATALYST_SERVER} )
     $mech->content_contains('Start Chained actions...Middle of Chained actions...End of Chained actions.', "Chained content");
 
     # Request a page (from ExtensionB) we should NOT have access to..
-    $mech->get_ok( '/extensionb', "Get Access Denied" );
+    $mech->get_ok( '/test/noaccess', "Get Access Denied" );
     $mech->content_contains("Access denied", "Can see Access denied message");
 
     # can we see the ExtensionB formpage

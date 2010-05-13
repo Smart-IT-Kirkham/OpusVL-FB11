@@ -106,6 +106,15 @@ sub access_user_or_admin
     $c->res->body('Controller: Test Action: access_user_or_admin');
 }
 
+sub access_none
+    :Path('noaccess') 
+    :Args(0)
+    :NavigationName("Test NO Access")
+{ 
+    my ($self, $c) = @_;
+    $c->res->body('Controller: Test Action: access_none');
+}
+
 sub cause_error 
     :Path('error') 
     :Args(0)

@@ -1,4 +1,4 @@
-package OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Users;
+package OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::User;
 
 use strict;
 use Moose::Role;
@@ -24,8 +24,8 @@ sub setup_authdb
         }
     );
 
-    $class->many_to_many( roles         => 'users_roles',       'role_id'       );
-    $class->many_to_many( parameters    => 'users_parameters',  'parameter_id'  );
+    $class->many_to_many( roles         => 'users_roles',       'role'       );
+    $class->many_to_many( parameters    => 'users_parameters',  'parameter'  );
 }
 
 =head2 getdata
