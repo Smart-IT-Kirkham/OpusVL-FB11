@@ -2,6 +2,8 @@
 
 /* @override http://localhost:3000/static/css/skin.css */
 
+/* @override http://localhost:3000/static/css/skin.css */
+
 /* @override http://localhost:3333/static/css/skin.css */
 
 /* @override http://localhost:3000/static/css/skin.css */
@@ -26,9 +28,9 @@ body {
 /* @group Page */
 
 div#page {
-	box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
-	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-moz-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
+	box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
 }
 
 /* @end */
@@ -337,6 +339,8 @@ a.link_button {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	-webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+	-moz-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+	box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
 }
 
 a:hover.link_button {
@@ -386,6 +390,8 @@ input.submit {
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	-webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+	-moz-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+	box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
 	float: left;
 	margin-right: 11px;
 	border-style: none;
@@ -483,9 +489,9 @@ div#application_body {
 	border-radius: 8px;
 	-moz-border-radius: 8px;
 	-webkit-border-radius: 8px;
-	box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
-	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-moz-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
+	box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
 }
 
 h1 {
@@ -519,9 +525,9 @@ div#dashboard h2 {
 }
 
 div.portlet {
-	box-shadow: 0 0 5px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
-	-moz-box-shadow: 0 0 5px rgba(0,0,0,0.5);
+	-moz-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
+	box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;

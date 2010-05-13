@@ -10,6 +10,8 @@
 
 /* @override http://localhost:3000/static/css/layout.css */
 
+/* @override http://localhost:3000/static/css/layout.css */
+
 body {
 	margin: 0;
 	padding: 0;
@@ -194,6 +196,8 @@ ul.control-container li.control-edit-small ul.dropdown {
 	z-index: 9;
 	display: none;
 	-webkit-box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
+	-moz-box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
+	box-shadow: 2px 5px 15px rgba(0,0,0,0.2);
 	list-style-type: none;
 	padding-left: 0;
 	font-size: 9pt;
@@ -283,9 +287,9 @@ div.content_block {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	padding: 8px 17px 20px;
-	box-shadow: 0 0 3px rgba(0,0,0,0.5);
 	-webkit-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
 	-moz-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
 	margin-bottom: 11px;
 	position: relative;
 	color: #414141;
