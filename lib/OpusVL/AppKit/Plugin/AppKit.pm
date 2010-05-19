@@ -388,31 +388,16 @@ sub _appkit_allowed_roles
     # always allow to method starting with underscore (_) ... typically they are internal methods..
     return undef if $action_name =~ /^_/;
 
-    my $matched_rules;
-    RULE: foreach my $aclrule ( $c->model('AppKitAuthDB::Aclrule')->search )
-    {
-        # see if this rule, matches the action we a checking??...
-        my $rule_action_path = $aclrule->actionpath;
-      
-        if ( $action_path =~ /^$rule_action_path/ )
-        {
-            # it does match!.. (store it with its length)
-            $matched_rules->{ $rule_action_path } = length( $rule_action_path );
-        }
-    }
-    
-    # allow access if not matches..
-    return undef unless keys %$matched_rules;
+    # we are looking for an exact match for this action path..
+    my $aclrule = $c->model('AppKitAuthDB::Aclrule')->find( { actionpath => $action_path } );
 
-    # now check the roles the rule defines. (longest, most speficic, wins .. no very good logic!)..
-    my $rule_actionpath = first { $_ } sort { $matched_rules->{$b} <=> $matched_rules->{$a}  } keys %$matched_rules;
+    # return undef if not match found..
+    return undef unless $aclrule;
 
-    $c->log->debug("AppKit ACL : Matched Rule: $rule_actionpath FOR: $action_path ") if $c->debug;
+    $c->log->debug("AppKit ACL : Matched Rule: " . $aclrule->id . " FOR: $action_path ") if $c->debug;
 
-    # find the rule object that matches the path we found to be the closest match...
-    my $rule = $c->model('AppKitAuthDB::Aclrule')->find( { actionpath => $rule_actionpath } );
     #.. pull out all the allowed roles for this rule..
-    my $allowed_roles = [ map { $_->role } $rule->roles ];
+    my $allowed_roles = [ map { $_->role } $aclrule->roles ];
 
     # return array ref of roles..
     return $allowed_roles;
