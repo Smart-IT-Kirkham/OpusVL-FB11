@@ -78,9 +78,14 @@
                 </div>
                 <div id="header_nav">
                     <ul>
-                        <li id="header_home"><a href="/">Home</a></li>
+                        <li id="header_home">
+                            <a href="/">Home</a>
+                        </li>
+                        <li id="header_search">
+                            <a href="#" id="appKitSearch_anchor">Search</a>
+                        </li>
                         <li id="header_applications">
-                                <a href="#" id="appList_anchor">Applications</a>
+                            <a href="#" id="appList_anchor">Applications</a>
                         </li>
                     </ul>
                 </div>
@@ -160,13 +165,13 @@
                         <div class="clear"></div>
                     </div>
                 </div>
-                <div id="appList">
-                    <div id="appList_top">
-                        <div id="appList_tl"></div>
-                        <div id="appList_tr"></div>
+                <div id="appList" class="tlMenu">
+                    <div class="tlMenu_top">
+                        <div class="tlMenu_tl"></div>
+                        <div class="tlMenu_tr"></div>
                     </div>
-                    <div id="appList_mid">
-                        <div id="appList_ml">
+                    <div class="tlMenu_mid">
+                        <div class="tlMenu_ml">
                             <p>Applications</p>
                             <ul class="appList_l1">
                                     [% USE Math %]
@@ -179,38 +184,58 @@
                                     [% x = Math.sqrt(application_count) %]
                                     [% appList_cols = ((x - Math.int(x)) > 0) ? (Math.int(x)) + 1 : x %]
                                     [% FOREACH appList_col IN [1 .. appList_cols] %]
-                                <li>
-                                        <ul class="appList_l2" id="appList_col[% appList_col %]">
-                                        </ul>
-                                </li>
+                                        <li>
+                                            <ul class="appList_l2" id="appList_col[% appList_col %]">
+                                            </ul>
+                                        </li>
                                     [% END %]
-<script language="JavaScript">
-    $(function() {
-        var col_id = 1;
-        [% FOR myc IN c.appkit_controllers.sort  %]
-
-            [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
-
-                $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]">[% myc.appkit_name %]</a>');
-
-                col_id++;
-
-                if (col_id > [% appList_cols %] ) 
-                {
-                    col_id = 1;
-                }
-
-            [% END %]
-        [% END %]
-    });
-</script>
+                                <script language="JavaScript">
+                                    $(function() {
+                                        var col_id = 1;
+                                        [% FOR myc IN c.appkit_controllers.sort  %]
+                                
+                                            [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
+                                
+                                                $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]">[% myc.appkit_name %]</a>');
+                                
+                                                col_id++;
+                                
+                                                if (col_id > [% appList_cols %] ) 
+                                                {
+                                                    col_id = 1;
+                                                }
+                                
+                                            [% END %]
+                                        [% END %]
+                                    });
+                                </script>
                             </ul>
                         </div>
-                        <div id="appList_mr"></div>
+                        <div class="tlMenu_mr"></div>
                     </div>
-                <div id="appList_bot">
-                    <div id="appList_bl"></div>
-                    <div id="appList_br"></div>
+                    <div class="tlMenu_bot">
+                        <div class="tlMenu_bl"></div>
+                        <div class="tlMenu_br"></div>
+                    </div>
+                </div>
+                <div id="appKitSearch" class="tlMenu">
+                    <div class="tlMenu_top">
+                        <div class="tlMenu_tl"></div>
+                        <div class="tlMenu_tr"></div>
+                    </div>
+                    <div class="tlMenu_mid">
+                        <div class="tlMenu_ml">
+                            <p>Search</p>
+                            <form action="/search" method="get">
+                                <input type="text" name="q" style="margin-left:17px;margin-right:16px;margin-bottom:7px;">
+                            </form>
+                        </div>
+                        <div class="tlMenu_mr"></div>
+                    </div>
+                    <div class="tlMenu_bot">
+                        <div class="tlMenu_bl"></div>
+                        <div class="tlMenu_br"></div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -56,6 +56,7 @@ sub _build_appkit_controllers
     Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
     This attribute is used to define access to an action.
 =cut
+
 has appkit_actiontree => ( is => 'ro',    isa => 'Tree::Simple',  lazy_build => 1 );
 sub _build_appkit_actiontree
 {   
@@ -174,6 +175,7 @@ sub _build_appkit_actiontree
 =head2 is_unrestricted_action_name
     Little helper to ascertain if an action's name is one we dont apply access control to.
 =cut
+
 has is_unrestricted_action_name => 
 ( 
     is          => 'ro',    
@@ -200,10 +202,12 @@ has is_unrestricted_action_name =>
 ###########################################################################################################################
 # catalyst hook.
 ###########################################################################################################################
+
 =head2 execute
     The method hooks into the catalyst despatch path.
     If the current logged in used is denied access to the action this will detach to the 'access_denied' action.
 =cut
+
 sub execute 
 {
     my ( $c, $class, $action ) = @_;
@@ -274,6 +278,7 @@ sub detach_to_appkit_access_denied
             # $c->user must have the correct roles.
         }
 =cut
+
 sub can_access
 {   
     my $c               = shift;
@@ -335,6 +340,7 @@ sub can_access
          undef      - if not allowed roles
         resultset   - of users that can access the otherwise returns a resultset
 =cut
+
 sub who_can_access
 {   
     my $c               = shift;
@@ -367,6 +373,7 @@ sub who_can_access
 =head2 _appkit_allowed_roles
     Returns ArrayRef of roles that can access the passed action path.
 =cut
+
 sub _appkit_allowed_roles
 {   
     my $c               = shift;
@@ -420,6 +427,7 @@ sub _appkit_allowed_roles
         name    = The name of the portlet
         html    = The HTML content of the portlet
 =cut
+
 sub _appkit_stash_portlets 
 {
     my ( $c ) = @_;
@@ -456,6 +464,49 @@ sub _appkit_stash_portlets
     $c->stash->{portlets} = \@portlets;
 }
 
+
+sub _appkit_stash_searches 
+{
+    my ( $c, $q ) = @_;
+
+    my @search_results;
+    foreach my $apc ( @{ $c->appkit_controllers } )
+    {
+        next unless $apc->search_actions;
+        foreach my $search ( @{ $apc->search_actions } )
+        {   
+            my $search_action = $apc->action_for( $search->{actionname} );
+
+            # dont stash if we can't access it..
+            next unless $c->can_access( $search_action->reverse );
+
+            # run the search action..
+            {
+                local $c->stash->{breadcrumbs};
+                local $c->stash->{output_type} = 'plain';
+                undef $c->stash->{search_results};
+                
+                # Stop the default end action from rendering a view
+                $c->res->body('do_not_render');
+                $c->visit( $search_action, [], [$q] );
+                $c->res->body(undef);
+            }
+
+            # take things from the stash (that the action should have just filled out)
+            if ($c->stash->{search_results})
+            {
+                push @search_results,
+                {   
+                    name    => $search->{value},
+                    results => $c->stash->{search_results},
+                };
+            }
+        }
+    }
+
+    $c->stash->{search_results} = \@search_results;
+}
+
 =head2 _appkit_stash_navigation
     Put all the AppKit Controller Navigation data in the stash
     If you forward to this action, you should end up with a stash value keyed by 'navigation'.
@@ -465,6 +516,7 @@ sub _appkit_stash_portlets
         text    = The text of the navigation item
         uri     = The uri if the action the navigation relates to.
 =cut
+
 sub _appkit_stash_navigation
 {
     my ( $c ) = @_;

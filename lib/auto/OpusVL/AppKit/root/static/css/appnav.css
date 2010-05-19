@@ -3,17 +3,26 @@
 /* @group Explore */
 
 div#appList {
-	opacity: 1;
-	Xfilter:alpha(opacity=1);
-	position: absolute;
-	z-index: 1;
-	font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
 	top: -17px;
 	right: -5px;
 	display: none;
 }
 
-div#appList_top {
+div#appKitSearch {
+	top: -17px;
+	right: 115px;
+	display: none;	
+}
+
+div.tlMenu {
+	opacity: 1;
+	Xfilter:alpha(opacity=1);
+	position: absolute;
+	z-index: 1;
+	font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;	
+}
+
+div.tlMenu_top {
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
 	background-image: url(../images/explore_tm.png);
 	margin-right: 83px;
@@ -21,7 +30,7 @@ div#appList_top {
 	height: 27px;
 }
 
-div#appList_tl {
+div.tlMenu_tl {
 	width: 11px;
 	height: 27px;
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
@@ -31,7 +40,7 @@ div#appList_tl {
 	left: 0;
 }
 
-div#appList_tr {
+div.tlMenu_tr {
 	width: 83px;
 	height: 27px;
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
@@ -41,17 +50,17 @@ div#appList_tr {
 	right: 0;
 }
 
-div#appList_mid {
+div.tlMenu_mid {
 	overflow: hidden;
 }
 
-div#appList_ml {
+div.tlMenu_ml {
 	float: left;
 	background-image: url(../images/explore_c.png);
 	Xfilter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
 }
 
-div#appList_mr {
+div.tlMenu_mr {
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='crop');
 	background-image: url(../images/explore_mr.png);
 	width: 24px;
@@ -60,7 +69,7 @@ div#appList_mr {
 	margin-bottom: -2000px;
 }
 
-div#appList_bot {
+div.tlMenu_bot {
 	height: 31px;
 	margin-left: 26px;
 	margin-right: 31px;
@@ -69,7 +78,7 @@ div#appList_bot {
 	clear: both;
 }
 
-div#appList_bl {
+div.tlMenu_bl {
 	width: 26px;
 	height: 31px;
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='scale');
@@ -79,7 +88,7 @@ div#appList_bl {
 	bottom: 0;
 }
 
-div#appList_br {
+div.tlMenu_br {
 	width: 31px;
 	height: 31px;
 	filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='../images/1x1.png', sizingMethod='scale');
@@ -106,7 +115,7 @@ ul.appList_l1 {
 	Xborder: 2px solid lime;
 }
 
-div#appList_ml p {
+div.tlMenu_ml p {
 	margin: 2px 16px 4px 17px;
 	padding: 0 0 2px;
 	border-bottom: 1px solid #515151;

@@ -1,0 +1,30 @@
+package OpusVL::AppKit::Controller::Search;
+
+use Moose;
+use namespace::autoclean;
+
+BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI' }
+
+__PACKAGE__->config(
+    appkit_name => 'Search',
+);
+
+sub auto :Private {
+    my ($self, $c) = @_;
+    
+    push @{$c->stash->{breadcrumbs}},{
+        name => 'Search',
+        url  => $c->uri_for($c->controller->action_for('index')),
+    };
+}
+
+
+sub index :Path {
+    my ($self, $c) = @_;
+    
+    $c->_appkit_stash_searches($c->req->param('q'));
+    $c->stash->{query} = $c->req->param('q');
+}
+
+
+1;

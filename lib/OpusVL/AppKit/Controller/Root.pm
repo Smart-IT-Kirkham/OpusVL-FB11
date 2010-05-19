@@ -29,6 +29,7 @@ __PACKAGE__->config->{namespace}    = '';
 =head2 auto
     This is where i might apply the login logic!?... so far does not seem to be call 'auto' .. but why? 
 =cut
+
 sub auto : Private
 {
     my ( $self, $c ) = @_;
@@ -52,6 +53,7 @@ sub auto : Private
 =head2 index
     This is intended to be seen as the AppKit home page.
 =cut
+
 sub index 
     :Path 
     :Args(0) 
@@ -71,6 +73,7 @@ sub index
             access_denied   "access_notallowed"
         </OpusVL::AppKit::Plugin::AppKit>
 =cut
+
 sub access_notallowed : Private
 {
     my ( $self, $c ) = @_;
@@ -92,10 +95,11 @@ sub default :Path
 =head2 end
     Attempt to render a view, if needed.
 =cut
+
 sub end : ActionClass('RenderView') 
 {
     my ( $self, $c ) = @_;
-    $c->_appkit_stash_navigation;
+    #$c->_appkit_stash_navigation;
 }
 
 =head1 AUTHOR

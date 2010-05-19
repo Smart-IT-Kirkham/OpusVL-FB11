@@ -51,6 +51,9 @@ package OpusVL::AppKit::Base::Controller::GUI;
         AppKitForm
             Behaves like FormConfig option in FormFu Controller, except it loads form from the 
             ShareDir of namespace passed in 'appkit_myclass'
+            
+        SearchName
+            Tells the GUI this action is a search action and what its name should be
     
 
 =head1 SEE ALSO
@@ -89,22 +92,32 @@ has appkit_myclass          => ( is => 'ro',    isa => 'Str',                   
     This should be the hash of action details that pertain the the 'home action' of a controller.
     If there is none defined for a controller, it should be undef.
 =cut
+
 has home_action             => ( is => 'rw',    isa => 'HashRef'        );
 
 =head2 navigation_actions
     This should be an Array Ref of HashRef's pertaining the actions that make up the navigation
 =cut
+
 has navigation_actions      => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
 
 =head2 portlet_actions
     This should be an Array Ref of HashRef's pertaining the actions that are Portlet's
 =cut
+
 has portlet_actions         => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
+
+=head2 search_actions
+    This should be an Array Ref of HashRef's pertaining the actions that are Portlet's
+=cut
+
+has search_actions         => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
 
 =head2 create_action
     Hook into the creation of the actions.
     Here we read the action attributes and act accordingly.
 =cut
+
 before create_action  => sub 
 { 
     my $self = shift;
@@ -160,6 +173,23 @@ before create_action  => sub
             }
         );
         $self->portlet_actions ( $array );
+    }
+
+    if ( defined $args{attributes}{SearchName} )
+    {
+        # This action has been identified as a Search action...
+        my $array = $self->search_actions;
+        $array = [] unless defined $array;
+        push 
+        ( 
+            @$array,
+            {
+                value       => $args{attributes}{SearchName}->[0],
+                actionpath  => $args{reverse},
+                actionname  => $args{name},
+            }
+        );
+        $self->search_actions ( $array );
     }
 };
 
