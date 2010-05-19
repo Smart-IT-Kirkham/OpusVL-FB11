@@ -81,9 +81,11 @@
                         <li id="header_home">
                             <a href="/">Home</a>
                         </li>
-                        <li id="header_search">
-                            <a href="#" id="appKitSearch_anchor">Search</a>
-                        </li>
+                        [% IF c.can_access(c.controller('Search').action_for('index')) %]
+                            <li id="header_search">
+                                <a href="#" id="appKitSearch_anchor">Search</a>
+                            </li>
+                        [% END %]
                         <li id="header_applications">
                             <a href="#" id="appList_anchor">Applications</a>
                         </li>
@@ -218,25 +220,27 @@
                         <div class="tlMenu_br"></div>
                     </div>
                 </div>
-                <div id="appKitSearch" class="tlMenu">
-                    <div class="tlMenu_top">
-                        <div class="tlMenu_tl"></div>
-                        <div class="tlMenu_tr"></div>
-                    </div>
-                    <div class="tlMenu_mid">
-                        <div class="tlMenu_ml">
-                            <p>Search</p>
-                            <form action="/search" method="get">
-                                <input type="text" name="q" style="margin-left:17px;margin-right:16px;margin-bottom:7px;">
-                            </form>
+                [% IF c.can_access(c.controller('Search').action_for('index')) %]
+                    <div id="appKitSearch" class="tlMenu">
+                        <div class="tlMenu_top">
+                            <div class="tlMenu_tl"></div>
+                            <div class="tlMenu_tr"></div>
                         </div>
-                        <div class="tlMenu_mr"></div>
+                        <div class="tlMenu_mid">
+                            <div class="tlMenu_ml">
+                                <p>Search</p>
+                                <form action="/search" method="get">
+                                    <input type="text" name="q" style="margin-left:17px;margin-right:16px;margin-bottom:7px;">
+                                </form>
+                            </div>
+                            <div class="tlMenu_mr"></div>
+                        </div>
+                        <div class="tlMenu_bot">
+                            <div class="tlMenu_bl"></div>
+                            <div class="tlMenu_br"></div>
+                        </div>
                     </div>
-                    <div class="tlMenu_bot">
-                        <div class="tlMenu_bl"></div>
-                        <div class="tlMenu_br"></div>
-                    </div>
-                </div>
+                [% END %]
             </div>
         </div>
    <!--     <script language="JavaScript" type="text/javascript" src="js/appkit.js"></script>
