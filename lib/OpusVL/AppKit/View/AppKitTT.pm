@@ -32,4 +32,11 @@ BEGIN {
     extends 'Catalyst::View::TT'; 
 }
 
+=head as_list
+    Little help vmethod for TemplateToolkit to force array context.
+    Helps when DBIx::Class ->search method return only 1 result.
+        eg.  [% FOR row IN rs.search().as_list %]
+=cut
+$Template::Stash::LIST_OPS->{as_list} = sub { return ref( $_[0] ) eq 'ARRAY' ? shift : [shift]; };
+
 1;
