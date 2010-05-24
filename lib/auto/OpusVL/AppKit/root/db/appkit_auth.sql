@@ -10,7 +10,7 @@ CREATE TABLE users
         email               TEXT                NOT NULL,
         name                TEXT                NOT NULL,
         tel                 TEXT                NOT NULL,
-        status              TEXT                NOT NULL DEFAULT ('active'),
+        status              TEXT                NOT NULL DEFAULT ('enabled'),
     PRIMARY KEY (id)
 );
 
