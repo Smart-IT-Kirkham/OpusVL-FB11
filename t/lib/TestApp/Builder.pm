@@ -51,7 +51,7 @@ override _build_config => sub
 
 
     # DEBUGIN!!!!
-    $config->{'appkit_can_access_everything'} = 0;  
+    $config->{'appkit_can_access_everything'} = 1;  
 
     return $config;
 };

@@ -49,6 +49,21 @@ __PACKAGE__->set_primary_key("id");
 
 =head1 RELATIONS
 
+=head2 parameter_defaults
+
+Type: has_many
+
+Related object: L<OpusVL::AppKit::Schema::AppKitAuthDB::Result::ParameterDefault>
+
+=cut
+
+__PACKAGE__->has_many(
+  "parameter_defaults",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::ParameterDefault",
+  { "foreign.parameter_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 =head2 users_parameters
 
 Type: has_many
@@ -65,8 +80,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.06001 @ 2010-05-13 11:00:25
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5/CUggmZ+0CTIMDHIk77LA
+# Created by DBIx::Class::Schema::Loader v0.06001 @ 2010-05-24 08:46:28
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:pFYXwYSy8Xkp0POHtr2dZw
 
 use Moose;
 use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::Parameter;

@@ -25,6 +25,11 @@ CREATE TABLE parameter (
         data_type           TEXT,
         parameter           TEXT
 );
+CREATE TABLE parameter_defaults (
+        id                  INTEGER PRIMARY KEY,
+        parameter_id        INTEGER REFERENCES parameter(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+        data                TEXT
+);
 CREATE TABLE users_data (
         id                  INTEGER PRIMARY KEY,
         users_id             INTEGER REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -87,6 +92,12 @@ INSERT INTO role VALUES (2, 'normal users');
 
 INSERT INTO parameter VALUES (1,'integer','client_id' );
 INSERT INTO parameter VALUES (2,'boolean','Login Validation via SMS' );
+INSERT INTO parameter VALUES (3,'select','Location' );
+
+INSERT INTO parameter_defaults VALUES (1,3, 'Cardiff' );
+INSERT INTO parameter_defaults VALUES (2,3, 'Blackpool' );
+INSERT INTO parameter_defaults VALUES (3,3, 'Brighton' );
+INSERT INTO parameter_defaults VALUES (4,3, 'Northampton' );
 
 INSERT INTO users_role VALUES (1, 1);
 INSERT INTO users_role VALUES (1, 2);

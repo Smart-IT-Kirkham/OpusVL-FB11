@@ -245,11 +245,23 @@ sub get_parameter_input
     my $up = $c->stash->{thisuser}->find_related('users_parameters', { parameter_id => $param_id } );
     my $value = $up->value if ( $up );
 
+    # output correct HTML..
     my $html = '';
     if ( $param->data_type eq 'boolean' )
     {
         $html .= "<label for='parameter_value_true'>True</label><input type='radio' name='parameter_value' value='1' id='parameter_value_true' " . ( $value ? "checked='1'" : '') . ">";
         $html .= "<label for='parameter_value_false'>False</label><input type='radio' name='parameter_value' value='0' id='parameter_value_false' " . ( $value ? '' : "checked='1'") . ">";
+    }
+    elsif ( $param->data_type eq 'select' )
+    {
+        $html .= "<select name='parameter_value'> \n";
+        foreach my $pdef ( $param->parameter_defaults )
+        {
+            my $thisval = $pdef->data;
+            my $selected = $thisval eq $value ? 'selected' : '';
+            $html .= "<option $selected value='$thisval'> $thisval</option>\n";
+        }
+        $html .= "</select> \n";
     }
     elsif ( $param->data_type eq 'integer' )
     {
@@ -260,6 +272,7 @@ sub get_parameter_input
         $html .= "<input type='text' name='parameter_value' value='$value' id='parameter_value'>";
     }
 
+$c->log->debug("***************** HTML: $html \n");
     $c->stash->{no_wrapper} = 1;
     $c->stash->{html} = $html;
 
