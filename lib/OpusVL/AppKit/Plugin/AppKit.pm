@@ -295,6 +295,7 @@ sub can_access
     # check if we have told this app to allow everything...
     if ( $c->config->{'appkit_can_access_everything'} )
     {
+        $c->log->debug("Allowing Access to EVERYTHING! - Turn off in the config if you do not want this!") if $c->debug;
         return 1;
     }
 

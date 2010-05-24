@@ -4,43 +4,42 @@
 PRAGMA foreign_keys = ON;
 CREATE TABLE users
 (
-        id                  SERIAL              ,
+        id                  INTEGER             NOT NULL,
         username            TEXT UNIQUE         NOT NULL,
         password            TEXT                NOT NULL,
         email               TEXT                NOT NULL,
         name                TEXT                NOT NULL,
         tel                 TEXT                NOT NULL,
-        status              TEXT                NOT NULL,
+        status              TEXT                NOT NULL DEFAULT ('active'),
     PRIMARY KEY (id)
 );
 
-
 CREATE TABLE aclrule (
-        id                  SERIAL              ,
+        id                  INTEGER     NULL,
         actionpath          TEXT        NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE role (
-        id                  SERIAL              ,
+        id                  INTEGER     NULL,
         role                TEXT        NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE parameter (
-        id                  SERIAL              ,
+        id                  INTEGER     NULL,
         data_type           TEXT        NOT NULL,
         parameter           TEXT        NOT NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE parameter_defaults (
-        id                  SERIAL              ,
-        parameter_id        INTEGER REFERENCES parameter(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
+        id                  INTEGER     NULL,
+        parameter_id        INTEGER     REFERENCES parameter(id) ON DELETE CASCADE ON UPDATE CASCADE NOT NULL,
         data                TEXT,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE users_data (
-        id                  SERIAL              ,
+        id                  INTEGER     NULL,
         users_id            INTEGER     NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
         key                 TEXT        NOT NULL,
         value               TEXT        NOT NULL,

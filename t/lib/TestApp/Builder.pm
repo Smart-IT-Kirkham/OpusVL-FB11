@@ -35,9 +35,10 @@ override _build_config => sub
         schema_class => 'OpusVL::AppKit::Schema::AppKitAuthDB',
         connect_info =>
         {   
-            dsn         => 'dbi:SQLite:' . $path . '/root/db/appkit_auth.db',
-            user        => '',
-            password    => '',
+            dsn             => 'dbi:SQLite:' . $path . '/root/db/appkit_auth.db',
+            user            => '',
+            password        => '',
+            on_connect_call => 'use_foreign_keys',
         }
     };
 
