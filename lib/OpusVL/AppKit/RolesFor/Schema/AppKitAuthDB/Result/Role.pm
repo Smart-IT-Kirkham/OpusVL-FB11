@@ -10,7 +10,7 @@ sub setup_authdb
 {
     my $class = shift;
 
-    $class->many_to_many( users => 'users_roles', 'users_id');
+    $class->many_to_many( users => 'users_roles', 'user');
     $class->many_to_many( aclrules => 'aclrule_roles', 'aclrule_id');
 
 }
