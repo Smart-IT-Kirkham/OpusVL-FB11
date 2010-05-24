@@ -272,7 +272,6 @@ sub get_parameter_input
         $html .= "<input type='text' name='parameter_value' value='$value' id='parameter_value'>";
     }
 
-$c->log->debug("***************** HTML: $html \n");
     $c->stash->{no_wrapper} = 1;
     $c->stash->{html} = $html;
 
