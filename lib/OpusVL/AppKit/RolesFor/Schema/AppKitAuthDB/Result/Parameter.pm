@@ -9,7 +9,7 @@ use Moose::Role;
 sub setup_authdb
 {
     my $class = shift;
-    $class->many_to_many( roles => 'role_parameters', 'role');
+    $class->many_to_many( users => 'user_parameters', 'user');
 }
 
 1;
