@@ -49,9 +49,8 @@ override _build_config => sub
     # .. allow access regardless of ACL rules...
     $config->{'appkit_can_access_actionpaths'} = ['custom/custom'];
 
-
     # DEBUGIN!!!!
-    $config->{'appkit_can_access_everything'} = 1;  
+    $config->{'appkit_can_access_everything'} = 0;  
 
     return $config;
 };
