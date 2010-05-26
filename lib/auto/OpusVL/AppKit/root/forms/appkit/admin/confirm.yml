@@ -1,18 +1,14 @@
-
 ---
-auto_fieldset: 1
-
+indicator: submitok
+auto_fieldset: 0
 elements:
-
   - type: Submit
-    value: Yes
-    name: yesbutton
-
+    name: submitok
+    value: OK
+    attributes:
+      class: "submit submit_ok"
   - type: Submit
-    value: No
-    name: nobutton
-
-constraints:
-  - SingleValue
-  - Required
-
+    name: cancel
+    value: Cancel
+    attributes:
+      class: "submit submit_cancel"

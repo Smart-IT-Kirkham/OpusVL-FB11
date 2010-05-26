@@ -1,7 +1,9 @@
 
-
-<h2>
+<h1> Are you sure? </h1>
+<div class="content_block">
+  <p>
     [% question %]
-</h2>
+  </p>
+</div>
 
 [% form %]

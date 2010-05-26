@@ -107,6 +107,36 @@ sub user_delete_from_role
     $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
 }
 
+=head2 delete_role
+    End of chain.
+    Deletes a role (after confirmation)
+=cut
+sub delete_role
+    : Chained('role_specific')
+    : PathPart('delrole')
+    : Args(0)
+    : AppKitForm("appkit/admin/confirm.yml")
+{   
+    my ( $self, $c ) = @_;
+
+    $c->stash->{question} = "Are you sure you want to delete the role: " . $c->stash->{role}->role;
+    $c->stash->{template} = 'appkit/admin/confirm.tt';
+
+    if ( $c->stash->{form}->submitted_and_valid )
+    {   
+        $c->stash->{role}->delete;
+        $c->flash->{status_msg} = "Role deleted";
+        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('index') ) );
+    }
+    elsif( $c->req->method eq 'POST' )
+    {
+        $c->flash->{status_msg} = "Role NOT deleted";
+        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('index') ) );
+    }
+
+}
+
+
 =head2 user_add_to_role
     End of chain.
     Adds a user to a role
@@ -165,20 +195,6 @@ sub action_rule_for_role
 
     # refresh show page..
     $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->role ] ) ) ;
-}
-
-=head2 delete_role
-    End of chain.
-=cut
-sub delete_role
-    : Chained('role_specific')
-    : PathPart('delete')
-    : Args(0)
-{
-    my ( $self, $c ) = @_;
-
-    $c->stash->{role}->delete;
-    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('index') ) );
 }
 
 =head2 show_role

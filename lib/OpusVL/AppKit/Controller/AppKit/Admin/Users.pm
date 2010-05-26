@@ -176,16 +176,14 @@ sub delete_user
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
-        if ( $c->req->params->{yesbutton} )
-        {
-            $c->stash->{thisuser}->delete;
-            $c->stash->{status_msg} = "User deleted";
-        }
-        else
-        {
-            $c->stash->{status_msg} = "User NOT deleted";
-        }
-        $c->go( $c->controller->action_for('index') );
+        $c->stash->{thisuser}->delete;
+        $c->flash->{status_msg} = "User deleted";
+        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('index') ) );
+    }
+    elsif( $c->req->method eq 'POST' )
+    {
+         $c->flash->{status_msg} = "User NOT deleted";
+        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('index') ) );
     }
 
 }
@@ -201,8 +199,8 @@ sub delete_parameter
     my ( $self, $c, $param_id ) = @_;
 
     $c->stash->{thisuser}->delete_related('users_parameters', { parameter_id => $param_id } );
-    $c->stash->{status_msg} = "Parameter deleted";
-    $c->go( $c->controller->action_for('index') );
+    $c->flash->{status_msg} = "Parameter deleted";
+    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) );
 }
 
 =head2 add_parameter
