@@ -169,6 +169,7 @@ override _build_config => sub
     $config->{'View::AppKitTT'}->{'INCLUDE_PATH'}         = $inc_path;
     $config->{'View::AppKitTT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
+    $config->{'View::AppKitTT'}->{'PRE_PROCESS'}          = 'preprocess.tt';
 
     # Configure session handling
     $config->{'session'} =

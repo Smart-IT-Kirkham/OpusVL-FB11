@@ -1,0 +1,73 @@
+[%- 
+
+    # This is basically where we look at the 'features' hash to see what features have 
+    # been told to turn on/off.
+    # If a feature is turned on, it means css, javascript inc. and javascript source
+    # are included in the header.
+    # To manipulate the header we just change the 'header' hash which we know is used in the wrapper.tt.
+
+IF features.appkitfeature_stdcss;
+    header.css.list.push( "/static/css/layout.css");
+    header.css.list.push( "/static/css/skin.css");
+    header.css.list.push( "/static/css/appnav.css");
+    header.css.list.push( "/static/css/overrides.css");
+    header.css.list.push( "/static/css/vader/jquery-ui-1.8.custom.css");
+END;
+
+IF features.appkitfeature_htmleditor;
+    header.js.list.push( "/static/js/wymeditor/jquery.wymeditor.min.js ");
+-%]
+[%- BLOCK htmleditor_jssrc -%]
+        $(function() {
+            $(':submit').addClass('wymupdate');
+            $('.htmleditor').wymeditor({
+                skin: 'silver'
+            });      
+        });
+[%- END;
+    header.jssrc.list.push(  htmleditor_jssrc );
+END;
+
+IF features.appkitfeature_tablesorter;
+    header.js.list.push( "/static/js/jquery.tablesorter.min.js");
+    header.css.list.push( "/static/css/tablesorter/style.css");
+END;
+
+IF features.appkitfeature_clipboard;
+    header.js.list.push( "/static/js/ZeroClipboard.js");
+-%]
+[%- BLOCK clipboard_jssrc -%]
+        $(function() {
+          ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
+          
+          $(".copy_to_clipboard").click(function() {
+            return false;
+          });
+          
+          $(".copy_to_clipboard").mouseover(function() {
+            var element = $(this);
+            var clip    = new ZeroClipboard.Client();
+            
+            clip.addEventListener('onMouseOut', function(myClip) {
+              setTimeout(function(){myClip.destroy()},0);
+            });
+            
+            clip.addEventListener('onComplete', function(myClip) {
+              setTimeout(function() {
+                myClip.destroy();
+                element.removeClass('hover');
+              },0);
+            });
+        
+            clip.setText(element.attr('href'));
+            clip.glue(this);
+          });  
+        });
+[%- END;
+    header.jssrc.list.push( clipboard_jssrc );
+END;
+
+
+
+    # END
+-%]

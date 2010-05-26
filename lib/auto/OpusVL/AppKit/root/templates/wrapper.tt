@@ -1,74 +1,35 @@
-[%- IF ( output_type == 'plain' or c.stash.no_wrapper ) -%][% content %][%- ELSE -%]<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+[%- IF ( output_type == 'plain' or c.stash.no_wrapper ) -%]
+[%-    debug("Passing page through as text: $template.name \n"); -%]
+[%-    content -%]
+[%- ELSE -%]
+[%-    debug("Applying HTML page layout wrappers to $template.name \n"); -%]
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+[%- USE today = DateTime(today = 1); -%]
+
 <html>
     <head>
-        [% PROCESS macros.tt %]
-        [% USE today = DateTime(today = 1) %]
-        <title>[% header.title %]</title>
-        <link href="/static/css/layout.css" rel="stylesheet" rev="stylesheet" type="text/css">
-        <link href="/static/css/skin.css" rel="stylesheet" rev="stylesheet" type="text/css">
-        <link href="/static/css/appnav.css" rel="stylesheet" rev="stylesheet" type="text/css">
-        <link href="/static/css/overrides.css" rel="stylesheet" rev="stylesheet" type="text/css">
-        <link href="/static/css/vader/jquery-ui-1.8.custom.css" rel="stylesheet" rev="stylesheet" type="text/css">
+
+        <title>[% template.title or header.title%]</title>
 
         [% IF header.favicon %]
             <link rel="shortcut icon" href="[% header.favicon %]" type="image/png" />
         [% END %]
 
-        [% FOR css IN c.controller.appkit_css %]
+        [% FOR css IN header.css %]
             <link rel="stylesheet" href="[% css %]" type="text/css" media="all" />
-        [% END %]
-
-        <script language="JavaScript" type="text/javascript" src="/static/js/jquery-1.4.2.min.js"></script>
-        <script language="JavaScript" type="text/javascript" src="/static/js/jquery-ui-1.8.custom.min.js"></script>
-        <script language="JavaScript" type="text/javascript" src="/static/js/appkit.js"></script>
-        
-        [% IF c.controller.appkit_features.list.grep('htmleditor') %]
-            <script language="JavaScript" type="text/javascript" src="/static/js/wymeditor/jquery.wymeditor.min.js"></script>
-            <script language="JavaScript" type="text/javascript">
-                $(function() {
-                    $(':submit').addClass('wymupdate');
-                    $('.htmleditor').wymeditor({
-                        skin: 'silver'
-                    });      
-                });
-            </script>
-        [% END %]
-        
-        [% IF c.controller.appkit_features.list.grep('clipboard') %]
-            <script language="JavaScript" type="text/javascript" src="/static/js/ZeroClipboard.js"></script>
-            <script language="JavaScript" type="text/javascript">
-                $(function() {
-                  ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
-                  
-                  $(".copy_to_clipboard").click(function() {
-                    return false;
-                  });
-                  
-                  $(".copy_to_clipboard").mouseover(function() {
-                    var element = $(this);
-                    var clip    = new ZeroClipboard.Client();
-                    
-                    clip.addEventListener('onMouseOut', function(myClip) {
-                      setTimeout(function(){myClip.destroy()},0);
-                    });
-                    
-                    clip.addEventListener('onComplete', function(myClip) {
-                      setTimeout(function() {
-                        myClip.destroy();
-                        element.removeClass('hover');
-                      },0);
-                    });
-                
-                    clip.setText(element.attr('href'));
-                    clip.glue(this);
-                  });  
-                });
-            </script>
         [% END %]
 
         [% FOR js IN header.js %]
             <script type="text/javascript" src="[% js %]"></script>
         [% END %]
+
+        <script type="text/javascript">
+        [% FOR jssrc IN header.jssrc %]
+            [% jssrc %]
+        [% END %]
+        </script>
+
     </head>
     <body>
         <div id="page">
@@ -151,12 +112,12 @@
                         </div>
                     [% END %]
                     <div id="application_body"[% IF c.controller.navigation_actions %] class="app_body_with_nav"[% END %]>
-                        [% IF status_msg.defined %]
+                        [% IF status_msg.length > 0 %]
                             <div class="alert status">
                                 [% status_msg %]
                             </div>
                         [% END %]
-                        [% IF error_msg.defined %]
+                        [% IF error_msg.length > 0 %]
                             <div class="alert error">
                                 [% error_msg %]
                             </div>

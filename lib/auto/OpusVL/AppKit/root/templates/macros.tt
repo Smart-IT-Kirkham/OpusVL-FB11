@@ -1,3 +1,10 @@
+[%-
+    IF c.debug;
+        # define a debug() macro directed to Catalyst's log
+        MACRO debug(message) CALL c.log.debug(message);
+    END;
+-%]
+
 [% MACRO date_long(dt) BLOCK %]
     [% dt.day_name %], [% dt.day | format('%02d') %] [% dt.month_name %] [% dt.year %]
 [% END %]

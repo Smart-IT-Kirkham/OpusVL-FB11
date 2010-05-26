@@ -1,0 +1,55 @@
+[%-
+    # This is the AppKitTT configuration template which is processed before
+    # any other page.
+    # This is the place to define any extra template variables, macros, 
+    # load plugins, and perform any other template setup.
+
+    # process the macros.tt include file..
+    PROCESS macros.tt;
+
+    # define a data structure to hold header data
+    header      = 
+    {
+        title       => 'Application',
+        favicon     => '',
+        css         => [],
+        js          => [ '/static/js/jquery-1.4.2.min.js', '/static/js/jquery-ui-1.8.custom.min.js', '/static/js/appkit.js'],
+        jssrc       => [],
+    };
+
+    # define a data structure to hold info on what 'features' are available (and enabled/disabled)...
+    features    =
+    {
+        appkitfeature_stdcss        => 1,
+        appkitfeature_htmleditor    => 0,
+        appkitfeature_tablesorter   => 0,
+        appkitfeature_clipboard     => 0,
+    };
+
+    # the above 'feature' hashref is a list of available features in this template.
+    # the idea is that you can turn them on/off in the template by using a META
+    # directive at the top of your template. eg. META appkitfeature_tablesorter = 1
+  
+    # process the template meta varibles to alter the header 'features' hash...
+    FOR feat IN features.keys;
+        IF template.$feat.defined;
+            features.$feat = template.$feat;
+        END;
+    END;
+
+    # process features.. this puts things into the 'header' varible..
+    PROCESS features.tt;
+
+    # TBA.
+    # Below, we manage support for versions where Controller methods/properties manipulate the template..
+    FOR css IN c.controller.appkit_css;
+        header.css.list.push( css );
+    END;
+    IF c.controller.appkit_features.list.grep('htmleditor');
+        header.features.appkitfeature_htmleditor = 1;
+    END;
+    IF c.controller.appkit_features.list.grep('clipboard');
+        header.features.appkitfeature_clipboard = 1;
+    END;
+
+-%]
