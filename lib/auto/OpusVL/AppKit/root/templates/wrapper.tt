@@ -100,7 +100,7 @@
                     [% END %]
                 </div>
                 <div id="application">
-                    [% IF c.controller.navigation_actions %]
+                    [% IF c.controller.navigation_actions.size > 1 %]
                         <div id="application_nav">
                             <ul>
                                 [% FOREACH nav IN c.controller.navigation_actions %]
@@ -111,13 +111,13 @@
                             </ul>
                         </div>
                     [% END %]
-                    <div id="application_body"[% IF c.controller.navigation_actions %] class="app_body_with_nav"[% END %]>
-                        [% IF status_msg.length > 0 %]
+                    <div id="application_body"[% IF c.controller.navigation_actions.size > 0 %] class="app_body_with_nav"[% END %]>
+                        [% IF status_msg.defined && status_msg.length > 0 %]
                             <div class="alert status">
                                 [% status_msg %]
                             </div>
                         [% END %]
-                        [% IF error_msg.length > 0 %]
+                        [% IF error_msg.defined && error_msg.length > 0 %]
                             <div class="alert error">
                                 [% error_msg %]
                             </div>

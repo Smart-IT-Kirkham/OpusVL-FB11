@@ -1,14 +1,15 @@
-package OpusVL::AppKit::Base::Controller::GUI;
+package OpusVL::AppKit::RolesFor::Controller::GUI;
 
 =head1 NAME
 
-    OpusVL::AppKit::Base::Controller::GUI - Base Controller for those wanting to interact with AppKit
+    OpusVL::AppKit::RolesFor::Controller::GUI - Role for Controllers wanting to interact with AppKit
 
 =head1 SYNOPSIS
 
     package MyApp::Controller::SomeFunkyThing;
     use Moose
-    BEGIN{ extends 'OpusVL::AppKit::Base::Controller::GUI' };
+    BEGIN{ extends 'Catalyst::Controller' };
+    with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
     __PACKAGE__->config( appkit_name        => 'My Funky App' );
     __PACKAGE__->config( appkit_icon        => 'static/funkster/me.gif' );
@@ -27,10 +28,11 @@ package OpusVL::AppKit::Base::Controller::GUI;
         
 =head1 DESCRIPTION
 
-    If you extend this controller it can be intergrated into the OpusVL::AppKit.
+    If you use this Moose::Role with a controller it can be intergrated into the OpusVL::AppKit.
 
     You can just do: 
-        extends 'OpusVL::AppKit::Base::Controller::GUI';
+        use Moose;
+        with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
     Give your Controller a name within the GUI:
         __PACKAGE__->config( appkit_name => 'Some Name' );
@@ -55,7 +57,6 @@ package OpusVL::AppKit::Base::Controller::GUI;
         SearchName
             Tells the GUI this action is a search action and what its name should be
     
-
 =head1 SEE ALSO
 
     L<CatalystX::AppBuilder>,
@@ -75,14 +76,12 @@ package OpusVL::AppKit::Base::Controller::GUI;
 ##################################################################################################################################
 # use lines.
 ##################################################################################################################################
-use Moose;
-use namespace::autoclean;
+use strict;
+use Moose::Role;
 
 ##################################################################################################################################
 # moose calls.
 ##################################################################################################################################
-
-BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; }
 
 has appkit                  => ( is => 'ro',    isa => 'Int',                       default => 1 );
 has appkit_name             => ( is => 'ro',    isa => 'Str',                       default => 'AppKit' );
@@ -197,7 +196,9 @@ before create_action  => sub
 # controller actions.
 ##################################################################################################################################
 
-sub date_long {
+# WHAT IS THIS? ... do we still need it? ... what is it used for?
+sub date_long 
+{
     my ($self, $dt) = @_;
     
     return join '',

@@ -3,7 +3,9 @@ package OpusVL::AppKit::Controller::AppKit;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+BEGIN { extends 'Catalyst::Controller'; };
+with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+
 __PACKAGE__->config
 (
     appkit_myclass              => 'OpusVL::AppKit',

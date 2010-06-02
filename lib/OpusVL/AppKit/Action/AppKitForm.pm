@@ -61,8 +61,8 @@ sub execute
     my ($controller, $c, @args) = @_;
 
     # get the FormFu object ...
+    die("Failed to pull form from controller. Ensure your Controller 'extends' Catalyst::Controller::HTML::FormFu") unless $controller->can('form');
     my $form = $controller->form;
-    die("Failed to pull form from controller... did you 'extend' the OpusVL::AppKit::Base::Controller::GUI (which extends HTML::FormFu)???") unless defined $form;
     
     # Configure the form to generate IDs automatically
     $form->auto_id("formfield_%n_%r_%c");

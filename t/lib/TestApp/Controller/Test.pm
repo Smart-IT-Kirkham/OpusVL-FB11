@@ -2,7 +2,9 @@ package TestApp::Controller::Test;
 
 use Moose;
 use namespace::autoclean;
-BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+
+BEGIN { extends 'Catalyst::Controller'; }
+with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
@@ -23,7 +25,6 @@ __PACKAGE__->config
     AppKit to tell the controller should be part of the GUI
 
 =head1 METHODS
-
 
 =head2 portlet_test
     This is a test of a Portlet type action.
@@ -122,6 +123,46 @@ sub cause_error
 { 
     my ($self, $c) = @_;
     $c->stash->{error} = 0/2;
+}
+
+sub custom
+    :Local
+    :Args(0)
+    :NavigationName("Custom - Index")
+{
+    my ($self, $c) = @_;
+    $c->res->body('Hello .. this is the Test Controller from TestApp - custom action' );
+}
+
+sub custom_link
+    : Path('link')
+    : NavigationName("Custom - Link")
+{
+    my ($self, $c) = @_;
+    $c->res->body('Hello .. this is the Test Controller from TestApp - custom_link action' );
+}
+
+sub custom_access_denied
+    : Path('ad')
+{
+    my ($self, $c) = @_;
+    $c->stash->{error_msg} = "Custom accessd denied message";
+    $c->go('/index');
+}
+
+sub who_can_access_stuff
+    :Path('whocan')
+    :Args(0)
+    :NavigationName("Who Can Access")
+{
+    my ($self, $c) = @_;
+
+    my $string = '';
+    foreach my $user ( $c->who_can_access( 'test/custom' ) )
+    {
+        $string .= "--" . $user->username;
+    }
+    $c->res->body("Who: $string");
 }
 
 ##

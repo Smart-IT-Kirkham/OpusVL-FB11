@@ -39,10 +39,10 @@ sub _build_appkit_controllers
     # Get all the components for this app... sorted by length of the name of the componant so they are in hierarchical order (bit hacky, but think it should work)
     foreach my $comp ( sort { length($a) <=> length($b) } values %{ $c->components } )
     {   
-        # Check this is a controller..
+        # Check this is a controller for AppKit.... (not sure if we need to ignore others, but it just seems cleaner)..
         if  (
                 ( $comp->isa('Catalyst::Controller')    )               &&
-                ( $comp->isa('OpusVL::AppKit::Base::Controller::GUI') )
+                ( $comp->can('appkit') )
             )
         {   
             push( @controllers, $comp );

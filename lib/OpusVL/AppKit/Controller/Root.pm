@@ -4,9 +4,12 @@ use Moose;
 use namespace::autoclean;
 use File::ShareDir ':ALL';
 
-BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI', 'Catalyst::Controller::ActionRole' };
-__PACKAGE__->config->{namespace}    = '';
+# NOT SURE WHY WE WE'RE USING ActionRole!!! ... yet!.. leaving this here just incase things break..
+#BEGIN { 'Catalyst::Controller::ActionRole' };
 
+BEGIN { extends 'Catalyst::Controller'; }
+with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+__PACKAGE__->config->{namespace}    = '';
   
 =head1 NAME
 
@@ -16,8 +19,9 @@ __PACKAGE__->config->{namespace}    = '';
 
     The OpusVL::AppKit is intended to be inherited by another Catalyst App using AppBuilder.
 
-    The current intention is that Root Controller should not be over written and contains
-    some common controller functionality to knit all the plugged in app together.
+    The current intention is that Apps that use AppKit do not need to have their own Root Controller,
+    but use this one. 
+    If you app requires its own Root.pm Controller, you should inherite this one    
 
     This should provide all the base funcationallity required for delivery of standard sites
     developed by the OpusVL team.
@@ -44,7 +48,7 @@ sub auto : Private
     }
     elsif ( $c->controller->can('login_redirect') ) 
     {
-        $c->log->debug("User viewing the controller that deals with logging in and out");
+        $c->log->debug("User viewing the controller that deals with logging in and out") if $c->debug;
     }
 
     return 1;
@@ -78,9 +82,6 @@ sub access_notallowed : Private
 {
     my ( $self, $c ) = @_;
     $c->stash->{status_msg} = "Access denied - Please login with an account that has permissions to access the requested area";
-
-    #.. could just call another action... but what if the user does not have access to that action!?, answer, you get deep recursion!
-    #$c->go('index');
     #.. instead we will just show the access denied page..
     $c->stash->{template} = 'access_denied.tt';
 }
@@ -99,7 +100,6 @@ sub default :Path
 sub end : ActionClass('RenderView') 
 {
     my ( $self, $c ) = @_;
-    #$c->_appkit_stash_navigation;
 }
 
 =head1 AUTHOR

@@ -5,7 +5,9 @@ use namespace::autoclean;
 use Tree::Simple::View::HTML;
 use Tree::Simple::VisitorFactory;
 
-BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
+with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+
 __PACKAGE__->config
 (
     appkit_myclass              => 'OpusVL::AppKit',

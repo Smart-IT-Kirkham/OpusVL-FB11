@@ -3,7 +3,8 @@ package TestX::CatalystX::ExtensionA::Controller::ExtensionA::ExpansionAA;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+BEGIN { extends 'Catalyst::Controller'; };
+with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
 sub home
     :Path

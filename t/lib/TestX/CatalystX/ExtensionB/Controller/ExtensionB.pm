@@ -2,7 +2,9 @@ package TestX::CatalystX::ExtensionB::Controller::ExtensionB;
 
 use Moose;
 use namespace::autoclean;
-BEGIN { extends 'OpusVL::AppKit::Base::Controller::GUI'; }
+
+BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
+with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
@@ -10,7 +12,6 @@ __PACKAGE__->config
     appkit_icon                 => 'static/images/flagB.jpg',
     appkit_myclass              => 'TestX::CatalystX::ExtensionB',
 );
-
 
 sub auto 
     :Private

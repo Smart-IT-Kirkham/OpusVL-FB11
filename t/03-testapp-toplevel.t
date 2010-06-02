@@ -51,15 +51,14 @@ if ( $ENV{CATALYST_SERVER} )
     $mech->content_contains('<option value="1">Greg Bastien</option>', "Showing select option with content from the BookDB model");
 
     # Request a page (we should not have an ACL rule for this action)...
-    $mech->get_ok( '/custom', "Get Custom page" );
-    $mech->content_contains("Custom Controller from TestApp", "Can see custom controller action .. this should not have an ACL rule (but be allowed via the 'appkit_can_access_actionpaths' config var. ");
+    $mech->get_ok( '/test/custom', "Get Custom page" );
+    $mech->content_contains("Test Controller from TestApp - custom action", "Request action with no ACL but be allowed via the 'appkit_can_access_actionpaths' config var.");
 
     # can we logout.
     $mech->get_ok( '/logout', "Can logout");
 
     # request the home page .. (which should redirect to login)..
     $mech->get_ok("/");
-
 
     ## NEED TO ADD MANY MORE TESTS!!... think about all things that could and could not happen with the TestApp..
     # .. things I can think of now:

@@ -48,7 +48,7 @@ override _build_config => sub
     $config->{static}->{include_path} = $static_dirs;
 
     # .. allow access regardless of ACL rules...
-    $config->{'appkit_can_access_actionpaths'} = ['custom/custom'];
+    $config->{'appkit_can_access_actionpaths'} = ['test/custom'];
 
     # DEBUGIN!!!!
     $config->{'appkit_can_access_everything'} = 0;  
