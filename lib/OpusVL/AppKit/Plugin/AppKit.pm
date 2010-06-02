@@ -239,8 +239,6 @@ sub execute
     $c->maybe::next::method( $class, $action );
 }
 
-
-
 sub detach_to_appkit_access_denied
 {
     my ( $c, $denied_access_to_action ) = @_;
@@ -299,7 +297,7 @@ sub can_access
         return 1;
     }
 
-    # check if we have list of actionpath to allow (regardless of rules)...
+    # check if we have list of actionpaths to allow (regardless of rules)...
     if ( $c->config->{'appkit_can_access_actionpaths'} )
     {
         foreach my $allowed_path ( @{ $c->config->{'appkit_can_access_actionpaths'} } )
@@ -317,7 +315,6 @@ sub can_access
     return 1 if $c->is_unrestricted_action_name->( $action_path );
 
     # -- above here we see if we are blindly allowing access --- 
-
 
     # find all allowed roles for this action path...
     my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
@@ -368,8 +365,6 @@ sub who_can_access
     return $c->model('AppKitAuthDB::User')->search( { 'id' => { 'IN' => $inside_rs->get_column('users_id')->as_query } }, { distinct => 1 } );
 
 }
-
-
 
 =head2 _appkit_allowed_roles
     Returns ArrayRef of roles that can access the passed action path.

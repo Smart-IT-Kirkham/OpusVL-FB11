@@ -1,16 +1,5 @@
 package OpusVL::AppKit::Controller::Root;
 
-use Moose;
-use namespace::autoclean;
-use File::ShareDir ':ALL';
-
-# NOT SURE WHY WE WE'RE USING ActionRole!!! ... yet!.. leaving this here just incase things break..
-#BEGIN { 'Catalyst::Controller::ActionRole' };
-
-BEGIN { extends 'Catalyst::Controller'; }
-with 'OpusVL::AppKit::RolesFor::Controller::GUI';
-__PACKAGE__->config->{namespace}    = '';
-  
 =head1 NAME
 
     OpusVL::AppKit::Controller::Root - Root Controller for OpusVL::AppKit
@@ -30,10 +19,19 @@ __PACKAGE__->config->{namespace}    = '';
 
 =cut
 
+############################################################################################################
+use Moose;
+use namespace::autoclean;
+use File::ShareDir ':ALL';
+
+BEGIN { extends 'Catalyst::Controller'; }
+with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+
+__PACKAGE__->config->{namespace}    = '';
+  
 =head2 auto
     This is where i might apply the login logic!?... so far does not seem to be call 'auto' .. but why? 
 =cut
-
 sub auto : Private
 {
     my ( $self, $c ) = @_;
