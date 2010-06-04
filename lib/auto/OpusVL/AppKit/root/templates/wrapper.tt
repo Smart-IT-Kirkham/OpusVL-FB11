@@ -111,7 +111,7 @@
                             </ul>
                         </div>
                     [% END %]
-                    <div id="application_body"[% IF c.controller.navigation_actions.size > 0 %] class="app_body_with_nav"[% END %]>
+                    <div id="application_body"[% IF c.controller.navigation_actions.as_list.size > 0 %] class="app_body_with_nav"[% END %]>
                         [% IF status_msg.defined && status_msg.length > 0 %]
                             <div class="alert status">
                                 [% status_msg %]

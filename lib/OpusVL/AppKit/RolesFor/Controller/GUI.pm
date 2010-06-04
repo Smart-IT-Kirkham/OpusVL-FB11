@@ -122,11 +122,9 @@ before create_action  => sub
     my $self = shift;
     my %args = @_;
 
-    if ( defined $args{attributes}{AppKitForm} )
-    {
-        # add an ActionClass to this action.. so when it is called, some extra code is excuted....
-        push @{ $args{attributes}{ActionClass} }, "OpusVL::AppKit::Action::AppKitForm";
-    }
+    # add any ActionClass's to this action.. so when it is called, some extra code is excuted....
+
+    if ( defined $args{attributes}{AppKitForm} ) { push @{ $args{attributes}{ActionClass} }, "OpusVL::AppKit::Action::AppKitForm"; }
 
     if ( defined $args{attributes}{NavigationHome} )
     {

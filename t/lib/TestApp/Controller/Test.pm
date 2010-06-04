@@ -116,6 +116,16 @@ sub access_none
     $c->res->body('Controller: Test Action: access_none');
 }
 
+sub access_public
+    :Path('publicaccess') 
+    :Args(0)
+    :NavigationName("Test AppKitAllAccess")
+    :AppKitAllAccess
+{ 
+    my ($self, $c) = @_;
+    $c->res->body('Controller: Test Action: access_public');
+}
+
 sub cause_error 
     :Path('error') 
     :Args(0)

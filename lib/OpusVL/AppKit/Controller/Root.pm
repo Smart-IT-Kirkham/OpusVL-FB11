@@ -22,33 +22,19 @@ package OpusVL::AppKit::Controller::Root;
 ############################################################################################################
 use Moose;
 use namespace::autoclean;
-use File::ShareDir ':ALL';
 
 BEGIN { extends 'Catalyst::Controller'; }
 with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
+use File::ShareDir ':ALL';
+
 __PACKAGE__->config->{namespace}    = '';
   
 =head2 auto
-    This is where i might apply the login logic!?... so far does not seem to be call 'auto' .. but why? 
 =cut
 sub auto : Private
 {
     my ( $self, $c ) = @_;
-
-    # lets add some essential css and js files..
-
-    if (! $c->user && ! $c->controller->can('login_redirect') ) 
-    {
-        # use the simplelogin code...
-        $c->controller('Login')->login_redirect($c, 'Please login to go any further' );
-        $c->detach;
-    }
-    elsif ( $c->controller->can('login_redirect') ) 
-    {
-        $c->log->debug("User viewing the controller that deals with logging in and out") if $c->debug;
-    }
-
     return 1;
 }
 
@@ -69,7 +55,7 @@ sub index
 }
 
 =head2 access_notallowed
-    This called by the ACL method when an access control rule is broken.
+    This called by the ACL method when an access control rule is broken. (including not being logged in!)
     Configured in myapp.conf     :
         <OpusVL::AppKit::Plugin::AppKit>
             access_denied   "access_notallowed"
@@ -80,8 +66,7 @@ sub access_notallowed : Private
 {
     my ( $self, $c ) = @_;
     $c->stash->{status_msg} = "Access denied - Please login with an account that has permissions to access the requested area";
-    #.. instead we will just show the access denied page..
-    $c->stash->{template} = 'access_denied.tt';
+    $c->detach( $c->controller('Login')->action_for('login') );
 }
 
 sub default :Path 

@@ -51,20 +51,28 @@ sub _build_appkit_controllers
     return \@controllers;
 }
 
+=head2 appkit_actiontree_visitor
+    Use for find node in the appkit_actiontree...
+=cut 
+has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor::FindByPath',  default => sub
+{
+    my $visitor = Tree::Simple::Visitor::FindByPath->new;
+    $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
+    return $visitor;
+} );
+
 =head2 appkit_actiontree
     This is a Tree::Simple of OpusVL::AppKit::Plugin::AppKit::Node's.
     Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
-    This attribute is used to define access to an action.
+    This attribute is used to define access to actions.
 =cut
-
 has appkit_actiontree => ( is => 'ro',    isa => 'Tree::Simple',  lazy_build => 1 );
 sub _build_appkit_actiontree
 {   
     my ( $c ) = shift;
 
-    # used to find nodes..
-    my $visitor = Tree::Simple::Visitor::FindByPath->new;
-    $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
+    # get the vistor..
+    my $visitor = $c->appkit_actiontree_visitor;
 
     # make a tree root (based on code from Catalyst::Plugin::Authorization::ACL::Engine)
     my $root = Tree::Simple->new('AppKit', Tree::Simple->ROOT);
@@ -85,18 +93,18 @@ sub _build_appkit_actiontree
             my @path = split '/', $action_path;
             my $name = pop @path;
 
-
             # build AppKit::Node object...
             my $appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
             (
-                node_name   => $name,
-                controller  => $cont,
-                action_path => $action_path,
-                access_only => [],  # default to "no roles allowed"
+                node_name       => $name,
+                controller      => $cont,
+                action_path     => $action_path,
+                action_attrs    => $action->attributes,
+                access_only     => [],  # default to "no roles allowed"
             );
 
             ## look for any ACL rules for this action_path...
-            if ( my $allowed_roles = $c->_appkit_allowed_roles( $action_path ) )
+            if ( my $allowed_roles = $c->_allowed_roles_from_db( $action_path ) )
             {
                 $appkit_action_object->access_only( $allowed_roles );
             }
@@ -151,7 +159,7 @@ sub _build_appkit_actiontree
                 else
                 {
 
-                    # build AppKit::Node object...(this is not an action, so is pretty minimal)...
+                    # build AppKit::Node object...
                     my $branch_appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
                     (
                         node_name   => $path_part,
@@ -212,18 +220,14 @@ sub execute
 {
     my ( $c, $class, $action ) = @_;
 
-    #  to check roles we need the plugin
+    #  to check roles we need the plugin!
     $c->isa("Catalyst::Plugin::Authorization::Roles") or die "Please use the Authorization::Roles plugin.";
-
-    my $access_denied_action_path = $c->config->{'appkit_access_denied'};
-    #$c->log->debug("************** AppKit - Access Denied Path - " . $access_denied_action_path );
 
     if  ( 
         Scalar::Util::blessed($action)
-            and 
-        $action->reverse ne $access_denied_action_path
         )
     {
+        # ensure the user is logged in...(do what Catalyst::ActionRole::NeedsLogin does )...
         if ( $c->can_access( $action->reverse ) )
         {
             # do nothing..
@@ -231,35 +235,10 @@ sub execute
         }
         else
         {
-            $c->log->debug("AppKit - Not Allowed Access to " . $action->reverse . " - Detaching to - $access_denied_action_path ") if $c->debug;
             $c->detach_to_appkit_access_denied( $action );
         }
     }
-
     $c->maybe::next::method( $class, $action );
-}
-
-sub detach_to_appkit_access_denied
-{
-    my ( $c, $denied_access_to_action ) = @_;
-
-    my $access_denied_action_path = $c->config->{'appkit_access_denied'};
-
-    my @ad_path = split('/', $access_denied_action_path );
-    my $ad_action_name = pop @ad_path; 
-    my $ad_namespace = '';
-    $ad_namespace = join('/', @ad_path) if @ad_path;
-
-    if ( my $ad_handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
-    {
-        (my $ad_path = $ad_handler->reverse) =~ s!^/?!/!;
-        eval { $c->detach( $ad_path, [$denied_access_to_action, "Access Denied"] ) };
-        die $@ || $Catalyst::DETACH;
-    }
-    else
-    {
-        die "AppKit Configration Issue!: You could configure a valid 'appkit_access_denied' key... I have '$access_denied_action_path'";
-    }
 }
 
 ###########################################################################################################################
@@ -285,16 +264,21 @@ sub can_access
     # did we get passed a path?...
     return undef unless defined $action_path;
 
-    $c->log->warn("can_access called with a non-string action path: $action_path ") if ( ref $action_path );
-
-    # -- below here we see if we are blindly allowing access --- 
-    # ... thinking this should be wrapped up in a nice rouinte!..
-
-    # check if we have told this app to allow everything...
-    if ( $c->config->{'appkit_can_access_everything'} )
+    if ( ref $action_path )
     {
-        $c->log->debug("Allowing Access to EVERYTHING! - Turn off in the config if you do not want this!") if $c->debug;
-        return 1;
+        $c->log->warn("can_access called with a non-string action path: $action_path .. converting..");
+        $action_path    = $action_path->reverse;
+    }
+
+    return 1 if $c->is_unrestricted_action_name->( $action_path );
+
+    # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
+    return 1 if ( $action_path eq $c->config->{'appkit_access_denied'} );
+
+    if ( ! $c->user )
+    {
+        $c->log->debug("NO User logged. can_access says 'no!'") if $c->debug;
+        return 0;
     }
 
     # check if we have list of actionpaths to allow (regardless of rules)...
@@ -306,18 +290,19 @@ sub can_access
         }
     }
 
-    # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
-    if ( $action_path eq $c->config->{'appkit_access_denied'} )
+
+
+    # check if we have been told to allow everything...
+    if ( $c->config->{'appkit_can_access_everything'} )
     {
-        # matches.. better allow the user to run the access denied action...
-        return 1
+        $c->log->debug("Allowing Access to EVERYTHING! - Turn off in the config if you do not want this!") if $c->debug;
+        return 1;
     }
-    return 1 if $c->is_unrestricted_action_name->( $action_path );
 
     # -- above here we see if we are blindly allowing access --- 
 
     # find all allowed roles for this action path...
-    my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
+    my $allowed_roles = $c->_allowed_roles_from_tree( $action_path );
 
     # if none found.. do NOT allow access..
     return 0 unless defined $allowed_roles;
@@ -345,7 +330,7 @@ sub who_can_access
     my ($action_path)   = @_;
 
     # find all allowed roles for this action path...
-    my $allowed_roles = $c->_appkit_allowed_roles( $action_path );
+    my $allowed_roles = $c->_allowed_roles_from_tree( $action_path );
     return undef unless defined $allowed_roles;
 
     # get an resultset of user_id's...
@@ -366,12 +351,66 @@ sub who_can_access
 
 }
 
-=head2 _appkit_allowed_roles
-    Returns ArrayRef of roles that can access the passed action path.
+
+=head2 _find_node_in_appkit_actiontree
+    Returns OpusVL::AppKit::Plugin::AppKit::Node that represents the action_path.
+    .. or undef if not found.
 =cut
 
-sub _appkit_allowed_roles
+sub _find_node_in_appkit_actiontree
 {   
+    my $c               = shift;
+    my ($action_path)   = @_;
+
+    # get the important bits...
+    my $visitor = $c->appkit_actiontree_visitor;
+    my $root = $c->appkit_actiontree;
+
+    # look for action path in the tree...
+    my @path = split '/', $action_path;
+    $visitor->setResults; # clear any results.
+    $visitor->setSearchPath(@path);
+    $root->accept($visitor);
+
+    if ( my $node = $visitor->getResult )
+    {   
+        # got it, return it...
+        return $node->getNodeValue;
+    }
+
+    # .. can't find it!
+    $c->log->debug("AppKit ACL : Could not find node for: " . $action_path ) if $c->debug;
+    return undef;
+}
+
+=head2 _allowed_roles_from_tree
+    Returns ArrayRef of roles that can access the passed action path. 
+    This checks the 'appkit_actiontree' .. so should be quick.
+=cut
+
+sub _allowed_roles_from_tree
+{   
+    my $c               = shift;
+    my ($action_path)   = @_;
+
+    # find the node in the tree..
+    my $node = $c->_find_node_in_appkit_actiontree( $action_path );
+
+    return [] if ( ! defined $node );
+
+    #.. pull out the array ref of roles the allowed for this node (action path)..
+    my $roles = $node->access_only;
+
+    return $node->access_only;
+}
+
+=head2 _allowed_roles_from_db
+    Returns ArrayRef of roles that can access the passed action path. 
+    This checks the database (model)
+=cut
+
+sub _allowed_roles_from_db
+{
     my $c               = shift;
     my ($action_path)   = @_;
 
@@ -398,6 +437,7 @@ sub _appkit_allowed_roles
     # return array ref of roles..
     return $allowed_roles;
 }
+
 
 =head2 _appkit_stash_portlets
     Put all the AppKit Controller Portlets data in the stash
@@ -524,6 +564,31 @@ sub _appkit_stash_navigation
         }
     }
     $c->stash->{navigation} = \@navigations;
+}
+
+sub detach_to_appkit_access_denied
+{
+    my ( $c, $denied_access_to_action ) = @_;
+
+    my $access_denied_action_path = $c->config->{'appkit_access_denied'};
+
+    $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;
+
+    my @ad_path = split('/', $access_denied_action_path );
+    my $ad_action_name = pop @ad_path; 
+    my $ad_namespace = '';
+    $ad_namespace = join('/', @ad_path) if @ad_path;
+
+    if ( my $ad_handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
+    {
+        (my $ad_path = $ad_handler->reverse) =~ s!^/?!/!;
+        eval { $c->detach( $ad_path, [$denied_access_to_action, "Access Denied"] ) };
+        die $@ || $Catalyst::DETACH;
+    }
+    else
+    {
+        die "AppKit Configration Issue!: You could configure a valid 'appkit_access_denied' key... I have '$access_denied_action_path'";
+    }
 }
 
 __PACKAGE__->meta->make_immutable;

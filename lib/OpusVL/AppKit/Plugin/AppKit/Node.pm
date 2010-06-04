@@ -13,7 +13,8 @@ has action_path     => ( is => 'rw'       , isa => 'Str'                     );
 # Array of roles that can access this node..
 has access_only     => ( is => 'rw'       , isa => 'ArrayRef'                );
 
-
+# Hash of attributes..
+has action_attrs    => ( is => 'rw'       , isa => 'HashRef'                 );
 
 # maybe for future use?.... currently being delt with in the Base::Controller::GUI...
 #   has navigation      => ( is => 'rw'       , isa => 'Int'                     , default  => 0 );
