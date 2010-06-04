@@ -42,7 +42,7 @@ CREATE TABLE users_data (
         id                  INTEGER     NULL,
         users_id            INTEGER     NOT NULL REFERENCES users (id) ON DELETE CASCADE ON UPDATE CASCADE,
         key                 TEXT        NOT NULL,
-        value               TEXT        NOT NULL,
+        value               TEXT        NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE users_role (
