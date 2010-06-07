@@ -449,7 +449,6 @@ sub _allowed_roles_from_db
     return $allowed_roles;
 }
 
-
 =head2 _appkit_stash_portlets
     Put all the AppKit Controller Portlets data in the stash
     If you forward to this action, you should end up with a stash value keyed by 'portlets'.
@@ -467,6 +466,9 @@ sub _appkit_stash_portlets
     foreach my $apc ( @{ $c->appkit_controllers } )
     {   
         next unless $apc->portlet_actions;
+
+        $c->log->debug("AppKit - RREALLY LOOKING FOR PORTLETS IN : " . $apc ) if $c->debug;
+
         foreach my $portlet ( @{ $apc->portlet_actions } )
         {   
             my $portlet_action = $apc->action_for( $portlet->{actionname} );

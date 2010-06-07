@@ -34,7 +34,7 @@ __PACKAGE__->config
     This can then be interpreted by the caller.
 =cut
 sub portlet_test
-    :PortletName("Test Portlet")
+    : PortletName('Test Portlet')
 {
     my $self                = shift;
     my ($c, $portlet_type)  = @_;
