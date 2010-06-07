@@ -264,7 +264,7 @@ sub can_access
 
     if ( ref $action_path )
     {
-        $c->log->warn("can_access called with a non-string action path: $action_path .. converting..");
+        $c->log->debug("can_access called with a non-string action path: $action_path .. converting..") if $c->debug;
         $action_path    = $action_path->reverse;
     }
 
