@@ -26,6 +26,11 @@ if ( $ENV{CATALYST_SERVER} )
     is( $mech->ct, "text/html");
     $mech->content_contains("Please login", "Redirect to login page");
 
+    # Request public page... not logged but should allow access.
+    $mech->get_ok("/test/publicaccess");
+    is( $mech->ct, "text/html");
+    $mech->content_contains("Controller: Test Action: access_public", "Runs a action with 'AppKitAllAccess' specified ");
+
     # Send incorrect login information..
     $mech->post_ok( '/login', { username => 'appkitadmin', password => 'passwordnotcorrect' }, "Submit to login page");
     $mech->content_contains("Wrong username or password", "Not Logged after giving incorrect details");

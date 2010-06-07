@@ -13,6 +13,7 @@ __PACKAGE__->config
     appkit_myclass              => 'TestX::CatalystX::ExtensionB',
 );
 
+
 sub auto 
     :Private
 {

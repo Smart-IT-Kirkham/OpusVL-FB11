@@ -20,14 +20,12 @@ package OpusVL::AppKit::Plugin::AppKit;
 ###########################################################################################################################
 use namespace::autoclean;
 use Moose;
-use List::Util 'first';
 use Tree::Simple;
 use OpusVL::AppKit::Plugin::AppKit::Node;
 
 ###########################################################################################################################
 # moose calls.
 ###########################################################################################################################
-with 'Catalyst::ClassData';
 
 has appkit_controllers => ( is => 'ro',    isa => 'ArrayRef',  lazy_build => 1 );
 sub _build_appkit_controllers
@@ -227,7 +225,7 @@ sub execute
         Scalar::Util::blessed($action)
         )
     {
-        # ensure the user is logged in...(do what Catalyst::ActionRole::NeedsLogin does )...
+        # ensure the user is logged in...
         if ( $c->can_access( $action->reverse ) )
         {
             # do nothing..
@@ -275,6 +273,21 @@ sub can_access
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
     return 1 if ( $action_path eq $c->config->{'appkit_access_denied'} );
 
+    # find this actions node in the tree ...
+    my $action_node = $c->_find_node_in_appkit_actiontree( $action_path );
+    if ( ! $action_node )
+    {
+        $c->log->debug("Could not find ::Node in tree for: $action_path ") if $c->debug;
+        return 1;
+    }
+
+    # Have we been told to "NOT APPLY ACCESS CONTROL" ?? ...
+    if ( exists $action_node->action_attrs->{AppKitAllAccess} )
+    {
+        $c->log->debug("The following action has AppKitAllAccess for $action_path . No access control being applied ") if $c->debug;
+        return 1;
+    }
+
     if ( ! $c->user )
     {
         $c->log->debug("NO User logged. can_access says 'no!'") if $c->debug;
@@ -289,8 +302,6 @@ sub can_access
             return 1 if $action_path eq $allowed_path;
         }
     }
-
-
 
     # check if we have been told to allow everything...
     if ( $c->config->{'appkit_can_access_everything'} )

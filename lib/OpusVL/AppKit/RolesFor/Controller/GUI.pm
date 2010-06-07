@@ -123,7 +123,6 @@ before create_action  => sub
     my %args = @_;
 
     # add any ActionClass's to this action.. so when it is called, some extra code is excuted....
-
     if ( defined $args{attributes}{AppKitForm} ) { push @{ $args{attributes}{ActionClass} }, "OpusVL::AppKit::Action::AppKitForm"; }
 
     if ( defined $args{attributes}{NavigationHome} )
@@ -189,6 +188,7 @@ before create_action  => sub
         $self->search_actions ( $array );
     }
 };
+
 
 ##################################################################################################################################
 # controller actions.

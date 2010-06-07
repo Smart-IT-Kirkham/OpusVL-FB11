@@ -32,7 +32,7 @@ __PACKAGE__->config->{namespace}    = '';
   
 =head2 auto
 =cut
-sub auto : Private
+sub auto : Private 
 {
     my ( $self, $c ) = @_;
     return 1;
