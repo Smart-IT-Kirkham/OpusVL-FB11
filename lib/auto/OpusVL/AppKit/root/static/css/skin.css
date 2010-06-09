@@ -1,3 +1,5 @@
+/* @override http://172.16.10.215:3000/static/css/skin.css */
+
 /* @override http://localhost:3000/static/css/skin.css */
 
 /* @override http://localhost:3000/static/css/skin.css */
@@ -470,14 +472,20 @@ div#application_nav ul li {
 }
 
 div#application_nav ul li a {
+	text-overflow:ellipsis;
+	overflow:hidden;
+	white-space:nowrap;
 	display: block;
-	width: 150px;
+	overflow: hidden;
+	width: 130px;
 	padding-top: 12px;
 	padding-bottom: 18px;
 	padding-left: 10px;
+	padding-right: 20px;
 	background: url(/static/images/app_side_menu.png) no-repeat;
 	color: #515151;
 	text-decoration: none;
+	height: 14px;
 }
 
 div#application_nav ul li a:hover {
@@ -518,6 +526,16 @@ h1 {
 h3 {
 	margin-bottom: 0;
 	font-size: 1em;
+}
+
+table.vertical_list {
+	font-size: .8em;
+}
+
+table.vertical_list th {
+	text-align: left;
+	padding-right: 20px;
+	vertical-align: top;
 }
 
 /* @end */
