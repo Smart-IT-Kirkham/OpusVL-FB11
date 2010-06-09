@@ -115,7 +115,7 @@ sub set_param_by_name
     return undef unless $param;
 
     # add to users parameter...
-    $self->find_or_create_related( 'users_parameters', { value => $param_value, parameter_id => $param->id   } );
+    $self->update_or_create_related( 'users_parameters', { value => $param_value, parameter_id => $param->id   } );
 
     return 1; 
 }
