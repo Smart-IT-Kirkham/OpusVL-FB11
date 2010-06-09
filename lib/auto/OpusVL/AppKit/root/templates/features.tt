@@ -17,7 +17,7 @@ END;
 IF features.appkitfeature_htmleditor;
     header.js.list.push( "/static/js/wymeditor/jquery.wymeditor.min.js ");
 -%]
-[%- BLOCK htmleditor_jssrc -%]
+[%- htmleditor_jssrc = BLOCK -%]
         $(function() {
             $(':submit').addClass('wymupdate');
             $('.htmleditor').wymeditor({
@@ -43,7 +43,7 @@ END;
 IF features.appkitfeature_clipboard;
     header.js.list.push( "/static/js/ZeroClipboard.js");
 -%]
-[%- BLOCK clipboard_jssrc -%]
+[%- clipboard_jssrc = BLOCK -%]
         $(function() {
           ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
           
