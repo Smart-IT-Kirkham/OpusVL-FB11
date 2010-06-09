@@ -31,6 +31,13 @@ END;
 IF features.appkitfeature_tablesorter;
     header.js.list.push( "/static/js/jquery.tablesorter.min.js");
     header.css.list.push( "/static/css/tablesorter/style.css");
+-%]
+[%- BLOCK tablesorter_jssrc -%]
+    $(function() {
+        $(".tablesorter").each(function(){$(this).tablesorter()});
+    });
+[%- END;
+    header.jssrc.list.push( tablesorter_jssrc );
 END;
 
 IF features.appkitfeature_clipboard;
