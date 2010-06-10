@@ -96,9 +96,7 @@
                         [% FOR up IN c.stash.thisuser.users_parameters %]
                             <li>
                                 [% up.parameter.parameter %] 
-                                [% IF c.debug %]
                                    ( [% up.value %] )
-                                [% END %]
                                 <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('delete_parameter'), [ c.stash.thisuser.id ] ) _ "/" _ up.parameter.id  %]'> Remove </a>
                             </li>
                         [% END %]
