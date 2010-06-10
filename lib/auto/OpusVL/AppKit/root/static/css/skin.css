@@ -385,6 +385,11 @@ a.link_button_cancel {
 	padding-left: 38px;	
 }
 
+a.link_button_search {
+	background: url(/static/images/controls/search-button-med.png) no-repeat -4px -4px;
+	padding-left: 38px;	
+}
+
 /* @end */
 
 /* @group Controls */
@@ -440,6 +445,11 @@ input.submit_back {
 input.submit_add {
 	background: url(/static/images/controls/add-med.png) no-repeat -4px -6px;
 	padding-left: 46px;	
+}
+
+input.submit_search {
+	background: url(/static/images/controls/search-button-med.png) no-repeat -4px -4px;
+	padding-left: 38px;	
 }
 
 /* @end */
