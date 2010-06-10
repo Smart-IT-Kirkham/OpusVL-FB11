@@ -304,6 +304,7 @@ div.content_block {
 	margin-bottom: 11px;
 	position: relative;
 	color: #414141;
+	overflow: auto;
 }
 
 p {
