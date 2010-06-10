@@ -380,6 +380,11 @@ a.link_button_ok {
 	padding-left: 38px;	
 }
 
+a.link_button_edit {
+	background: url(/static/images/controls/edit-button-med.png) no-repeat -4px -5px;
+	padding-left: 38px;	
+}
+
 a.link_button_cancel {
 	background: url(/static/images/controls/cancel-button-med.png) no-repeat -4px -4px;
 	padding-left: 38px;	
@@ -444,6 +449,11 @@ input.submit_back {
 
 input.submit_add {
 	background: url(/static/images/controls/add-med.png) no-repeat -4px -6px;
+	padding-left: 42px;	
+}
+
+input.submit_edit {
+	background: url(/static/images/controls/edit-button-med.png) no-repeat -4px -5px;
 	padding-left: 38px;	
 }
 
