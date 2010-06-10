@@ -362,7 +362,7 @@ a:hover.link_button {
 
 a.link_button_add {
 	background: url(/static/images/controls/add-med.png) no-repeat -4px -4px;
-	padding-left: 45px;
+	padding-left: 42px;
 }
 
 a.link_button_back {
@@ -444,7 +444,7 @@ input.submit_back {
 
 input.submit_add {
 	background: url(/static/images/controls/add-med.png) no-repeat -4px -6px;
-	padding-left: 46px;	
+	padding-left: 38px;	
 }
 
 input.submit_search {
