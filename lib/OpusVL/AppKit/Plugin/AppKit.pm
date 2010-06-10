@@ -192,7 +192,6 @@ has is_unrestricted_action_name =>
         {
         my ($name) = @_;
         return 1 if $name =~ /(^|\/)_/;
-        return 1 if $name =~ /auto$/;
         return 1 if $name =~ /begin$/;
         return 1 if $name =~ /end$/;
         return 1 if $name =~ /default$/;
@@ -229,10 +228,11 @@ sub execute
         if ( $c->can_access( $action->reverse ) )
         {
             # do nothing..
-            #$c->log->debug("************** AppKit - Allows Access - " . $action->reverse );
+            $c->log->debug("************** AppKit - Allows Access to - " . $action->reverse ) if $c->debug;
         }
         else
         {
+            $c->log->debug("************** AppKit - DENIED Access to - " . $action->reverse ) if $c->debug;
             $c->detach_to_appkit_access_denied( $action );
         }
     }
@@ -252,6 +252,8 @@ sub execute
         {
             # $c->user must have the correct roles.
         }
+
+    THIS NEEDS A MASSIVE CLEAN UP ONCE WE ARE HAPPY APPKIT WORKS WELL.
 =cut
 
 sub can_access
@@ -269,6 +271,24 @@ sub can_access
     }
 
     return 1 if $c->is_unrestricted_action_name->( $action_path );
+
+    # TBA - just trying the logic out (put into method when done).. 
+    # check here for the 'auto' action .. if this is an auto action, check to see if the current users has access to
+    # any actions in the Controller the auto action belongs to..
+    if ( $action_path =~ /auto$/ )
+    {
+
+        # get the path to the requested action.. and check that against ->can_access...
+        my $request_action_path = $c->action->reverse;
+        if ( $request_action_path =~ /auto$/ )
+        {
+            $c->log->warn("Problem with can_access logic.. $request_action_path will cause an infinite loop!");
+        }
+        else    
+        {
+            return $c->can_access( $request_action_path );
+        }
+    }
 
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
     return 1 if ( $action_path eq $c->config->{'appkit_access_denied'} );
