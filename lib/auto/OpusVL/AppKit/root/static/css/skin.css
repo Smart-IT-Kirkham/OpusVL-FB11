@@ -207,8 +207,6 @@ fieldset {
 	padding-top: 10px;
 	padding-bottom: 12px;
 	margin-top: 10px;
-	width:  600px;
-	overflow: auto;
 }
 
 fieldset + fieldset {
