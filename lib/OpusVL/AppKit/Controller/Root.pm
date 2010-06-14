@@ -65,8 +65,9 @@ sub index
 sub access_notallowed : Private
 {
     my ( $self, $c ) = @_;
-    $c->stash->{status_msg} = "Access denied - Please login with an account that has permissions to access the requested area";
-    $c->detach( $c->controller('Login')->action_for('login') );
+    $c->flash->{status_msg} = "Access denied - Please login with an account that has permissions to access the requested area";
+    $c->res->redirect( $c->uri_for( $c->controller('Login')->action_for('login') ) );
+    $c->detach();
 }
 
 sub default :Path 

@@ -17,6 +17,16 @@
         jssrc       => [],
     };
 
+    # read in any header modifications from the $c..
+    FOR css IN c.stash.header.css.list;
+        header.css.push( css );
+    END;
+    FOR js IN c.stash.header.js.list;
+        header.js.push( js );
+    END ;
+
+
+
     # define a data structure to hold info on what 'features' are available (and enabled/disabled)...
     features    =
     {
