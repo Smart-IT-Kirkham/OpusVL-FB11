@@ -157,6 +157,11 @@ override _build_config => sub
     $config->{static}->{include_path}      = $static_dirs;
     $config->{static}->{ignore_extensions} = [qw/tt tt2/];
 
+    # .. add template dir into the config for View::PDF::Reuse...
+    my $pdf_path = $config->{'View::PDF::Reuse'}->{'INCLUDE_PATH'};
+    push(@$pdf_path, $path . '/root/templates' );
+    $config->{'View::PDF::Reuse'}->{'INCLUDE_PATH'} = $pdf_path;
+
     # .. add template dir into the config for View::AppKitTT...
     my $inc_path = $config->{'View::AppKitTT'}->{'INCLUDE_PATH'};
     push(@$inc_path, $path . '/root/templates' );
