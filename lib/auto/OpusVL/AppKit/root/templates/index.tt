@@ -32,7 +32,7 @@
 </script>
 
 
-[% IF c.debug %]
+[% IF c.debug && iwant_to_see_messy_debug_output %]
     <ul>
         <li> 
             AppKit Controllers
