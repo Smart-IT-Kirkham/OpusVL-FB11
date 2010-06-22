@@ -10,7 +10,7 @@
 [% END %]
 
 [% MACRO date_short(dt) BLOCK %]
-    [% dt.day | format('%o2d') %]-[% dt.month_abbr %]-[% dt.year %]
+    [% dt.day | format('%02d') %]-[% dt.month_abbr %]-[% dt.year %]
 [% END %]
 
 [% MACRO time_long(dt) BLOCK %]
