@@ -92,7 +92,7 @@
                             [% IF loop.last %]
                                 [% crumb.name %]
                             [% ELSE %]
-                                <a href="[% crumb.url %]">[% crumb.name %]</a> &gt;
+                                <a href="[% crumb.url or crumb.uri %]">[% crumb.name %]</a> &gt;
                             [% END %]
                         [% END %]
                     [% ELSE %]
