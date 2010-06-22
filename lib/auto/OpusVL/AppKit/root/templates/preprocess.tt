@@ -25,7 +25,15 @@
         header.js.push( js );
     END ;
 
+    # set the status message..
+    IF status_msg.defined && status_msg.length > 0;
+        status_message = status_message _ c.stash.status_msg;
+    END;
 
+    # set the error message..
+    IF error_msg.defined && error_msg.length > 0;
+        error_message = error_message _ c.stash.errror_msg;
+    END;
 
     # define a data structure to hold info on what 'features' are available (and enabled/disabled)...
     features    =

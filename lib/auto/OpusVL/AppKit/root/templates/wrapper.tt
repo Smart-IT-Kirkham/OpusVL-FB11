@@ -112,14 +112,14 @@
                         </div>
                     [% END %]
                     <div id="application_body"[% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.as_list.size > 0 %] class="app_body_with_nav"[% END %]>
-                        [% IF status_msg.defined && status_msg.length > 0 %]
+                        [% IF status_message.defined %]
                             <div class="alert status">
-                                [% status_msg %]
+                                [% status_message %]
                             </div>
                         [% END %]
-                        [% IF error_msg.defined && error_msg.length > 0 %]
+                        [% IF error_message.defined %]
                             <div class="alert error">
-                                [% error_msg %]
+                                [% error_message %]
                             </div>
                         [% END %]
                         
