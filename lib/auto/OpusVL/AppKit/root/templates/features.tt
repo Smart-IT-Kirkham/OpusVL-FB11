@@ -15,15 +15,13 @@ IF features.appkitfeature_stdcss;
 END;
 
 IF features.appkitfeature_htmleditor;
-    header.js.list.push( "/static/js/wymeditor/jquery.wymeditor.min.js ");
+    header.js.list.push( "/static/js/wymeditor/jquery.wymeditor.min.js");
 -%]
 [%- htmleditor_jssrc = BLOCK -%]
-        $(function() {
-            $(':submit').addClass('wymupdate');
-            $('.htmleditor').wymeditor({
-                skin: 'silver'
-            });      
-        });
+    $(function() {
+        $(':submit').addClass('wymupdate');
+        $('.htmleditor').wymeditor({skin:'silver'});
+    });
 [%- END;
     header.jssrc.list.push(  htmleditor_jssrc );
 END;
@@ -48,6 +46,7 @@ IF features.appkitfeature_clipboard;
           ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
           
           $(".copy_to_clipboard").click(function() {
+            appKit.windowClick();
             return false;
           });
           
@@ -63,6 +62,7 @@ IF features.appkitfeature_clipboard;
               setTimeout(function() {
                 myClip.destroy();
                 element.removeClass('hover');
+                appKit.windowClick();
               },0);
             });
         

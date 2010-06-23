@@ -55,19 +55,18 @@
         END;
     END;
 
-    # process features.. this puts things into the 'header' varible..
-    PROCESS features.tt;
-
     # TBA.
     # Below, we manage support for versions where Controller methods/properties manipulate the template..
     FOR css IN c.controller.appkit_css;
         header.css.list.push( css );
     END;
     IF c.controller.appkit_features.list.grep('htmleditor');
-        header.features.appkitfeature_htmleditor = 1;
+        features.appkitfeature_htmleditor = 1;
     END;
     IF c.controller.appkit_features.list.grep('clipboard');
-        header.features.appkitfeature_clipboard = 1;
+        features.appkitfeature_clipboard = 1;
     END;
 
+    # process features.. this puts things into the 'header' varible..
+    PROCESS features.tt;
 -%]

@@ -19,6 +19,7 @@ package OpusVL::AppKit::Plugin::AppKit;
 # use lines.
 ###########################################################################################################################
 use namespace::autoclean;
+use 5.010;
 use Moose;
 use Tree::Simple;
 use OpusVL::AppKit::Plugin::AppKit::Node;
@@ -64,7 +65,20 @@ has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor:
     Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
     This attribute is used to define access to actions.
 =cut
-has appkit_actiontree => ( is => 'ro',    isa => 'Tree::Simple',  lazy_build => 1 );
+#has appkit_actiontree => ( is => 'ro',    isa => 'Tree::Simple',  lazy_build => 1 );
+
+sub appkit_actiontree {
+    my ($c,$rebuild) = @_;
+    
+    state $appkit_actiontree = $c->_build_appkit_actiontree;
+
+    if ($rebuild) {
+        $appkit_actiontree = $c->_build_appkit_actiontree;
+    }
+
+    return $appkit_actiontree;
+}
+
 sub _build_appkit_actiontree
 {   
     my ( $c ) = shift;
