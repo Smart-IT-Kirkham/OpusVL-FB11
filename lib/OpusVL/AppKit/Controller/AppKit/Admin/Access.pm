@@ -138,7 +138,6 @@ sub delete_role
 
 }
 
-
 =head2 user_add_to_role
     End of chain.
     Adds a user to a role
@@ -249,20 +248,19 @@ sub show_role
 
         foreach my $path ( @$allowed )
         {
-            $c->log->debug("***************ALLOWING:" . $path . "\n");
+            $c->log->debug("***************ALLOWING:" . $path . "\n") if $c->debug;
             my $aclrule = $c->model('AppKitAuthDB::Aclrule')->find_or_create( { actionpath => $path } );
             $c->stash->{role}->update_or_create_related('aclrule_roles', { aclrule_id => $aclrule->id } );
         }
         foreach my $path ( @$denied )
         {
-            $c->log->debug("****************DENYING:" . $path . "\n");
+            $c->log->debug("****************DENYING:" . $path . "\n") if $c->debug;
             my $aclrule = $c->model('AppKitAuthDB::Aclrule')->find_or_create( { actionpath => $path } );
             $c->stash->{role}->search_related('aclrule_roles', { aclrule_id => $aclrule->id } )->delete;
         }
 
-        # now we have allowed and denied access to the different parts of the tree... we need to rebuild it..z
-        $c->clear_appkit_actiontree;
-        $c->stash->{action_tree} = $c->appkit_actiontree;
+        # now we have allowed and denied access to the different parts of the tree... we need to rebuild it..
+        $c->stash->{action_tree} = $c->appkit_actiontree(1); # built with a 'force re-read'
 
     }
 

@@ -60,25 +60,97 @@ has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor:
     return $visitor;
 } );
 
-=head2 appkit_actiontree
-    This is a Tree::Simple of OpusVL::AppKit::Plugin::AppKit::Node's.
-    Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
-    This attribute is used to define access to actions.
-=cut
-#has appkit_actiontree => ( is => 'ro',    isa => 'Tree::Simple',  lazy_build => 1 );
 
-sub appkit_actiontree {
-    my ($c,$rebuild) = @_;
-    
+=head2 is_unrestricted_action_name
+    Little helper to ascertain if an action's name is one we dont apply access control to.
+=cut
+
+has is_unrestricted_action_name => 
+( 
+    is          => 'ro',    
+    isa         => 'CodeRef',  
+    default     => sub 
+    { 
+        sub 
+        {
+        my ($name) = @_;
+        return 1 if $name =~ /(^|\/)_/;
+        return 1 if $name =~ /begin$/;
+        return 1 if $name =~ /end$/;
+        return 1 if $name =~ /default$/;
+        return 1 if $name =~ /login$/;
+        return 1 if $name =~ /logout$/;
+        return 1 if $name =~ /login\/not_required$/;
+        return 1 if $name =~ /View\:\:/;
+        return 0;
+        } 
+    } 
+);
+
+###########################################################################################################################
+# catalyst hook.
+###########################################################################################################################
+
+=head2 execute
+    The method hooks into the catalyst despatch path.
+    If the current logged in used is denied access to the action this will detach to the 'access_denied' action.
+=cut
+
+sub execute 
+{
+    my ( $c, $class, $action ) = @_;
+
+    #  to check roles we need the plugin!
+    $c->isa("Catalyst::Plugin::Authorization::Roles") or die "Please use the Authorization::Roles plugin.";
+
+    if  ( 
+        Scalar::Util::blessed($action)
+        )
+    {
+        # ensure the user is logged in...
+        if ( $c->can_access( $action->reverse ) )
+        {
+            # do nothing..
+            $c->log->debug("************** AppKit - Allows Access to - " . $action->reverse ) if $c->debug;
+        }
+        else
+        {
+            $c->log->debug("************** AppKit - DENIED Access to - " . $action->reverse ) if $c->debug;
+            $c->detach_to_appkit_access_denied( $action );
+        }
+    }
+    $c->maybe::next::method( $class, $action );
+}
+
+###########################################################################################################################
+# plugin methods.
+###########################################################################################################################
+
+=head2 appkit_actiontree
+    This returns a Tree::Simple of OpusVL::AppKit::Plugin::AppKit::Node's.
+    Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
+    This attribute is used to define access to actions.(but could be used for many more things)
+
+    Arguments:
+        $_[0]   -   Self
+        $_[1]   -   Optional flag to say "re-read the tree"
+=cut
+sub appkit_actiontree 
+{
+    my ($c, $rebuild) = @_;
+
+    # 'state' var means this will only be called once .. if Perl encounters this line again it knows not to run again..
     state $appkit_actiontree = $c->_build_appkit_actiontree;
 
-    if ($rebuild) {
-        $appkit_actiontree = $c->_build_appkit_actiontree;
-    }
+    # force a re-read of the tree?.. (for example, if access control changes)...
+    $appkit_actiontree = $c->_build_appkit_actiontree if ($rebuild);
 
     return $appkit_actiontree;
 }
-
+=head2 _build_appkit_actiontree
+    internal only method that supports the appkit_actiontree routine.
+    This basically builds a tree of actions/controllers in the current catalyst app.           
+=cut
 sub _build_appkit_actiontree
 {   
     my ( $c ) = shift;
@@ -191,71 +263,6 @@ sub _build_appkit_actiontree
     # finished :) 
     return $root;
 }
-
-=head2 is_unrestricted_action_name
-    Little helper to ascertain if an action's name is one we dont apply access control to.
-=cut
-
-has is_unrestricted_action_name => 
-( 
-    is          => 'ro',    
-    isa         => 'CodeRef',  
-    default     => sub 
-    { 
-        sub 
-        {
-        my ($name) = @_;
-        return 1 if $name =~ /(^|\/)_/;
-        return 1 if $name =~ /begin$/;
-        return 1 if $name =~ /end$/;
-        return 1 if $name =~ /default$/;
-        return 1 if $name =~ /login$/;
-        return 1 if $name =~ /logout$/;
-        return 1 if $name =~ /login\/not_required$/;
-        return 1 if $name =~ /View\:\:/;
-        return 0;
-        } 
-    } 
-);
-
-###########################################################################################################################
-# catalyst hook.
-###########################################################################################################################
-
-=head2 execute
-    The method hooks into the catalyst despatch path.
-    If the current logged in used is denied access to the action this will detach to the 'access_denied' action.
-=cut
-
-sub execute 
-{
-    my ( $c, $class, $action ) = @_;
-
-    #  to check roles we need the plugin!
-    $c->isa("Catalyst::Plugin::Authorization::Roles") or die "Please use the Authorization::Roles plugin.";
-
-    if  ( 
-        Scalar::Util::blessed($action)
-        )
-    {
-        # ensure the user is logged in...
-        if ( $c->can_access( $action->reverse ) )
-        {
-            # do nothing..
-            $c->log->debug("************** AppKit - Allows Access to - " . $action->reverse ) if $c->debug;
-        }
-        else
-        {
-            $c->log->debug("************** AppKit - DENIED Access to - " . $action->reverse ) if $c->debug;
-            $c->detach_to_appkit_access_denied( $action );
-        }
-    }
-    $c->maybe::next::method( $class, $action );
-}
-
-###########################################################################################################################
-# plugin methods.
-###########################################################################################################################
 
 =head2 can_access
     Checks the ACL structure against the current user and action.
