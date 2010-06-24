@@ -60,11 +60,14 @@
     FOR css IN c.controller.appkit_css;
         header.css.list.push( css );
     END;
-    IF c.controller.appkit_features.list.grep('htmleditor');
+    IF c.controller.appkit_features.list.grep('htmleditor').size;
         features.appkitfeature_htmleditor = 1;
     END;
-    IF c.controller.appkit_features.list.grep('clipboard');
+    IF c.controller.appkit_features.list.grep('clipboard').size;
         features.appkitfeature_clipboard = 1;
+    END;
+    IF c.controller.appkit_features.list.grep('tablesorter').size;
+        features.appkitfeature_tablesorter = 1;
     END;
 
     # process features.. this puts things into the 'header' varible..
