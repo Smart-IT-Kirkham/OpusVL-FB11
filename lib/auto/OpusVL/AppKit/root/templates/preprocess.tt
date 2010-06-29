@@ -70,6 +70,11 @@
         features.appkitfeature_tablesorter = 1;
     END;
 
+    # Resolve dependencies between features
+    IF (features.appkitfeature_tablesorter);
+        features.appkitfeature_clipboard = 1;
+    END;
+
     # process features.. this puts things into the 'header' varible..
     PROCESS features.tt;
 -%]

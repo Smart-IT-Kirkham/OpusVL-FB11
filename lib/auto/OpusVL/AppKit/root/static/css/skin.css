@@ -476,6 +476,21 @@ ul.control-container li.control-edit-small {
 	background: url(/static/images/controls/action-small.png) no-repeat;
 }
 
+a.copy_button {
+	text-decoration: none;
+	color: #999;
+	background: url(/static/images/controls/copy-small.png) no-repeat;
+	padding-left: 23px;
+	height: 16px;
+	padding-top: 3px;
+	font-size: .7em;
+	display: inline-block;
+}
+
+a.hover {
+	color: #696969;
+}
+
 /* @end */
 
 /* @group Side navigation */

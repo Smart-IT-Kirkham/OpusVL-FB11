@@ -32,7 +32,11 @@ IF features.appkitfeature_tablesorter;
 -%]
 [%- tablesorter_jssrc = BLOCK -%]
     $(function() {
-        $(".tablesorter").each(function(){$(this).tablesorter()});
+        $(".tablesorter").each(function(){
+            var table = $(this);
+            $('<a></a>',{text: "Copy to clipboard", href: "<table>"+table.html()+"</table>"}).addClass('copy_to_clipboard').addClass('copy_button').insertBefore(table);
+            table.tablesorter();
+        });
     });
 [%- END;
     header.jssrc.list.push( tablesorter_jssrc );
