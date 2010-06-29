@@ -478,7 +478,7 @@ ul.control-container li.control-edit-small {
 
 a.copy_button {
 	text-decoration: none;
-	color: #999;
+	color: #888;
 	background: url(/static/images/controls/copy-small.png) no-repeat;
 	padding-left: 23px;
 	height: 16px;
