@@ -1,3 +1,5 @@
+/* @override http://172.16.10.215:3003/static/css/skin.css */
+
 /* @override http://172.16.10.198:3000/static/css/skin.css */
 
 /* @override http://localhost:3303/static/css/skin.css */
@@ -615,8 +617,13 @@ div.ui-tabs-panel.ui-widget-content.ui-corner-bottom {
 	overflow: auto;
 }
 
+div.ui-tabs-panel.ui-widget-content.ui-corner-bottom a {
+	color: blue;
+}
 
-
+div.ui-tabs-panel.ui-widget-content.ui-corner-bottom a:visited {
+	color: purple;
+}
 
 /* @end */
 
