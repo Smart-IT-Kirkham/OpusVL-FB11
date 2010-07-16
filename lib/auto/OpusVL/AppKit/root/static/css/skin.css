@@ -1,3 +1,5 @@
+/* @override http://localhost:3303/static/css/skin.css */
+
 /* @override http://172.16.10.215:3000/static/css/skin.css */
 
 /* @override http://localhost:3000/static/css/skin.css */
@@ -537,6 +539,84 @@ div#application_nav ul li a.active {
 
 /* @group Body */
 
+/* @group Tabbed content */
+
+#application_body div.tabbed_content_block {
+	background-color: transparent;
+	border-style: none;
+	padding: 0;
+	background-image: none;
+	font-size: 1em;
+}
+
+#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active {
+	background-image: none;
+	background-color: #fbfcfb;
+	-webkit-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	-moz-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	box-shadow: 3px 5px 10px rgba(0,0,0,0.2);	color: #414141;
+	border-style: none;
+	padding-top: 3px;
+	padding-bottom: 1px;
+	margin-top: -3px;
+}
+
+#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active a {
+	color:  #414141;
+}
+
+#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top:hover {
+	background-color: #d4d4d4;
+}
+
+
+
+#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top {
+	background-image: none;
+	background-color: #cacaca;
+	border-style: none;
+	height: 27px;
+	font-size: .9em;
+	margin-right: 4px;
+	padding-right: 1px;
+}
+
+#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all {
+	border-style: none;
+	padding: 0;
+	background-color: transparent;
+	background-image: none;
+	font-size: .9em;
+}
+
+#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active a {
+}
+
+li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active {
+	border-style: none;
+}
+
+div.ui-tabs-panel.ui-widget-content.ui-corner-bottom {
+	border-style: none;
+	background-color: #fbfcfb;
+	-webkit-border-top-right-radius: 5px;
+	-moz-border-radius-topright: 5px;
+	border-top-right-radius: 5px;
+	padding: 5px 17px 20px;
+	-webkit-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	-moz-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
+	margin-bottom: 11px;
+	position: relative;
+	color: #414141;
+	overflow: auto;
+}
+
+
+
+
+/* @end */
+
 div#application_body {
 	background-color: #eaeaea;
 	border: 1px none #747474;
@@ -572,6 +652,8 @@ table.vertical_list th {
 	padding-right: 20px;
 	vertical-align: top;
 }
+
+
 
 /* @end */
 
