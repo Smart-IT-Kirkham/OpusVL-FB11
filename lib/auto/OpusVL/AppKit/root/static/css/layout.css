@@ -1,3 +1,5 @@
+/* @override http://localhost:3303/static/css/layout.css */
+
 /* @override http://172.16.10.215:3000/static/css/layout.css */
 
 /* @override http://localhost:3000/static/css/layout.css */
@@ -279,6 +281,25 @@ div.status {
 /* @end */
 
 /* @group Body */
+
+/* @group Column layout */
+
+div.two_column {
+}
+
+div.two_column div.left_column {
+	width: 49%;
+	float: left;
+	padding-right: 1px;
+}
+
+div.two_column div.right_column {
+	width: 49%;
+	float: left;
+	padding-left: 2%;
+}
+
+/* @end */
 
 div#application_nav {
 	float: left;
