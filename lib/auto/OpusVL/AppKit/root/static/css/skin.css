@@ -346,6 +346,8 @@ textarea {
 
 /* @end */
 
+/* @group Controls */
+
 /* @group Link buttons */
 
 a.link_button {
@@ -406,7 +408,37 @@ a.link_button_search {
 
 /* @end */
 
-/* @group Controls */
+/* @group Text links */
+
+a.link_add {
+	background: url(/static/images/controls/add-small.png) no-repeat;
+	padding: 2px 4px 3px 23px;
+}
+
+a.link_delete {
+	background: url(/static/images/controls/delete-small.png) no-repeat;
+	padding: 2px 4px 3px 24px;
+}
+
+a.link_edit {
+	background: url(/static/images/controls/edit-small.png) no-repeat;
+	padding: 1px 4px 3px 23px;
+}
+
+a.link_prev {
+	background: url(/static/images/controls/prev-small.png) no-repeat;
+	padding: 1px 4px 3px 16px;
+}
+
+a.link_next {
+	background: url(/static/images/controls/next-small.png) no-repeat right 0;
+	padding-top: 1px;
+	padding-bottom: 3px;
+	padding-right: 17px;
+	margin-right: 4px;
+}
+
+/* @end */
 
 /* @group Submit buttons */
 
