@@ -1,5 +1,7 @@
 /* @override http://localhost:3303/static/css/layout.css */
 
+/* @override http://localhost:3303/static/css/layout.css */
+
 /* @override http://172.16.10.215:3000/static/css/layout.css */
 
 /* @override http://localhost:3000/static/css/layout.css */
@@ -170,7 +172,8 @@ div#button_group_right a.link_button {
 }
 
 div.button_group_right a.link_button {
-	margin-left: 8px;
+	margin-left: 7px;
+	margin-right: 0;
 }
 
 /* @end */

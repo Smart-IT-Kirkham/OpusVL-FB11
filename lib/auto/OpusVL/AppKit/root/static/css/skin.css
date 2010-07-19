@@ -1,3 +1,5 @@
+/* @override http://localhost:3303/static/css/skin.css */
+
 /* @override http://172.16.10.215:3003/static/css/skin.css */
 
 /* @override http://172.16.10.198:3000/static/css/skin.css */
@@ -353,13 +355,14 @@ a.link_button {
 	color: #515151;
 	font-weight: bold;
 	text-decoration: none;
-	padding: 14px 15px 16px;
+	padding: 12px 15px 14px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
 	-webkit-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
 	-moz-box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
 	box-shadow: 3px 3px 5px rgba(0,0,0,0.4);
+	margin-right: 7px;
 }
 
 a:hover.link_button {
@@ -367,28 +370,28 @@ a:hover.link_button {
 }
 
 a.link_button_add {
-	background: url(/static/images/controls/add-med.png) no-repeat -4px -4px;
+	background: url(/static/images/controls/add-med.png) no-repeat -4px -6px;
 	padding-left: 42px;
 }
 
 a.link_button_back {
-	background: url(/static/images/controls/back-button-med.png) no-repeat -4px -4px;
-	padding-left: 45px;
+	background: url(/static/images/controls/back-button-med.png) no-repeat -3px -5px;
+	padding-left: 47px;
 }
 
 a.link_button_delete {
-	background: url(/static/images/controls/delete-button-med.png) no-repeat -4px -4px;
-	padding-left: 45px;
+	background: url(/static/images/controls/delete-button-med.png) no-repeat -1px -4px;
+	padding-left: 43px;
 }
 
 a.link_button_ok {
-	background: url(/static/images/controls/ok-button-med.png) no-repeat -4px -4px;
+	background: url(/static/images/controls/ok-button-med.png) no-repeat -2px -3px;
 	padding-left: 38px;	
 }
 
 a.link_button_edit {
-	background: url(/static/images/controls/edit-button-med.png) no-repeat -4px -5px;
-	padding-left: 38px;	
+	background: url(/static/images/controls/edit-button-med.png) no-repeat -4px -4px;
+	padding-left: 39px;	
 }
 
 a.link_button_cancel {
@@ -397,7 +400,7 @@ a.link_button_cancel {
 }
 
 a.link_button_search {
-	background: url(/static/images/controls/search-button-med.png) no-repeat -4px -4px;
+	background: url(/static/images/controls/search-button-med.png) no-repeat -2px -3px;
 	padding-left: 38px;	
 }
 
@@ -449,8 +452,8 @@ input.submit_cancel {
 }
 
 input.submit_back {
-	background: url(/static/images/controls/back-button-med.png) no-repeat -4px -6px;
-	padding-left: 46px;	
+	background: url(/static/images/controls/back-button-med.png) no-repeat -4px -7px;
+	padding-left: 47px;	
 }
 
 input.submit_add {
@@ -458,13 +461,18 @@ input.submit_add {
 	padding-left: 42px;	
 }
 
+input.submit_delete {
+	background: url(/static/images/controls/delete-button-med.png) no-repeat -1px -4px;
+	padding-left: 43px;	
+}
+
 input.submit_edit {
 	background: url(/static/images/controls/edit-button-med.png) no-repeat -4px -5px;
-	padding-left: 38px;	
+	padding-left: 39px;	
 }
 
 input.submit_search {
-	background: url(/static/images/controls/search-button-med.png) no-repeat -4px -4px;
+	background: url(/static/images/controls/search-button-med.png) no-repeat -3px -4px;
 	padding-left: 38px;	
 }
 
