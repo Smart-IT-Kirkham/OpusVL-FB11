@@ -657,6 +657,11 @@ div.ui-tabs-panel.ui-widget-content.ui-corner-bottom {
 	overflow: auto;
 }
 
+div.ui-tabs-panel.ui-widget-content.ui-corner-bottom input.submit { 
+	font-size: 0.9em; 
+	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
+}
+
 div.ui-tabs-panel.ui-widget-content.ui-corner-bottom a {
 	color: blue;
 }
