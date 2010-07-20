@@ -449,7 +449,6 @@ input.submit {
 	color: #515151;
 	font-weight: bold;
 	text-decoration: none;
-	padding: 12px 15px 14px;
 	-webkit-border-radius: 4px;
 	-moz-border-radius: 4px;
 	border-radius: 4px;
@@ -461,6 +460,10 @@ input.submit {
 	border-style: none;
 	font-family: "Helvetica Neue", Arial, Helvetica, Geneva, sans-serif;
 	margin-left: 0;
+	padding-left: 15px;
+	padding-right: 15px;
+	height: 43px;
+	padding-bottom: 4px;
 }
 
 div#button_group_right input.submit {
@@ -609,6 +612,10 @@ div#application_nav ul li a.active {
 	color:  #414141;
 }
 
+#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active a:focus {
+	outline: none;
+}
+
 #application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top:hover {
 	background-color: #d4d4d4;
 }
@@ -632,9 +639,6 @@ div#application_nav ul li a.active {
 	font-size: .9em;
 	padding: 0;
 	height: 28px;
-}
-
-#application_body div.tabbed_content_block.ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active a {
 }
 
 li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active {

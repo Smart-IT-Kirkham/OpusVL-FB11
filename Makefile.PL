@@ -23,6 +23,7 @@ requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::View::TT';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::Download';
+requires 'Catalyst::View::PDF::Reuse';
 
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Unicode';
@@ -42,6 +43,8 @@ requires 'parent';
 requires 'Config::General';
 
 catalyst;
+
+install_share 'lib/auto';
 
 #install_script glob('script/*.pl');
 auto_install;
