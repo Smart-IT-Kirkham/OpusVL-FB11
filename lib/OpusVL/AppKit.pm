@@ -76,7 +76,7 @@ package OpusVL::AppKit;
 use strict;
 use warnings;
 use OpusVL::AppKit::Builder;
-our $VERSION = '1.00';
+our $VERSION = '1.01';
 
 ##################################################################################################################################
 # main #
