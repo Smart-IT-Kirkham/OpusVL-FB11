@@ -16,15 +16,23 @@ requires 'Tree::Simple::VisitorFactory';
 requires 'Crypt::Eksblowfish::Bcrypt';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
 requires 'Template::Plugin::DateTime';
+requires 'parent';
+requires 'Config::General';
+requires 'DBIx::Class::TimeStamp';
 
+# Base Catalyst components
 requires 'Catalyst::Runtime' => '5.8002';
 requires 'Catalyst::Action::RenderView';
+requires 'Catalyst::Authentication::Store::DBIx::Class';
 
+# Catalyst views
 requires 'Catalyst::View::TT';
 requires 'Catalyst::View::JSON';
+requires 'Catalyst::View::Email';
 requires 'Catalyst::View::Download';
 requires 'Catalyst::View::PDF::Reuse';
 
+# Catalyst plugins
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Unicode';
 requires 'Catalyst::Plugin::CustomErrorMessage';
@@ -34,13 +42,18 @@ requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
+requires 'Catalyst::Plugin::Static::Simple';
 
+# Catalyst models
+requires 'Catalyst::Model::DBIC::Schema';
+
+# Catalyst controllers
+requires 'Catalyst::Controller::HTML::FormFu';
+
+# CatalystX components
 requires 'CatalystX::AppBuilder';
 requires 'CatalystX::VirtualComponents';
 requires 'CatalystX::SimpleLogin';
-
-requires 'parent';
-requires 'Config::General';
 
 catalyst;
 
