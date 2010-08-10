@@ -23,9 +23,11 @@ sub auto :Private
 
     OpusVL - www.opusvl.com
 
-=head1 LICENSE
+=head1 COPYRIGHT and LICENSE
 
-    This library is free software. You can redistribute it and/or modify it under the same terms as Perl itself.
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
 
 =cut
 

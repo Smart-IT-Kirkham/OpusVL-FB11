@@ -15,8 +15,11 @@ __PACKAGE__->config
 
 
 =head2 auto
+
     Default action for this controller.
+    
 =cut
+
 sub auto
     : Private
 {
@@ -28,8 +31,11 @@ sub auto
 }
 
 =head2 index
+
     default action for access administration.
+
 =cut
+
 sub index
     : Path
     : Args(0)
@@ -39,8 +45,11 @@ sub index
 }
 
 =head2 addrole
+
     Add a role
+
 =cut
+
 sub addrole
     : Local
 {
@@ -66,9 +75,12 @@ sub addrole
 }
 
 =head2 role_specific
+
     Start of chain.
     Action to capture role specific action..
+
 =cut
+
 sub role_specific
     : Chained('/')
     : PathPart('admin/access/role')
@@ -82,8 +94,11 @@ sub role_specific
 }
 
 =head2 user_for_role
+
     Middle of chain.
+
 =cut
+
 sub user_for_role
     : Chained('role_specific')
     : PathPart('user')
@@ -94,9 +109,12 @@ sub user_for_role
 }
 
 =head2 user_delete_from_role
+
     End of chain.
     Add a user to a role (and give it a value)
+
 =cut
+
 sub user_delete_from_role
     : Chained('user_for_role')
     : PathPart('delete')
@@ -110,9 +128,12 @@ sub user_delete_from_role
 }
 
 =head2 delete_role
+
     End of chain.
     Deletes a role (after confirmation)
+
 =cut
+
 sub delete_role
     : Chained('role_specific')
     : PathPart('delrole')
@@ -139,9 +160,12 @@ sub delete_role
 }
 
 =head2 user_add_to_role
+
     End of chain.
     Adds a user to a role
+
 =cut
+
 sub user_add_to_role
     : Chained('role_specific')
     : PathPart('adduser')
@@ -161,8 +185,11 @@ sub user_add_to_role
 }
 
 =head2 action_rule_for_role
+
     End of chain.
+
 =cut
+
 sub action_rule_for_role
     : Chained('role_specific')
     : PathPart('rule')
@@ -199,9 +226,12 @@ sub action_rule_for_role
 }
 
 =head2 show_role
+
     End of chain.
     Action to display role info page.
+
 =cut
+
 sub show_role
     : Chained('role_specific')
     : PathPart('show')
@@ -314,6 +344,14 @@ sub show_role
     # manually set (as we may forward to this action).
     $c->stash->{template} = 'appkit/admin/access/show_role.tt';
 }
+
+=head1 COPYRIGHT and LICENSE
+
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut
 
 1;
 __END__

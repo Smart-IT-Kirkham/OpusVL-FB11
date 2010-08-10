@@ -317,7 +317,7 @@ div.app_body_with_nav {
 }
 
 div.content_block {
-	background-color: rgba(254,255,254,0.89);
+	background-color: #fffefe;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border-radius: 5px;

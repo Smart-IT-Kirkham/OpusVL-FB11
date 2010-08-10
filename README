@@ -59,4 +59,10 @@
     (you can give 'dot' as the first argument to the above command to produce TestApp.png chart)
 
 
+=head1 COPYRIGHT and LICENSE
 
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut

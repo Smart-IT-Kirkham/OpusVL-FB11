@@ -52,7 +52,8 @@ sub _build_appkit_controllers
 
 =head2 appkit_actiontree_visitor
     Use for find node in the appkit_actiontree...
-=cut 
+=cut
+
 has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor::FindByPath',  default => sub
 {
     my $visitor = Tree::Simple::Visitor::FindByPath->new;
@@ -135,6 +136,7 @@ sub execute
         $_[0]   -   Self
         $_[1]   -   Optional flag to say "re-read the tree"
 =cut
+
 sub appkit_actiontree 
 {
     my ($c, $rebuild) = @_;
@@ -147,10 +149,12 @@ sub appkit_actiontree
 
     return $appkit_actiontree;
 }
+
 =head2 _build_appkit_actiontree
     internal only method that supports the appkit_actiontree routine.
     This basically builds a tree of actions/controllers in the current catalyst app.           
 =cut
+
 sub _build_appkit_actiontree
 {   
     my ( $c ) = shift;
@@ -644,6 +648,14 @@ sub detach_to_appkit_access_denied
         die "AppKit Configration Issue!: You could configure a valid 'appkit_access_denied' key... I have '$access_denied_action_path'";
     }
 }
+
+=head1 COPYRIGHT and LICENSE
+
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut
 
 __PACKAGE__->meta->make_immutable;
 __PACKAGE__;

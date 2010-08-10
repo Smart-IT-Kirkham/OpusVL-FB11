@@ -6,6 +6,7 @@ use Moose::Role;
 =head2 setup_authdb
 
 =cut
+
 sub setup_authdb
 {
     my $class = shift;
@@ -29,7 +30,9 @@ sub setup_authdb
 }
 
 =head2 getdata
+
 =cut
+
 sub getdata
 {
     my $self = shift;
@@ -38,8 +41,11 @@ sub getdata
     return undef unless $data;
     return $data->value;
 }
+
 =head2 setdata
+
 =cut
+
 sub setdata
 {
     my $self = shift;
@@ -50,8 +56,11 @@ sub setdata
 }
 
 =head2 disable
+
     Disables a users account.
+
 =cut
+
 sub disable
 {
     my $self = shift;
@@ -65,8 +74,11 @@ sub disable
 }
 
 =head2 enable
+
     Enables a users account.
+
 =cut
+
 sub enable
 {
     my $self = shift;
@@ -80,8 +92,11 @@ sub enable
 }
 
 =head2 params_hash
+
     Finds all a users parameters, matches them with the value and returns a nice Hash ref.
+
 =cut
+
 sub params_hash
 {
     my $self = shift;
@@ -98,11 +113,14 @@ sub params_hash
 }
 
 =head2 set_param_by_name
+
     Sets a users parameter by the parameter name.
     Returns:
         undef   - if the param could be found by name.
         1       - if the param was set successfully.
+
 =cut
+
 sub set_param_by_name
 {
     my $self  = shift;
@@ -119,12 +137,16 @@ sub set_param_by_name
 
     return 1; 
 }
+
 =head2 delete_param_by_name
+
     Deltes a users parameter by the parameter name.
     Returns:
         undef   - if the param could be found by name.
         1       - if the param was deleted successfully.
+
 =cut
+
 sub delete_param_by_name
 {
     my $self  = shift;
@@ -141,5 +163,14 @@ sub delete_param_by_name
 
     return 1; 
 }
+
+=head1 COPYRIGHT and LICENSE
+
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut
+
 1;
 __END__

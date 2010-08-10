@@ -134,5 +134,13 @@ use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::User;
 with 'OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::User';
 __PACKAGE__->setup_authdb;
 
+=head1 COPYRIGHT and LICENSE
+
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut
+
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;

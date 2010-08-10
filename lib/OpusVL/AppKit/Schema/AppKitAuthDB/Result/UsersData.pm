@@ -77,6 +77,13 @@ __PACKAGE__->belongs_to(
 # Created by DBIx::Class::Schema::Loader v0.07000 @ 2010-05-24 12:44:30
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:114U0Ljc/s4Hsusm7WyD9A
 
+=head1 COPYRIGHT and LICENSE
+
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;

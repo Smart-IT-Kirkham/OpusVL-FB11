@@ -12,8 +12,11 @@ __PACKAGE__->config
 );
 
 =head2 auto
+
     Default action for this controller.
+
 =cut
+
 sub auto
     : Private
 {
@@ -31,8 +34,11 @@ sub auto
 }
 
 =head2 index
+
     default action for access administration.
+    
 =cut
+
 sub index
     : Path
     : Args(0)
@@ -44,6 +50,7 @@ sub index
 =head2 adduser
 
 =cut
+
 sub adduser
     : Local
     : Args(0)
@@ -79,8 +86,11 @@ sub adduser
 }
 
 =head2 user_specific
+
     Start of chain.
+
 =cut
+
 sub user_specific
     : Chained('/')
     : PathPart('user')
@@ -91,9 +101,12 @@ sub user_specific
 }
 
 =head2 show_user
+
     End of chain.
     Display a users details.
+
 =cut
+
 sub show_user
     : Chained('user_specific')
     : PathPart('show')
@@ -137,9 +150,12 @@ sub show_user
 }
 
 =head2 edit_user
+
     End of chain.
     Display a users details.
+
 =cut
+
 sub edit_user
     : Chained('user_specific')
     : PathPart('form')
@@ -163,8 +179,11 @@ sub edit_user
 }
 
 =head2 delete_user
+
     End of chain.
+
 =cut
+
 sub delete_user
     : Chained('user_specific')
     : PathPart('delete')
@@ -191,8 +210,11 @@ sub delete_user
 }
 
 =head2 delete_parameter
+
     End of chain.
+
 =cut
+
 sub delete_parameter
     : Chained('user_specific')
     : PathPart('deleteparameter')
@@ -206,8 +228,11 @@ sub delete_parameter
 }
 
 =head2 add_parameter
+
     End of chain.
+
 =cut
+
 sub add_parameter
     : Chained('user_specific')
     : PathPart('addparameter')
@@ -228,9 +253,12 @@ sub add_parameter
 }
 
 =head2 get_parameter_input
+
     End of chain.
     Returns the input for a parameter.
+
 =cut
+
 sub get_parameter_input
     : Chained('user_specific')
     : PathPart('addparaminput')
@@ -276,6 +304,14 @@ sub get_parameter_input
     $c->stash->{html} = $html;
 
 }
+
+=head1 COPYRIGHT and LICENSE
+
+Copyright (C) 2010 OpusVL
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut
 
 1;
 __END__
