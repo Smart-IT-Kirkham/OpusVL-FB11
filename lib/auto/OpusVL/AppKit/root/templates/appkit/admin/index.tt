@@ -7,6 +7,11 @@
 
     <ul>
         <li>
+            <a href='[% c.uri_for( c.controller('AppKit::User').action_for('change_password') ) %]'>
+                Change Your Password
+            </a>
+        </li>
+        <li>
             <a href='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('index') ) %]'>
                 Roles
             </a>

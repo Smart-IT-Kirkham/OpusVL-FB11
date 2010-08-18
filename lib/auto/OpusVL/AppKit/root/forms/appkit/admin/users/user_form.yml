@@ -9,9 +9,9 @@ elements:
     name: username
     label: Username
     constraints:
-      - type: Callback
-        message: "Username already taken"
-
+      - Required
+      - type: '+OpusVL::AppKit::FormFu::Constraint::AppKitUsername'
+        user_stashkey: thisuser
 
   - type: Password
     name: password
@@ -20,14 +20,20 @@ elements:
   - type: Text
     name: name
     label: Name
+    constraints:
+      - Required
 
   - type: Text
     name: email
     label: Email
+    constraints:
+      - Required
 
   - type: Text
     name: tel
     label: Telephone
+    constraints:
+      - Required
 
   - type: Radiogroup
     name: status
@@ -35,6 +41,8 @@ elements:
        - [ 'enabled',   'Enabled' ]
        - [ 'disabled',  'Disabled' ]
        - [ 'deleted',   'Deleted' ]
+    constraints:
+      - Required
 
   - type: Submit
     value: Submit
@@ -42,5 +50,4 @@ elements:
 
 constraints:
   - SingleValue
-  - Required
 

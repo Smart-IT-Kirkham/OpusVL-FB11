@@ -178,11 +178,9 @@ override _build_config => sub
     $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
     $config->{'View::AppKitTT'}->{'PRE_PROCESS'}          = 'preprocess.tt';
 
-    # Configure session handling
-    $config->{'session'} =
-    {
-        flash_to_stash => 1,
-    };
+    # Configure session handling..
+    $config->{'session'} ||= {};
+    $config->{'session'}->{flash_to_stash} = 1;
 
     $config->{'Plugin::Authentication'} =
     {

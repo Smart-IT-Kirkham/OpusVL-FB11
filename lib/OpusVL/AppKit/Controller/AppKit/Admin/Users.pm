@@ -60,27 +60,20 @@ sub adduser
 
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('adduser') ) } );
 
+    my $form = $c->stash->{form};
+
+    # add 'Required' constraint to form .. adding means you must have set a password...
+    $form->get_all_element('password')->constraint('Required');
+    $form->process();
+
     if ( $c->stash->{form}->submitted_and_valid )
     {
+        my $newuser = $c->model('AppKitAuthDB::User')->new_result( {} );
+        $c->stash->{form}->model->update( $newuser );
 
-        # we have to check here to see if the user exists...
-        # .. using a normal FormFu 'callback' wont work (due to AppBuilder changing namespaces)
-        # .. can't do an eval and error msg check, as different databases return different messages..
-        my $founduser = $c->model('AppKitAuthDB::User')->find( { username => $c->stash->{form}->param_value('username') } );
-        if ( $founduser )
-        {
-            $c->stash->{form}->get_field('username')->get_constraint({ type => 'Callback' })->force_errors(1);
-            $c->stash->{form}->process;
-        }
-        else
-        {
-            my $newuser = $c->model('AppKitAuthDB::User')->new_result( {} );
-            $c->stash->{form}->model->update( $newuser );
-
-            $c->stash->{status_msg} = "User added";
-            $c->stash->{thisuser}   = $newuser;
-            $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
-        }
+        $c->stash->{status_msg} = "User added";
+        $c->stash->{thisuser}   = $newuser;
+        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
     }
     $c->stash->{template} = "appkit/admin/users/user_form.tt";
 }
