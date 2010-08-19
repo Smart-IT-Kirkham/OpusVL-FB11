@@ -163,6 +163,11 @@ sub edit_user
     {
         # update the user from the form..
         $c->stash->{form}->model->update( $c->stash->{thisuser} );
+
+        # .. alter password if we have been passed one..
+        $c->stash->{thisuser}->update( { password => $c->stash->{form}->param_value('password') } )
+            if $c->stash->{form}->param_value('password');
+
         $c->stash->{status_msg} = "User updated";
     }
 

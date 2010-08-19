@@ -16,6 +16,8 @@ elements:
   - type: Password
     name: password
     label: Password
+    model_config:
+      read_only: 1
 
   - type: Text
     name: name
