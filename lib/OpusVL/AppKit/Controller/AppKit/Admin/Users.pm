@@ -68,7 +68,8 @@ sub adduser
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
-        my $newuser = $c->model('AppKitAuthDB::User')->new_result( {} );
+        my $newuser = $c->model('AppKitAuthDB::User')->new_result( { password => $c->stash->{form}->param_value('password') } );
+
         $c->stash->{form}->model->update( $newuser );
 
         $c->stash->{status_msg} = "User added";
