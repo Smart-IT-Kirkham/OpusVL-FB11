@@ -19,6 +19,7 @@
         [% FOR css IN header.css %]
             <link rel="stylesheet" href="[% css %]" type="text/css" media="all" />
         [% END %]
+        <link rel="stylesheet" href="/static/css/print.css" type="text/css" media="print" />
 
         [% FOR js IN header.js %]
             <script type="text/javascript" src="[% js %]"></script>
