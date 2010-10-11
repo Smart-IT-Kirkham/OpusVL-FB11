@@ -333,11 +333,15 @@ sub can_access
         return 1;
     }
 
-    if ( ! $c->user )
-    {
-        $c->log->debug("NO User logged. can_access says 'no!'") if $c->debug;
-        return 0;
-    }
+    # Moved this so we now have a PUBLIC role allowed if no
+    # user logged in.
+    #
+    # FIXME: set profile to public and see if they have access
+    ## if ( ! $c->user )
+    ## {
+    ##     $c->log->debug("NO User logged. can_access says 'no!'") if $c->debug;
+    ##     return 0;
+    ## }
 
     # check if we have list of actionpaths to allow (regardless of rules)...
     if ( $c->config->{'appkit_can_access_actionpaths'} )
@@ -363,14 +367,12 @@ sub can_access
     # if none found.. do NOT allow access..
     return 0 unless defined $allowed_roles;
 
-    # if none found.. do allow access..
-    return 1 unless defined $allowed_roles;
-
     # if we found a rule, but no roles applied, let deny access..
     return 0 if $#$allowed_roles < 0;
 
     # return a test that will check for the roles
-    return $c->check_any_user_role( @$allowed_roles );
+    return $c->user && $c->check_any_user_role( @$allowed_roles )
+        || 'PUBLIC' ~~ @$allowed_roles ;
 }
 
 =head2 who_can_access
