@@ -204,6 +204,7 @@ lib/OpusVL/AppKit/View/DownloadFile.pm
 lib/OpusVL/AppKit/View/Email.pm
 lib/OpusVL/AppKit/View/JSON.pm
 lib/OpusVL/AppKit/View/PDF/Reuse.pm
+lib/OpusVL/AppKit/View/SimpleXML.pm
 lib/OpusVL/Makefile.PL
 Makefile.PL
 MANIFEST			This list of files
