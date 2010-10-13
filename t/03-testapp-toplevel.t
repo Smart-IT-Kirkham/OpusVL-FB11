@@ -2,22 +2,22 @@
 ##########################################################################################################################
 # This set of tests should be run against the TestApp within the 't' directory of the OpusVL::AppKit Catalyst app.
 #
-# Due to reasons I belive are related to Catalyst::ScriptRunner and the AppBuilder, we can't use the
-# Test::WWW::Mechanize::Catalyst as normal, so please run up a copy of the OpusVL::Appkit TestApp (see README)
-# Once you have run the test server, set the host and port in the ENV variable 'CATALYST_SERVER'.. then you can test.
+# I couldn't figure out why we couldn't run the tests in the usual way so 
+# I flipped it to do so.  I guess the problem we had was fixed somehow?
+#
 ##########################################################################################################################
 
 use strict;
 use warnings;
 use Test::More;
-use Test::WWW::Mechanize::Catalyst;
 
-if ( $ENV{CATALYST_SERVER} )
+use FindBin qw($Bin);
+use lib "$Bin/lib";
+
+use ok 'TestApp';
+use Test::WWW::Mechanize::Catalyst 'TestApp';
+
 {
-    # once done, we should set the number of tests.. for no just using 'no_plan'..
-    #plan tests => 60;
-    plan 'no_plan';
-
     # build the testing machanised object...
     my $mech = Test::WWW::Mechanize::Catalyst->new();
 
@@ -73,7 +73,5 @@ if ( $ENV{CATALYST_SERVER} )
     #       users (adding, removing, change password)
 
 }
-else 
-{
-      plan skip_all => 'NOT specified (and probably running) the CATALYST_SERVER.. please run the TestApp server (see README) and run test again.';
-}
+
+done_testing();
