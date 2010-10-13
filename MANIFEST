@@ -169,6 +169,7 @@ lib/auto/OpusVL/AppKit/root/templates/macros.tt
 lib/auto/OpusVL/AppKit/root/templates/preprocess.tt
 lib/auto/OpusVL/AppKit/root/templates/search/index.tt
 lib/auto/OpusVL/AppKit/root/templates/wrapper.tt
+lib/HTML/FormFu/Validator/OpusVL/AppKit/CurrentPasswordValidator.pm
 lib/OpusVL/AppKit.pm
 lib/OpusVL/AppKit/Action/AppKitForm.pm
 lib/OpusVL/AppKit/Builder.pm

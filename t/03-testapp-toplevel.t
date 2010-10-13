@@ -64,6 +64,66 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     # request the home page .. (which should redirect to login)..
     $mech->get_ok("/");
+    $mech->content_like(qr/Access denied/i, 'check not logged in');
+
+    $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
+    $mech->content_contains("Welcome to", "Logged in, showing index page");
+
+    $mech->get_ok('/appkit/admin/users/adduser', 'Go to add user page');
+    $mech->post_ok('/appkit/admin/users/adduser', 
+        {
+            username     => 'tester',
+            password     => 'password',
+            status       => 'enabled',
+            email        => 'colin@opusvl.com',
+            tel          => '555-32321',
+            submitbutton => 'Submit',
+        }, 'Try (and fail) to add user'
+    );
+    $mech->content_contains("This field is required", "Not all fields filled in on add user page") 
+        || diag $mech->content;
+    $mech->post_ok('/appkit/admin/users/adduser', 
+        {
+            username     => 'tester',
+            password     => 'password',
+            status       => 'enabled',
+            email        => 'colin@opusvl.com',
+            name         => 'Colin',
+            tel          => '555-32321',
+            submitbutton => 'Submit',
+        }, 'Add user'
+    );
+    # setup permissions
+    # FIXME: these user id/role id's are hard wired.
+    # we could use mechanise to find them from the links.
+    $mech->get_ok('/user/3/show', 'Look at user details');
+    $mech->post_ok('/user/3/show', { user_role => 1, savebutton => 'Save' }, 'Add role to user'); 
+    $mech->content_contains('User Roles updated', 'Role should have been updated');
+
+    $mech->get_ok( '/logout', "Can logout");
+    $mech->post_ok( '/login', { username => 'tester', password => 'password' }, "Login as tester");
+    $mech->content_contains("Welcome", "Change password page");
+
+    $mech->get_ok('/appkit/user/changepword', 'Get change password page');
+    $mech->content_contains("Current Password", "Change password page")
+        || diag $mech->content;
+
+    $mech->post_ok('/appkit/user/changepword', { password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query' }, 'Try to change password without mentioning current password');
+    $mech->content_contains('required', 'Should complain about current password being missing')
+        || diag $mech->content;
+
+
+    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'nomatch', submitbutton => 'Submit Query'  }, 'Try to change password with dodgy passwords');
+    $mech->content_contains('Does not match', 'Should complain about differing password inputs')
+        || diag $mech->content;
+
+    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query'  }, 'Try to change password');
+    $mech->content_contains('Your password was updated', 'Password changed okay');
+
+    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'wrong', password => 'newpassword2', passwordconfirm => 'newpassword2', submitbutton => 'Submit Query'  }, 'Try to change password using wrong original password');
+    $mech->content_contains('Invalid password', 'Password not changed');
+
+    $mech->get_ok( '/logout', "Can logout");
 
     ## NEED TO ADD MANY MORE TESTS!!... think about all things that could and could not happen with the TestApp..
     # .. things I can think of now:
