@@ -2,6 +2,7 @@
 ^.gitignore
 .git/
 .svn
+.swp$
 tags
 blib
 pm_to_blib
