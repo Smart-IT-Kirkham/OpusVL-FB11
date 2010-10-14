@@ -112,6 +112,10 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->content_contains('required', 'Should complain about current password being missing')
         || diag $mech->content;
 
+    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => '', passwordconfirm => '', submitbutton => 'Submit Query' }, 'Try to change password to blank');
+    $mech->content_contains('required', 'Should complain about password being missing')
+        || diag $mech->content;
+
 
     $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'nomatch', submitbutton => 'Submit Query'  }, 'Try to change password with dodgy passwords');
     $mech->content_contains('Does not match', 'Should complain about differing password inputs')
