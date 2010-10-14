@@ -231,6 +231,12 @@ override _build_config => sub
     # Configure AppKit Plugin access denied..
     $config->{'appkit_access_denied'}    = "access_notallowed";
 
+    $config->{'Controller::Login'} = 
+    {
+        traits => [ '+OpusVL::AppKit::TraitFor::Controller::Login::SetHomePageFlag' ],
+    };
+
+
     return $config;
 };
 

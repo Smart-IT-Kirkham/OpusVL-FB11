@@ -25,6 +25,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok("/");
     is( $mech->ct, "text/html");
     $mech->content_contains("Please login", "Redirect to login page");
+    $mech->content_contains('OpusVL::AppKit', 'App name and logo should be present');
 
     # Request public page... not logged but should allow access.
     $mech->get_ok("/test/publicaccess");
