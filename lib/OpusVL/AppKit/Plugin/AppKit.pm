@@ -344,19 +344,22 @@ sub can_access
     ## }
 
     # check if we have list of actionpaths to allow (regardless of rules)...
-    if ( $c->config->{'appkit_can_access_actionpaths'} )
+    if(  $c->user )
     {
-        foreach my $allowed_path ( @{ $c->config->{'appkit_can_access_actionpaths'} } )
+        if ( $c->config->{'appkit_can_access_actionpaths'} )
         {
-            return 1 if $action_path eq $allowed_path;
+            foreach my $allowed_path ( @{ $c->config->{'appkit_can_access_actionpaths'} } )
+            {
+                return 1 if $action_path eq $allowed_path;
+            }
         }
-    }
 
-    # check if we have been told to allow everything...
-    if ( $c->config->{'appkit_can_access_everything'} )
-    {
-        $c->log->debug("Allowing Access to EVERYTHING! - Turn off in the config if you do not want this!") if $c->debug;
-        return 1;
+        # check if we have been told to allow everything...
+        if ( $c->config->{'appkit_can_access_everything'} )
+        {
+            $c->log->debug("Allowing Access to EVERYTHING! - Turn off in the config if you do not want this!") if $c->debug;
+            return 1;
+        }
     }
 
     # -- above here we see if we are blindly allowing access --- 
