@@ -74,7 +74,7 @@ sub adduser
 
         $c->stash->{status_msg} = "User added";
         $c->stash->{thisuser}   = $newuser;
-        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
+        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Users')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
     }
     $c->stash->{template} = "appkit/admin/users/user_form.tt";
 }
