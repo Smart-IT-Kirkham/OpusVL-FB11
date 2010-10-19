@@ -199,6 +199,7 @@ lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/User.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/UsersData.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/UsersParameter.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/UsersRole.pm
+lib/OpusVL/AppKit/TraitFor/Controller/Login/SetHomePageFlag.pm
 lib/OpusVL/AppKit/View/AppKitTT.pm
 lib/OpusVL/AppKit/View/Download.pm
 lib/OpusVL/AppKit/View/DownloadFile.pm

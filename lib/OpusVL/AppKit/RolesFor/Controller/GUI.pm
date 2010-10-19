@@ -7,7 +7,7 @@ package OpusVL::AppKit::RolesFor::Controller::GUI;
 =head1 SYNOPSIS
 
     package MyApp::Controller::SomeFunkyThing;
-    use Moose
+    use Moose;
     BEGIN{ extends 'Catalyst::Controller' };
     with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
