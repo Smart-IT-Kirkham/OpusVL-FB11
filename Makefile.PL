@@ -15,6 +15,7 @@ requires 'Tree::Simple';
 requires 'Tree::Simple::View';
 requires 'Tree::Simple::VisitorFactory';
 requires 'Crypt::Eksblowfish::Bcrypt';
+requires 'HTML::FormFu::Model::DBIC';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
 requires 'Template::Plugin::DateTime';
 requires 'parent';
