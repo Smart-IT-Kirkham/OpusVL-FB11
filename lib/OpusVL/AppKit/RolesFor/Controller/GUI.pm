@@ -86,6 +86,8 @@ use Moose::Role;
 has appkit                  => ( is => 'ro',    isa => 'Int',                       default => 1 );
 has appkit_name             => ( is => 'ro',    isa => 'Str',                       default => 'AppKit' );
 has appkit_myclass          => ( is => 'ro',    isa => 'Str',                       );
+has appkit_shared_module => ( is => 'ro', isa => 'Str');
+has navigation_items_merged => ( is => 'rw', isa => 'Bool', default => 0 );
 
 =head2 home_action
     This should be the hash of action details that pertain the the 'home action' of a controller.
@@ -149,6 +151,7 @@ before create_action  => sub
                 value       => $args{attributes}{NavigationName}->[0],
                 actionpath  => $args{reverse},
                 actionname  => $args{name},
+                controller  => $self,
             }
         );
         $self->navigation_actions( $array );

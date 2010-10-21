@@ -101,12 +101,13 @@
                     [% END %]
                 </div>
                 <div id="application">
+                    [% CALL c.merge_controller_actions() %]
                     [% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.size > 1 %]
                         <div id="application_nav">
                             <ul>
                                 [% FOREACH nav IN c.controller.navigation_actions %]
-                                    [% IF c.can_access(c.controller.action_for(nav.actionname)) %]
-                                        <li><a href="[% c.uri_for(c.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
+                                    [% IF c.can_access(nav.controller.action_for(nav.actionname)) %]
+                                        <li><a href="[% c.uri_for(nav.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
                                     [% END %]
                                 [% END %]
                             </ul>
