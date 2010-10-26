@@ -102,7 +102,7 @@
                 </div>
                 <div id="application">
                     [% CALL c.merge_controller_actions() %]
-                    [% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.size > 1 %]
+                    [% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.size > 0 %]
                         <div id="application_nav">
                             <ul>
                                 [% FOREACH nav IN c.controller.navigation_actions %]
