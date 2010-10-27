@@ -679,24 +679,10 @@ sub detach_to_appkit_access_denied
     my ( $c, $denied_access_to_action ) = @_;
 
     my $access_denied_action_path = $c->config->{'appkit_access_denied'};
-
     $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;
-
-    my @ad_path = split('/', $access_denied_action_path );
-    my $ad_action_name = pop @ad_path; 
-    my $ad_namespace = '';
-    $ad_namespace = join('/', @ad_path) if @ad_path;
-
-    if ( my $ad_handler = ( $c->get_actions( $ad_action_name, $ad_namespace ) )[-1] )
-    {
-        (my $ad_path = $ad_handler->reverse) =~ s!^/?!/!;
-        eval { $c->detach( $ad_path, [$denied_access_to_action, "Access Denied"] ) };
-        die $@ || $Catalyst::DETACH;
-    }
-    else
-    {
-        die "AppKit Configration Issue!: You could configure a valid 'appkit_access_denied' key... I have '$access_denied_action_path'";
-    }
+    my $message = "Access denied - Please login with an account that has permissions to access the requested area";
+    $c->controller('Login')->login_redirect($c, $message);
+    $c->detach();
 }
 
 =head1 COPYRIGHT and LICENSE

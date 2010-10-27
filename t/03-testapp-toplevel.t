@@ -102,10 +102,11 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->content_contains('User Roles updated', 'Role should have been updated');
 
     $mech->get_ok( '/logout', "Can logout");
-    $mech->post_ok( '/login', { username => 'tester', password => 'password' }, "Login as tester");
-    $mech->content_contains("Welcome", "Change password page");
 
     $mech->get_ok('/appkit/user/changepword', 'Get change password page');
+    $mech->content_contains('Access denied');
+    $mech->post_ok( '/login', { username => 'tester', password => 'password' }, "Login as tester");
+    $mech->base_is('http://localhost/appkit/user/changepword', 'Should have redirected to url I was trying to access');
     $mech->content_contains("Current Password", "Change password page")
         || diag $mech->content;
 

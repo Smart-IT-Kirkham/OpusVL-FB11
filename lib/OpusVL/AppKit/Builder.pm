@@ -233,9 +233,8 @@ override _build_config => sub
 
     $config->{'Controller::Login'} = 
     {
-        traits => [ '+OpusVL::AppKit::TraitFor::Controller::Login::SetHomePageFlag' ],
+        traits => [ '+OpusVL::AppKit::TraitFor::Controller::Login::SetHomePageFlag', '-Login::WithRedirect' ],
     };
-
 
     return $config;
 };
