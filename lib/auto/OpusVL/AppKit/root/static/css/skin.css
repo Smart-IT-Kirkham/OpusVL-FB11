@@ -348,6 +348,31 @@ textarea {
 
 /* @group Controls */
 
+/* @group Pager */
+
+.pager a img
+{
+    border: none;
+}
+
+.pager
+{
+   font-size: 0.85em; 
+}
+
+.pager span
+{
+    position: relative;
+    top: -5px;
+}
+
+div.pager
+{
+    text-align: center;
+}
+
+/* @end */
+
 /* @group Link buttons */
 
 a.link_button {
