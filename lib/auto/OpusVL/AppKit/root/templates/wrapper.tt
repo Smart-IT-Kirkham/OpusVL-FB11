@@ -91,9 +91,9 @@
                         <a href="/">Home</a> &gt;
                         [% FOREACH crumb IN breadcrumbs %]
                             [% IF loop.last %]
-                                [% crumb.name %]
+                                [% crumb.name | html %]
                             [% ELSE %]
-                                <a href="[% crumb.url or crumb.uri %]">[% crumb.name %]</a> &gt;
+                                <a href="[% crumb.url or crumb.uri %]">[% crumb.name | html %]</a> &gt;
                             [% END %]
                         [% END %]
                     [% ELSE %]
