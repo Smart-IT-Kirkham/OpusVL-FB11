@@ -99,8 +99,7 @@ sub execute
         # .. load it..
         $form->load_config_file ( $form_file );
     
-        # .. process it..
-        $form->process;
+        $self->process( $form );
         
         # .. stash it..
         $c->stash->{ 'form' } = $form;
@@ -114,6 +113,15 @@ sub execute
     my $r = $self->next::method(@_);
 
     return $r;
+}
+
+sub process
+{
+    my $self = shift;
+    my $form = shift;
+    # this is here so that other classes/roles can hook this method.
+    # .. process it..
+    $form->process;
 }
 
 1;
