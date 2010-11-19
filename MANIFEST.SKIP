@@ -5,6 +5,7 @@
 .swp$
 tags
 blib
+.DS_Store
 pm_to_blib
 MANIFEST.bak
 MANIFEST.SKIP~
