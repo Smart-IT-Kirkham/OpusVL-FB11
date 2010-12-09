@@ -1,4 +1,3 @@
-.DS_Store
 Changes
 inc/Module/AutoInstall.pm
 inc/Module/Install.pm
@@ -13,17 +12,11 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Share.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
-lib/.DS_Store
-lib/auto/.DS_Store
-lib/auto/OpusVL/.DS_Store
-lib/auto/OpusVL/AppKit/.DS_Store
-lib/auto/OpusVL/AppKit/root/.DS_Store
 lib/auto/OpusVL/AppKit/root/db/appkit_auth.sql
 lib/auto/OpusVL/AppKit/root/favicon.ico
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/confirm.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/users/user_form.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/user/change_password.yml
-lib/auto/OpusVL/AppKit/root/static/.DS_Store
 lib/auto/OpusVL/AppKit/root/static/css/appnav.css
 lib/auto/OpusVL/AppKit/root/static/css/layout.css
 lib/auto/OpusVL/AppKit/root/static/css/print.css
@@ -45,11 +38,9 @@ lib/auto/OpusVL/AppKit/root/static/css/vader/images/ui-icons_cccccc_256x240.png
 lib/auto/OpusVL/AppKit/root/static/css/vader/images/ui-icons_cd0a0a_256x240.png
 lib/auto/OpusVL/AppKit/root/static/css/vader/images/ui-icons_f29a00_256x240.png
 lib/auto/OpusVL/AppKit/root/static/css/vader/jquery-ui-1.8.custom.css
-lib/auto/OpusVL/AppKit/root/static/images/.DS_Store
 lib/auto/OpusVL/AppKit/root/static/images/app_side_menu.png
 lib/auto/OpusVL/AppKit/root/static/images/app_side_menu_hover.png
 lib/auto/OpusVL/AppKit/root/static/images/app_side_menu_selected.png
-lib/auto/OpusVL/AppKit/root/static/images/controls/.DS_Store
 lib/auto/OpusVL/AppKit/root/static/images/controls/action-small.png
 lib/auto/OpusVL/AppKit/root/static/images/controls/add-med.png
 lib/auto/OpusVL/AppKit/root/static/images/controls/add-small.png
