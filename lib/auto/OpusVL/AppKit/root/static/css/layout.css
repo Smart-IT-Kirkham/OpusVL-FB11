@@ -248,6 +248,14 @@ ul.control-container li.control-edit-small ul.dropdown li a.hover {
 
 /* @end */
 
+div.version
+{
+    color: #fff;
+	text-align: center;
+    padding-top: 15px;
+	margin-bottom: -20px;
+	font-size: .8em;
+}
 
 
 /* @end */

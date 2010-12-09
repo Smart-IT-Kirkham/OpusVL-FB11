@@ -132,6 +132,11 @@
 
                         <div class="clear"></div>
                     </div>
+                    [% IF version %]
+                    <div class="version">
+                        This is [% c.config.name %] [% version | html %]
+                    </div>
+                    [% END %]
                 </div>
                 <div id="appList" class="tlMenu">
                     <div class="tlMenu_top">

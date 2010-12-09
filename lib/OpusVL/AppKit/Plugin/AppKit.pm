@@ -146,6 +146,8 @@ sub execute
 {
     my ( $c, $class, $action ) = @_;
 
+    $c->stash->{version} = eval '$' . $c->config->{name}. '::VERSION'
+            if $c->config->{appkit_display_app_version};
     #  to check roles we need the plugin!
     $c->isa("Catalyst::Plugin::Authorization::Roles") or die "Please use the Authorization::Roles plugin.";
 
