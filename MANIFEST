@@ -80,14 +80,6 @@ lib/auto/OpusVL/AppKit/root/static/images/icons/logout-med.png
 lib/auto/OpusVL/AppKit/root/static/images/icons/search-big.png
 lib/auto/OpusVL/AppKit/root/static/images/icons/search-med.png
 lib/auto/OpusVL/AppKit/root/static/images/icons/settings-med.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_first.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_first_disabled.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_last.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_last_disabled.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_next.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_next_disabled.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_prev.png
-lib/auto/OpusVL/AppKit/root/static/images/pager_prev_disabled.png
 lib/auto/OpusVL/AppKit/root/static/images/search_button_small.png
 lib/auto/OpusVL/AppKit/root/static/images/tablesorter/asc.gif
 lib/auto/OpusVL/AppKit/root/static/images/tablesorter/bg.gif
