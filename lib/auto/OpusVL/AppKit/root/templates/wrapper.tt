@@ -12,6 +12,8 @@
 
         <title>[% template.title or header.title%]</title>
 
+        <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
         [% IF header.favicon %]
             <link rel="shortcut icon" href="[% header.favicon %]" type="image/png" />
         [% END %]
