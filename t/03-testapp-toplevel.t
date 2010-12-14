@@ -42,7 +42,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     # can we see the admin..
     $mech->get_ok( '/appkit/admin', "Can see the admin index");
-    $mech->content_contains("Administration", "Showing admin page");
+    $mech->content_contains("Settings", "Showing admin page");
 
     # can we see the ExtensionA chained actoin
     $mech->get_ok( '/start/mid/end', "Can see the ExtensionA chained action page");
@@ -107,7 +107,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->content_contains('Access denied');
     $mech->post_ok( '/login', { username => 'tester', password => 'password' }, "Login as tester");
     $mech->base_is('http://localhost/appkit/user/changepword', 'Should have redirected to url I was trying to access');
-    $mech->content_contains("Current Password", "Change password page")
+    $mech->content_contains("Current password", "Change password page")
         || diag $mech->content;
 
     $mech->post_ok('/appkit/user/changepword', { password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query' }, 'Try to change password without mentioning current password');
@@ -124,7 +124,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
         || diag $mech->content;
 
     $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query'  }, 'Try to change password');
-    $mech->content_contains('Your password was updated', 'Password changed okay');
+    $mech->content_contains('your password has been changed', 'Password changed okay');
 
     $mech->post_ok('/appkit/user/changepword', { originalpassword => 'wrong', password => 'newpassword2', passwordconfirm => 'newpassword2', submitbutton => 'Submit Query'  }, 'Try to change password using wrong original password');
     $mech->content_contains('Invalid password', 'Password not changed');
