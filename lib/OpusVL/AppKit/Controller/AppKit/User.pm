@@ -25,7 +25,7 @@ sub change_password
     if ( $c->stash->{form}->submitted_and_valid )
     {   
         $c->user->update( { password => $c->req->params->{'password'} } );
-        $c->stash->{status_msg} = "Your password was updated.";
+        $c->stash->{hide_form} = 1;
     }
 }
     

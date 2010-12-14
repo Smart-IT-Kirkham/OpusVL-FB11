@@ -1,25 +1,27 @@
+<h1>Settings</h1>
 
-<h1> AppKit Administration </h1>
-
-<fieldset>
-
-    <legend> What would you like to Change? </legend>
+<div class="content_block">
+    <h3>What would you like to change?</h3>
 
     <ul>
         <li>
             <a href='[% c.uri_for( c.controller('AppKit::User').action_for('change_password') ) %]'>
-                Change Your Password
+                Change your password
             </a>
         </li>
-        <li>
-            <a href='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('index') ) %]'>
-                Roles
-            </a>
-        </li>
-        <li>
-            <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('index') ) %]'>
-                Users
-            </a>
-        </li>
+        [% IF c.can_access(c.controller('AppKit::Admin::Access').action_for('index')) %]
+            <li>
+                <a href='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('index') ) %]'>
+                    Roles
+                </a>
+            </li>
+        [% END %]
+        [% IF c.can_access(c.controller('AppKit::Admin::Users').action_for('index')) %]
+            <li>
+                <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('index') ) %]'>
+                    Users
+                </a>
+            </li>
+        [% END %]
     </ul>
-</fieldset>
+</div>
