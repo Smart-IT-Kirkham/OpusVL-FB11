@@ -55,18 +55,25 @@ sub addrole
 {
     my ( $self, $c ) = @_;
 
-    if ( $c->req->method eq 'POST' )
+    if ( $c->req->method eq 'POST')
     {
         my $rolename    = $c->req->param('rolename');
-        my $role        = $c->user->add_to_roles( { role => $rolename } );
-
-        if ( $role )
+        if($rolename)
         {
-            $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $rolename ] ) );
+            my $role        = $c->user->add_to_roles( { role => $rolename } );
+
+            if ( $role )
+            {
+                $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_role'), [ $rolename ] ) );
+            }
+            else
+            {
+                $c->stash->{error_msg} = 'Role not added';
+            }
         }
         else
         {
-            $c->stash->{error_msg} = 'Role not added';
+            $c->stash->{error_msg} = 'Specify a role name!';
         }
     }
 
