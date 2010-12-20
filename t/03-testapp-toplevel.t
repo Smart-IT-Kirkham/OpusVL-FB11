@@ -131,6 +131,81 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     $mech->get_ok( '/logout', "Can logout");
 
+    ##################################################
+    # test the blank role fix.
+
+    $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
+    $mech->content_contains("Welcome to", "Logged in, showing index page");
+
+    $mech->get_ok('/appkit/admin/access/addrole', 'Go to roles page');
+    $mech->post_ok('/appkit/admin/access/addrole', {
+        addrolebutton => 'Add Role',
+        rolename => 'blah',
+    }, 'Create a new role');
+    $mech->content_like(qr'Access Tree for blah'i, 'Check we have created role');
+    $mech->post_ok('/appkit/admin/access/addrole', {
+        addrolebutton => 'Add Role',
+        rolename => 'blah',
+    }, 'Create a new role');
+    $mech->content_like(qr'Role already exists'i, 'Check we cannot create role again');
+    $mech->post_ok('/appkit/admin/access/addrole', {
+        addrolebutton => 'Add Role',
+        rolename => '',
+    }, 'Try to create a blank role');
+    $mech->content_unlike(qr'Access Tree for'i, 'Check we have created role');
+    $mech->content_like(qr'Specify a role name'i, 'Check we got told to enter a role name');
+
+    $mech->get_ok('/admin/access/role/blah/show', 'Go back to the role we created');
+    $mech->get_ok('/admin/access/role/blah/delrole', 'Delete the role');
+    $mech->content_like(qr'Access denied'i, 'Check we get bounced for trying it');
+    $mech->get_ok('/admin/access/role/Administrator/show', 'Lets give ourselves permission to do it, we are admin after all');
+    $mech->post_ok('/admin/access/role/Administrator/show', {
+            savebutton => 'Save',
+            'appkit/admin/access/auto'=>'allow',
+            'appkit/admin/access/addrole'=>'allow',
+            'appkit/admin/access/delete_role'=>'allow',
+            'appkit/admin/access/index'=>'allow',
+            'appkit/admin/access/role_specific'=>'allow',
+            'appkit/admin/access/show_role'=>'allow',
+            'appkit/admin/index'=>'allow',
+            'appkit/admin/users/add_parameter'=>'allow',
+            'appkit/admin/users/adduser'=>'allow',
+            'appkit/admin/users/auto'=>'allow',
+            'appkit/admin/users/delete_parameter'=>'allow',
+            'appkit/admin/users/delete_user'=>'allow',
+            'appkit/admin/users/edit_user'=>'allow',
+            'appkit/admin/users/get_parameter_input'=>'allow',
+            'appkit/admin/users/index'=>'allow',
+            'appkit/admin/users/show_user'=>'allow',
+            'appkit/admin/users/user_specific'=>'allow',
+            'appkit/user/change_password'=>'allow',
+            'extensiona/expansionaa/endchain'=>'allow',
+            'extensiona/expansionaa/home'=>'allow',
+            'extensiona/expansionaa/midchain'=>'allow',
+            'extensiona/expansionaa/startchain'=>'allow',
+            'extensiona/home'=>'allow',
+            'extensionb/formpage'=>'allow',
+            'extensionb/home'=>'allow',
+            'index'=>'allow',
+            'search/index'=>'allow',
+            'test/access_admin'=>'allow',
+            'test/cause_error'=>'allow',
+            'test/index'=>'allow',
+    }, 'Allow deleting roles.');
+
+    $mech->get_ok('/admin/access/role/blah/delrole', 'Delete the role');
+    $mech->content_like(qr'Are you sure you want to delete the role'i, 'Check we are asked to confirm the deletion');
+    $mech->click_ok('submitok');
+    $mech->content_like(qr'Role deleted'i, 'Check we deleted the role');
+
+    $mech->get('/admin/access/role/notthere/delrole');
+    is $mech->status, 404, 'Check we get a 404 for a non existent role';
+
+    # this would be so cool if it worked.  Unfortunately the mech
+    # will only work if the page it's just downloaded has this
+    # link contained.
+    #$mech->link_status_is(['/admin/access/role/notthere/delrole'], 404, 'Check 404 on role that does not exist');
+
     ## NEED TO ADD MANY MORE TESTS!!... think about all things that could and could not happen with the TestApp..
     # .. things I can think of now:
     #       

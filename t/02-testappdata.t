@@ -50,7 +50,11 @@ diag("Created Roles");
 my %rules = (
     'index'                                 => ['Administrator'],
     'default',                              => ['Administrator'],
+    'auto',                                 => ['Administrator'],
+    'appkit/auto',                          => ['Administrator'],
+    'appkit/admin/auto',                    => ['Administrator'],
     'appkit/admin/index',                   => ['Administrator'],
+    'appkit/admin/access/auto',             => ['Administrator'],
     'appkit/admin/access/index',            => ['Administrator'],
     'appkit/admin/access/addrole',          => ['Administrator'],
     'appkit/admin/access/role_specific',    => ['Administrator'],

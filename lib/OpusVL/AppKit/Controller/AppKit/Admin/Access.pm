@@ -60,7 +60,9 @@ sub addrole
         my $rolename    = $c->req->param('rolename');
         if($rolename)
         {
-            my $role        = $c->user->add_to_roles( { role => $rolename } );
+            my $role = grep /^\Q$rolename\E$/, $c->user->roles;
+            $c->flash->{error_msg} = 'Role already exists' if $role;
+            $role = $c->user->add_to_roles( { role => $rolename } ) if !$role;
 
             if ( $role )
             {
@@ -97,6 +99,11 @@ sub role_specific
 
     # put role into stash..
     $c->stash->{role} = $c->model('AppKitAuthDB::Role')->find( { role => $rolename } );
+    if(!$c->stash->{role})
+    {
+        $c->forward('/default');
+        $c->detach;
+    }
 
 }
 
