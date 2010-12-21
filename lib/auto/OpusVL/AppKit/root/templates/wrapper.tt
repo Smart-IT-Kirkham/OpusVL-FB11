@@ -36,7 +36,7 @@
                 if (document.title == '[% c.controller.appkit_name %]') {
                     var h1 = $('h1:first').text();
                     if (h1) {
-                        document.title = h1;
+                        document.title = h1 + " | " + "[% c.controller.appkit_name %]";
                     }
                 }
             });
