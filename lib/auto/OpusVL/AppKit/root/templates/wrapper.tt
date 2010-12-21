@@ -10,7 +10,7 @@
 <html>
     <head>
 
-        <title>[% template.title or header.title%]</title>
+        <title>[% IF homepage %][% title or c.config.application_name %][% ELSE %][% title or c.controller.appkit_name %][% END %]</title>
 
         [% IF header.favicon %]
             <link rel="shortcut icon" href="[% header.favicon %]" type="image/png" />
@@ -29,6 +29,17 @@
         [% FOR jssrc IN header.jssrc %]
             [% jssrc %]
         [% END %]
+        </script>
+        
+        <script type="text/javascript">
+            $(function() {
+                if (document.title == '[% c.controller.appkit_name %]') {
+                    var h1 = $('h1:first').text();
+                    if (h1) {
+                        document.title = h1;
+                    }
+                }
+            });
         </script>
 
     </head>
