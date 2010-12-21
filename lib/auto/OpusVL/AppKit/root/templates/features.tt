@@ -29,6 +29,7 @@ END;
 IF features.appkitfeature_tablesorter;
     header.js.list.push( "/static/js/jquery.tablesorter.min.js");
     header.css.list.push( "/static/css/tablesorter/style.css");
+    UNLESS (c.request.user_agent.match('(?i)Linux'));
 -%]
 [%- tablesorter_jssrc = BLOCK -%]
     $(function() {
@@ -39,43 +40,46 @@ IF features.appkitfeature_tablesorter;
         });
     });
 [%- END;
+    END;
     header.jssrc.list.push( tablesorter_jssrc );
 END;
 
-IF features.appkitfeature_clipboard;
-    header.js.list.push( "/static/js/ZeroClipboard.js");
--%]
-[%- clipboard_jssrc = BLOCK -%]
-        $(function() {
-          ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
-          
-          $(".copy_to_clipboard").click(function() {
-            appKit.windowClick();
-            return false;
-          });
-          
-          $(".copy_to_clipboard").mouseover(function() {
-            var element = $(this);
-            var clip    = new ZeroClipboard.Client();
-            
-            clip.addEventListener('onMouseOut', function(myClip) {
-              setTimeout(function(){myClip.destroy()},0);
-            });
-            
-            clip.addEventListener('onComplete', function(myClip) {
-              setTimeout(function() {
-                myClip.destroy();
-                element.removeClass('hover');
+UNLESS (c.request.user_agent.match('(?i)Linux'));
+    IF features.appkitfeature_clipboard;
+        header.js.list.push( "/static/js/ZeroClipboard.js");
+    -%]
+    [%- clipboard_jssrc = BLOCK -%]
+            $(function() {
+              ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
+              
+              $(".copy_to_clipboard").click(function() {
                 appKit.windowClick();
-              },0);
+                return false;
+              });
+              
+              $(".copy_to_clipboard").mouseover(function() {
+                var element = $(this);
+                var clip    = new ZeroClipboard.Client();
+                
+                clip.addEventListener('onMouseOut', function(myClip) {
+                  setTimeout(function(){myClip.destroy()},0);
+                });
+                
+                clip.addEventListener('onComplete', function(myClip) {
+                  setTimeout(function() {
+                    myClip.destroy();
+                    element.removeClass('hover');
+                    appKit.windowClick();
+                  },0);
+                });
+            
+                clip.setText(element.attr('href'));
+                clip.glue(this);
+              });  
             });
-        
-            clip.setText(element.attr('href'));
-            clip.glue(this);
-          });  
-        });
-[%- END;
-    header.jssrc.list.push( clipboard_jssrc );
+    [%- END;
+        header.jssrc.list.push( clipboard_jssrc );
+    END;
 END;
 
 
