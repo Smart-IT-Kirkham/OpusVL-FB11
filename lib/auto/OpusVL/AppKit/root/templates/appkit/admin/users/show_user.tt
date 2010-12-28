@@ -5,7 +5,7 @@
 
         <div>
 
-            <div style="width: 200px; float:left; clear:left;">
+            <div style="width: 250px; float:left; clear:left;">
 
                 <fieldset>
                     <legend>
@@ -24,6 +24,9 @@
                                 </td> 
                                 <td> 
                         <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('delete_user'),   [ myuser.id ] ) %] '>del</a>
+                                </td> 
+                                <td> 
+                        <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('reset_password'),   [ myuser.id ] ) %] '>reset</a>
                                 </td> 
                             </tr>
                     [% END %]

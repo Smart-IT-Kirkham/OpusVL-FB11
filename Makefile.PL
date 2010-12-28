@@ -21,6 +21,7 @@ requires 'Template::Plugin::DateTime';
 requires 'parent';
 requires 'Config::General';
 requires 'DBIx::Class::TimeStamp';
+requires 'String::MkPasswd';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.8002';

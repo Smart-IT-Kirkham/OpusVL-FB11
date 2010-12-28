@@ -2,6 +2,7 @@ package OpusVL::AppKit::Controller::AppKit::Admin::Users;
 
 use Moose;
 use namespace::autoclean;
+use String::MkPasswd qw/mkpasswd/;
 
 BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
 with 'OpusVL::AppKit::RolesFor::Controller::GUI';
@@ -141,6 +142,40 @@ sub show_user
         push( @roles, { role => $role_rs->role, input => "<INPUT TYPE='checkbox' NAME='user_role' VALUE='".$role_rs->id."' $checked>" } );
     }
     $c->stash->{roles} = \@roles;
+}
+
+sub reset_password
+    : Chained('user_specific')
+    : PathPart('reset')
+    : Args(0)
+    : AppKitForm
+{
+    my ( $self, $c ) = @_;
+
+    my $user = $c->stash->{thisuser};
+    my $prev_url = $c->uri_for( $self->action_for('show_user'), [ $user->id ] );
+    if ($c->req->param('cancel'))
+    {
+        $c->response->redirect( $prev_url );
+        $c->detach;
+    }
+
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Reset password', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('reset_password'), [ $user->id ] ) } );
+
+    my $form = $c->stash->{form};
+    if ( $form->submitted_and_valid )
+    {
+        $user->update( { password => $form->param_value('newpassword') } );
+        $c->flash->{status_msg} = 'Reset password';
+        $c->response->redirect( $prev_url );
+    }
+    else
+    {
+        $c->stash->{form}->default_values( {
+                newpassword => mkpasswd,
+                user => $user->username,
+            });
+    }
 }
 
 =head2 edit_user
