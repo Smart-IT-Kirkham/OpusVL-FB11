@@ -101,6 +101,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->post_ok('/user/3/show', { user_role => 1, savebutton => 'Save' }, 'Add role to user'); 
     $mech->content_contains('User Roles updated', 'Role should have been updated');
     $mech->get_ok('/user/3/reset', 'Try password reset link');
+    # fIXME: check this actually works rather than bounces me for instance!
 
     $mech->get_ok( '/logout', "Can logout");
 

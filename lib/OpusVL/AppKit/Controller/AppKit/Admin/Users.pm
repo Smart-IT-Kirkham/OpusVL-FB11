@@ -162,6 +162,16 @@ sub reset_password
 
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Reset password', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('reset_password'), [ $user->id ] ) } );
 
+    $c->forward('/appkit/admin/users/reset_password_form', [ $prev_url, $user ] );
+}
+
+# to allow other controllers to forward to this setting their own 
+# breadcrumbs and passing their own url.
+sub reset_password_form
+    : Private
+{
+    my ($self, $c, $prev_url, $user) = @_;
+
     my $form = $c->stash->{form};
     if ( $form->submitted_and_valid )
     {
