@@ -49,8 +49,8 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->content_contains('Start Chained actions...Middle of Chained actions...End of Chained actions.', "Chained content");
 
     # Request a page (from ExtensionB) we should NOT have access to..
-    $mech->get_ok( '/test/noaccess', "Get Access Denied" );
-    $mech->content_contains("Access denied", "Can see Access denied message");
+    $mech->get( '/test/noaccess', "Get Access Denied" );
+    is $mech->status, 403, 'Check we get a 403';
 
     # can we see the ExtensionB formpage
     $mech->get_ok( '/extensionb/formpage', "Can see the ExtensionB form page");
@@ -100,7 +100,11 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok('/user/3/show', 'Look at user details');
     $mech->post_ok('/user/3/show', { user_role => 1, savebutton => 'Save' }, 'Add role to user'); 
     $mech->content_contains('User Roles updated', 'Role should have been updated');
-    $mech->get_ok('/user/3/reset', 'Try password reset link');
+
+    TODO: {
+          local $TODO = 'Check password reset functionality';
+          $mech->get_ok('/user/3/reset', 'Try password reset link');
+    }
     # fIXME: check this actually works rather than bounces me for instance!
 
     $mech->get_ok( '/logout', "Can logout");
@@ -158,8 +162,8 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->content_like(qr'Specify a role name'i, 'Check we got told to enter a role name');
 
     $mech->get_ok('/admin/access/role/blah/show', 'Go back to the role we created');
-    $mech->get_ok('/admin/access/role/blah/delrole', 'Delete the role');
-    $mech->content_like(qr'Access denied'i, 'Check we get bounced for trying it');
+    $mech->get('/admin/access/role/blah/delrole', 'Delete the role');
+    is $mech->status, 403, 'Check we get a 403';
     $mech->get_ok('/admin/access/role/Administrator/show', 'Lets give ourselves permission to do it, we are admin after all');
     $mech->post_ok('/admin/access/role/Administrator/show', {
             savebutton => 'Save',

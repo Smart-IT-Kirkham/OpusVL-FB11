@@ -65,8 +65,17 @@ sub index
 sub default :Path 
 {
     my ( $self, $c ) = @_;
-    $c->response->body( 'Page not found' );
+    $c->stash->{template} = '404.tt';
     $c->response->status(404);
+    $c->stash->{homepage} = 1;
+}
+
+sub access_denied : Private
+{
+    my ( $self, $c ) = @_;
+    $c->stash->{template} = '403.tt';
+    $c->response->status(403);
+    $c->stash->{homepage} = 1;
 }
 
 =head2 end

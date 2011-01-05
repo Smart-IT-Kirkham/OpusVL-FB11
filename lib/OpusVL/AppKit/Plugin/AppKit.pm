@@ -128,6 +128,7 @@ has is_unrestricted_action_name =>
         return 1 if $name =~ /logout$/;
         return 1 if $name =~ /login\/not_required$/;
         return 1 if $name =~ /View\:\:/;
+        return 1 if $name =~ /access_denied$/;
         return 0;
         } 
     } 
@@ -164,7 +165,10 @@ sub execute
         else
         {
             $c->log->debug("************** AppKit - DENIED Access to - " . $action->reverse ) if $c->debug;
-            $c->detach_to_appkit_access_denied( $action );
+            $c->detach_to_appkit_access_denied( $action ) if !$c->user;
+
+            $c->forward('/access_denied');
+            $c->detach;
         }
     }
     $c->maybe::next::method( $class, $action );

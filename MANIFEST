@@ -15,6 +15,7 @@ inc/Module/Install/WriteAll.pm
 lib/auto/OpusVL/AppKit/root/db/appkit_auth.sql
 lib/auto/OpusVL/AppKit/root/favicon.ico
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/confirm.yml
+lib/auto/OpusVL/AppKit/root/forms/appkit/admin/users/reset_password.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/users/user_form.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/user/change_password.yml
 lib/auto/OpusVL/AppKit/root/static/css/appnav.css
@@ -166,6 +167,7 @@ lib/auto/OpusVL/AppKit/root/templates/appkit/admin/access/show_role.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/confirm.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/index.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/users/get_parameter_input.tt
+lib/auto/OpusVL/AppKit/root/templates/appkit/admin/users/reset_password.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/users/show_user.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/users/user_form.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/user/change_password.tt
