@@ -104,6 +104,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 ##################################################################################################################################
 use Moose;
 use File::ShareDir qw/module_dir/;
+use OpusVL::AppKit::Form::Login;
 
 ##################################################################################################################################
 # moose calls.
@@ -234,6 +235,7 @@ override _build_config => sub
     $config->{'Controller::Login'} = 
     {
         traits => [ '+OpusVL::AppKit::TraitFor::Controller::Login::SetHomePageFlag', '-Login::WithRedirect' ],
+        login_form_class => 'OpusVL::AppKit::Form::Login',
     };
 
     return $config;

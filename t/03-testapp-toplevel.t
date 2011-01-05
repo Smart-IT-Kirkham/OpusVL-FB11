@@ -67,7 +67,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok("/");
     $mech->content_like(qr/Access denied/i, 'check not logged in');
 
-    $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
+    $mech->post_ok( '/login', { username => 'APPKITadmin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
     $mech->get_ok('/appkit/admin/users/adduser', 'Go to add user page');
