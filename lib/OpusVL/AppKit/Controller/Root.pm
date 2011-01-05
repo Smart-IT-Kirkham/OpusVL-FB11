@@ -68,6 +68,7 @@ sub default :Path
     $c->stash->{template} = '404.tt';
     $c->response->status(404);
     $c->stash->{homepage} = 1;
+    $c->detach;
 }
 
 sub access_denied : Private
@@ -76,6 +77,7 @@ sub access_denied : Private
     $c->stash->{template} = '403.tt';
     $c->response->status(403);
     $c->stash->{homepage} = 1;
+    $c->detach;
 }
 
 =head2 end
