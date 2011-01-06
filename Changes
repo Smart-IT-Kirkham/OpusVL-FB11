@@ -1,5 +1,13 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+0.17
+
+* Now allow portlets to not be displayed.  All they need to do is return a status of 404
+  for their response.  i.e. $c->res->status(404);.  Be careful with calls to detach within
+  the portlets because they may cause the whole process to break down.  The Portlet 
+  construction is done by the index page 'visiting' each portlet as if it was a page and then
+  constructing it's page from all of their responses.
+
 0.16 
 
 * Added support for case insensitive logins
