@@ -592,7 +592,8 @@ sub _appkit_stash_portlets
                     name    => $portlet->{value},
                     html    => $c->res->body,
                 }
-            );
+            ) if($c->res->status == 200);
+            $c->res->status(200);
             $c->res->body(undef);
         }
     }
