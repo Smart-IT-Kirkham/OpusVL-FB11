@@ -162,6 +162,8 @@ lib/auto/OpusVL/AppKit/root/static/js/wymeditor/skins/twopanels/skin.js
 lib/auto/OpusVL/AppKit/root/static/js/wymeditor/skins/wymeditor_icon.png
 lib/auto/OpusVL/AppKit/root/static/js/ZeroClipboard.js
 lib/auto/OpusVL/AppKit/root/static/ZeroClipboard.swf
+lib/auto/OpusVL/AppKit/root/templates/403.tt
+lib/auto/OpusVL/AppKit/root/templates/404.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/access/index.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/access/show_role.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/confirm.tt
@@ -192,6 +194,7 @@ lib/OpusVL/AppKit/Controller/AppKit/Admin/Users.pm
 lib/OpusVL/AppKit/Controller/AppKit/User.pm
 lib/OpusVL/AppKit/Controller/Root.pm
 lib/OpusVL/AppKit/Controller/Search.pm
+lib/OpusVL/AppKit/Form/Login.pm
 lib/OpusVL/AppKit/FormFu/Constraint/AppKitUsername.pm
 lib/OpusVL/AppKit/Model/AppKitAuthDB.pm
 lib/OpusVL/AppKit/Plugin/AppKit.pm
