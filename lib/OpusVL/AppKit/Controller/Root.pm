@@ -71,6 +71,12 @@ sub default :Path
     $c->detach;
 }
 
+sub not_found :Private
+{
+    my ($self, $c) = @_;
+    $c->forward('/default');
+}
+
 sub access_denied : Private
 {
     my ( $self, $c ) = @_;
