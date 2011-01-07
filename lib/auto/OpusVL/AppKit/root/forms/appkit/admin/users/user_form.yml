@@ -47,7 +47,7 @@ elements:
       - Required
 
   - type: Submit
-    value: Submit
+    value: Save
     name: submitbutton
 
 constraints:
