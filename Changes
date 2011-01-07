@@ -1,5 +1,10 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+0.18
+
+* Changed submit button to say save on user roles saving.
+* Added a not_found action for producing a 404 because default isn't terribly logical.
+
 0.17
 
 * Now allow portlets to not be displayed.  All they need to do is return a status of 404
