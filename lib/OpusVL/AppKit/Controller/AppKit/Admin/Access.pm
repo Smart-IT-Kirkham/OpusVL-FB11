@@ -101,8 +101,7 @@ sub role_specific
     $c->stash->{role} = $c->model('AppKitAuthDB::Role')->find( { role => $rolename } );
     if(!$c->stash->{role})
     {
-        $c->forward('/default');
-        $c->detach;
+        $c->detach('/not_found');
     }
 
 }
