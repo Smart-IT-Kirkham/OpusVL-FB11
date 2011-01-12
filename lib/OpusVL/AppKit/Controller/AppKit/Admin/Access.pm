@@ -106,6 +106,48 @@ sub role_specific
 
 }
 
+=head2 role_management
+=cut
+
+sub role_management
+    : Chained('role_specific')
+    : PathPart('management')
+    : Args(0)
+    : AppKitForm
+{
+    my ($self, $c) = @_;
+
+    my $form = $c->stash->{form};
+    my $role = $c->stash->{role};
+
+    my $selection = $form->get_all_element({ type => 'Checkboxgroup', name => 'roles_allowed_roles'});
+    my @all_roles = $c->model('AppKitAuthDB::Role')->all;
+    my @options = map { [ $_->id, $_->role ] } @all_roles;
+    $selection->options(\@options);
+    my @selected = $role->roles_allowed_roles->get_column('role_allowed')->all;
+    if(@selected)
+    {
+        $form->default_values( { 
+            roles_allowed_roles => \@selected,
+            can_change_any_role => $role->can_change_any_role,
+        } );
+    }
+    $form->process;
+
+    if($form->submitted_and_valid)
+    {
+        my $ids = $form->param_array('roles_allowed_roles');
+        my $can_change_any_role = $form->param_value('can_change_any_role');
+        if(!$can_change_any_role)
+        {
+            $role->delete_related('roles_allowed_roles');
+            $role->create_related('roles_allowed_roles', { role_allowed => $_}) for @$ids;
+        }
+        $role->can_change_any_role($can_change_any_role);
+    }
+
+}
+
 =head2 user_for_role
 
     Middle of chain.

@@ -132,7 +132,7 @@ sub show_user
 
     # capture and stash role information for the user..
     my @roles;
-    foreach my $role_rs ( $c->model('AppKitAuthDB::Role')->search )
+    foreach my $role_rs ( $c->user->roles_modifiable->all )
     {
         my $checked = '';
         if ( $c->stash->{thisuser}->search_related('users_roles', { role_id => $role_rs->id } )->count > 0 )

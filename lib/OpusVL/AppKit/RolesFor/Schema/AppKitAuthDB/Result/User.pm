@@ -164,6 +164,38 @@ sub delete_param_by_name
     return 1; 
 }
 
+=head2 roles_allowed
+
+Returns the list of roles this user is allowed to modify.
+
+=cut
+
+sub roles_modifiable
+{
+    my $self = shift;
+
+    my $allowed_roles = $self->roles->search_related('roles_allowed_roles');
+    my $schema = $self->result_source->schema;
+    if($allowed_roles->count == 0)
+    {
+        # check to see if any allowed roles are setup
+        # if not return all roles.
+        if($schema->resultset('RoleAllowed')->count == 0)
+        {
+            return $schema->resultset('Role');
+        }
+        # check to see if any of the current roles allow access to all
+        if (grep { $_ } map { $_->can_change_any_role } $self->roles->all)
+        {
+            return $schema->resultset('Role');
+        }
+    }
+    # FIXME:
+    my $roles = $schema->resultset('Role')->search({ id => { in => $allowed_roles->get_column('role_allowed')->as_query }});
+
+    return $roles;
+}
+
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2010 OpusVL

@@ -362,4 +362,18 @@ div#dashboard_col_2 {
 }
 
 /* @end */
+div.role_sidebar {
+    width: 220px;
+    float: left;
+    padding-right: 10px;
+}
+
+#application_body div div div.role_details fieldset form fieldset.checkboxgroup.legend span span {
+    display: block;
+}
+
+div.role_details {
+    float: left;
+    width: 560px;
+}
 

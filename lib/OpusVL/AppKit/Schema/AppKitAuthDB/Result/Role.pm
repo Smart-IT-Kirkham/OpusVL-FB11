@@ -24,7 +24,7 @@ __PACKAGE__->table("role");
 
   data_type: 'integer'
   is_auto_increment: 1
-  is_nullable: 1
+  is_nullable: 0
 
 =head2 role
 
@@ -35,7 +35,7 @@ __PACKAGE__->table("role");
 
 __PACKAGE__->add_columns(
   "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 1 },
+  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "role",
   { data_type => "text", is_nullable => 0 },
 );
@@ -72,6 +72,53 @@ __PACKAGE__->has_many(
   { "foreign.role_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
+
+=head2 roles_allowed_roles_allowed
+
+Type: has_many
+
+Related object: L<OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleAllowed>
+
+=cut
+
+__PACKAGE__->has_many(
+  "roles_allowed_roles_allowed",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleAllowed",
+  { "foreign.role_allowed" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 roles_allowed_roles
+
+Type: has_many
+
+Related object: L<OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleAllowed>
+
+=cut
+
+__PACKAGE__->has_many(
+  "roles_allowed_roles",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleAllowed",
+  { "foreign.role" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 role_admin
+
+Type: might_have
+
+Related object: L<OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleAdmin>
+
+=cut
+
+__PACKAGE__->might_have(
+  "role_admin",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::RoleAdmin",
+  { "foreign.role_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
+
 
 
 # Created by DBIx::Class::Schema::Loader v0.07000 @ 2010-05-24 12:44:30
