@@ -4,6 +4,21 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 
 * Added a facility for managing which roles can manage other roles.  This allows users to 
   manage roles without needing to have them assigned.  See bug 235 for more details.
+  Two new tables have been added to support this facility.  The need to be added to your
+  appkit auth schema.
+
+  CREATE TABLE roles_allowed 
+  (
+      role integer not null references role(id) on delete cascade, 
+      role_allowed integer not null references role(id) on delete cascade, 
+      primary key (role, role_allowed)
+  );
+  CREATE TABLE role_admin
+  (
+      role_id integer not null references role(id) on delete cascade, 
+      primary key(role_id)
+  );
+
 
 0.18
 
