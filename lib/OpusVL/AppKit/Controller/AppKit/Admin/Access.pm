@@ -120,6 +120,11 @@ sub role_management
     my $form = $c->stash->{form};
     my $role = $c->stash->{role};
 
+    if($c->req->param('cancel'))
+    {
+        $c->response->redirect($c->uri_for($self->action_for('show_role'), [ $role->role ]));
+        $c->detach;
+    }
     my $selection = $form->get_all_element({ type => 'Checkboxgroup', name => 'roles_allowed_roles'});
     my @all_roles = $c->model('AppKitAuthDB::Role')->all;
     my @options = map { [ $_->id, $_->role ] } @all_roles;
@@ -147,6 +152,7 @@ sub role_management
             $role->create_related('roles_allowed_roles', { role_allowed => $_}) for @$ids;
         }
         $role->can_change_any_role($can_change_any_role);
+        $c->flash->{status_msg} = 'Permissions changed';
     }
 
 }
