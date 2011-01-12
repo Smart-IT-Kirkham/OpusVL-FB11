@@ -125,11 +125,14 @@ sub role_management
     my @options = map { [ $_->id, $_->role ] } @all_roles;
     $selection->options(\@options);
     my @selected = $role->roles_allowed_roles->get_column('role_allowed')->all;
-    if(@selected)
+    my $can_change_any_role = $role->can_change_any_role;
+    if(@selected || $can_change_any_role)
     {
+        my $defaults = { can_change_any_role => $can_change_any_role };
+        $defaults->{ roles_allowed_roles } = \@selected if @selected;
         $form->default_values( { 
             roles_allowed_roles => \@selected,
-            can_change_any_role => $role->can_change_any_role,
+            can_change_any_role => $can_change_any_role,
         } );
     }
     $form->process;
