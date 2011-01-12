@@ -14,6 +14,7 @@ inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/auto/OpusVL/AppKit/root/db/appkit_auth.sql
 lib/auto/OpusVL/AppKit/root/favicon.ico
+lib/auto/OpusVL/AppKit/root/forms/appkit/admin/access/role_management.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/confirm.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/users/reset_password.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/users/user_form.yml
@@ -165,7 +166,9 @@ lib/auto/OpusVL/AppKit/root/static/ZeroClipboard.swf
 lib/auto/OpusVL/AppKit/root/templates/403.tt
 lib/auto/OpusVL/AppKit/root/templates/404.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/access/index.tt
+lib/auto/OpusVL/AppKit/root/templates/appkit/admin/access/role_management.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/access/show_role.tt
+lib/auto/OpusVL/AppKit/root/templates/appkit/admin/access/side_bar.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/confirm.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/index.tt
 lib/auto/OpusVL/AppKit/root/templates/appkit/admin/users/get_parameter_input.tt
@@ -210,6 +213,8 @@ lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/AclruleRole.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/Parameter.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/ParameterDefault.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/Role.pm
+lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/RoleAdmin.pm
+lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/RoleAllowed.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/User.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/UsersData.pm
 lib/OpusVL/AppKit/Schema/AppKitAuthDB/Result/UsersParameter.pm
@@ -234,6 +239,7 @@ t/01-testapp.t
 t/02-testappdata.t
 t/03-testapp-toplevel.t
 t/04-testapp-new.t
+t/alternate_model_test.t
 t/lib/auto/TestApp/root/db/appkit_auth.db
 t/lib/auto/TestApp/root/db/bookdb.db
 t/lib/auto/TestApp/root/static/images/client-logo.png
@@ -264,5 +270,6 @@ t/lib/TestX/CatalystX/ExtensionB/Schema/Result/Author.pm
 t/lib/TestX/CatalystX/ExtensionB/Schema/Result/Book.pm
 t/lib/TestX/CatalystX/ExtensionB/Schema/Result/BookAuthor.pm
 t/lib/TestX/CatalystX/ExtensionB/Schema/ResultSet/Book.pm
+t/model-test.t
 t/model_AppKitAuthDB.t
 t/view_PDF-Reuse.t

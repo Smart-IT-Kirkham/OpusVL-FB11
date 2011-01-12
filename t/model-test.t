@@ -60,6 +60,8 @@ use Test::More;
     $superuser->can_change_any_role(1);
     ok $superuser->can_change_any_role, 'Check flag set';
 
+    is $rich->roles_modifiable->count, 0, 'Shouldn\'t be able to access anything at the moment because there is a superuser and no roles have been permitted';
+
     $admin->add_to_roles_allowed_roles({ role_allowed => $admin });
     $admin->add_to_roles_allowed_roles({ role_allowed => $user });
     $admin->add_to_roles_allowed_roles({ role_allowed => $guest });
