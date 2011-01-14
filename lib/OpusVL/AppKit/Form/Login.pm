@@ -12,7 +12,6 @@ override 'validate' => sub
     my $self = shift;
 
     my %values = %{$self->values}; # copy the values
-    $DB::single = 1;
     my $rs = $self->ctx->model('AppKitAuthDB::User')->search(
         \[
             'lower(username) = ?', [ dummy => lc ($self->values->{username}) ]
