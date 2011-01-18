@@ -58,6 +58,8 @@ requires 'CatalystX::AppBuilder';
 requires 'CatalystX::VirtualComponents';
 requires 'CatalystX::SimpleLogin';
 
+requires 'Test::DBIx::Class';
+
 catalyst;
 
 install_share 'lib/auto';

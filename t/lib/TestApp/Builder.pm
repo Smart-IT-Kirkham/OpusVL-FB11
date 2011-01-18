@@ -57,4 +57,6 @@ override _build_config => sub
     return $config;
 };
 
+1;
+
 __END__
