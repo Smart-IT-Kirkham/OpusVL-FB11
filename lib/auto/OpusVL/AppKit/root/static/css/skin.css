@@ -776,6 +776,13 @@ div#dashboard h2 {
 	border-bottom: 1px solid #cacaca;
 }
 
+div#contactdetails {
+	color: #515151;
+	font-size: .8em;
+	margin: 0 0 10px;
+	border-bottom: 1px solid #cacaca;
+}
+
 div.portlet {
 	-webkit-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
 	-moz-box-shadow: 3px 5px 20px rgba(0,0,0,0.3);
