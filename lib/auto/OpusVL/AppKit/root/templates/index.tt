@@ -1,17 +1,5 @@
 <h1> Welcome to [% c.config.application_name %] </h1>
 
-<div id="contactdetails">
-    Eazy Collect Services Limited <br><br>
-
-    1 Tebbit Mews <br>
-    Winchcombe Street <br>
-    Cheltenham <br>
-    Gloucestershire <br>
-    GL52 2NF <br><br>
-
-    Technical Support: 01242 269 790 Option 2
-</div>
-
 <div id="dashboard">
     <h2>Dashboard</h2>
     <div id="dashboard_col_1"></div>
