@@ -197,7 +197,14 @@ before create_action  => sub
 # controller actions.
 ##################################################################################################################################
 
-# WHAT IS THIS? ... do we still need it? ... what is it used for?
+=head2 date_long
+
+Provides a standard L<DateTime> formatting function that is also mirrored (and called) from TT using
+the date_long() function.
+
+Monday, 10 May 2010
+
+=cut
 sub date_long 
 {
     my ($self, $dt) = @_;
@@ -209,6 +216,56 @@ sub date_long
         $dt->month_name,
         ' ',
         $dt->year;
+}
+
+=head2 date_short
+
+Provides a short date format function for DD-MM-YYYY display.
+
+=cut
+sub date_short
+{
+    my ($self, $dt) = @_;
+    return join '',
+        sprintf("%02d", $dt->day),
+        '-',
+        $dt->month_abbr,
+        '-',
+        $dt->year;
+}
+
+=head2 time_long
+
+Provides a long time format function, HH:MM:SS
+
+=cut
+sub time_long
+{
+    my ($self, $dt) = @_;
+
+    return join '',
+        sprintf('%02d', $dt->hour),
+        ':',
+        sprintf('%02d', $dt->minute),
+        ':',
+        sprintf('%02d', $dt->second);
+
+}
+
+=head2 time_short
+
+Provides a short time format function, HH:MM
+
+=cut
+sub time_short
+{
+    my ($self, $dt) = @_;
+
+    return join '',
+        sprintf('%02d', $dt->hour),
+        ':',
+        sprintf('%02d', $dt->minute);
+
 }
 
 =head1 COPYRIGHT and LICENSE

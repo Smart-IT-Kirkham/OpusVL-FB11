@@ -5,10 +5,10 @@
     END;
 -%]
 
-[% MACRO date_long(dt) BLOCK %][% dt.day_name %], [% dt.day | format('%02d') %] [% dt.month_name %] [% dt.year %][% END %]
+[% MACRO date_long(dt) BLOCK %][% c.controller.date_long(dt) %][% END %]
 
-[% MACRO date_short(dt) BLOCK %][% dt.day | format('%02d') %]-[% dt.month_abbr %]-[% dt.year %][% END %]
+[% MACRO date_short(dt) BLOCK %][% c.controller.date_short(dt) %][% END %]
 
-[% MACRO time_long(dt) BLOCK %][% dt.hour | format('%02d') %]:[% dt.minute | format('%02d') %]:[% dt.second | format('%02d') %][% END %]
+[% MACRO time_long(dt) BLOCK %][% c.controller.time_long(dt) %][% END %]
 
-[% MACRO time_short(dt) BLOCK %][% dt.hour | format('%02d') %]:[% dt.minute | format('%02d') %][% END %]
+[% MACRO time_short(dt) BLOCK %][% c.controller.time_short(dt) %][% END %]
