@@ -241,6 +241,7 @@ t/02-testappdata.t
 t/03-testapp-toplevel.t
 t/04-testapp-new.t
 t/alternate_model_test.t
+t/date_format.t
 t/lib/auto/TestApp/root/db/appkit_auth.db
 t/lib/auto/TestApp/root/db/bookdb.db
 t/lib/auto/TestApp/root/static/images/client-logo.png
