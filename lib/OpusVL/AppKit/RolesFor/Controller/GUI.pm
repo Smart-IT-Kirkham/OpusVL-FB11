@@ -207,6 +207,7 @@ sub date_long
 {
     my ($self, $dt) = @_;
     
+    return if !$dt;
     return join '',
         $dt->day_name,
         ', ',
@@ -224,6 +225,7 @@ Provides a short date format function for DD-MM-YYYY display.
 sub date_short
 {
     my ($self, $dt) = @_;
+    return if !$dt;
     return join '',
         sprintf("%02d", $dt->day),
         '-',
@@ -240,6 +242,7 @@ Provides a long time format function, HH:MM:SS
 sub time_long
 {
     my ($self, $dt) = @_;
+    return if !$dt;
 
     return join '',
         sprintf('%02d', $dt->hour),
@@ -258,6 +261,7 @@ Provides a short time format function, HH:MM
 sub time_short
 {
     my ($self, $dt) = @_;
+    return if !$dt;
 
     return join '',
         sprintf('%02d', $dt->hour),
