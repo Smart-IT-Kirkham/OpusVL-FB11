@@ -1,5 +1,14 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+0.20
+
+* Moved the date_short, date_long, time_short and time_long DateTime formatting functions
+  to the controller (via OpusVL::AppKit::RolesFor::Controller::GUI) and update the macros
+  to call those functions so that we have consistency.  You can now access those functions
+  from both your controllers and your TT templates.
+* Fixed the module version number reporting so if you do perl -MOpusVL::AppKit\ 9999 it will
+  report the correct version number.
+
 0.19
 
 * Added a facility for managing which roles can manage other roles.  This allows users to 
