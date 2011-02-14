@@ -57,19 +57,7 @@ package OpusVL::AppKit::RolesFor::Controller::GUI;
         SearchName
             Tells the GUI this action is a search action and what its name should be
     
-=head1 SEE ALSO
-
-    L<CatalystX::AppBuilder>,
-    L<OpusVL::AppKit>,
-    L<Catalyst>
-
-=head1 AUTHOR
-
-    OpusVL - www.opusvl.com
-
-=head1 LICENSE
-
-    This library is free software. You can redistribute it and/or modify it under the same terms as Perl itself.
+=head1 METHODS
 
 =cut
 
@@ -90,33 +78,43 @@ has appkit_shared_module => ( is => 'ro', isa => 'Str');
 has navigation_items_merged => ( is => 'rw', isa => 'Bool', default => 0 );
 
 =head2 home_action
+
     This should be the hash of action details that pertain the the 'home action' of a controller.
     If there is none defined for a controller, it should be undef.
+
 =cut
 
 has home_action             => ( is => 'rw',    isa => 'HashRef'        );
 
 =head2 navigation_actions
+
     This should be an Array Ref of HashRef's pertaining the actions that make up the navigation
+
 =cut
 
 has navigation_actions      => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
 
 =head2 portlet_actions
+
     This should be an Array Ref of HashRef's pertaining the actions that are Portlet's
+
 =cut
 
 has portlet_actions         => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
 
 =head2 search_actions
+
     This should be an Array Ref of HashRef's pertaining the actions that are Portlet's
+
 =cut
 
 has search_actions         => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
 
 =head2 create_action
+
     Hook into the creation of the actions.
     Here we read the action attributes and act accordingly.
+
 =cut
 
 before create_action  => sub 
@@ -267,6 +265,16 @@ sub time_short
         sprintf('%02d', $dt->minute);
 
 }
+
+=head1 SEE ALSO
+
+    L<CatalystX::AppBuilder>,
+    L<OpusVL::AppKit>,
+    L<Catalyst>
+
+=head1 AUTHOR
+
+    OpusVL - www.opusvl.com
 
 =head1 COPYRIGHT and LICENSE
 
