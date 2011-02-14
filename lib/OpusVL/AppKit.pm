@@ -88,7 +88,7 @@ our $VERSION = '1.19';
 #   OpusVL::AppKit::Builder 
 #   CatalystX::AppBuilder
 
-my $builder = OpusVL::AppKit::Builder->new( appname => __PACKAGE__ );
+my $builder = OpusVL::AppKit::Builder->new( appname => __PACKAGE__, version => $VERSION );
 $builder->bootstrap;
 
 ##################################################################################################################################
