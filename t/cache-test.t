@@ -28,6 +28,7 @@ my $child = Child->new(server(9001));
 my $child2 = Child->new(server(9002));
 my $proc = $child->start;
 my $proc2 = $child2->start;
+sleep(1);
 
 my $mech = Test::WWW::Mechanize->new();
 $mech->get_ok('http://localhost:9001/');
@@ -78,6 +79,6 @@ done_testing;
 
 # Kill the children if it is not done
 note ("Killing servers");
-$proc->complete || $proc->kill(9);
-$proc2->complete || $proc2->kill(9);
+$proc->is_complete || $proc->kill(9);
+$proc2->is_complete || $proc2->kill(9);
 note ("Done");
