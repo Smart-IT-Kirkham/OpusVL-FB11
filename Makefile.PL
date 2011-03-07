@@ -50,7 +50,7 @@ requires 'Catalyst::Plugin::Static::Simple';
 # really test dependencies.
 requires 'Catalyst::Engine::PSGI';
 requires 'Plack';
-requires 'Test::WWW::Mechanize::PSGI';
+requires 'Child';
 
 # Catalyst models
 requires 'Catalyst::Model::DBIC::Schema';
