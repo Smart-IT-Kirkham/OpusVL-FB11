@@ -46,6 +46,9 @@ requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Static::Simple';
+requires 'Catalyst::Plugin::Cache';
+
+requires 'Cache::Memcached::libmemcached';
 
 # really test dependencies.
 requires 'Catalyst::Engine::PSGI';

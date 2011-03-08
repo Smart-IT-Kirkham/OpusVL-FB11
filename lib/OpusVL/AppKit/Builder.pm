@@ -134,6 +134,7 @@ override _build_plugins => sub
         Session
         Session::Store::FastMmap
         Session::State::Cookie
+        Cache
         +CatalystX::SimpleLogin
         +CatalystX::VirtualComponents
         +OpusVL::AppKit::Plugin::AppKit
@@ -237,6 +238,13 @@ override _build_config => sub
         traits => [ '+OpusVL::AppKit::TraitFor::Controller::Login::SetHomePageFlag', '-Login::WithRedirect' ],
         login_form_class => 'OpusVL::AppKit::Form::Login',
     };
+
+    $config->{'Plugin::Cache'}{backend} = {
+        class   => "Cache::Memcached::libmemcached",
+        servers => ['127.0.0.1:11211'],
+        debug   => 2,
+    };
+
 
     return $config;
 };
