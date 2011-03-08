@@ -261,7 +261,7 @@ sub _build_appkit_actiontree
                 if ( my $namespace_node = $visitor->getResult )
                 {   
 
-                    # final 'belt and braches' check to see if we have already added it..
+                    # final 'belt and braces' check to see if we have already added it..
                     foreach my $kid ( $namespace_node->getAllChildren )
                     {
                         if ( $kid->getNodeValue->node_name eq $appkit_action_object->node_name )
