@@ -240,10 +240,15 @@ override _build_config => sub
     };
 
     $config->{'Plugin::Cache'}{backend} = {
-        class   => "Cache::Memcached::libmemcached",
-        servers => ['127.0.0.1:11211'],
-        debug   => 2,
+        class => 'Cache::FastMmap',
     };
+    # NOTE: if you want to use Memcahced in your app add this to your builder,
+    #
+    # $config->{'Plugin::Cache'}{backend} = {
+    #     class   => "Cache::Memcached::libmemcached",
+    #     servers => ['127.0.0.1:11211'],
+    #     debug   => 2,
+    # };
 
 
     return $config;
