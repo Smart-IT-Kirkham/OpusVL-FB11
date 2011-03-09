@@ -193,10 +193,29 @@ sub appkit_actiontree
     my ($c, $rebuild) = @_;
 
     # 'state' var means this will only be called once .. if Perl encounters this line again it knows not to run again..
-    state $appkit_actiontree = $c->_build_appkit_actiontree;
-
-    # force a re-read of the tree?.. (for example, if access control changes)...
-    $appkit_actiontree = $c->_build_appkit_actiontree if ($rebuild);
+    my $cache = $c->cache;
+    state $appkit_actiontree = $cache->get('actiontree');
+    if(!$appkit_actiontree)
+    {
+        $appkit_actiontree = $c->_build_appkit_actiontree;
+        $cache->set('actiontree', $appkit_actiontree);
+    }
+    else
+    {
+        # force a re-read of the tree.. (for example, if access control changes)...
+        if($rebuild)
+        {
+            $appkit_actiontree = $c->_build_appkit_actiontree;
+            $cache->set('actiontree', $appkit_actiontree);
+        }
+        else
+        {
+            # convoluted way to prevent cache failure
+            # causing a recalc every time.
+            my $actions = $cache->get('actiontree');
+            $appkit_actiontree = $actions if $actions;
+        }
+    }
 
     return $appkit_actiontree;
 }
@@ -236,7 +255,6 @@ sub _build_appkit_actiontree
             my $appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
             (
                 node_name       => $name,
-                controller      => $cont,
                 action_path     => $action_path,
                 action_attrs    => $action->attributes,
                 access_only     => [],  # default to "no roles allowed"
@@ -261,7 +279,7 @@ sub _build_appkit_actiontree
                 if ( my $namespace_node = $visitor->getResult )
                 {   
 
-                    # final 'belt and braches' check to see if we have already added it..
+                    # final 'belt and braces' check to see if we have already added it..
                     foreach my $kid ( $namespace_node->getAllChildren )
                     {
                         if ( $kid->getNodeValue->node_name eq $appkit_action_object->node_name )
@@ -302,7 +320,6 @@ sub _build_appkit_actiontree
                     my $branch_appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
                     (
                         node_name   => $path_part,
-                        controller  => $cont,
                     );
 
                     # add tree branch..

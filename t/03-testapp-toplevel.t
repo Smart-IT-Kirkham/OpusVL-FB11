@@ -10,12 +10,26 @@
 use strict;
 use warnings;
 use Test::More;
+use Cache::Memcached::libmemcached;
+
 
 use FindBin qw($Bin);
 use lib "$Bin/lib";
 
 use ok 'TestApp';
 use Test::WWW::Mechanize::Catalyst 'TestApp';
+
+# quickly reset the memcached cache to 
+# make sure test results aren't skewed by
+# previous runs.
+
+{
+    my $memd = Cache::Memcached::libmemcached->new({
+            servers => [ "localhost:11211"],
+            compress_threshold => 10_000
+            });
+    $memd->flush_all;
+}
 
 {
     # build the testing machanised object...
