@@ -2,9 +2,8 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 
 0.21
 
-* Moved permissions cache to memcached.  This requires memcached to be installed somewhere.
-  This can be done simply using apt-get install memcached.  If everything is sat on the same
-  server no further configuration should need to be done.
+* Moved permissions cache to a proper cache.  This prevents the issue where permissions were
+  changed and other users on the server didn't see the changes. (Bug 224)
 
 0.20
 
