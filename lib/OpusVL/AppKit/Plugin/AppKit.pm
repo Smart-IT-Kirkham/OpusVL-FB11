@@ -401,16 +401,6 @@ sub can_access
         return 1;
     }
 
-    # Moved this so we now have a PUBLIC role allowed if no
-    # user logged in.
-    #
-    # FIXME: set profile to public and see if they have access
-    ## if ( ! $c->user )
-    ## {
-    ##     $c->log->debug("NO User logged. can_access says 'no!'") if $c->debug;
-    ##     return 0;
-    ## }
-
     # check if we have list of actionpaths to allow (regardless of rules)...
     if(  $c->user )
     {
