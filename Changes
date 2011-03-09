@@ -1,5 +1,11 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+0.21
+
+* Moved permissions cache to memcached.  This requires memcached to be installed somewhere.
+  This can be done simply using apt-get install memcached.  If everything is sat on the same
+  server no further configuration should need to be done.
+
 0.20
 
 * Moved the date_short, date_long, time_short and time_long DateTime formatting functions
