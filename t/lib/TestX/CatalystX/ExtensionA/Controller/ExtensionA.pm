@@ -8,7 +8,6 @@ with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 __PACKAGE__->config
 (
     appkit_name                 => 'ExtensionA',
-    appkit_order                => 10,
     appkit_icon                 => 'static/images/flagA.jpg',
     appkit_myclass              => 'TestX::CatalystX::ExtensionA',
     appkit_method_group         => 'Extension A',

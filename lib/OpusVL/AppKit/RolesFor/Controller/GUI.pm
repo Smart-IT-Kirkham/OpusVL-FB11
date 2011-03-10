@@ -71,11 +71,13 @@ use Moose::Role;
 # moose calls.
 ##################################################################################################################################
 
-has appkit                  => ( is => 'ro',    isa => 'Int',                       default => 1 );
-has appkit_name             => ( is => 'ro',    isa => 'Str',                       default => 'AppKit' );
-has appkit_myclass          => ( is => 'ro',    isa => 'Str',                       );
-has appkit_shared_module => ( is => 'ro', isa => 'Str');
-has navigation_items_merged => ( is => 'rw', isa => 'Bool', default => 0 );
+has appkit                      => ( is => 'ro',    isa => 'Int',                       default => 1 );
+has appkit_name                 => ( is => 'ro',    isa => 'Str',                       default => 'AppKit' );
+has appkit_myclass              => ( is => 'ro',    isa => 'Str',                       );
+has appkit_shared_module        => ( is => 'ro',    isa => 'Str');
+has navigation_items_merged     => ( is => 'rw',    isa => 'Bool', default => 0 );
+has appkit_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
+has appkit_method_group         => ( is => 'rw',    isa => 'Str');
 
 =head2 home_action
 

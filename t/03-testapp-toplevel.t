@@ -115,6 +115,13 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->post_ok('/user/3/show', { user_role => 1, savebutton => 'Save' }, 'Add role to user'); 
     $mech->content_contains('User Roles updated', 'Role should have been updated');
 
+    $mech->get_ok('/extensiona', 'Go to extension page');
+    $mech->content_like(qr'Expanded Chained Action'i, 'Check we have menu along left');
+    $mech->content_like(qr'Expanded Action'i, 'Check we have menu along left');
+    $mech->content_like(qr'ExtensionA'i, 'Check we have menu along left');
+    $mech->content_like(qr'ExtensionB'i, 'Check we have menu along left');
+    $mech->content_like(qr'Test Controller \(within TestApp\)'i, 'Check we have menu along left');
+
     TODO: {
           local $TODO = 'Check password reset functionality';
           $mech->get_ok('/user/3/reset', 'Try password reset link');
