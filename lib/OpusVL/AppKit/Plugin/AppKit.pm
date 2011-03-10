@@ -71,7 +71,7 @@ sub apps_allowed
     my $self = shift;
     # return a sorted list of appkit controllers the user can use.
     return sort { $a->appkit_order <=> $b->appkit_order } 
-            grep { $self->can_access($_->home_action->actionpath) } $self->appkit_controllers;
+            grep { $_->home_action && $self->can_access($_->home_action->{actionpath}) } @{$self->appkit_controllers};
 }
 
 =head2 appkit_actiontree_visitor

@@ -138,6 +138,7 @@ override _build_plugins => sub
         +CatalystX::SimpleLogin
         +CatalystX::VirtualComponents
         +OpusVL::AppKit::Plugin::AppKit
+        +OpusVL::AppKit::Plugin::AppKitControllerSorter
     );
 
     return $plugins;

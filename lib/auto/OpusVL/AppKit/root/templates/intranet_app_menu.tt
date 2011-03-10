@@ -8,12 +8,8 @@
             <p>Applications</p>
             <ul class="appList_l1">
                     [% USE Math %]
-                    [% application_count = 0 %]
-                    [% FOR myc IN c.appkit_controllers.sort  %]
-                        [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
-                            [% application_count = application_count + 1 %]
-                        [% END %]
-                    [% END %]
+                    [% SET apps = c.apps_allowed %]
+                    [% SET application_count = apps.size %]
                     [% x = Math.sqrt(application_count) %]
                     [% appList_cols = ((x - Math.int(x)) > 0) ? (Math.int(x)) + 1 : x %]
                     [% FOREACH appList_col IN [1 .. appList_cols] %]
@@ -25,20 +21,17 @@
                 <script language="JavaScript">
                     $(function() {
                         var col_id = 1;
-                        [% FOR myc IN c.appkit_controllers.sort  %]
+                        [% FOR myc IN apps  %]
                 
-                            [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
+                            $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]">[% myc.appkit_name %]</a>');
+            
+                            col_id++;
+            
+                            if (col_id > [% appList_cols %] ) 
+                            {
+                                col_id = 1;
+                            }
                 
-                                $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]">[% myc.appkit_name %]</a>');
-                
-                                col_id++;
-                
-                                if (col_id > [% appList_cols %] ) 
-                                {
-                                    col_id = 1;
-                                }
-                
-                            [% END %]
                         [% END %]
                     });
                 </script>

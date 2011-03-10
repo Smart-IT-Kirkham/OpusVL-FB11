@@ -54,6 +54,10 @@ override _build_config => sub
     # DEBUGIN!!!!
     $config->{'appkit_can_access_everything'} = 0;  
 
+    $config->{appkit_app_order} = [
+        qw/TestApp::Controller::ExtensionA TestApp::Controller::ExtensionB TestApp::Controller::Test/
+    ];
+
     return $config;
 };
 

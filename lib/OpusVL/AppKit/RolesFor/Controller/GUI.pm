@@ -78,6 +78,7 @@ has appkit_shared_module        => ( is => 'ro',    isa => 'Str');
 has navigation_items_merged     => ( is => 'rw',    isa => 'Bool', default => 0 );
 has appkit_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
 has appkit_method_group         => ( is => 'rw',    isa => 'Str');
+has appkit_order                => ( is => 'rw',    isa => 'Int', default => 0);
 
 =head2 home_action
 
