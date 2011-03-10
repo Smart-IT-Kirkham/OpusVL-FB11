@@ -226,20 +226,43 @@ sub intranet_action_list
     my $c = shift;
 
     my $actions = $self->navigation_actions;
-    return [] if !$actions;
-    return sort { $a->{sort_index} <=> $b->{sort_index} } 
-        grep { $c->can_access($_->{controller}->action_for($_->{actionname})) } @$actions;
+    return $self->_sorted_filtered_actions($c, $actions);
 }
 
-=head2 intranet_action_list
+sub _sorted_filtered_actions
+{
+    my $self = shift;
+    my $c = shift;
+    my $actions = shift;
+
+    return [] if !$actions;
+    my @actions = sort { $a->{sort_index} <=> $b->{sort_index} } 
+        grep { $c->can_access($_->{controller}->action_for($_->{actionname})) } @$actions;
+    return \@actions;
+}
+
+=head2 application_action_list
 
 Returns a sorted list of actions for the menu filtered by what the user can access.
 
+It returns a list of hashes containing two keys, group (the group name) and actions, a list of 
+the actions for that group.
+
 =cut
-sub appplication_action_list
+sub application_action_list
 {
     # this list includes groups too.
+    my $self = shift;
+    my $c = shift;
 
+    my $grouped_actions = $self->navigation_actions_grouped;
+    return [] if !$grouped_actions;
+    my @groups;
+    for my $group (@$grouped_actions)
+    {
+        push @groups, { group => $group->group, actions => $self->_sorted_filtered_actions($c, $group->actions) };
+    }
+    return \@groups;
 }
 
 

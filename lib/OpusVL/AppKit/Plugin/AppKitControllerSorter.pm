@@ -75,7 +75,14 @@ sub merge_controller_actions
     return [] if !$controller->does('OpusVL::AppKit::RolesFor::Controller::GUI'); 
     my @navItems = @{$controller->navigation_actions};
     @navItems = () if(!@navItems);
-    my @grouped = ( { group => $controller->appkit_method_group, actions => \@navItems } );
+    my $group_process = { 
+                $controller->appkit_method_group => { 
+                    group => $controller->appkit_method_group, 
+                    order => $controller->appkit_method_group_order,
+                    actions => \@navItems } 
+                };
+    my @grouped;
+    @grouped = ( $group_process->{$controller->appkit_method_group} );
     if($controller->appkit_shared_module && !$controller->navigation_items_merged)
     {
         my $controllers = $appkit_controllers;
@@ -95,9 +102,24 @@ sub merge_controller_actions
                         last;
                     }
                     push @navItems, @{$c->navigation_actions};
-                    # FIXME: push the list of actions onto the correct group.
+                    my $group = $group_process->{$c->appkit_method_group};
+                    if($group)
+                    {
+                        push @{$group->actions}, @{$c->navigation_actions} if $c->navigation_actions; 
+                    }
+                    else
+                    {
+                        $group_process->{ $c->appkit_method_group } = { 
+                            group => $c->appkit_method_group, 
+                            order => $c->appkit_method_group_order,
+                            actions => $c->navigation_actions  
+                        } if($c->navigation_actions);
+                    }
                 }
             }
+            # sort the group
+            @grouped = map { $group_process->{$_} } sort { $group_process->{$a}->{order} <=> $group_process->{$b}->{order} } keys %$group_process;
+                
         }
         # sort the items so that they appear
         # in a consistent order regardless of controller.
