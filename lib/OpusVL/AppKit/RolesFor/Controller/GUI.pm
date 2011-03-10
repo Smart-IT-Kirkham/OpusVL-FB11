@@ -80,6 +80,8 @@ has appkit_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
 has appkit_method_group         => ( is => 'rw',    isa => 'Str');
 has appkit_order                => ( is => 'rw',    isa => 'Int', default => 0);
 
+has _default_order              => ( is => 'rw',    isa => 'Int', default => 0);
+
 =head2 home_action
 
     This should be the hash of action details that pertain the the 'home action' of a controller.
@@ -145,6 +147,16 @@ before create_action  => sub
         # This action has been identified as a Navigation item..
         my $array = $self->navigation_actions;
         $array = [] unless defined $array;
+        $self->_default_order($self->_default_order+1);
+        my $order;
+        if(defined $args{attributes}{NavigationOrder})
+        {
+            $order = $args{attributes}{NavigationOrder}->[0] 
+        }
+        else
+        {
+            $order = $self->_default_order;
+        }
         push 
         ( 
             @$array,
@@ -153,6 +165,7 @@ before create_action  => sub
                 actionpath  => $args{reverse},
                 actionname  => $args{name},
                 controller  => $self,
+                sort_index  => $order,
             }
         );
         $self->navigation_actions( $array );
@@ -192,6 +205,22 @@ before create_action  => sub
         $self->search_actions ( $array );
     }
 };
+
+=head2 intranet_action_list
+
+Returns a sorted list of actions for the menu filtered by what the user can access.
+
+=cut
+sub intranet_action_list
+{
+    my $self = shift;
+    my $c = shift;
+
+    my $actions = $self->navigation_actions;
+    return [] if !$actions;
+    return sort { $a->{sort_index} <=> $b->{sort_index} } 
+        grep { $c->can_access($_->{controller}->action_for($_->{actionname})) } @$actions;
+}
 
 
 ##################################################################################################################################

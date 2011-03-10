@@ -1,11 +1,10 @@
 [% CALL c.merge_controller_actions() %]
-[% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.size > 0 %]
+[% SET actions = c.controller.intranet_action_list(c) %]
+[% IF actions.defined && actions.size > 0 %]
 <div id="application_nav">
     <ul>
-        [% FOREACH nav IN c.controller.navigation_actions %]
-            [% IF c.can_access(nav.controller.action_for(nav.actionname)) %]
-                <li><a href="[% c.uri_for(nav.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
-            [% END %]
+        [% FOREACH nav IN actions %]
+            <li><a href="[% c.uri_for(nav.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
         [% END %]
     </ul>
 </div>
