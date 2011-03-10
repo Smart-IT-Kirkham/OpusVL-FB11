@@ -5,37 +5,7 @@
 <html>
     <head>
 
-        <title>[% IF homepage %][% title or c.config.application_name %][% ELSE %][% title or c.controller.appkit_name %][% END %]</title>
-
-        [% IF header.favicon %]
-            <link rel="shortcut icon" href="[% header.favicon %]" type="image/png" />
-        [% END %]
-
-        [% FOR css IN header.css %]
-            <link rel="stylesheet" href="[% css %]" type="text/css" media="all" />
-        [% END %]
-        <link rel="stylesheet" href="/static/css/print.css" type="text/css" media="print" />
-
-        [% FOR js IN header.js %]
-            <script type="text/javascript" src="[% js %]"></script>
-        [% END %]
-
-        <script type="text/javascript">
-        [% FOR jssrc IN header.jssrc %]
-            [% jssrc %]
-        [% END %]
-        </script>
-        
-        <script type="text/javascript">
-            $(function() {
-                if (document.title == '[% c.controller.appkit_name %]') {
-                    var h1 = $('h1:first').text();
-                    if (h1) {
-                        document.title = h1 + " | " + "[% c.controller.appkit_name %]";
-                    }
-                }
-            });
-        </script>
+    [% PROCESS wrapper_head.tt %]
 
     </head>
     <body>
@@ -61,64 +31,11 @@
                 </div>
             </div>
             <div id="body">
-                <div id="user_nav">
-                    <ul>
-                        [% IF c.user %]
-                            <li id="user_details">
-                                Welcome, [% c.user.name %]<br>
-                                [% date_long(today) %]
-                            </li>
-                        [% END %]
-                        [% IF c.can_access( 'appkit/admin/index' ) %]
-                            <li id="user_settings">
-                                <a href="[% c.uri_for( c.controller('AppKit::Admin').action_for('index') ) %]">Settings</a>
-                            </li>
-                        [% END %]
-                        <li id="user_logout">
-                            [% IF c.user %]
-                                <a href="[% c.uri_for( c.controller('Login').action_for('logout') ) %]">Logout</a>
-                            [% ELSE %]
-                                <a href="[% c.uri_for( c.controller('Login').action_for('login') ) %]">Login</a>
-                            [% END %]
-                        </li>
-                    </ul>
-                </div>
-                [% IF homepage %]
-                    <div class="appname" id="appname_home">
-                        [% c.config.application_name %]
-                    </div>
-                [% ELSE %]
-                    <div class="appname" id="appname_[% c.controller.appkit_name | replace('\s+','_') | lower %]">
-                        [% c.controller.appkit_name %]
-                    </div>
-                [% END %]
-                <div id="breadcrumbs">
-                    [% IF breadcrumbs %]
-                        <a href="/">Home</a> &gt;
-                        [% FOREACH crumb IN breadcrumbs %]
-                            [% IF loop.last %]
-                                [% crumb.name | html %]
-                            [% ELSE %]
-                                <a href="[% crumb.url or crumb.uri %]">[% crumb.name | html %]</a> &gt;
-                            [% END %]
-                        [% END %]
-                    [% ELSE %]
-                        Home
-                    [% END %]
-                </div>
+                [% PROCESS user_header.tt %]
+
                 <div id="application">
-                    [% CALL c.merge_controller_actions() %]
-                    [% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.size > 0 %]
-                        <div id="application_nav">
-                            <ul>
-                                [% FOREACH nav IN c.controller.navigation_actions %]
-                                    [% IF c.can_access(nav.controller.action_for(nav.actionname)) %]
-                                        <li><a href="[% c.uri_for(nav.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
-                                    [% END %]
-                                [% END %]
-                            </ul>
-                        </div>
-                    [% END %]
+                    [% PROCESS intranet_left_menu.tt %]
+
                     [% IF before_content %]
                     [% before_content %]
                     [% END %]
@@ -144,79 +61,11 @@
                     </div>
                     [% END %]
                 </div>
-                <div id="appList" class="tlMenu">
-                    <div class="tlMenu_top">
-                        <div class="tlMenu_tl"></div>
-                        <div class="tlMenu_tr"></div>
-                    </div>
-                    <div class="tlMenu_mid">
-                        <div class="tlMenu_ml">
-                            <p>Applications</p>
-                            <ul class="appList_l1">
-                                    [% USE Math %]
-                                    [% application_count = 0 %]
-                                    [% FOR myc IN c.appkit_controllers.sort  %]
-                                        [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
-                                            [% application_count = application_count + 1 %]
-                                        [% END %]
-                                    [% END %]
-                                    [% x = Math.sqrt(application_count) %]
-                                    [% appList_cols = ((x - Math.int(x)) > 0) ? (Math.int(x)) + 1 : x %]
-                                    [% FOREACH appList_col IN [1 .. appList_cols] %]
-                                        <li>
-                                            <ul class="appList_l2" id="appList_col[% appList_col %]">
-                                            </ul>
-                                        </li>
-                                    [% END %]
-                                <script language="JavaScript">
-                                    $(function() {
-                                        var col_id = 1;
-                                        [% FOR myc IN c.appkit_controllers.sort  %]
-                                
-                                            [% IF ( myc.action_for( myc.home_action.actionname ) && c.can_access( myc.home_action.actionpath ) ) %]
-                                
-                                                $('#appList_col' + col_id).append('<li id="app_[% myc.appkit_name | lower %]" style="background: url([% myc.appkit_icon %]) no-repeat 6px 6px;"><a href="[% c.uri_for( myc.action_for( myc.home_action.actionname ) ) %]">[% myc.appkit_name %]</a>');
-                                
-                                                col_id++;
-                                
-                                                if (col_id > [% appList_cols %] ) 
-                                                {
-                                                    col_id = 1;
-                                                }
-                                
-                                            [% END %]
-                                        [% END %]
-                                    });
-                                </script>
-                            </ul>
-                        </div>
-                        <div class="tlMenu_mr"></div>
-                    </div>
-                    <div class="tlMenu_bot">
-                        <div class="tlMenu_bl"></div>
-                        <div class="tlMenu_br"></div>
-                    </div>
-                </div>
+
+                [% PROCESS intranet_app_menu.tt %]
+
                 [% IF c.can_access(c.controller('Search').action_for('index')) %]
-                    <div id="appKitSearch" class="tlMenu">
-                        <div class="tlMenu_top">
-                            <div class="tlMenu_tl"></div>
-                            <div class="tlMenu_tr"></div>
-                        </div>
-                        <div class="tlMenu_mid">
-                            <div class="tlMenu_ml">
-                                <p>Search</p>
-                                <form action="/search" method="get">
-                                    <input type="text" name="q" style="margin-left:17px;margin-right:16px;margin-bottom:7px;">
-                                </form>
-                            </div>
-                            <div class="tlMenu_mr"></div>
-                        </div>
-                        <div class="tlMenu_bot">
-                            <div class="tlMenu_bl"></div>
-                            <div class="tlMenu_br"></div>
-                        </div>
-                    </div>
+                [% PROCESS intranet_search_box.tt %]
                 [% END %]
             </div>
         </div>
