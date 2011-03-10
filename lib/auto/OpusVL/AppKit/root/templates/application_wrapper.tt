@@ -34,8 +34,6 @@
                 [% PROCESS user_header.tt %]
 
                 <div id="application">
-                    [% PROCESS intranet_left_menu.tt %]
-
                     [% IF before_content %]
                     [% before_content %]
                     [% END %]
@@ -62,7 +60,7 @@
                     [% END %]
                 </div>
 
-                [% PROCESS intranet_app_menu.tt %]
+                [% PROCESS application_style_menu.tt %]
 
                 [% IF c.can_access(c.controller('Search').action_for('index')) %]
                 [% PROCESS intranet_search_box.tt %]

@@ -64,6 +64,17 @@ sub apps_allowed
             grep { $_->home_action && $self->can_access($_->home_action->{actionpath}) } @{$self->appkit_controllers};
 }
 
+=head2 menu_data
+
+List of apps and the group data for the full blown menu
+
+=cut
+sub menu_data
+{
+    # rip through the apps and construct an array of apps containing the 
+    # group info too.
+}
+
 =head2 appkit_actiontree_visitor
     Use for find node in the appkit_actiontree...
 =cut
