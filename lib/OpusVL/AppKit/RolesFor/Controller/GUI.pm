@@ -77,7 +77,7 @@ has appkit_myclass              => ( is => 'ro',    isa => 'Str',               
 has appkit_shared_module        => ( is => 'ro',    isa => 'Str');
 has navigation_items_merged     => ( is => 'rw',    isa => 'Bool', default => 0 );
 has appkit_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
-has appkit_method_group         => ( is => 'rw',    isa => 'Str');
+has appkit_method_group         => ( is => 'rw',    isa => 'Str', default => '');
 has appkit_order                => ( is => 'rw',    isa => 'Int', default => 0);
 
 has _default_order              => ( is => 'rw',    isa => 'Int', default => 0);
@@ -98,6 +98,15 @@ has home_action             => ( is => 'rw',    isa => 'HashRef'        );
 =cut
 
 has navigation_actions      => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
+
+=head2 navigation_actions_grouped
+
+    This should be an Array Ref of HashRef's pertaining the actions that make up the navigation
+    grouped by appkit_method_group.
+
+=cut
+
+has navigation_actions_grouped      => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
 
 =head2 portlet_actions
 

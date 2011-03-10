@@ -76,6 +76,7 @@ sub merge_controller_actions
     return [] if !$controller->does('OpusVL::AppKit::RolesFor::Controller::GUI'); 
     my @navItems = @{$controller->navigation_actions};
     @navItems = () if(!@navItems);
+    my @grouped = ( { group => $controller->appkit_method_group, actions => \@navItems } );
     if($controller->appkit_shared_module && !$controller->navigation_items_merged)
     {
         my $controllers = $appkit_controllers;
@@ -91,9 +92,11 @@ sub merge_controller_actions
                         # so just short cut the process.
                         # and use it's result.
                         @navItems = @{$c->navigation_actions};
+                        @grouped = @{$c->navigation_actions_grouped};
                         last;
                     }
                     push @navItems, @{$c->navigation_actions};
+                    # FIXME: push the list of actions onto the correct group.
                 }
             }
         }
@@ -101,6 +104,7 @@ sub merge_controller_actions
         # in a consistent order regardless of controller.
         my @sorted = sort { $a->{actionpath} cmp $b->{actionpath} } @navItems;
         $controller->navigation_actions( \@sorted );
+        $controller->navigation_actions_grouped( \@grouped );
         $controller->navigation_items_merged(1);
     }
 }
