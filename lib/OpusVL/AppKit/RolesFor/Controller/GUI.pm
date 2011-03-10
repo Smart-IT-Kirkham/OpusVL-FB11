@@ -222,6 +222,17 @@ sub intranet_action_list
         grep { $c->can_access($_->{controller}->action_for($_->{actionname})) } @$actions;
 }
 
+=head2 intranet_action_list
+
+Returns a sorted list of actions for the menu filtered by what the user can access.
+
+=cut
+sub appplication_action_list
+{
+    # this list includes groups too.
+
+}
+
 
 ##################################################################################################################################
 # controller actions.

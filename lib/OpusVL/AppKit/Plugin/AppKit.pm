@@ -50,16 +50,6 @@ sub _build_appkit_controllers
     return \@controllers;
 }
 
-
-#after setup_finalize => sub 
-#{
-#    my ($self, @args) = @_;
-#
-#    # FIXME: extract the conroller order desired from the config and 
-#    # tag it onto the controllers.
-#    
-#};
-
 =head2 apps_allowed
 
 Returns a list of the appkit controllers the user has access to sorted as the app config
@@ -84,52 +74,6 @@ has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor:
     $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
     return $visitor;
 } );
-
-=head2 controller_navigation_actions
-    Looks at other controllers in the app to see if any of the navigation actions
-    need to be merged up together.  This allows us to have multiple controllers
-    that are all part of the same module.
-
-    This is called by the template to ensure the parts are merged up before we 
-    go on.
-=cut
-
-sub merge_controller_actions
-{
-    my $self = shift;
-    my $controller = $self->controller;
-
-    return [] if !$controller->does('OpusVL::AppKit::RolesFor::Controller::GUI'); 
-    my @navItems = @{$controller->navigation_actions};
-    @navItems = () if(!@navItems);
-    if($controller->appkit_shared_module && !$controller->navigation_items_merged)
-    {
-        my $controllers = $self->appkit_controllers;
-        for my $c (@$controllers)
-        {
-            if($c != $controller && $c->does('OpusVL::AppKit::RolesFor::Controller::GUI'))
-            {
-                if($c->appkit_shared_module && $c->appkit_shared_module eq $controller->appkit_shared_module)
-                {
-                    if($c->navigation_items_merged)
-                    {
-                        # we've alraedy done the merge when we did this controller
-                        # so just short cut the process.
-                        # and use it's result.
-                        @navItems = @{$c->navigation_actions};
-                        last;
-                    }
-                    push @navItems, @{$c->navigation_actions};
-                }
-            }
-        }
-        # sort the items so that they appear
-        # in a consistent order regardless of controller.
-        my @sorted = sort { $a->{actionpath} cmp $b->{actionpath} } @navItems;
-        $controller->navigation_actions( \@sorted );
-        $controller->navigation_items_merged(1);
-    }
-}
 
 =head2 is_unrestricted_action_name
     Little helper to ascertain if an action's name is one we dont apply access control to.

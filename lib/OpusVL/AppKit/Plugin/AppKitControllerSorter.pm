@@ -51,7 +51,59 @@ after setup_finalize => sub
             $default_sort[$i]->appkit_order($i);
         }
     }
+    my @all_controllers = map { $self->controller($_) } grep { $self->controller($_)->can('appkit') } $self->controllers;
+    for my $controller (@all_controllers)
+    {
+        $self->merge_controller_actions($controller, \@all_controllers);
+    }
 };
+
+=head2 merge_controller_actions
+    Looks at other controllers in the app to see if any of the navigation actions
+    need to be merged up together.  This allows us to have multiple controllers
+    that are all part of the same module.
+
+    This is called by the template to ensure the parts are merged up before we 
+    go on.
+=cut
+
+sub merge_controller_actions
+{
+    my $self = shift;
+    my $controller = shift;
+    my $appkit_controllers = shift;
+
+    return [] if !$controller->does('OpusVL::AppKit::RolesFor::Controller::GUI'); 
+    my @navItems = @{$controller->navigation_actions};
+    @navItems = () if(!@navItems);
+    if($controller->appkit_shared_module && !$controller->navigation_items_merged)
+    {
+        my $controllers = $appkit_controllers;
+        for my $c (@$controllers)
+        {
+            if($c != $controller && $c->does('OpusVL::AppKit::RolesFor::Controller::GUI'))
+            {
+                if($c->appkit_shared_module && $c->appkit_shared_module eq $controller->appkit_shared_module)
+                {
+                    if($c->navigation_items_merged)
+                    {
+                        # we've alraedy done the merge when we did this controller
+                        # so just short cut the process.
+                        # and use it's result.
+                        @navItems = @{$c->navigation_actions};
+                        last;
+                    }
+                    push @navItems, @{$c->navigation_actions};
+                }
+            }
+        }
+        # sort the items so that they appear
+        # in a consistent order regardless of controller.
+        my @sorted = sort { $a->{actionpath} cmp $b->{actionpath} } @navItems;
+        $controller->navigation_actions( \@sorted );
+        $controller->navigation_items_merged(1);
+    }
+}
 
 1;
 
