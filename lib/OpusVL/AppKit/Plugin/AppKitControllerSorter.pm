@@ -5,7 +5,6 @@ use strict;
 use warnings;
 
 use Moose::Role;
-use CatalystX::NavigationMenu;
 use namespace::autoclean;
 
 use vars qw($VERSION);
