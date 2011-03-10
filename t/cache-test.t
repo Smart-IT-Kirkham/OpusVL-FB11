@@ -1,10 +1,9 @@
 use strict;
 use Test::More;
-use Test::WWW::Mechanize::PSGI;
 use Child;
 use Plack::Runner;
 use TestApp;
-use Cache::Memcached::libmemcached;
+use Test::WWW::Mechanize;
 
 sub server
 {
@@ -23,14 +22,6 @@ sub server
         $runner->run($app);
 
     }
-}
-
-{
-    my $memd = Cache::Memcached::libmemcached->new({
-            servers => [ "localhost:11211"],
-            compress_threshold => 10_000
-            });
-    $memd->flush_all;
 }
 
 my $child = Child->new(server(9001));
