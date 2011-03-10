@@ -18,9 +18,9 @@ package OpusVL::AppKit::Plugin::AppKit;
 ###########################################################################################################################
 # use lines.
 ###########################################################################################################################
+use Moose;
 use namespace::autoclean;
 use 5.010;
-use Moose;
 use Tree::Simple;
 use OpusVL::AppKit::Plugin::AppKit::Node;
 
@@ -48,6 +48,30 @@ sub _build_appkit_controllers
         }
     }
     return \@controllers;
+}
+
+
+#after setup_finalize => sub 
+#{
+#    my ($self, @args) = @_;
+#
+#    # FIXME: extract the conroller order desired from the config and 
+#    # tag it onto the controllers.
+#    
+#};
+
+=head2 apps_allowed
+
+Returns a list of the appkit controllers the user has access to sorted as the app config
+specifies.  Generally used for building up the menu.
+
+=cut
+sub apps_allowed
+{
+    my $self = shift;
+    # return a sorted list of appkit controllers the user can use.
+    return sort { $a->appkit_order <=> $b->appkit_order } 
+            grep { $self->can_access($_->home_action->actionpath) } $self->appkit_controllers;
 }
 
 =head2 appkit_actiontree_visitor
