@@ -358,7 +358,11 @@ sub show_role
 
     }
 
+    $c->stash->{appkit_features} = $c->appkit_features->feature_list($show_role);
+
     # create the tree view...
+    # FIXME: need to prune items that are in_feature 
+    # to prevent confusion.
     my $tree_view = Tree::Simple::View::HTML->new
     (
         $c->stash->{action_tree} => 
@@ -376,7 +380,12 @@ sub show_role
                 my $checked             = '';
                 my $color               = 'blue';
 
-                if ( defined $tree->getNodeValue->action_path )
+                if($tree->getNodeValue->in_feature)
+                {
+                    # it's part of a feature so avoid using this mechanism.
+                    $color = 'grey';
+                }
+                elsif ( defined $tree->getNodeValue->action_path )
                 {
                     $color = 'red';
                     if ( my $roles = $tree->getNodeValue->access_only )

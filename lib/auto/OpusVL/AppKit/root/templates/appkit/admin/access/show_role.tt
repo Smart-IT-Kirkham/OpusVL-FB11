@@ -15,7 +15,16 @@
                         Access Tree for [% c.stash.role.role %] 
                     </legend>
 
-                    <form method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('show_role'), [ c.stash.role.role ] )  %]'>
+                    <form id="roles" method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('show_role'), [ c.stash.role.role ] )  %]'>
+                        [% IF appkit_features  %]
+                        <ul>
+                        [% FOREACH feature IN appkit_features.keys %]
+                        <li><input id="[% feature|html %]" type="checkbox" name="[% feature| html %]"[% IF features.feature %] checked="checked"[% END %] value="allow">
+                        <label for="[% feature| html %]">[% feature| html %]</label>
+                        </li>
+                        [% END %]
+                        </ul>
+                        [% END %]
                         [% access_control_role_tree.expandAll %]
                         <input type='submit' name='savebutton'      value='Save'>
                         <input type='submit' name='cancelbutton'    value='Cancel'>

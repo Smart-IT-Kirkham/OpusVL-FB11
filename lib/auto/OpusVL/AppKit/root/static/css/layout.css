@@ -377,3 +377,18 @@ div.role_details {
     width: 560px;
 }
 
+form#roles ul {
+    list-style: circle outside none;
+}
+
+form#roles li {
+    font-family: courier;
+}
+
+form#roles li label{
+    color: red;
+}
+
+form#roles li.allowed label{
+    color: green;
+}

@@ -16,6 +16,8 @@ has access_only     => ( is => 'rw'       , isa => 'ArrayRef'                );
 # Hash of attributes..
 has action_attrs    => ( is => 'rw'       , isa => 'HashRef'                 );
 
+has in_feature      => ( is => 'rw', isa => 'Bool', required => 1 );
+
 # maybe for future use?.... currently being delt with in the Base::Controller::GUI...
 #   has navigation      => ( is => 'rw'       , isa => 'Int'                     , default  => 0 );
 #   has navigation_name => ( is => 'rw'       , isa => 'Str'                     );

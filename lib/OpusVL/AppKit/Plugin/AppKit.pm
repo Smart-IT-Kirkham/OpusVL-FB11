@@ -23,6 +23,7 @@ use namespace::autoclean;
 use 5.010;
 use Tree::Simple;
 use OpusVL::AppKit::Plugin::AppKit::Node;
+use OpusVL::AppKit::Plugin::AppKit::FeatureList;
 
 ###########################################################################################################################
 # moose calls.
@@ -187,6 +188,19 @@ sub execute
 # plugin methods.
 ###########################################################################################################################
 
+=head2 appkit_features
+
+Returns a OpusVL::AppKit::Plugin::AppKit::FeatureList object that allows the querying of the features permissions
+that sit on top of our roles management.
+
+=cut
+sub appkit_features
+{
+    # NOTE: this property is setup when the appkit_actiontree is setup.
+    my $self = shift;
+    return $self->cache->get('appkit_features');
+}
+
 =head2 appkit_actiontree
     This returns a Tree::Simple of OpusVL::AppKit::Plugin::AppKit::Node's.
     Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
@@ -243,6 +257,7 @@ sub _build_appkit_actiontree
 
     # make a tree root (based on code from Catalyst::Plugin::Authorization::ACL::Engine)
     my $root = Tree::Simple->new('AppKit', Tree::Simple->ROOT);
+    my $features = OpusVL::AppKit::Plugin::AppKit::FeatureList->new;
 
     AKCONTROLLERS: foreach my $cont ( @{ $c->appkit_controllers } )
     {   
@@ -254,6 +269,8 @@ sub _build_appkit_actiontree
 
             my $action = $cont->action_for( $action_method->name );
             next unless defined $action;
+
+            # FIXME: spot feature paths.
 
             # Deal with path...
             my $action_path = $action->reverse;
@@ -267,7 +284,9 @@ sub _build_appkit_actiontree
                 action_path     => $action_path,
                 action_attrs    => $action->attributes,
                 access_only     => [],  # default to "no roles allowed"
+                in_feature      => defined $action->attributes->{AppKitFeature},
             );
+            $features->add_action($action);
 
             ## look for any ACL rules for this action_path...
             if ( my $allowed_roles = $c->_allowed_roles_from_db( $action_path ) )
@@ -329,6 +348,7 @@ sub _build_appkit_actiontree
                     my $branch_appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
                     (
                         node_name   => $path_part,
+                        in_feature => 0,
                     );
 
                     # add tree branch..
@@ -340,6 +360,8 @@ sub _build_appkit_actiontree
             $node->addChild( Tree::Simple->new( $appkit_action_object ) );
         }
     }
+
+    $c->cache->set('appkit_features', $features);
 
     # finished :) 
     return $root;
@@ -433,6 +455,7 @@ sub can_access
 
     # find all allowed roles for this action path...
     my $allowed_roles = $c->_allowed_roles_from_tree( $action_path );
+    push @$allowed_roles, @{$c->appkit_features->roles_allowed_for_action( $action_path )};
 
     # if none found.. do NOT allow access..
     return 0 unless defined $allowed_roles;
