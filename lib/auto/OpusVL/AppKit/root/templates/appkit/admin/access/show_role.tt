@@ -30,33 +30,3 @@
     </div>
 
 
-<!--
-<h1> [% role.role %] </h1>
-
-<h2> Action Access </h2>
-
-<h2> Users </h2>
-<ul>
-[% FOR thisuser IN role.users %]
-    <li>
-        [% thisuser.username %]
-
-        [% UNLESS thisuser.username == c.user.username %]
-            <a href='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('user_delete_from_role'), [ role.role, thisuser.id ] ) %]'> Remove </a>
-        [% END %]
-    </li>
-[% END %]
-</ul>
-
-<form method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('user_add_to_role'), [ role.role ] ) %]'>
-    <select name='user_id'>
-    [% FOR thisuser IN c.model('AppKitAuthDB::User').search %]
-        <option value='[% thisuser.id %]'>[% thisuser.username %]</option>
-    [% END %]
-    </select>
-    <input type='submit' name='add_user_to_role' value='Add User to Role'>
-</form>
-
-
-
--->
