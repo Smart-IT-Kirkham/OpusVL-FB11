@@ -73,6 +73,36 @@ sub menu_data
 {
     # rip through the apps and construct an array of apps containing the 
     # group info too.
+    my $self = shift;
+
+    my @apps = sort { ($a->appkit_shared_module || '') cmp ($b->appkit_shared_module || '') } 
+            @{$self->appkit_controllers};
+    # now merge together the grouped controllers.
+    my $i = 0;
+    while($i + 1 < scalar @apps)
+    {
+        if($apps[$i]->appkit_shared_module && $apps[$i+1]->appkit_shared_module && 
+            ($apps[$i]->appkit_shared_module eq $apps[$i+1]->appkit_shared_module))
+        {
+            splice @apps, $i + 1, 1;
+        }
+        else
+        {
+            $i++;
+        }
+    }
+    @apps = sort { $a->appkit_order <=> $b->appkit_order } @apps;
+    my $menu = [];
+
+    for my $app (@apps)
+    {
+        my $actions = $app->application_action_list($self);
+        if(@$actions)
+        {
+            push @$menu, { controller => $app, actions => $actions };
+        }
+    }
+    return $menu;
 }
 
 =head2 appkit_actiontree_visitor

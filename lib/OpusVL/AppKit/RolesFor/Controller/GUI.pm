@@ -260,7 +260,8 @@ sub application_action_list
     my @groups;
     for my $group (@$grouped_actions)
     {
-        push @groups, { group => $group->group, actions => $self->_sorted_filtered_actions($c, $group->actions) };
+        my $filtered = $self->_sorted_filtered_actions($c, $group->{actions});
+        push @groups, { group => $group->{group}, actions => $filtered } if @$filtered;
     }
     return \@groups;
 }
