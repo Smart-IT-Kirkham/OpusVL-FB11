@@ -318,6 +318,10 @@ sub show_role
     # test if need to process some rules submission...
     if ( $c->req->method eq 'POST' )
     {
+        # FIXME: find features and do them too.
+        # $DB::single = 1;
+        # my @a = grep /^feature_/, $c->req->params;
+
         # now we run traverse the tree finding if we are allowing access or not...
 
         my $allowed = [];
@@ -329,7 +333,7 @@ sub show_role
                 my ($_tree) = @_;
                 $_tree->accept($path2root_visitor);
                 my $path = $path2root_visitor->getPathAsString("/");
-                if ( $c->req->params->{$path} )
+                if ( $c->req->params->{'action_' . $path} )
                 {
                     push ( @$allowed, $path );
                 }
@@ -401,7 +405,7 @@ sub show_role
                            $color   = 'green';
                        }
                     }
-                    $node_string = "<input type='checkbox' name='$checkbox_name' value='allow' $checked>" . $node_string;
+                    $node_string = "<input type='checkbox' name='action_$checkbox_name' value='allow' $checked>" . $node_string;
                 }
                 else
                 {

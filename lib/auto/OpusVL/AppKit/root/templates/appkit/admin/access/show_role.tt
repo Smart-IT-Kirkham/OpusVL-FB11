@@ -19,7 +19,7 @@
                         [% IF appkit_features  %]
                         <ul>
                         [% FOREACH feature IN appkit_features.keys %]
-                        <li><input id="[% feature|html %]" type="checkbox" name="[% feature| html %]"[% IF features.feature %] checked="checked"[% END %] value="allow">
+                        <li><input type="checkbox" name="feature_[% feature| html %]"[% IF features.feature %] checked="checked" class="allowed"[% END %] value="allow">
                         <label for="[% feature| html %]">[% feature| html %]</label>
                         </li>
                         [% END %]
