@@ -360,11 +360,37 @@ sub _build_appkit_actiontree
             $node->addChild( Tree::Simple->new( $appkit_action_object ) );
         }
     }
+    for my $feature (keys %{$features->feature_list})
+    {
+        if( my $roles = $c->_allowed_feature_roles_from_db( $c, $feature ) )
+        {
+            $features->set_roles_allowed($feature, $roles);
+        }
+    }
 
     $c->cache->set('appkit_features', $features);
 
     # finished :) 
     return $root;
+}
+
+sub _allowed_feature_roles_from_db
+{
+    my $self = shift;
+    my $c = shift;
+    my $feature = shift;
+
+    my $aclfeature = $c->model('AppKitAuthDB::Aclfeature')->find( { feature => $feature } );
+    # return undef if not match found..
+    return undef unless $aclfeature;
+
+    $c->log->debug("AppKit Feature ACL : Matched Rule: " . $aclfeature->id . " FOR: $feature ") if $c->debug;
+
+    #.. pull out all the allowed roles for this rule..
+    my $allowed_roles = [ map { $_->role } $aclfeature->roles ];
+
+    # return array ref of roles..
+    return $allowed_roles;
 }
 
 =head2 can_access

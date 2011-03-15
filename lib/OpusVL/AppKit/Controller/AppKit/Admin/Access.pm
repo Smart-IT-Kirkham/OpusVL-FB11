@@ -382,6 +382,7 @@ sub show_role
 
         # now we have allowed and denied access to the different parts of the tree... we need to rebuild it..
         $c->stash->{action_tree} = $c->appkit_actiontree(1); # built with a 'force re-read'
+        $c->stash->{appkit_features} = $c->appkit_features->feature_list($show_role);
 
     }
 
