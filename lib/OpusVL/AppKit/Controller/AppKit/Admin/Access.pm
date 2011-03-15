@@ -22,6 +22,7 @@ __PACKAGE__->config
 
 sub auto
     : Private
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -39,6 +40,7 @@ sub auto
 sub index
     : Path
     : Args(0)
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c ) = @_;
     $c->stash->{template} = 'appkit/admin/access/show_role.tt';
@@ -52,6 +54,7 @@ sub index
 
 sub addrole
     : Local
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -94,6 +97,7 @@ sub role_specific
     : Chained('/')
     : PathPart('admin/access/role')
     : CaptureArgs(1)
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c, $rolename ) = @_;
 
@@ -114,6 +118,7 @@ sub role_management
     : PathPart('management')
     : Args(0)
     : AppKitForm
+    : AppKitFeature('Role Administration')
 {
     my ($self, $c) = @_;
 
@@ -167,6 +172,7 @@ sub user_for_role
     : Chained('role_specific')
     : PathPart('user')
     : CaptureArgs(1)
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c, $user_id ) = @_;
     $c->stash->{roleuser} = $c->model('AppKitAuthDB::User')->find( $user_id );
@@ -183,6 +189,7 @@ sub user_delete_from_role
     : Chained('user_for_role')
     : PathPart('delete')
     : Args(0)
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c ) = @_;
     # delete user/role lookup..
@@ -203,6 +210,7 @@ sub delete_role
     : PathPart('delrole')
     : Args(0)
     : AppKitForm("appkit/admin/confirm.yml")
+    : AppKitFeature('Role Administration')
 {   
     my ( $self, $c ) = @_;
 
@@ -234,6 +242,7 @@ sub user_add_to_role
     : Chained('role_specific')
     : PathPart('adduser')
     : Args(0)
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -258,6 +267,7 @@ sub action_rule_for_role
     : Chained('role_specific')
     : PathPart('rule')
     : Args(2)
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c, $action, $action_path ) = @_;
 
@@ -300,6 +310,7 @@ sub show_role
     : Chained('role_specific')
     : PathPart('show')
     : Args(0)
+    : AppKitFeature('Role Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -322,15 +333,19 @@ sub show_role
         # FIXME: find features and do them too.
         my @features_allowed;
         my @features_denied;
-        for my $feature (keys %{$c->stash->{appkit_features}})
+        for my $app (keys %{$c->stash->{appkit_features}})
         {
-            if($c->req->params->{'feature_' . $feature})
+            my $features = $c->stash->{appkit_features}->{$app};
+            for my $feature (keys %$features)
             {
-                push @features_allowed, $feature;
-            }
-            else
-            {
-                push @features_denied, $feature;
+                if($c->req->params->{"feature_$app/$feature"})
+                {
+                    push @features_allowed, "$app/$feature";
+                }
+                else
+                {
+                    push @features_denied, "$app/$feature";
+                }
             }
         }
         for my $feature (@features_allowed)

@@ -60,5 +60,21 @@ eq_or_diff $features, { app => { 'Extension A' => [ qw/Admin Supervisor/ ] }}, '
 eq_or_diff $f->roles_allowed_for_action($action->reverse), [ qw/Admin Supervisor/ ], 'Check roles for action';
 eq_or_diff $f->roles_allowed_for_action($action2->reverse), [ qw/Admin Supervisor/ ], 'Check roles for action';
 
+my $action3 = Catalyst::Action->new(
+    class => 'TestApp::Controller::ExtensionA',
+    name => 'list',
+    namespace => 'extensiona',
+    attributes => {
+        AppKitFeature => [ 'Extension B' ],
+        Args => [],
+        AppKitRolesAllowed => [ 'Administrator' ],
+        Path => [ 'extensionsb' ],
+    },
+    reverse => 'extensionb/list',
+);
+$feature->add_action('app', $action3);
+$features = $feature->feature_list;
+eq_or_diff $features, { app => { 'Extension B' => [], 'Extension A' => [ qw/Admin Supervisor/ ] } }, 'Checking feature list';
+
 done_testing;
 

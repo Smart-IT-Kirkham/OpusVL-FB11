@@ -36,11 +36,13 @@ sub add_action
 
     my $features = $action->attributes->{AppKitFeature};
     return if !$features || !@$features;
-    for my $feature (@$features)
+    my $list = $features->[0];
+    my @features = split /,/, $list;
+    for my $feature (@features)
     {
         $self->_add_to_feature($app .'/'. $feature, $action->reverse);
     }
-    my @app_and_feature = map { $app .'/'. $_ } @$features;
+    my @app_and_feature = map { $app .'/'. $_ } @features;
     $self->_path_to_feature->{$action->reverse} = \@app_and_feature;
 }
 
@@ -107,7 +109,13 @@ sub feature_list
         %map = map { $_ => $self->_features->{$_}->{roles_allowed} } @keys;
     }
     # now split the map up some more.
-    my %apps = map { $_ =~ q|^(.*)/(.*)$|; $1 => { $2 => $map{$_} } } sort keys %map;
+    my %apps;
+    for my $key (sort keys %map)
+    {
+        $key =~ q|^(.*)/(.*)$|;
+        $apps{$1} = {} if !defined $apps{$1};
+        $apps{$1}->{$2} = $map{$key};
+    }
     return \%apps;
 }
 
