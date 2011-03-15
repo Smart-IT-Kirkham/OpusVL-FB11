@@ -20,7 +20,7 @@ sub home
     :Args(0)
     :NavigationHome
     :AppKitFeature('Extension A')
-    :AppKitRolesAllowed('Administrator')
+#    :AppKitRolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{template} = 'extensiona.tt';

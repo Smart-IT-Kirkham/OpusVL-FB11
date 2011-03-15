@@ -23,7 +23,7 @@ sub home
     :NavigationName('Expanded Action')
     :AppKitFeature('Extension A')
     :NavigationOrder(1)
-    :AppKitRolesAllowed('Administrator')
+#    :AppKitRolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{template} = 'extensiona.tt';
@@ -35,7 +35,7 @@ sub startchain
     :PathPart('start')
     :CaptureArgs(0)
     :AppKitFeature('Extension A')
-    :AppKitRolesAllowed('Administrator')
+#    :AppKitRolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{template} = 'extensiona.tt';
@@ -45,7 +45,7 @@ sub midchain
     :Chained('startchain')
     :PathPart('mid')
     :CaptureArgs(0)
-    :AppKitRolesAllowed('Administrator')
+#    :AppKitRolesAllowed('Administrator')
     :AppKitFeature('Extension A')
 {
     my ($self, $c) = @_;
@@ -58,7 +58,7 @@ sub endchain
     :NavigationName('Expanded Chained Action')
     :NavigationOrder(2)
     :AppKitFeature('Extension A')
-    :AppKitRolesAllowed('Administrator')
+#    :AppKitRolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{custom_string} .= 'End of Chained actions.';
