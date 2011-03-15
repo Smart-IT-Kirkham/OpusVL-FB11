@@ -71,11 +71,16 @@ use Moose::Role;
 # moose calls.
 ##################################################################################################################################
 
-has appkit                  => ( is => 'ro',    isa => 'Int',                       default => 1 );
-has appkit_name             => ( is => 'ro',    isa => 'Str',                       default => 'AppKit' );
-has appkit_myclass          => ( is => 'ro',    isa => 'Str',                       );
-has appkit_shared_module => ( is => 'ro', isa => 'Str');
-has navigation_items_merged => ( is => 'rw', isa => 'Bool', default => 0 );
+has appkit                      => ( is => 'ro',    isa => 'Int',                       default => 1 );
+has appkit_name                 => ( is => 'ro',    isa => 'Str',                       default => 'AppKit' );
+has appkit_myclass              => ( is => 'ro',    isa => 'Str',                       );
+has appkit_shared_module        => ( is => 'ro',    isa => 'Str');
+has navigation_items_merged     => ( is => 'rw',    isa => 'Bool', default => 0 );
+has appkit_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
+has appkit_method_group         => ( is => 'rw',    isa => 'Str', default => '');
+has appkit_order                => ( is => 'rw',    isa => 'Int', default => 0);
+
+has _default_order              => ( is => 'rw',    isa => 'Int', default => 0);
 
 =head2 home_action
 
@@ -93,6 +98,15 @@ has home_action             => ( is => 'rw',    isa => 'HashRef'        );
 =cut
 
 has navigation_actions      => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
+
+=head2 navigation_actions_grouped
+
+    This should be an Array Ref of HashRef's pertaining the actions that make up the navigation
+    grouped by appkit_method_group.
+
+=cut
+
+has navigation_actions_grouped      => ( is => 'rw',    isa => 'ArrayRef',  default => sub { [] } );
 
 =head2 portlet_actions
 
@@ -142,6 +156,16 @@ before create_action  => sub
         # This action has been identified as a Navigation item..
         my $array = $self->navigation_actions;
         $array = [] unless defined $array;
+        $self->_default_order($self->_default_order+1);
+        my $order;
+        if(defined $args{attributes}{NavigationOrder})
+        {
+            $order = $args{attributes}{NavigationOrder}->[0] 
+        }
+        else
+        {
+            $order = $self->_default_order;
+        }
         push 
         ( 
             @$array,
@@ -150,6 +174,7 @@ before create_action  => sub
                 actionpath  => $args{reverse},
                 actionname  => $args{name},
                 controller  => $self,
+                sort_index  => $order,
             }
         );
         $self->navigation_actions( $array );
@@ -189,6 +214,57 @@ before create_action  => sub
         $self->search_actions ( $array );
     }
 };
+
+=head2 intranet_action_list
+
+Returns a sorted list of actions for the menu filtered by what the user can access.
+
+=cut
+sub intranet_action_list
+{
+    my $self = shift;
+    my $c = shift;
+
+    my $actions = $self->navigation_actions;
+    return $self->_sorted_filtered_actions($c, $actions);
+}
+
+sub _sorted_filtered_actions
+{
+    my $self = shift;
+    my $c = shift;
+    my $actions = shift;
+
+    return [] if !$actions;
+    my @actions = sort { $a->{sort_index} <=> $b->{sort_index} } 
+        grep { $c->can_access($_->{controller}->action_for($_->{actionname})) } @$actions;
+    return \@actions;
+}
+
+=head2 application_action_list
+
+Returns a sorted list of actions for the menu filtered by what the user can access.
+
+It returns a list of hashes containing two keys, group (the group name) and actions, a list of 
+the actions for that group.
+
+=cut
+sub application_action_list
+{
+    # this list includes groups too.
+    my $self = shift;
+    my $c = shift;
+
+    my $grouped_actions = $self->navigation_actions_grouped;
+    return [] if !$grouped_actions;
+    my @groups;
+    for my $group (@$grouped_actions)
+    {
+        my $filtered = $self->_sorted_filtered_actions($c, $group->{actions});
+        push @groups, { group => $group->{group}, actions => $filtered } if @$filtered;
+    }
+    return \@groups;
+}
 
 
 ##################################################################################################################################

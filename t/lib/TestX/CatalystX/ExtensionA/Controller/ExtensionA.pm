@@ -10,12 +10,17 @@ __PACKAGE__->config
     appkit_name                 => 'ExtensionA',
     appkit_icon                 => 'static/images/flagA.jpg',
     appkit_myclass              => 'TestX::CatalystX::ExtensionA',
+    appkit_method_group         => 'Extension A',
+    appkit_method_group_order   => 2,
+    appkit_shared_module        => 'ExtensionA',
 );
 
 sub home
     :Path
     :Args(0)
     :NavigationHome
+    :AppKitFeature('Extension A')
+    :AppKitRolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{template} = 'extensiona.tt';

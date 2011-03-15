@@ -1,10 +1,9 @@
 use strict;
 use Test::More;
-use Test::WWW::Mechanize::PSGI;
 use Child;
 use Plack::Runner;
 use TestApp;
-use Cache::Memcached::libmemcached;
+use Test::WWW::Mechanize;
 
 sub server
 {
@@ -25,14 +24,6 @@ sub server
     }
 }
 
-{
-    my $memd = Cache::Memcached::libmemcached->new({
-            servers => [ "localhost:11211"],
-            compress_threshold => 10_000
-            });
-    $memd->flush_all;
-}
-
 my $child = Child->new(server(9001));
 my $child2 = Child->new(server(9002));
 my $proc = $child->start;
@@ -45,35 +36,35 @@ $mech->post_ok( 'http://localhost:9001//login', { username => 'appkitadmin', pas
 $mech->get_ok('http://localhost:9001//admin/access/role/Administrator/show');
 $mech->post_ok('http://localhost:9002/admin/access/role/Administrator/show', {
         savebutton => 'Save',
-        'appkit/admin/access/auto'=>'allow',
-        'appkit/admin/access/addrole'=>'allow',
-        'appkit/admin/access/delete_role'=>'allow',
-        'appkit/admin/access/index'=>'allow',
-        'appkit/admin/access/role_specific'=>'allow',
-        'appkit/admin/access/show_role'=>'allow',
-        'appkit/admin/index'=>'allow',
-        'appkit/admin/users/add_parameter'=>'allow',
-        'appkit/admin/users/adduser'=>'allow',
-        'appkit/admin/users/auto'=>'allow',
-        'appkit/admin/users/delete_parameter'=>'allow',
-        'appkit/admin/users/delete_user'=>'allow',
-        'appkit/admin/users/edit_user'=>'allow',
-        'appkit/admin/users/get_parameter_input'=>'allow',
-        'appkit/admin/users/index'=>'allow',
-        'appkit/admin/users/show_user'=>'allow',
-        'appkit/admin/users/user_specific'=>'allow',
-        'appkit/user/change_password'=>'allow',
-        'extensiona/expansionaa/endchain'=>'allow',
-        'extensiona/expansionaa/home'=>'allow',
-        'extensiona/expansionaa/midchain'=>'allow',
-        'extensiona/expansionaa/startchain'=>'allow',
-        'extensiona/home'=>'allow',
-        'extensionb/formpage'=>'allow',
-        'extensionb/home'=>'allow',
-        'index'=>'allow',
-        'search/index'=>'allow',
-        'test/cause_error'=>'allow',
-        'test/access_admin'=>'allow',
+        'action_appkit/admin/access/auto'=>'allow',
+        'action_appkit/admin/access/addrole'=>'allow',
+        'action_appkit/admin/access/delete_role'=>'allow',
+        'action_appkit/admin/access/index'=>'allow',
+        'action_appkit/admin/access/role_specific'=>'allow',
+        'action_appkit/admin/access/show_role'=>'allow',
+        'action_appkit/admin/index'=>'allow',
+        'action_appkit/admin/users/add_parameter'=>'allow',
+        'action_appkit/admin/users/adduser'=>'allow',
+        'action_appkit/admin/users/auto'=>'allow',
+        'action_appkit/admin/users/delete_parameter'=>'allow',
+        'action_appkit/admin/users/delete_user'=>'allow',
+        'action_appkit/admin/users/edit_user'=>'allow',
+        'action_appkit/admin/users/get_parameter_input'=>'allow',
+        'action_appkit/admin/users/index'=>'allow',
+        'action_appkit/admin/users/show_user'=>'allow',
+        'action_appkit/admin/users/user_specific'=>'allow',
+        'action_appkit/user/change_password'=>'allow',
+        'action_extensiona/expansionaa/endchain'=>'allow',
+        'action_extensiona/expansionaa/home'=>'allow',
+        'action_extensiona/expansionaa/midchain'=>'allow',
+        'action_extensiona/expansionaa/startchain'=>'allow',
+        'action_extensiona/home'=>'allow',
+        'action_extensionb/formpage'=>'allow',
+        'action_extensionb/home'=>'allow',
+        'action_index'=>'allow',
+        'action_search/index'=>'allow',
+        'action_test/cause_error'=>'allow',
+        'action_test/access_admin'=>'allow',
 }, 'Set role to known state.');
 $mech->get_ok('http://localhost:9001//admin/access/role/Administrator/show');
 my $first_load = $mech->content;
@@ -84,36 +75,36 @@ $mech2->post_ok( 'http://localhost:9002/login', { username => 'appkitadmin', pas
 $mech2->get_ok('http://localhost:9002/admin/access/role/Administrator/show');
 $mech2->post_ok('http://localhost:9002/admin/access/role/Administrator/show', {
         savebutton => 'Save',
-        'appkit/admin/access/auto'=>'allow',
-        'appkit/admin/access/addrole'=>'allow',
-        'appkit/admin/access/delete_role'=>'allow',
-        'appkit/admin/access/index'=>'allow',
-        'appkit/admin/access/role_specific'=>'allow',
-        'appkit/admin/access/show_role'=>'allow',
-        'appkit/admin/index'=>'allow',
-        'appkit/admin/users/add_parameter'=>'allow',
-        'appkit/admin/users/adduser'=>'allow',
-        'appkit/admin/users/auto'=>'allow',
-        'appkit/admin/users/delete_parameter'=>'allow',
-        'appkit/admin/users/delete_user'=>'allow',
-        'appkit/admin/users/edit_user'=>'allow',
-        'appkit/admin/users/get_parameter_input'=>'allow',
-        'appkit/admin/users/index'=>'allow',
-        'appkit/admin/users/show_user'=>'allow',
-        'appkit/admin/users/user_specific'=>'allow',
-        'appkit/user/change_password'=>'allow',
-        'extensiona/expansionaa/endchain'=>'allow',
-        'extensiona/expansionaa/home'=>'allow',
-        'extensiona/expansionaa/midchain'=>'allow',
-        'extensiona/expansionaa/startchain'=>'allow',
-        'extensiona/home'=>'allow',
-        'extensionb/formpage'=>'allow',
-        'extensionb/home'=>'allow',
-        'index'=>'allow',
-        'search/index'=>'allow',
-        'test/cause_error'=>'allow',
-        'test/access_admin'=>'allow',
-        'test/index'=>'allow',
+        'action_appkit/admin/access/auto'=>'allow',
+        'action_appkit/admin/access/addrole'=>'allow',
+        'action_appkit/admin/access/delete_role'=>'allow',
+        'action_appkit/admin/access/index'=>'allow',
+        'action_appkit/admin/access/role_specific'=>'allow',
+        'action_appkit/admin/access/show_role'=>'allow',
+        'action_appkit/admin/index'=>'allow',
+        'action_appkit/admin/users/add_parameter'=>'allow',
+        'action_appkit/admin/users/adduser'=>'allow',
+        'action_appkit/admin/users/auto'=>'allow',
+        'action_appkit/admin/users/delete_parameter'=>'allow',
+        'action_appkit/admin/users/delete_user'=>'allow',
+        'action_appkit/admin/users/edit_user'=>'allow',
+        'action_appkit/admin/users/get_parameter_input'=>'allow',
+        'action_appkit/admin/users/index'=>'allow',
+        'action_appkit/admin/users/show_user'=>'allow',
+        'action_appkit/admin/users/user_specific'=>'allow',
+        'action_appkit/user/change_password'=>'allow',
+        'action_extensiona/expansionaa/endchain'=>'allow',
+        'action_extensiona/expansionaa/home'=>'allow',
+        'action_extensiona/expansionaa/midchain'=>'allow',
+        'action_extensiona/expansionaa/startchain'=>'allow',
+        'action_extensiona/home'=>'allow',
+        'action_extensionb/formpage'=>'allow',
+        'action_extensionb/home'=>'allow',
+        'action_index'=>'allow',
+        'action_search/index'=>'allow',
+        'action_test/cause_error'=>'allow',
+        'action_test/access_admin'=>'allow',
+        'action_test/index'=>'allow',
 }, 'Allow deleting roles.');
 
 $mech->get_ok('http://localhost:9001/admin/access/role/Administrator/show');

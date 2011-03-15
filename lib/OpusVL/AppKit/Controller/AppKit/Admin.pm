@@ -12,6 +12,7 @@ with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
 sub auto
     : Private
+    : AppKitFeature('Role Admin,User Admin')
 {
     my ( $self, $c ) = @_;
 
@@ -28,6 +29,7 @@ sub auto
 sub index
     : Path
     : Args(0)
+    : AppKitFeature('Role Administration,User Administration')
 {
     my ( $self, $c ) = @_;
 

@@ -32,7 +32,9 @@ __PACKAGE__->config->{namespace}    = '';
   
 =head2 auto
 =cut
-sub auto : Private 
+sub auto 
+    : Private 
+    : AppKitAllAccess
 {
     my ( $self, $c ) = @_;
     return 1;
@@ -45,6 +47,7 @@ sub auto : Private
 sub index 
     :Path 
     :Args(0) 
+    : AppKitFeature('Home Page')
 {
     my ( $self, $c ) = @_;
 
