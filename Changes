@@ -1,5 +1,43 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+0.21
+
+* Added 2 level access permissions that allow the grouping of related actions into features to make
+  role administration simpler.  To do this apply the AppKitFeature attribute.  Specify multiple features
+  like this,
+
+  sub action_name 
+    : Local
+    : AppKitFeature('Feature 1,Feature 2')
+
+  Note that what you put here is what is displayed on the user interface.  Apply the feature to all 
+  actions you need to execute as part of your feature, including the various auto actions.
+
+* Added method groups for the new application style menus.  Menus are divided into applications, 
+  groups, then actions.  Applications are defined as they are now.  Groups are defined as a class
+  attribute, appkit_method_group_order.  
+  
+* It is also possible to sort all the parts of the menu.  To sort the actions use the 
+  :NavigationOrder(2) attribute.  To sort the groups use the appkit_method_group_order attribute on 
+  the class.
+
+  To sort the applicaitons use the appkit_app_order configuration setting.  This should be a list 
+  of classes (using the injected names).  If you're unsure what to put add the key and put in a 
+  bogus value and when your app is run it will complain and tell you what classes it is expecting.
+
+    $config->{appkit_app_order} = [
+        qw/TestApp::Controller::ExtensionA TestApp::Controller::ExtensionB TestApp::Controller::Test/
+    ];
+
+  If you have less classes mentioned than there are you will get a warning like this after catalyst has
+  loaded,
+
+    [warn] Application order is not completely set.  Update your appkit_app_order config setting
+    [warn] Expecting these controllers to be specified TestApp::Controller::ExtensionB, TestApp::Controller::ExtensionA, TestApp::Controller::Test
+
+* Moved permissions cache to a proper cache.  This prevents the issue where permissions were
+  changed and other users on the server didn't see the changes. (Bug 224)
+
 0.20
 
 * Moved the date_short, date_long, time_short and time_long DateTime formatting functions

@@ -22,7 +22,7 @@
       bash$ perldoc ./lib/OpusVL/AppKit/Plugin/AppKit.pm
     
     Run the tests as detailed below, a high level, will-it-complete test might be:
-      bash$ prove -l
+      bash$ prove -l -I t/lib
     
     You can start the TestApp in the like so:
       bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_server.pl --port=3006 -r -d

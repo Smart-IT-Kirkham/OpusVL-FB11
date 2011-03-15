@@ -46,6 +46,12 @@ requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Static::Simple';
+requires 'Catalyst::Plugin::Cache';
+
+# really test dependencies.
+requires 'Catalyst::Engine::PSGI';
+requires 'Plack';
+requires 'Child';
 
 # Catalyst models
 requires 'Catalyst::Model::DBIC::Schema';

@@ -14,7 +14,9 @@ __PACKAGE__->config
 
 =head2 auto
 =cut
-sub auto :Private 
+sub auto 
+    :Private 
+    : AppKitFeature('Password Change,User Administration,Role Administration')
 {
     my ($self, $c) = @_;
 }
