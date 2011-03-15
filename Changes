@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.22
+
+* Fixed broken tests to make it install cleanly.  Note to self: run make test before rolling a release.
+
 0.21
 
 * Added 2 level access permissions that allow the grouping of related actions into features to make
