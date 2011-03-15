@@ -314,14 +314,39 @@ sub show_role
     # build my visitor to get the path to the root..
     my $path2root_visitor = Tree::Simple::VisitorFactory->getVisitor("PathToRoot");
     $path2root_visitor->setNodeFilter(sub { my ($t) = @_; return $t->getNodeValue()->node_name });
+    $c->stash->{appkit_features} = $c->appkit_features->feature_list($show_role);
 
     # test if need to process some rules submission...
     if ( $c->req->method eq 'POST' )
     {
         # FIXME: find features and do them too.
-        # $DB::single = 1;
-        # my @a = grep /^feature_/, $c->req->params;
-
+        my @features_allowed;
+        my @features_denied;
+        for my $feature (keys %{$c->stash->{appkit_features}})
+        {
+            if($c->req->params->{'feature_' . $feature})
+            {
+                push @features_allowed, $feature;
+            }
+            else
+            {
+                push @features_denied, $feature;
+            }
+        }
+        for my $feature (@features_allowed)
+        {
+            $c->log->debug("****************ALLOWING FEATURE:" . $feature . "\n") if $c->debug;
+            $DB::single = 1;
+            my $aclfeature = $c->model('AppKitAuthDB::Aclfeature')->find_or_create( { feature => $feature } );
+            $c->stash->{role}->update_or_create_related('aclfeature_roles', { aclfeature_id => $aclfeature->id } );
+        }
+        for my $feature (@features_denied)
+        {
+            $c->log->debug("****************DENYING FEATURE:" . $feature . "\n") if $c->debug;
+            $DB::single = 1;
+            my $aclfeature = $c->model('AppKitAuthDB::Aclfeature')->find_or_create( { feature => $feature } );
+            $c->stash->{role}->search_related('aclfeature_roles', { aclfeature_id => $aclfeature->id } )->delete;
+        }
         # now we run traverse the tree finding if we are allowing access or not...
 
         my $allowed = [];
@@ -362,7 +387,6 @@ sub show_role
 
     }
 
-    $c->stash->{appkit_features} = $c->appkit_features->feature_list($show_role);
 
     # create the tree view...
     # FIXME: need to prune items that are in_feature 

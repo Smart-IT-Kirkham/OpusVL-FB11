@@ -119,6 +119,21 @@ __PACKAGE__->might_have(
 );
 
 
+=head2 aclfeature_roles
+
+Type: has_many
+
+Related object: L<OpusVL::AppKit::Schema::AppKitAuthDB::Result::AclfeatureRole>
+
+=cut
+
+__PACKAGE__->has_many(
+  "aclfeature_roles",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::AclfeatureRole",
+  { "foreign.role_id" => "self.id" },
+  { cascade_copy => 0, cascade_delete => 0 },
+);
+
 
 
 # Created by DBIx::Class::Schema::Loader v0.07000 @ 2010-05-24 12:44:30
