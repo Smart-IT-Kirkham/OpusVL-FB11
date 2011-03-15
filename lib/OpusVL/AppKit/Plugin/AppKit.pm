@@ -286,7 +286,7 @@ sub _build_appkit_actiontree
                 access_only     => [],  # default to "no roles allowed"
                 in_feature      => defined $action->attributes->{AppKitFeature},
             );
-            $features->add_action($action);
+            $features->add_action($cont->appkit_name, $action);
 
             ## look for any ACL rules for this action_path...
             if ( my $allowed_roles = $c->_allowed_roles_from_db( $action_path ) )

@@ -18,13 +18,18 @@
                     <form id="roles" method='POST' action='[% c.uri_for( c.controller('AppKit::Admin::Access').action_for('show_role'), [ c.stash.role.role ] )  %]'>
                         [% IF appkit_features  %]
                         <ul>
-                        [% FOREACH feature IN appkit_features.keys %]
-                        <li [% IF appkit_features.$feature %]class="allowed"[% END %]><input type="checkbox" name="feature_[% feature| html %]"[% IF appkit_features.$feature %] checked="checked"[% END %] value="allow">
+                        [% FOREACH app IN appkit_features.keys %]
+                        <li class="app"><span>[% app | html %]<span></li>
+                        <ul>
+                        [% FOREACH feature IN appkit_features.$app.keys %]
+                        <li [% IF appkit_features.$app.$feature %]class="allowed"[% END %]><input type="checkbox" name="feature_[% feature| html %]"[% IF appkit_features.$app.$feature %] checked="checked"[% END %] value="allow">
                         <label for="[% feature| html %]">[% feature| html %]</label>
                         </li>
                         [% END %]
                         </ul>
                         [% END %]
+                        [% END %]
+                        </ul>
                         [% access_control_role_tree.expandAll %]
                         <input type='submit' name='savebutton'      value='Save'>
                         <input type='submit' name='cancelbutton'    value='Cancel'>

@@ -18,15 +18,15 @@ my $action = Catalyst::Action->new(
     },
     reverse => 'extensiona/home',
 );
-$feature->add_action($action);
+$feature->add_action('app', $action);
 
 my $features = $feature->feature_list;
-eq_or_diff $features, { 'Extension A' => [] }, 'Checking feature list';
+eq_or_diff $features, { 'app' => {'Extension A' => [] }}, 'Checking feature list';
 
-$feature->set_roles_allowed('Extension A', [ qw/Admin Supervisor/ ]);
+$feature->set_roles_allowed('app/Extension A', [ qw/Admin Supervisor/ ]);
 eq_or_diff $feature->roles_allowed_for_action($action->reverse), [ qw/Admin Supervisor/ ], 'Check roles for action';
 $features = $feature->feature_list;
-eq_or_diff $features, { 'Extension A' => [ qw/Admin Supervisor/ ] }, 'Checking feature list';
+eq_or_diff $features, { app => { 'Extension A' => [ qw/Admin Supervisor/ ] }}, 'Checking feature list';
 
 my $action2 = Catalyst::Action->new(
     class => 'TestApp::Controller::ExtensionA',
@@ -40,13 +40,13 @@ my $action2 = Catalyst::Action->new(
     },
     reverse => 'extensiona/list',
 );
-$feature->add_action($action2);
+$feature->add_action('app', $action2);
 $features = $feature->feature_list;
-eq_or_diff $features, { 'Extension A' => [ qw/Admin Supervisor/ ] }, 'Checking feature list';
+eq_or_diff $features, { app => { 'Extension A' => [ qw/Admin Supervisor/ ] } }, 'Checking feature list';
 eq_or_diff $feature->roles_allowed_for_action($action->reverse), [ qw/Admin Supervisor/ ], 'Check roles for action';
 eq_or_diff $feature->roles_allowed_for_action($action2->reverse), [ qw/Admin Supervisor/ ], 'Check roles for action';
-eq_or_diff $feature->feature_list('Admin'), { 'Extension A' => 1 }, 'Checking role filtering';
-eq_or_diff $feature->feature_list('Administrator'), { 'Extension A' => 0 }, 'Checking role filtering';
+eq_or_diff $feature->feature_list('Admin'), { app => {'Extension A' => 1} }, 'Checking role filtering';
+eq_or_diff $feature->feature_list('Administrator'), { app => { 'Extension A' => 0} }, 'Checking role filtering';
 
 # now check we can cache the object and use it.
 note 'cache test';
@@ -56,7 +56,7 @@ $cache->set('test', $feature);
 
 my $f = $cache->get('test');
 $features = $f->feature_list;
-eq_or_diff $features, { 'Extension A' => [ qw/Admin Supervisor/ ] }, 'Checking feature list';
+eq_or_diff $features, { app => { 'Extension A' => [ qw/Admin Supervisor/ ] }}, 'Checking feature list';
 eq_or_diff $f->roles_allowed_for_action($action->reverse), [ qw/Admin Supervisor/ ], 'Check roles for action';
 eq_or_diff $f->roles_allowed_for_action($action2->reverse), [ qw/Admin Supervisor/ ], 'Check roles for action';
 

@@ -31,15 +31,17 @@ the details.
 sub add_action
 {
     my $self = shift;
+    my $app = shift;
     my $action = shift;
 
     my $features = $action->attributes->{AppKitFeature};
     return if !$features || !@$features;
     for my $feature (@$features)
     {
-        $self->_add_to_feature($feature, $action->reverse);
+        $self->_add_to_feature($app .'/'. $feature, $action->reverse);
     }
-    $self->_path_to_feature->{$action->reverse} = $features;
+    my @app_and_feature = map { $app .'/'. $_ } @$features;
+    $self->_path_to_feature->{$action->reverse} = \@app_and_feature;
 }
 
 sub _add_to_feature
@@ -94,16 +96,19 @@ sub feature_list
 
     # return a list of Feature name -> [roles allowed]
     my %map;
+    my @keys = keys %{$self->_features};
     if($current_role)
     {
         # filter it down to a yes/no type deal.
-        %map = map { $_ => scalar grep { $current_role eq $_ } @{$self->_features->{$_}->{roles_allowed}} } keys %{$self->_features};
+        %map = map { $_ => scalar grep { $current_role eq $_ } @{$self->_features->{$_}->{roles_allowed}} } @keys;
     }
     else
     {
-        %map = map { $_ => $self->_features->{$_}->{roles_allowed} } keys %{$self->_features};
+        %map = map { $_ => $self->_features->{$_}->{roles_allowed} } @keys;
     }
-    return \%map;
+    # now split the map up some more.
+    my %apps = map { $_ =~ q|^(.*)/(.*)$|; $1 => { $2 => $map{$_} } } sort keys %map;
+    return \%apps;
 }
 
 1;

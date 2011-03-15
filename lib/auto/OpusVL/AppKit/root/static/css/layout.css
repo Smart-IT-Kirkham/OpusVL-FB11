@@ -392,3 +392,8 @@ form#roles li label{
 form#roles li.allowed label{
     color: green;
 }
+
+form#roles li.app span {
+    color: blue;
+}
+
