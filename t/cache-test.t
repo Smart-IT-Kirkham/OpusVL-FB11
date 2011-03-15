@@ -2,6 +2,8 @@ use strict;
 use Test::More;
 use Child;
 use Plack::Runner;
+use FindBin qw($Bin);
+use lib "$Bin/lib";
 use TestApp;
 use Test::WWW::Mechanize;
 

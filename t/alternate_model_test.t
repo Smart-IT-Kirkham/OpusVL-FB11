@@ -1,5 +1,7 @@
 # this test is needed because we also need to test role 
 # stuff with an empty RoleAllowed table.
+use FindBin qw($Bin);
+use lib "$Bin/lib";
 
 use Test::More; 
 {
