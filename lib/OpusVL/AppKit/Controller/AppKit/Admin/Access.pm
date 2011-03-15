@@ -405,9 +405,27 @@ sub show_role
     # create the tree view...
     # FIXME: need to prune items that are in_feature 
     # to prevent confusion.
+    my $display_tree = $c->stash->{action_tree};
+    my @remove;
+    $display_tree->traverse(sub {
+        my ($tree) = @_;
+        push @remove, $tree if($tree->getNodeValue->in_feature);
+        push @remove, $tree if($tree->getNodeValue->action_attrs && defined $tree->getNodeValue->action_attrs->{AppKitAllAccess});
+    });
+    for my $item (@remove)
+    {
+        my $parent = $item->getParent;
+        $parent->removeChild($item);
+        while($parent->getChildCount == 0)
+        {
+            my $item = $parent;
+            $parent = $parent->getParent;
+            $parent->removeChild($item);
+        }
+    }
     my $tree_view = Tree::Simple::View::HTML->new
     (
-        $c->stash->{action_tree} => 
+        $display_tree => 
         (
             list_css                => "list-style: circle;",
             list_item_css           => "font-family: courier;",
