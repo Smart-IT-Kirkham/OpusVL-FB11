@@ -336,14 +336,12 @@ sub show_role
         for my $feature (@features_allowed)
         {
             $c->log->debug("****************ALLOWING FEATURE:" . $feature . "\n") if $c->debug;
-            $DB::single = 1;
             my $aclfeature = $c->model('AppKitAuthDB::Aclfeature')->find_or_create( { feature => $feature } );
             $c->stash->{role}->update_or_create_related('aclfeature_roles', { aclfeature_id => $aclfeature->id } );
         }
         for my $feature (@features_denied)
         {
             $c->log->debug("****************DENYING FEATURE:" . $feature . "\n") if $c->debug;
-            $DB::single = 1;
             my $aclfeature = $c->model('AppKitAuthDB::Aclfeature')->find_or_create( { feature => $feature } );
             $c->stash->{role}->search_related('aclfeature_roles', { aclfeature_id => $aclfeature->id } )->delete;
         }
