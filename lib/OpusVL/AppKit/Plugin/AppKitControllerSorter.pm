@@ -105,7 +105,7 @@ sub merge_controller_actions
                     my $group = $group_process->{$c->appkit_method_group};
                     if($group)
                     {
-                        push @{$group->actions}, @{$c->navigation_actions} if $c->navigation_actions; 
+                        push @{$group->{actions}}, @{$c->navigation_actions} if $c->navigation_actions; 
                     }
                     else
                     {
