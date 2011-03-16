@@ -1,0 +1,6 @@
+tags
+META.yml
+Makefile
+blib
+inc
+*.swp

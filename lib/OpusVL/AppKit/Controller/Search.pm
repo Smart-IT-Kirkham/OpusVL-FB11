@@ -10,7 +10,9 @@ __PACKAGE__->config(
     appkit_name => 'Search',
 );
 
-sub auto :Private {
+sub auto :Private 
+    : AppKitFeature('Search box')
+{
     my ($self, $c) = @_;
     
     push @{$c->stash->{breadcrumbs}},{
@@ -20,7 +22,9 @@ sub auto :Private {
 }
 
 
-sub index :Path {
+sub index :Path 
+    : AppKitFeature('Search box')
+{
     my ($self, $c) = @_;
     
     $c->_appkit_stash_searches($c->req->param('q'));

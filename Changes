@@ -1,5 +1,81 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.23
+
+* Minor bug fix for bug introduced in 1.21.
+* Tweaked release notes (this file) to mention dataset change.
+
+1.22
+
+* Fixed broken tests to make it install cleanly.  Note to self: run make test before rolling a release.
+
+1.21
+
+* IMPORTANT: This release has changed the appkit auth db so if you have it stored in Postgres you 
+  will need to add a couple of tables and if you have your own DBIx::Class classes for the authdb
+  you will need to regenerate them.
+
+    CREATE TABLE "aclfeature" (
+      "id" serial NOT NULL,
+      "feature" text NOT NULL,
+      PRIMARY KEY ("id")
+    );
+
+    CREATE TABLE "aclfeature_role" (
+      "aclfeature_id" integer NOT NULL,
+      "role_id" integer NOT NULL,
+      PRIMARY KEY ("aclfeature_id", "role_id")
+    );
+    CREATE INDEX "aclfeature_role_idx_aclfeature_id" on "aclfeature_role" ("aclfeature_id");
+    CREATE INDEX "aclfeature_role_idx_role_id" on "aclfeature_role" ("role_id");
+
+    ALTER TABLE "aclfeature_role" ADD FOREIGN KEY ("aclfeature_id")
+      REFERENCES "aclfeature" ("id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+
+    ALTER TABLE "aclfeature_role" ADD FOREIGN KEY ("role_id")
+      REFERENCES "role" ("id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+
+  If you have your own DBIC class add this to the bottom of the Result::AclFeature class,
+
+    __PACKAGE__->many_to_many( roles => 'aclfeature_roles', 'role');
+
+* Added 2 level access permissions that allow the grouping of related actions into features to make
+  role administration simpler.  To do this apply the AppKitFeature attribute.  Specify multiple features
+  like this,
+
+  sub action_name 
+    : Local
+    : AppKitFeature('Feature 1,Feature 2')
+
+  Note that what you put here is what is displayed on the user interface.  Apply the feature to all 
+  actions you need to execute as part of your feature, including the various auto actions.
+
+* Added method groups for the new application style menus.  Menus are divided into applications, 
+  groups, then actions.  Applications are defined as they are now.  Groups are defined as a class
+  attribute, appkit_method_group_order.  
+  
+* It is also possible to sort all the parts of the menu.  To sort the actions use the 
+  :NavigationOrder(2) attribute.  To sort the groups use the appkit_method_group_order attribute on 
+  the class.
+
+  To sort the applicaitons use the appkit_app_order configuration setting.  This should be a list 
+  of classes (using the injected names).  If you're unsure what to put add the key and put in a 
+  bogus value and when your app is run it will complain and tell you what classes it is expecting.
+
+    $config->{appkit_app_order} = [
+        qw/TestApp::Controller::ExtensionA TestApp::Controller::ExtensionB TestApp::Controller::Test/
+    ];
+
+  If you have less classes mentioned than there are you will get a warning like this after catalyst has
+  loaded,
+
+    [warn] Application order is not completely set.  Update your appkit_app_order config setting
+    [warn] Expecting these controllers to be specified TestApp::Controller::ExtensionB, TestApp::Controller::ExtensionA, TestApp::Controller::Test
+
+* Moved permissions cache to a proper cache.  This prevents the issue where permissions were
+  changed and other users on the server didn't see the changes. (Bug 224)
+
+
 0.20
 
 * Moved the date_short, date_long, time_short and time_long DateTime formatting functions

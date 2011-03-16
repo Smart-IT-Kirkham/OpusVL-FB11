@@ -20,6 +20,7 @@ __PACKAGE__->config
 
 sub auto
     : Private
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -43,6 +44,7 @@ sub auto
 sub index
     : Path
     : Args(0)
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c ) = @_;
     $c->stash->{template} = 'appkit/admin/users/show_user.tt';
@@ -55,6 +57,7 @@ sub index
 sub adduser
     : Local
     : Args(0)
+    : AppKitFeature('User Administration')
     : AppKitForm("appkit/admin/users/user_form.yml")
 {
     my ( $self, $c ) = @_;
@@ -90,6 +93,7 @@ sub user_specific
     : Chained('/')
     : PathPart('user')
     : CaptureArgs(1)
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c, $user_id ) = @_;
     ( $c->stash->{thisuser} ) = $c->model('AppKitAuthDB::User')->find( $user_id );
@@ -105,6 +109,7 @@ sub user_specific
 sub show_user
     : Chained('user_specific')
     : PathPart('show')
+    : AppKitFeature('User Administration')
     : Args(0)
 {
     my ( $self, $c ) = @_;
@@ -147,6 +152,7 @@ sub show_user
 sub reset_password
     : Chained('user_specific')
     : PathPart('reset')
+    : AppKitFeature('User Administration')
     : Args(0)
     : AppKitForm
 {
@@ -164,6 +170,7 @@ sub reset_password
 # breadcrumbs and passing their own url.
 sub reset_password_form
     : Private
+    : AppKitFeature('User Administration')
 {
     my ($self, $c, $prev_url, $user) = @_;
 
@@ -201,6 +208,7 @@ sub edit_user
     : PathPart('form')
     : Args(0)
     : AppKitForm("appkit/admin/users/user_form.yml")
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -234,6 +242,7 @@ sub delete_user
     : PathPart('delete')
     : Args(0)
     : AppKitForm("appkit/admin/confirm.yml")
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -264,6 +273,7 @@ sub delete_parameter
     : Chained('user_specific')
     : PathPart('deleteparameter')
     : Args(1)
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c, $param_id ) = @_;
 
@@ -282,6 +292,7 @@ sub add_parameter
     : Chained('user_specific')
     : PathPart('addparameter')
     : Args(0)
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -308,6 +319,7 @@ sub get_parameter_input
     : Chained('user_specific')
     : PathPart('addparaminput')
     : Args(1)
+    : AppKitFeature('User Administration')
 {
     my ( $self, $c, $param_id ) = @_;
 

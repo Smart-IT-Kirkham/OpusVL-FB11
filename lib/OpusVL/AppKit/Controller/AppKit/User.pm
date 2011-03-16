@@ -19,6 +19,7 @@ sub change_password
     : Path('changepword')
     : Args(0)
     : AppKitForm("appkit/user/change_password.yml")
+    : AppKitFeature('Password Change')
 {
     my ($self, $c ) = @_;
 

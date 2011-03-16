@@ -18,11 +18,12 @@ package OpusVL::AppKit::Plugin::AppKit;
 ###########################################################################################################################
 # use lines.
 ###########################################################################################################################
+use Moose;
 use namespace::autoclean;
 use 5.010;
-use Moose;
 use Tree::Simple;
 use OpusVL::AppKit::Plugin::AppKit::Node;
+use OpusVL::AppKit::Plugin::AppKit::FeatureList;
 
 ###########################################################################################################################
 # moose calls.
@@ -50,6 +51,61 @@ sub _build_appkit_controllers
     return \@controllers;
 }
 
+=head2 apps_allowed
+
+Returns a list of the appkit controllers the user has access to sorted as the app config
+specifies.  Generally used for building up the menu.
+
+=cut
+sub apps_allowed
+{
+    my $self = shift;
+    # return a sorted list of appkit controllers the user can use.
+    return sort { $a->appkit_order <=> $b->appkit_order } 
+            grep { $_->home_action && $self->can_access($_->home_action->{actionpath}) } @{$self->appkit_controllers};
+}
+
+=head2 menu_data
+
+List of apps and the group data for the full blown menu
+
+=cut
+sub menu_data
+{
+    # rip through the apps and construct an array of apps containing the 
+    # group info too.
+    my $self = shift;
+
+    my @apps = sort { ($a->appkit_shared_module || '') cmp ($b->appkit_shared_module || '') } 
+            @{$self->appkit_controllers};
+    # now merge together the grouped controllers.
+    my $i = 0;
+    while($i + 1 < scalar @apps)
+    {
+        if($apps[$i]->appkit_shared_module && $apps[$i+1]->appkit_shared_module && 
+            ($apps[$i]->appkit_shared_module eq $apps[$i+1]->appkit_shared_module))
+        {
+            splice @apps, $i + 1, 1;
+        }
+        else
+        {
+            $i++;
+        }
+    }
+    @apps = sort { $a->appkit_order <=> $b->appkit_order } @apps;
+    my $menu = [];
+
+    for my $app (@apps)
+    {
+        my $actions = $app->application_action_list($self);
+        if(@$actions)
+        {
+            push @$menu, { controller => $app, actions => $actions };
+        }
+    }
+    return $menu;
+}
+
 =head2 appkit_actiontree_visitor
     Use for find node in the appkit_actiontree...
 =cut
@@ -60,52 +116,6 @@ has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor:
     $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
     return $visitor;
 } );
-
-=head2 controller_navigation_actions
-    Looks at other controllers in the app to see if any of the navigation actions
-    need to be merged up together.  This allows us to have multiple controllers
-    that are all part of the same module.
-
-    This is called by the template to ensure the parts are merged up before we 
-    go on.
-=cut
-
-sub merge_controller_actions
-{
-    my $self = shift;
-    my $controller = $self->controller;
-
-    return [] if !$controller->does('OpusVL::AppKit::RolesFor::Controller::GUI'); 
-    my @navItems = @{$controller->navigation_actions};
-    @navItems = () if(!@navItems);
-    if($controller->appkit_shared_module && !$controller->navigation_items_merged)
-    {
-        my $controllers = $self->appkit_controllers;
-        for my $c (@$controllers)
-        {
-            if($c != $controller && $c->does('OpusVL::AppKit::RolesFor::Controller::GUI'))
-            {
-                if($c->appkit_shared_module && $c->appkit_shared_module eq $controller->appkit_shared_module)
-                {
-                    if($c->navigation_items_merged)
-                    {
-                        # we've alraedy done the merge when we did this controller
-                        # so just short cut the process.
-                        # and use it's result.
-                        @navItems = @{$c->navigation_actions};
-                        last;
-                    }
-                    push @navItems, @{$c->navigation_actions};
-                }
-            }
-        }
-        # sort the items so that they appear
-        # in a consistent order regardless of controller.
-        my @sorted = sort { $a->{actionpath} cmp $b->{actionpath} } @navItems;
-        $controller->navigation_actions( \@sorted );
-        $controller->navigation_items_merged(1);
-    }
-}
 
 =head2 is_unrestricted_action_name
     Little helper to ascertain if an action's name is one we dont apply access control to.
@@ -178,6 +188,19 @@ sub execute
 # plugin methods.
 ###########################################################################################################################
 
+=head2 appkit_features
+
+Returns a OpusVL::AppKit::Plugin::AppKit::FeatureList object that allows the querying of the features permissions
+that sit on top of our roles management.
+
+=cut
+sub appkit_features
+{
+    # NOTE: this property is setup when the appkit_actiontree is setup.
+    my $self = shift;
+    return $self->cache->get('appkit_features');
+}
+
 =head2 appkit_actiontree
     This returns a Tree::Simple of OpusVL::AppKit::Plugin::AppKit::Node's.
     Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
@@ -193,10 +216,29 @@ sub appkit_actiontree
     my ($c, $rebuild) = @_;
 
     # 'state' var means this will only be called once .. if Perl encounters this line again it knows not to run again..
-    state $appkit_actiontree = $c->_build_appkit_actiontree;
-
-    # force a re-read of the tree?.. (for example, if access control changes)...
-    $appkit_actiontree = $c->_build_appkit_actiontree if ($rebuild);
+    my $cache = $c->cache;
+    state $appkit_actiontree = $cache->get('actiontree');
+    if(!$appkit_actiontree)
+    {
+        $appkit_actiontree = $c->_build_appkit_actiontree;
+        $cache->set('actiontree', $appkit_actiontree);
+    }
+    else
+    {
+        # force a re-read of the tree.. (for example, if access control changes)...
+        if($rebuild)
+        {
+            $appkit_actiontree = $c->_build_appkit_actiontree;
+            $cache->set('actiontree', $appkit_actiontree);
+        }
+        else
+        {
+            # convoluted way to prevent cache failure
+            # causing a recalc every time.
+            my $actions = $cache->get('actiontree');
+            $appkit_actiontree = $actions if $actions;
+        }
+    }
 
     return $appkit_actiontree;
 }
@@ -215,6 +257,7 @@ sub _build_appkit_actiontree
 
     # make a tree root (based on code from Catalyst::Plugin::Authorization::ACL::Engine)
     my $root = Tree::Simple->new('AppKit', Tree::Simple->ROOT);
+    my $features = OpusVL::AppKit::Plugin::AppKit::FeatureList->new;
 
     AKCONTROLLERS: foreach my $cont ( @{ $c->appkit_controllers } )
     {   
@@ -227,6 +270,8 @@ sub _build_appkit_actiontree
             my $action = $cont->action_for( $action_method->name );
             next unless defined $action;
 
+            # FIXME: spot feature paths.
+
             # Deal with path...
             my $action_path = $action->reverse;
             my @path = split '/', $action_path;
@@ -236,11 +281,12 @@ sub _build_appkit_actiontree
             my $appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
             (
                 node_name       => $name,
-                controller      => $cont,
                 action_path     => $action_path,
                 action_attrs    => $action->attributes,
                 access_only     => [],  # default to "no roles allowed"
+                in_feature      => defined $action->attributes->{AppKitFeature},
             );
+            $features->add_action($cont->appkit_name, $action);
 
             ## look for any ACL rules for this action_path...
             if ( my $allowed_roles = $c->_allowed_roles_from_db( $action_path ) )
@@ -261,7 +307,7 @@ sub _build_appkit_actiontree
                 if ( my $namespace_node = $visitor->getResult )
                 {   
 
-                    # final 'belt and braches' check to see if we have already added it..
+                    # final 'belt and braces' check to see if we have already added it..
                     foreach my $kid ( $namespace_node->getAllChildren )
                     {
                         if ( $kid->getNodeValue->node_name eq $appkit_action_object->node_name )
@@ -302,7 +348,7 @@ sub _build_appkit_actiontree
                     my $branch_appkit_action_object = OpusVL::AppKit::Plugin::AppKit::Node->new
                     (
                         node_name   => $path_part,
-                        controller  => $cont,
+                        in_feature => 0,
                     );
 
                     # add tree branch..
@@ -314,9 +360,42 @@ sub _build_appkit_actiontree
             $node->addChild( Tree::Simple->new( $appkit_action_object ) );
         }
     }
+    for my $app (keys %{$c->stash->{appkit_features}})
+    {
+        my $app_features = $c->stash->{appkit_features}->{$app};
+        for my $f (keys %$app_features)
+        {
+            my $feature = "$app/$f";
+            if( my $roles = $c->_allowed_feature_roles_from_db( $c, $feature ) )
+            {
+                $features->set_roles_allowed($feature, $roles);
+            }
+        }
+    }
+
+    $c->cache->set('appkit_features', $features);
 
     # finished :) 
     return $root;
+}
+
+sub _allowed_feature_roles_from_db
+{
+    my $self = shift;
+    my $c = shift;
+    my $feature = shift;
+
+    my $aclfeature = $c->model('AppKitAuthDB::Aclfeature')->find( { feature => $feature } );
+    # return undef if not match found..
+    return undef unless $aclfeature;
+
+    $c->log->debug("AppKit Feature ACL : Matched Rule: " . $aclfeature->id . " FOR: $feature ") if $c->debug;
+
+    #.. pull out all the allowed roles for this rule..
+    my $allowed_roles = [ map { $_->role } $aclfeature->roles ];
+
+    # return array ref of roles..
+    return $allowed_roles;
 }
 
 =head2 can_access
@@ -384,16 +463,6 @@ sub can_access
         return 1;
     }
 
-    # Moved this so we now have a PUBLIC role allowed if no
-    # user logged in.
-    #
-    # FIXME: set profile to public and see if they have access
-    ## if ( ! $c->user )
-    ## {
-    ##     $c->log->debug("NO User logged. can_access says 'no!'") if $c->debug;
-    ##     return 0;
-    ## }
-
     # check if we have list of actionpaths to allow (regardless of rules)...
     if(  $c->user )
     {
@@ -417,6 +486,7 @@ sub can_access
 
     # find all allowed roles for this action path...
     my $allowed_roles = $c->_allowed_roles_from_tree( $action_path );
+    push @$allowed_roles, @{$c->appkit_features->roles_allowed_for_action( $action_path )};
 
     # if none found.. do NOT allow access..
     return 0 unless defined $allowed_roles;
