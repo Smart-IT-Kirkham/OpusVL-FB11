@@ -1,10 +1,43 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.23
+
+* Minor bug fix for bug introduced in 1.21.
+* Tweaked release notes (this file) to mention dataset change.
+
 1.22
 
 * Fixed broken tests to make it install cleanly.  Note to self: run make test before rolling a release.
 
-0.21
+1.21
+
+* IMPORTANT: This release has changed the appkit auth db so if you have it stored in Postgres you 
+  will need to add a couple of tables and if you have your own DBIx::Class classes for the authdb
+  you will need to regenerate them.
+
+    CREATE TABLE "aclfeature" (
+      "id" serial NOT NULL,
+      "feature" text NOT NULL,
+      PRIMARY KEY ("id")
+    );
+
+    CREATE TABLE "aclfeature_role" (
+      "aclfeature_id" integer NOT NULL,
+      "role_id" integer NOT NULL,
+      PRIMARY KEY ("aclfeature_id", "role_id")
+    );
+    CREATE INDEX "aclfeature_role_idx_aclfeature_id" on "aclfeature_role" ("aclfeature_id");
+    CREATE INDEX "aclfeature_role_idx_role_id" on "aclfeature_role" ("role_id");
+
+    ALTER TABLE "aclfeature_role" ADD FOREIGN KEY ("aclfeature_id")
+      REFERENCES "aclfeature" ("id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+
+    ALTER TABLE "aclfeature_role" ADD FOREIGN KEY ("role_id")
+      REFERENCES "role" ("id") ON DELETE CASCADE ON UPDATE CASCADE DEFERRABLE;
+
+  If you have your own DBIC class add this to the bottom of the Result::AclFeature class,
+
+    __PACKAGE__->many_to_many( roles => 'aclfeature_roles', 'role');
 
 * Added 2 level access permissions that allow the grouping of related actions into features to make
   role administration simpler.  To do this apply the AppKitFeature attribute.  Specify multiple features
@@ -41,6 +74,7 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 
 * Moved permissions cache to a proper cache.  This prevents the issue where permissions were
   changed and other users on the server didn't see the changes. (Bug 224)
+
 
 0.20
 
