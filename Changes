@@ -1,5 +1,11 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.24
+
+* Various bug fixes to the feature auth code added in 1.21.  
+* Made regex for spotting 'end' actions less likely to catch legitimate actions like 'client_suspend'
+  thereby excluding them from the regular auth procedures.
+
 1.23
 
 * Minor bug fix for bug introduced in 1.21.
