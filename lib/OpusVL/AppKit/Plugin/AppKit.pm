@@ -360,16 +360,12 @@ sub _build_appkit_actiontree
             $node->addChild( Tree::Simple->new( $appkit_action_object ) );
         }
     }
-    for my $app (keys %{$c->stash->{appkit_features}})
+    my $feature_list = $features->feature_names_with_app;
+    for my $feature (@$feature_list)
     {
-        my $app_features = $c->stash->{appkit_features}->{$app};
-        for my $f (keys %$app_features)
+        if( my $roles = $c->_allowed_feature_roles_from_db( $c, $feature ) )
         {
-            my $feature = "$app/$f";
-            if( my $roles = $c->_allowed_feature_roles_from_db( $c, $feature ) )
-            {
-                $features->set_roles_allowed($feature, $roles);
-            }
+            $features->set_roles_allowed($feature, $roles);
         }
     }
 
