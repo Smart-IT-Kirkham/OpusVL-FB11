@@ -12,7 +12,7 @@ with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 
 sub auto
     : Action
-    : AppKitFeature('Role Admin,User Admin')
+    : AppKitFeature('Role Administration,User Administration')
 {
     my ( $self, $c ) = @_;
 
