@@ -19,7 +19,7 @@ __PACKAGE__->config
 =cut
 
 sub auto
-    : Private
+    : Action
     : AppKitFeature('User Administration')
 {
     my ( $self, $c ) = @_;
@@ -169,7 +169,7 @@ sub reset_password
 # to allow other controllers to forward to this setting their own 
 # breadcrumbs and passing their own url.
 sub reset_password_form
-    : Private
+    : Action
     : AppKitFeature('User Administration')
 {
     my ($self, $c, $prev_url, $user) = @_;

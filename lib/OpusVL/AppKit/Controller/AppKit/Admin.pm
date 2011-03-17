@@ -11,7 +11,7 @@ with 'OpusVL::AppKit::RolesFor::Controller::GUI';
 =cut
 
 sub auto
-    : Private
+    : Action
     : AppKitFeature('Role Admin,User Admin')
 {
     my ( $self, $c ) = @_;

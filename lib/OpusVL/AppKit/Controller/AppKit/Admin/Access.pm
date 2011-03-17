@@ -21,8 +21,8 @@ __PACKAGE__->config
 =cut
 
 sub auto
-    : Private
     : AppKitFeature('Role Administration')
+    : Action
 {
     my ( $self, $c ) = @_;
 
