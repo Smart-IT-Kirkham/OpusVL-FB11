@@ -420,6 +420,7 @@ sub show_role
         {
             my $item = $parent;
             $parent = $parent->getParent;
+            last if !$parent->can('removeChild');
             $parent->removeChild($item);
         }
     }
