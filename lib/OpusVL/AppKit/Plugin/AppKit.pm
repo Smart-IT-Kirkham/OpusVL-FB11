@@ -420,7 +420,6 @@ sub can_access
         $c->log->debug("can_access called with a non-string action path: $action_path .. converting..") if $c->debug;
         $action_path    = $action_path->reverse;
     }
-
     return 1 if $c->is_unrestricted_action_name->( $action_path );
 
     # TBA - just trying the logic out (put into method when done).. 
@@ -490,8 +489,8 @@ sub can_access
     return 0 unless @allowed;
 
     # return a test that will check for the roles
-    return $c->user && $c->check_any_user_role( @$allowed_roles )
-        || 'PUBLIC' ~~ @$allowed_roles ;
+    return $c->user && $c->check_any_user_role( @allowed )
+        || 'PUBLIC' ~~ @allowed;
 }
 
 =head2 who_can_access
