@@ -33,7 +33,7 @@ __PACKAGE__->config->{namespace}    = '';
 =head2 auto
 =cut
 sub auto 
-    : Private 
+    : Action 
     : AppKitAllAccess
 {
     my ( $self, $c ) = @_;

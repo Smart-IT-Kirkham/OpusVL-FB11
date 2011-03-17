@@ -119,6 +119,21 @@ sub feature_list
     return \%apps;
 }
 
+=head2 feature_names_with_app
+
+Returns a flat list of features.  These feature names have the app name encoded in.
+
+This is used by code that talks to the database since that's the format we store the features in.
+
+=cut
+sub feature_names_with_app
+{
+    my $self = shift;
+    my %map;
+    my @keys = keys %{$self->_features};
+    return \@keys;
+}
+
 1;
 
 =head1 COPYRIGHT and LICENSE
