@@ -482,13 +482,12 @@ sub can_access
 
     # find all allowed roles for this action path...
     my $allowed_roles = $c->_allowed_roles_from_tree( $action_path );
-    push @$allowed_roles, @{$c->appkit_features->roles_allowed_for_action( $action_path )};
+    my @allowed;
+    push @allowed, @$allowed_roles;
+    push @allowed, @{$c->appkit_features->roles_allowed_for_action( $action_path )};
 
     # if none found.. do NOT allow access..
-    return 0 unless defined $allowed_roles;
-
-    # if we found a rule, but no roles applied, let deny access..
-    return 0 if $#$allowed_roles < 0;
+    return 0 unless @allowed;
 
     # return a test that will check for the roles
     return $c->user && $c->check_any_user_role( @$allowed_roles )
