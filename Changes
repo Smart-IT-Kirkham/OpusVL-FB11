@@ -50,6 +50,10 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
   Note that what you put here is what is displayed on the user interface.  Apply the feature to all 
   actions you need to execute as part of your feature, including the various auto actions.
 
+  Note that you cannot specify multiple attributes against an action marked Private.  In order to 
+  mark those actions with the attributes change the Private to Feature.  For a more detailed 
+  explanation of this problem see bug 773 in bugzilla.
+
 * Added method groups for the new application style menus.  Menus are divided into applications, 
   groups, then actions.  Applications are defined as they are now.  Groups are defined as a class
   attribute, appkit_method_group_order.  
