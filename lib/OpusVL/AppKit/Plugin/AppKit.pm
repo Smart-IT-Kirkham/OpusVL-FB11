@@ -486,11 +486,17 @@ sub can_access
     push @allowed, @{$c->appkit_features->roles_allowed_for_action( $action_path )};
 
     # if none found.. do NOT allow access..
-    return 0 unless @allowed;
+    unless (@allowed)
+    {
+        $c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if $c->debug;
+        return 0;
+    }
 
     # return a test that will check for the roles
-    return $c->user && $c->check_any_user_role( @allowed )
+    my $allow = $c->user && $c->check_any_user_role( @allowed )
         || 'PUBLIC' ~~ @allowed;
+    $c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if !$allow && $c->debug;
+    return $allow;
 }
 
 =head2 who_can_access
