@@ -1,5 +1,14 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.25
+
+* Auth no longer examines auto actions to allow for other forms of auth before our access
+  control on the actions kicks in.
+* not_found and access_denied actions now clear current_view stash setting to prevent
+  issues if you get an access denied or not found bounce after setting that in the auto for
+  something like a json view.
+* Fixed the final private action that was broken by the new AppKitFeature attributes.
+
 1.24
 
 * Various bug fixes to the feature auth code added in 1.21.  
