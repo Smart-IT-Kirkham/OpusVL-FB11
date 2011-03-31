@@ -463,14 +463,14 @@ sub can_access
     # if none found.. do NOT allow access..
     unless (@allowed)
     {
-        $c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if $c->debug;
+        #$c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if $c->debug;
         return 0;
     }
 
     # return a test that will check for the roles
     my $allow = $c->user && $c->check_any_user_role( @allowed )
         || 'PUBLIC' ~~ @allowed;
-    $c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if !$allow && $c->debug;
+    #$c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if !$allow && $c->debug;
     return $allow;
 }
 
