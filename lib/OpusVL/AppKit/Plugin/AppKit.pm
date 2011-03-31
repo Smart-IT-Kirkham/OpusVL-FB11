@@ -22,6 +22,7 @@ use Moose;
 use namespace::autoclean;
 use 5.010;
 use Tree::Simple;
+use Tree::Simple::Visitor::FindByPath;
 use OpusVL::AppKit::Plugin::AppKit::Node;
 use OpusVL::AppKit::Plugin::AppKit::FeatureList;
 
@@ -121,29 +122,23 @@ has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor:
     Little helper to ascertain if an action's name is one we dont apply access control to.
 =cut
 
-has is_unrestricted_action_name => 
-( 
-    is          => 'ro',    
-    isa         => 'CodeRef',  
-    default     => sub 
-    { 
-        sub 
-        {
-        my ($name) = @_;
-        return 1 if $name =~ /(^|\/)_/;
-        return 1 if $name =~ /begin$/;
-        return 1 if $name =~ /\bend$/;
-        return 1 if $name =~ /default$/;
-        return 1 if $name =~ /login$/;
-        return 1 if $name =~ /logout$/;
-        return 1 if $name =~ /login\/not_required$/;
-        return 1 if $name =~ /View\:\:/;
-        return 1 if $name =~ /access_denied$/;
-        return 1 if $name =~ /not_found$/;
-        return 0;
-        } 
-    } 
-);
+# FIXME: is there any real reason to keep this a property?
+sub is_unrestricted_action_name 
+{ 
+    my ($self, $name) = @_;
+    return 1 if $name =~ /(^|\/)_/;
+    return 1 if $name =~ /(^|\/)begin$/;
+    return 1 if $name =~ /(^|\/)end$/;
+    return 1 if $name =~ /(^|\/)auto$/;
+    return 1 if $name =~ /(^|\/)default$/;
+    return 1 if $name =~ /(^|\/)login$/;
+    return 1 if $name =~ /(^|\/)logout$/;
+    return 1 if $name =~ /(^|\/)login\/not_required$/;
+    return 1 if $name =~ /View\:\:/;
+    return 1 if $name =~ /(^|\/)access_denied$/;
+    return 1 if $name =~ /(^|\/)not_found$/;
+    return 0;
+} 
 
 ###########################################################################################################################
 # catalyst hook.
@@ -265,12 +260,10 @@ sub _build_appkit_actiontree
         AKACTIONS: foreach my $action_method ( $cont->get_action_methods )
         {   
             # skip internal type action names...
-            next if $c->is_unrestricted_action_name->( $action_method->name );
+            next if $c->is_unrestricted_action_name( $action_method->name );
 
             my $action = $cont->action_for( $action_method->name );
             next unless defined $action;
-
-            # FIXME: spot feature paths.
 
             # Deal with path...
             my $action_path = $action->reverse;
@@ -420,25 +413,7 @@ sub can_access
         $c->log->debug("can_access called with a non-string action path: $action_path .. converting..") if $c->debug;
         $action_path    = $action_path->reverse;
     }
-    return 1 if $c->is_unrestricted_action_name->( $action_path );
-
-    # TBA - just trying the logic out (put into method when done).. 
-    # check here for the 'auto' action .. if this is an auto action, check to see if the current users has access to
-    # any actions in the Controller the auto action belongs to..
-    if ( $action_path =~ /auto$/ )
-    {
-
-        # get the path to the requested action.. and check that against ->can_access...
-        my $request_action_path = $c->action->reverse;
-        if ( $request_action_path =~ /auto$/ )
-        {
-            $c->log->warn("Problem with can_access logic.. $request_action_path will cause an infinite loop!");
-        }
-        else    
-        {
-            return $c->can_access( $request_action_path );
-        }
-    }
+    return 1 if $c->is_unrestricted_action_name( $action_path );
 
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
     return 1 if ( $action_path eq $c->config->{'appkit_access_denied'} );
@@ -488,14 +463,14 @@ sub can_access
     # if none found.. do NOT allow access..
     unless (@allowed)
     {
-        $c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if $c->debug;
+        #$c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if $c->debug;
         return 0;
     }
 
     # return a test that will check for the roles
     my $allow = $c->user && $c->check_any_user_role( @allowed )
         || 'PUBLIC' ~~ @allowed;
-    $c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if !$allow && $c->debug;
+    #$c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if !$allow && $c->debug;
     return $allow;
 }
 
