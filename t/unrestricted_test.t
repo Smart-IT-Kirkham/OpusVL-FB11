@@ -14,6 +14,7 @@ access_denied
 appkit/admin/access/_END
 TestApp::View::AppKitTT->process
 not_found
+appkit/admin/access/auto
 };
 
 note 'Checking unrestricted urls';
@@ -27,7 +28,6 @@ test_default
 search/test_default
 search/index
 appkit/admin/access/check_auto
-appkit/admin/access/auto
 };
 
 

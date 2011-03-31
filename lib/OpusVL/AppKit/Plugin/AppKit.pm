@@ -129,6 +129,7 @@ sub is_unrestricted_action_name
     return 1 if $name =~ /(^|\/)_/;
     return 1 if $name =~ /(^|\/)begin$/;
     return 1 if $name =~ /(^|\/)end$/;
+    return 1 if $name =~ /(^|\/)auto$/;
     return 1 if $name =~ /(^|\/)default$/;
     return 1 if $name =~ /(^|\/)login$/;
     return 1 if $name =~ /(^|\/)logout$/;
@@ -413,33 +414,6 @@ sub can_access
         $action_path    = $action_path->reverse;
     }
     return 1 if $c->is_unrestricted_action_name( $action_path );
-
-    # TBA - just trying the logic out (put into method when done).. 
-    # check here for the 'auto' action .. if this is an auto action, check to see if the current users has access to
-    # any actions in the Controller the auto action belongs to..
-    if ( $action_path =~ /(^|\/)auto$/ )
-    {
-        # switched to not authenticating auto because we should do enough auth
-        # by checking the other actions
-        # and we don't really auth the actual auto action anyway... well I think.
-        # plus the debug output tends to be very confusing when the action you're visiting 
-        # isn't allowed but the debug says it failed on auto.
-
-        return 1;
-
-        # FIXME: remove all this code if it turns out I can just skip auto.
-
-        # # get the path to the requested action.. and check that against ->can_access...
-        # my $request_action_path = $c->action->reverse;
-        # if ( $request_action_path =~ /auto$/ )
-        # {
-        #     $c->log->warn("Problem with can_access logic.. $request_action_path will cause an infinite loop!");
-        # }
-        # else    
-        # {
-        #     return $c->can_access( $request_action_path );
-        # }
-    }
 
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
     return 1 if ( $action_path eq $c->config->{'appkit_access_denied'} );
