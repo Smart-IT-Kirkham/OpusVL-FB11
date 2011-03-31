@@ -264,8 +264,6 @@ sub _build_appkit_actiontree
             my $action = $cont->action_for( $action_method->name );
             next unless defined $action;
 
-            # FIXME: spot feature paths.
-
             # Deal with path...
             my $action_path = $action->reverse;
             my @path = split '/', $action_path;
@@ -419,9 +417,6 @@ sub can_access
     # TBA - just trying the logic out (put into method when done).. 
     # check here for the 'auto' action .. if this is an auto action, check to see if the current users has access to
     # any actions in the Controller the auto action belongs to..
-    # FIXME: need to check what can come into here because right now
-    # an action simply ending auto will end up here.
-    # do can I simply stick a ^ onto the front of this pattern to make it work as intended?
     if ( $action_path =~ /(^|\/)auto$/ )
     {
         # switched to not authenticating auto because we should do enough auth
