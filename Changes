@@ -1,5 +1,10 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.26
+
+* Fixed an anoying bug where we duplicated menu items when doing grouped controllers in the intranet
+  style menu.
+
 1.25
 
 * Auth no longer examines auto actions to allow for other forms of auth before our access
