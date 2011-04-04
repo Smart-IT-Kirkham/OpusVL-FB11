@@ -75,11 +75,12 @@ sub merge_controller_actions
     return [] if !$controller->does('OpusVL::AppKit::RolesFor::Controller::GUI'); 
     my @navItems = @{$controller->navigation_actions};
     @navItems = () if(!@navItems);
+    my @second = @navItems;
     my $group_process = { 
                 $controller->appkit_method_group => { 
                     group => $controller->appkit_method_group, 
                     order => $controller->appkit_method_group_order,
-                    actions => \@navItems } 
+                    actions => \@second } 
                 };
     my @grouped;
     @grouped = ( $group_process->{$controller->appkit_method_group} );
@@ -109,14 +110,16 @@ sub merge_controller_actions
                     }
                     else
                     {
+                        my @copy = @{$c->navigation_actions};
                         $group_process->{ $c->appkit_method_group } = { 
                             group => $c->appkit_method_group, 
                             order => $c->appkit_method_group_order,
-                            actions => $c->navigation_actions  
+                            actions => \@copy,
                         } if($c->navigation_actions);
                     }
                 }
             }
+            # FIXME: figure out what this does because I've forgoten now.
             # sort the group
             @grouped = map { $group_process->{$_} } sort { $group_process->{$a}->{order} <=> $group_process->{$b}->{order} } keys %$group_process;
                 
