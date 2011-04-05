@@ -290,4 +290,5 @@ t/lib/TestX/CatalystX/ExtensionB/Schema/ResultSet/Book.pm
 t/menu-test.t
 t/model-test.t
 t/model_AppKitAuthDB.t
+t/unrestricted_test.t
 t/view_PDF-Reuse.t

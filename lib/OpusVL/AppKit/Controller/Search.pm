@@ -10,7 +10,8 @@ __PACKAGE__->config(
     appkit_name => 'Search',
 );
 
-sub auto :Private 
+sub auto 
+    : Action 
     : AppKitFeature('Search box')
 {
     my ($self, $c) = @_;
