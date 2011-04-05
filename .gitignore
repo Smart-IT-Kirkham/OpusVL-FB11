@@ -4,3 +4,4 @@ Makefile
 blib
 inc
 *.swp
+.DS_Store
