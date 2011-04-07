@@ -7,18 +7,20 @@
                     <div>
                     
                         [% FOR group IN app.navigation_actions_grouped %]
-                            <span class="appkit_mega_menu_group">
-                                <p>
-                                    [% group.group %]
-                                </p>
-                                <ul>
-                                    [% FOR action IN group.actions %]
-                                        [% IF (action.controller.appkit_method_group == group.group) %]
-                                            <li><a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a></li>
+                            [% IF group.group %]
+                                <span class="appkit_mega_menu_group">
+                                    <p>
+                                        [% group.group %]
+                                    </p>
+                                    <ul>
+                                        [% FOR action IN group.actions %]
+                                            [% IF (action.controller.appkit_method_group == group.group) %]
+                                                <li><a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a></li>
+                                            [% END %]
                                         [% END %]
-                                    [% END %]
-                                </ul>
-                            </span>
+                                    </ul>
+                                </span>
+                            [% END %]
                         [% END %]
                     
                     </div>
