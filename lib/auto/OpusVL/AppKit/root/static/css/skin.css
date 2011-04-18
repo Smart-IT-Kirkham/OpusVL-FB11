@@ -1,3 +1,5 @@
+/* @override http://localhost:3000/static/css/skin.css */
+
 /* @override http://localhost:3333/static/css/skin.css */
 
 /* @group Base */
@@ -630,7 +632,7 @@ div#application_nav ul li a.active {
 
 #application_body .ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active {
 	background-image: none;
-	background-color: #fbfcfb;
+	background-color: #fff;
 	-webkit-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
 	-moz-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
 	box-shadow: 3px 5px 10px rgba(0,0,0,0.2);	color: #414141;
@@ -683,7 +685,7 @@ div.ui-tabs-panel.ui-widget-content.ui-corner-bottom {
 
 div.tab_content_block {
 	border-style: none;
-	background-color: #fbfcfb !important;
+	background-color: #fff !important;
 	-webkit-border-top-right-radius: 5px;
 	-moz-border-radius-topright: 5px;
 	border-top-right-radius: 5px;
