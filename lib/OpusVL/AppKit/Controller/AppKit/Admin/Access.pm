@@ -21,8 +21,8 @@ __PACKAGE__->config
 =cut
 
 sub auto
-    : Private
     : AppKitFeature('Role Administration')
+    : Action
 {
     my ( $self, $c ) = @_;
 
@@ -405,7 +405,7 @@ sub show_role
     # create the tree view...
     # FIXME: need to prune items that are in_feature 
     # to prevent confusion.
-    my $display_tree = $c->stash->{action_tree};
+    my $display_tree = $c->stash->{action_tree}->clone;
     my @remove;
     $display_tree->traverse(sub {
         my ($tree) = @_;
@@ -420,6 +420,7 @@ sub show_role
         {
             my $item = $parent;
             $parent = $parent->getParent;
+            last if !$parent->can('removeChild');
             $parent->removeChild($item);
         }
     }

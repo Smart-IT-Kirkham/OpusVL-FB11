@@ -33,7 +33,7 @@ __PACKAGE__->config->{namespace}    = '';
 =head2 auto
 =cut
 sub auto 
-    : Private 
+    : Action 
     : AppKitAllAccess
 {
     my ( $self, $c ) = @_;
@@ -68,6 +68,7 @@ sub index
 sub default :Path 
 {
     my ( $self, $c ) = @_;
+    delete $c->stash->{current_view} if defined $c->stash->{current_view}; # ensure default view.
     $c->stash->{template} = '404.tt';
     $c->response->status(404);
     $c->stash->{homepage} = 1;
@@ -84,6 +85,7 @@ sub access_denied : Private
 {
     my ( $self, $c ) = @_;
     $c->stash->{template} = '403.tt';
+    delete $c->stash->{current_view} if defined $c->stash->{current_view}; # ensure default view.
     $c->response->status(403);
     $c->stash->{homepage} = 1;
     $c->detach;

@@ -1,5 +1,25 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.26
+
+* Fixed an anoying bug where we duplicated menu items when doing grouped controllers in the intranet
+  style menu.
+
+1.25
+
+* Auth no longer examines auto actions to allow for other forms of auth before our access
+  control on the actions kicks in.
+* not_found and access_denied actions now clear current_view stash setting to prevent
+  issues if you get an access denied or not found bounce after setting that in the auto for
+  something like a json view.
+* Fixed the final private action that was broken by the new AppKitFeature attributes.
+
+1.24
+
+* Various bug fixes to the feature auth code added in 1.21.  
+* Made regex for spotting 'end' actions less likely to catch legitimate actions like 'client_suspend'
+  thereby excluding them from the regular auth procedures.
+
 1.23
 
 * Minor bug fix for bug introduced in 1.21.
@@ -49,6 +69,10 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 
   Note that what you put here is what is displayed on the user interface.  Apply the feature to all 
   actions you need to execute as part of your feature, including the various auto actions.
+
+  Note that you cannot specify multiple attributes against an action marked Private.  In order to 
+  mark those actions with the attributes change the Private to Feature.  For a more detailed 
+  explanation of this problem see bug 773 in bugzilla.
 
 * Added method groups for the new application style menus.  Menus are divided into applications, 
   groups, then actions.  Applications are defined as they are now.  Groups are defined as a class
