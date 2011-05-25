@@ -299,6 +299,14 @@ div.text input {
 	width: 300px;
 }
 
+span.elements {
+	margin-left: -2px;
+}
+
+span.elements input {
+	font-size: 1.0em;
+}
+
 div.text input:focus {
   outline:0 none;
 }
