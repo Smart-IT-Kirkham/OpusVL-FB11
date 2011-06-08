@@ -1,3 +1,5 @@
+/* @override http://localhost:3000/static/css/layout.css */
+
 /* @override http://localhost:3303/static/css/layout.css */
 
 /* @override http://localhost:3303/static/css/layout.css */
@@ -19,9 +21,8 @@
 /* @override http://localhost:3000/static/css/layout.css */
 
 body {
-	margin: 0;
-	padding: 0;
-	position: relative;
+	margin: 0px;
+	padding: 0px;
 }
 
 .clear {

@@ -1,5 +1,8 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added a standard 'delete.yml' template in the root folder for most of the
+  delete forms where you just want a yes/no choice.
+
 1.26
 
 * Fixed an anoying bug where we duplicated menu items when doing grouped controllers in the intranet
@@ -76,7 +79,7 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 
 * Added method groups for the new application style menus.  Menus are divided into applications, 
   groups, then actions.  Applications are defined as they are now.  Groups are defined as a class
-  attribute, appkit_method_group_order.  
+  attribute, appkit_method_group.  
   
 * It is also possible to sort all the parts of the menu.  To sort the actions use the 
   :NavigationOrder(2) attribute.  To sort the groups use the appkit_method_group_order attribute on 
