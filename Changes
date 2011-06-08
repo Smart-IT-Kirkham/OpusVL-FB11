@@ -1,5 +1,6 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added hooks for the notification system in the application wrapper html.
 * Added a standard 'delete.yml' template in the root folder for most of the
   delete forms where you just want a yes/no choice.
 
