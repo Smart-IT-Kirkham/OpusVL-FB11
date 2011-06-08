@@ -16,6 +16,15 @@
                 </div>
                 <div id="header_nav">
                     <ul>
+                        [% SET notifications = c.controller('Modules::Notifications') %]
+                        [% IF notifications && c.can_access(notifications.action_for('feed')) %]
+                        <li id="appkit_app_style_search">
+                        [% PROCESS modules/notifications/message_icon.tt %]
+                        [% END %]
+                        [% IF c.can_access(c.controller('Search').action_for('index')) %]
+                        [% PROCESS intranet_search_box.tt %]
+                        </li>
+                        [% END %]
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
                             <li id="appkit_app_style_search">
                                 <form action="/search" method="get">
