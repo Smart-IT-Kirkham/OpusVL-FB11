@@ -18,7 +18,7 @@
                     <ul>
                         [% SET notifications = c.controller('Modules::Notifications') %]
                         [% IF notifications && c.can_access(notifications.action_for('feed')) %]
-                        <li id="appkit_app_style_search">
+                        <li>
                         [% PROCESS modules/notifications/message_icon.tt %]
                         [% END %]
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
