@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.27
+
 * Added a new role for the plugin to allow the update of the HTML::FormFu config to 
   allow multiple paths to be used.  Call add_form_path to use it.
 
