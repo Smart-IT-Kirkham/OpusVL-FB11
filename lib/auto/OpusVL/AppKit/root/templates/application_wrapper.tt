@@ -11,22 +11,27 @@
     <body>
         <div id="page">
             <div id="header">
-                <div id="header_logo">
+                <div id="application_home">
                     <a href="/"></a>
                 </div>
                 <div id="header_nav">
                     <ul>
-                        <li id="header_home">
-                            <a href="/">Home</a>
-                        </li>
+                        [% SET notifications = c.controller('Modules::Notifications') %]
+                        [% IF notifications && c.can_access(notifications.action_for('feed')) %]
+                        <li>
+                        [% PROCESS modules/notifications/message_icon.tt %]
+                        [% END %]
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
-                            <li id="header_search">
-                                <a href="#" id="appKitSearch_anchor">Search</a>
+                        [% PROCESS intranet_search_box.tt %]
+                        </li>
+                        [% END %]
+                        [% IF c.can_access(c.controller('Search').action_for('index')) %]
+                            <li id="appkit_app_style_search">
+                                <form action="/search" method="get">
+                                    <input type="search" name="q" placeholder="Search" results="5" autosave="appkit_search">
+                                </form>
                             </li>
                         [% END %]
-                        <li id="header_applications">
-                            <a href="#" id="appList_anchor">Applications</a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -37,7 +42,7 @@
                     [% IF before_content %]
                     [% before_content %]
                     [% END %]
-                    <div id="application_body"[% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.as_list.size > 0 %] class="app_body_with_nav"[% END %]>
+                    <div id="application_body">
                         [% IF status_message.defined %]
                             <div class="alert status">
                                 [% status_message %]
@@ -62,9 +67,6 @@
 
                 [% PROCESS application_style_menu.tt %]
 
-                [% IF c.can_access(c.controller('Search').action_for('index')) %]
-                [% PROCESS intranet_search_box.tt %]
-                [% END %]
             </div>
         </div>
    <!--     <script language="JavaScript" type="text/javascript" src="js/appkit.js"></script>

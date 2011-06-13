@@ -16,7 +16,7 @@ sub setup_authdb
     # Alter the password column to enable encoded password.. 
     $class->add_columns
     (
-        "password",
+        "+password",
         {
             encode_column => 1,
             encode_class  => 'Crypt::Eksblowfish::Bcrypt',
