@@ -31,7 +31,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 
 use Moose;
 BEGIN { 
-    extends 'Catalyst::View::TT'; 
+    extends 'Catalyst::View::TT::Alloy'; 
 }
 
 =head as_list
