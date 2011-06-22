@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Switched view template engine from TT2 to Template::Alloy
+  Note that this has slightly different syntax in places and doesn't like
+  spaced after function names.  i.e. c.uri_for (action) won't work.
+
 1.27
 
 * Added a new role for the plugin to allow the update of the HTML::FormFu config to 
