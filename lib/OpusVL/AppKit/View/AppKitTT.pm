@@ -34,6 +34,8 @@ BEGIN {
     extends 'Catalyst::View::TT::Alloy'; 
 }
 
+__PACKAGE__->config->{AUTO_FILTER} = 'html';
+
 =head as_list
     Little help vmethod for TemplateToolkit to force array context.
     Helps when DBIx::Class ->search method return only 1 result.
