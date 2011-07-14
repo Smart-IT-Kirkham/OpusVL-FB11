@@ -24,24 +24,23 @@ static content and Excel::Template::Plus templates.
 
 =head2 add_paths
 
-This calls the other functions to hook up all the paths you need for your module.  This means you only need the
-one call from your module.  The others are simply exposed in case you need to do anything funky.
+This sets up the paths for the TT templates and the L<Excel::Template::Plus> view.  Both views
+are setup to point to the same directory, named C<templates>.  It also sets up the static content path
+to point to the static directory.
 
-=head2 add_static_path
+It sets up the HTML::FormFu include directory so that it will pick up your forms.  The AppKitForm attribute
+also has some logic to pull forms from the current module but that doesn't allow you to do includes on other forms,
+either within your own module, or across modules.  
 
-Sets up the static path for the module to be picked up.  This is called by the add_paths method.
 =head2 add_form_path
 
 This sets up the HTML::FormFu include directory so that it will pick up your forms.  The AppKitForm attribute
 also has some logic to pull forms from the current module but that doesn't allow you to do includes on other forms,
-either within your own module, or across modules.  This is called by the add_paths method.
+either within your own module, or across modules.  
 
-=head2 add_template_path
-
-This sets up the paths for the TT templates and the L<Excel::Template::Plus> view.  Both views
-are setup to point to the same directory, named C<templates>.
-
-This is called by the add_paths method.
+This is called by the add_paths method.  The primary reason this method is exposed is that this was originaly 
+the only method on this role.  Now I've added the add_paths method you should change any existing modules calling 
+this method to use the add_paths call instead.
 
 =head1 COPYRIGHT and LICENSE
 
@@ -54,7 +53,32 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 use Moose::Role;
 use File::ShareDir qw/module_dir/;
 
+# this method is provided for compatibility reassons
+# you should switch to using add_paths instead since it does this
+# and sets up all the other paths too.
 sub add_form_path
+{
+    my $self = shift;
+    my $module = shift;
+
+    warn "Please change the module $module to use add_paths instead of add_form_path.";
+    my $module_dir = module_dir($module);
+    $self->_add_form_path($module_dir);
+}
+
+sub add_paths
+{
+    my $self = shift;
+    my $module = shift;
+
+    # FIXME: should I do a rel2abs here?
+    my $module_dir = module_dir($module);
+    $self->_add_form_path($module_dir);
+    $self->_add_static_path($module_dir);
+    $self->_add_template_path($module_dir);
+}
+
+sub _add_form_path
 {
     my $self = shift;
     my $module_dir = shift;
@@ -66,19 +90,7 @@ sub add_form_path
             $module_dir .  '/root/forms';
 }
 
-sub add_paths
-{
-    my $self = shift;
-    my $module = shift;
-
-    # FIXME: should I do a rel2abs here?
-    my $module_dir = module_dir($module);
-    $self->add_form_path($module_dir);
-    $self->add_static_path($module_dir);
-    $self->add_template_path($module_dir);
-}
-
-sub add_template_path
+sub _add_template_path
 {
     my $self = shift;
     my $module_dir = shift;
@@ -95,7 +107,7 @@ sub add_template_path
     }
 }
 
-sub add_static_path
+sub _add_static_path
 {
     my $self = shift;
     my $module_dir = shift;
