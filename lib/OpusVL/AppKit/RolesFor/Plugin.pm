@@ -2,7 +2,7 @@ package OpusVL::AppKit::RolesFor::Plugin;
 
 =head1 NAME
 
-OpusVL::AppKit::View::Excel
+OpusVL::AppKit::RolesFor::Plugin
 
 =head1 DESCRIPTION
 
