@@ -330,7 +330,6 @@ sub show_role
     # test if need to process some rules submission...
     if ( $c->req->method eq 'POST' )
     {
-        # FIXME: find features and do them too.
         my @features_allowed;
         my @features_denied;
         for my $app (keys %{$c->stash->{appkit_features}})
@@ -403,7 +402,7 @@ sub show_role
 
 
     # create the tree view...
-    # FIXME: need to prune items that are in_feature 
+    # need to prune items that are in_feature 
     # to prevent confusion.
     my $display_tree = $c->stash->{action_tree}->clone;
     my @remove;

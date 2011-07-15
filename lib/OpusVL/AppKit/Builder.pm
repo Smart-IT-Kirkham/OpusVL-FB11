@@ -28,6 +28,7 @@ package OpusVL::AppKit::Builder;
         View::Email
         View::Download
         View::JSON
+        View::Excel
 
     Plugins
         All the standard ones we use as per their documentation.
@@ -251,6 +252,8 @@ override _build_config => sub
     #     debug   => 2,
     # };
 
+    # set this up empty for now.
+    $config->{'View::Excel'} = { etp_config => { INCLUDE_PATH => [] }};
 
     return $config;
 };

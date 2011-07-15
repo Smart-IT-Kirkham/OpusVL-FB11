@@ -191,7 +191,6 @@ sub roles_modifiable
             return $schema->resultset('Role');
         }
     }
-    # FIXME:
     my $roles = $schema->resultset('Role')->search({ id => { in => $allowed_roles->get_column('role_allowed')->as_query }});
 
     return $roles;
