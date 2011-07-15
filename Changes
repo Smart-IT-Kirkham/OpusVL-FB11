@@ -1,5 +1,12 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.28
+
+* Integrated Excel view that makes use of Excel::Template::Plus.
+* Added a method to the role for making plugins easier to setup.
+  OpusVL::AppKit::RolesFor::Plugin->add_paths(__PACKAGE__).  This replaces
+  the add_form_path method in the previous release.
+
 1.27
 
 * Added a new role for the plugin to allow the update of the HTML::FormFu config to 
