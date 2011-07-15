@@ -40,7 +40,7 @@
 
                 <div id="application">
                     [% IF before_content %]
-                    [% before_content %]
+                    [% before_content | none %]
                     [% END %]
                     <div id="application_body">
                         [% IF status_message.defined %]
@@ -54,7 +54,7 @@
                             </div>
                         [% END %]
                         
-                        [% content %]
+                        [% content | none %]
 
                         <div class="clear"></div>
                     </div>
