@@ -10,7 +10,7 @@
                     [% USE Math %]
                     [% SET apps = c.apps_allowed %]
                     [% SET application_count = apps.size %]
-                    [% x = Math.sqrt(application_count) %]
+                    [% x = application_count ? Math.sqrt(application_count) : 0 %]
                     [% appList_cols = ((x - Math.int(x)) > 0) ? (Math.int(x)) + 1 : x %]
                     [% FOREACH appList_col IN [1 .. appList_cols] %]
                         <li>
