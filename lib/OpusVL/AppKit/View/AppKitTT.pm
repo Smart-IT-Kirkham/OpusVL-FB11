@@ -31,8 +31,10 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 
 use Moose;
 BEGIN { 
-    extends 'Catalyst::View::TT'; 
+    extends 'Catalyst::View::TT::Alloy'; 
 }
+
+__PACKAGE__->config->{AUTO_FILTER} = 'html';
 
 =head as_list
     Little help vmethod for TemplateToolkit to force array context.

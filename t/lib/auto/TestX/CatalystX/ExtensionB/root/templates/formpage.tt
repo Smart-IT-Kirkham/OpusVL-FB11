@@ -9,6 +9,6 @@
 
 
 <h2> Form Testing </h2>
-[% form.render %]
+[% form.render | none %]
 
 

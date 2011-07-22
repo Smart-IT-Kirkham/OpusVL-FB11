@@ -16,7 +16,7 @@
                         Roles that are administered by [% c.stash.role.role %] 
                     </legend>
 
-                    [% form %]
+                    [% form.render | none %]
 
                 </fieldset>
 

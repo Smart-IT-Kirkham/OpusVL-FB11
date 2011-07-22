@@ -6,4 +6,4 @@
   </p>
 </div>
 
-[% form %]
+[% form.render | none %]
