@@ -4,3 +4,6 @@ Makefile
 blib
 inc
 *.swp
+
+/pm_to_blib
+/MANIFEST.bak
