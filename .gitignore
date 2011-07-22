@@ -5,3 +5,7 @@ blib
 inc
 *.swp
 .DS_Store
+
+/MANIFEST.bak
+OpusVL-AppKit-*.tar.gz
+/pm_to_blib
