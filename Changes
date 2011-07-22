@@ -1,5 +1,30 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.28
+
+* Integrated Excel view that makes use of Excel::Template::Plus.
+* Added a method to the role for making plugins easier to setup.
+  OpusVL::AppKit::RolesFor::Plugin->add_paths(__PACKAGE__).  This replaces
+  the add_form_path method in the previous release.
+
+1.27
+
+* Added a new role for the plugin to allow the update of the HTML::FormFu config to 
+  allow multiple paths to be used.  Call add_form_path to use it.
+
+  If you want the forms from your AppKitX module to be included in the general forms
+  search path for all modules add this into the main modules code where you do your 
+  setup_components.
+
+    # at the top
+    with 'OpusVL::AppKit::RolesFor::Plugin';
+
+    # in after 'setup_components'
+    $class->add_form_path(__PACKAGE__); # ''
+
+  For an example of it in use look at OpusVL::AppKitX::ResultsetSearch
+
+* Added hooks for the notification system in the application wrapper html.
 * Added a standard 'delete.yml' template in the root folder for most of the
   delete forms where you just want a yes/no choice.
 
