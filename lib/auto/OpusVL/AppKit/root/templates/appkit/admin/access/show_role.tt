@@ -30,7 +30,7 @@
                         [% END %]
                         [% END %]
                         </ul>
-                        [% access_control_role_tree.expandAll %]
+                        [% access_control_role_tree.expandAll | none %]
                         <input type='submit' name='savebutton'      value='Save'>
                         <input type='submit' name='cancelbutton'    value='Cancel'>
                     </form>

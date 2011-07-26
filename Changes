@@ -1,5 +1,17 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.29
+
+* Added a new role to allow the easy merging of the AppKitAuthDB into another schema.
+  OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB
+* Switched view template engine from TT2 to Template::Alloy
+  Note that this has slightly different syntax in places and doesn't like
+  spaced after function names.  i.e. c.uri_for (action) won't work.
+  See https://opusvl-intranet/wiki/index.php/Conversion_to_Alloy for information about 
+  the differences.  The key thing you need to do is to unescape raw html content.  For
+  instance [% form %] should be changed to [% form.render | none %] which will prevent
+  the html being escaped.
+
 1.28
 
 * Integrated Excel view that makes use of Excel::Template::Plus.

@@ -37,9 +37,9 @@
                     [% PROCESS intranet_left_menu.tt %]
 
                     [% IF before_content %]
-                    [% before_content %]
+                    [% before_content | none %]
                     [% END %]
-                    <div id="application_body"[% IF c.controller.navigation_actions.defined && c.controller.navigation_actions.as_list.size > 0 %] class="app_body_with_nav"[% END %]>
+                    <div id="application_body"[% IF c.controller.navigation_actions.size > 0 %] class="app_body_with_nav"[% END %]>
                         [% IF status_message.defined %]
                             <div class="alert status">
                                 [% status_message %]
@@ -51,7 +51,7 @@
                             </div>
                         [% END %]
                         
-                        [% content %]
+                        [% content | none %]
 
                         <div class="clear"></div>
                     </div>

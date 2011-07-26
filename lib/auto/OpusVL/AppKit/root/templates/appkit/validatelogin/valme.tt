@@ -4,4 +4,4 @@ hi
 </h1>
 
 
-[% form %]
+[% form.render | none %]

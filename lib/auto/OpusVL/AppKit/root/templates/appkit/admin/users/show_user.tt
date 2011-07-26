@@ -55,7 +55,7 @@
 
                     [% FOR role IN c.stash.roles %]
 
-                        [% role.input %]
+                        [% role.input | none %]
                         [% role.role %]
                         <br>
 
