@@ -215,6 +215,8 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get('/admin/access/role/notthere/delrole');
     is $mech->status, 404, 'Check we get a 404 for a non existent role';
 
+    $mech->get("/db/appkit_auth.db");
+    is $mech->status, 404, 'Check we get a 404 for our db';
     # this would be so cool if it worked.  Unfortunately the mech
     # will only work if the page it's just downloaded has this
     # link contained.
