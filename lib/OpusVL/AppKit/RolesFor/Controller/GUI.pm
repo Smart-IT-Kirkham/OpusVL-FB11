@@ -346,6 +346,38 @@ sub time_short
 
 }
 
+=head2 add_breadcrumb
+
+Adds the a breadcrumb on your breadcrumb trial.  Pass it the context object and the breadcumb info,
+
+    $self->add_breadcrumb($c, { name => 'Title', url => $search_url });
+
+=cut
+
+sub add_breadcrumb
+{
+    my $self = shift;
+    my $c = shift;
+    my $args = shift;
+    push @{$c->stash->{breadcrumbs}}, $args;
+}
+
+=head2 add_final_crumb
+
+Adds the final breadcrumb on your trial.  Simply pass it the title of the breadcrumb.
+
+    $self->add_final_crumb($c, 'Title');
+
+=cut
+
+sub add_final_crumb
+{
+    my $self = shift;
+    my $c = shift;
+    my $title = shift;
+    push @{$c->stash->{breadcrumbs}}, { name => $title, url => $c->req->uri };
+}
+
 =head1 SEE ALSO
 
     L<CatalystX::AppBuilder>,

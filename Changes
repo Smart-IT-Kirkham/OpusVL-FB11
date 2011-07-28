@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added add_breadcrumb and add_final_crumb methods to the controller role
+  to simplify adding breadcrumbs to an application.
 * Added yml files and .db files to the list of ignored extensions when serving
   static content to slightly mitigate the risk posed by bug 1014.  
 * Added appkit form directory so forms from it's directory can be included in 
