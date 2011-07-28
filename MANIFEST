@@ -20,10 +20,12 @@ lib/auto/OpusVL/AppKit/root/forms/appkit/admin/confirm.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/users/reset_password.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/admin/users/user_form.yml
 lib/auto/OpusVL/AppKit/root/forms/appkit/user/change_password.yml
+lib/auto/OpusVL/AppKit/root/forms/delete.yml
 lib/auto/OpusVL/AppKit/root/static/css/appnav.css
 lib/auto/OpusVL/AppKit/root/static/css/layout.css
 lib/auto/OpusVL/AppKit/root/static/css/print.css
 lib/auto/OpusVL/AppKit/root/static/css/skin.css
+lib/auto/OpusVL/AppKit/root/static/css/tablesorter/dialog.css
 lib/auto/OpusVL/AppKit/root/static/css/tablesorter/style.css
 lib/auto/OpusVL/AppKit/root/static/css/vader/images/ui-bg_flat_0_aaaaaa_40x100.png
 lib/auto/OpusVL/AppKit/root/static/css/vader/images/ui-bg_glass_95_fef1ec_1x400.png
@@ -214,6 +216,7 @@ lib/OpusVL/AppKit/Plugin/AppKit/FeatureList.pm
 lib/OpusVL/AppKit/Plugin/AppKit/Node.pm
 lib/OpusVL/AppKit/Plugin/AppKitControllerSorter.pm
 lib/OpusVL/AppKit/RolesFor/Controller/GUI.pm
+lib/OpusVL/AppKit/RolesFor/Plugin.pm
 lib/OpusVL/AppKit/RolesFor/Schema/AppKitAuthDB/Result/Aclrule.pm
 lib/OpusVL/AppKit/RolesFor/Schema/AppKitAuthDB/Result/Parameter.pm
 lib/OpusVL/AppKit/RolesFor/Schema/AppKitAuthDB/Result/Role.pm
