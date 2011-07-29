@@ -16,7 +16,7 @@
 
 <script type="text/javascript">
 [% FOR jssrc IN header.jssrc %]
-    [% jssrc %]
+    [% jssrc | none %]
 [% END %]
 </script>
 
