@@ -1,3 +1,5 @@
+/* @override http://localhost:3210/static/css/skin.css */
+
 /* @override http://localhost:3000/static/css/skin.css */
 
 /* @override http://localhost:3333/static/css/skin.css */
@@ -64,7 +66,40 @@ div#header_nav a:hover {
 }
 /* @end */
 
+/* @group Diary */
 
+div#diary_menu {
+	background-color: #fff;
+	position: absolute;
+	top: 53px;
+	z-index: 5;
+	left: 7px;
+	padding: 11px;
+}
+
+div#diary_menu ul {
+	margin: 0;
+	padding: 0;
+}
+
+div#diary_menu ul li {
+	padding: 0;
+	margin: 0;
+	float: none;
+	height: auto;
+}
+
+div#diary_menu a {
+	padding: 0;
+	color: #777;
+	text-shadow: none;
+}
+
+div#diary_menu a:hover {
+	color: #333;
+}
+
+/* @end */
 
 /* @end */
 
