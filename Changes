@@ -1,5 +1,17 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.30
+
+* Fixed portlets html so it doesn't get mangled by Template::Alloy
+* Added add_breadcrumb and add_final_crumb methods to the controller role
+  to simplify adding breadcrumbs to an application.
+* Added yml files and .db files to the list of ignored extensions when serving
+  static content to slightly mitigate the risk posed by bug 1014.  
+* Added appkit form directory so forms from it's directory can be included in 
+  other modules.  They can not be used directly as the form for an action, but 
+  can be sucked in as part of an include.  That's down to the way the AppKitForm
+  attribute works.
+
 1.29
 
 * Added a new role to allow the easy merging of the AppKitAuthDB into another schema.
