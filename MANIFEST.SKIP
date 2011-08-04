@@ -11,3 +11,4 @@ MANIFEST.bak
 MANIFEST.SKIP~
 Makefile$
 Makefile.old$
+MYMETA*

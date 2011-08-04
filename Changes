@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.30
+
 * Fixed portlets html so it doesn't get mangled by Template::Alloy
 * Added add_breadcrumb and add_final_crumb methods to the controller role
   to simplify adding breadcrumbs to an application.
