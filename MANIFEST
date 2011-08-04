@@ -217,6 +217,7 @@ lib/OpusVL/AppKit/Plugin/AppKit/Node.pm
 lib/OpusVL/AppKit/Plugin/AppKitControllerSorter.pm
 lib/OpusVL/AppKit/RolesFor/Controller/GUI.pm
 lib/OpusVL/AppKit/RolesFor/Plugin.pm
+lib/OpusVL/AppKit/RolesFor/Schema/AppKitAuthDB.pm
 lib/OpusVL/AppKit/RolesFor/Schema/AppKitAuthDB/Result/Aclrule.pm
 lib/OpusVL/AppKit/RolesFor/Schema/AppKitAuthDB/Result/Parameter.pm
 lib/OpusVL/AppKit/RolesFor/Schema/AppKitAuthDB/Result/Role.pm
@@ -240,6 +241,7 @@ lib/OpusVL/AppKit/View/AppKitTT.pm
 lib/OpusVL/AppKit/View/Download.pm
 lib/OpusVL/AppKit/View/DownloadFile.pm
 lib/OpusVL/AppKit/View/Email.pm
+lib/OpusVL/AppKit/View/Excel.pm
 lib/OpusVL/AppKit/View/JSON.pm
 lib/OpusVL/AppKit/View/PDF/Reuse.pm
 lib/OpusVL/AppKit/View/SimpleXML.pm
@@ -248,6 +250,7 @@ Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
+MYMETA.yml
 README
 scripts/appkit_create.pl
 t/00-load.t
