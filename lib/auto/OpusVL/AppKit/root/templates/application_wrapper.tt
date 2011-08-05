@@ -11,6 +11,7 @@
     <body>
         <div id="page">
             <div id="header">
+                [% PROCESS application_style_menu.tt %]
                 <div id="application_home">
                     <a href="/"></a>
                 </div>
@@ -70,7 +71,6 @@
                     [% END %]
                 </div>
 
-                [% PROCESS application_style_menu.tt %]
 
             </div>
         </div>
