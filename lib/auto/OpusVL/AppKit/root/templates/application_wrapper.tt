@@ -8,7 +8,7 @@
     [% PROCESS wrapper_head.tt %]
 
     </head>
-    <body>
+    <body class="application_style">
         <div id="page">
             <div id="header">
                 [% PROCESS application_style_menu.tt %]

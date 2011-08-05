@@ -291,6 +291,10 @@ li#appkit_app_style_search input {
 	font-size: 1em;
 }
 
+.application_style li#appkit_app_style_search input {
+	font-size: 1em;
+}
+
 li#appkit_app_style_search input:focus {
 	background-color: white;
 }
