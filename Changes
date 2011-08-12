@@ -1,5 +1,8 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Rolled out change to form directory since it appears to do bad things
+  and isn't really used yet.
+
 1.30
 
 * Fixed portlets html so it doesn't get mangled by Template::Alloy

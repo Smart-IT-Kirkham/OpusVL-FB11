@@ -163,7 +163,9 @@ override _build_config => sub
     $config->{static}->{include_path}      = $static_dirs;
     $config->{static}->{ignore_extensions} = [qw/tt tt2 db yml/];
 
-    $config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path} = [ $path . '/root/forms' ];
+    # FIXME: this line appears to cause a problem
+    #$config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path} = [ $path . '/root/forms' ];
+
     # .. add template dir into the config for View::PDF::Reuse...
     my $pdf_path = $config->{'View::PDF::Reuse'}->{'INCLUDE_PATH'};
     push(@$pdf_path, $path . '/root/templates' );
