@@ -1,3 +1,5 @@
+/* @override http://localhost:3210/static/css/appnav.css */
+
 /* @override http://localhost:3000/static/css/appnav.css */
 
 
@@ -195,9 +197,9 @@ div#application_home a {
 
 div#appMenuBar {
 	position: absolute;
-	top: -36px;
+	top: 17px;
 	left: 77px;
-	width: 670px;
+	width: 710px;
 }
 
 div#appMenuBar ul {
@@ -241,15 +243,19 @@ li.appkit_mega_menu_item div.appkit_mega_menu_content {
 	color: #222;
 }
 
-div#appMenuBar li.appkit_mega_menu_open > a {
+li.appkit_mega_menu_open > a {
 	background-color: #555;
 }
 
-#appMenuBar ul.appkit_mega_menu li.appkit_mega_menu_item.appkit_mega_menu_open div.appkit_mega_menu_content div span.appkit_mega_menu_group p {
+ul.appkit_mega_menu li.appkit_mega_menu_item.appkit_mega_menu_open div.appkit_mega_menu_content div span.appkit_mega_menu_group p {
 	font-size: 100%;
 	margin: 0 0 4px;
 	border-bottom: 2px solid silver;
 	padding-right: 10px;
+}
+
+span.appkit_mega_menu_group p:not(:first-child) {
+	padding-top: 12px;
 }
 
 li.appkit_mega_menu_open div.appkit_mega_menu_content {
@@ -282,7 +288,7 @@ li#appkit_app_style_search input {
 	margin-right: 2px;
 	margin-left: 17px;
 	width: 140px;
-	font-size: 20pt;
+	font-size: 1em;
 }
 
 .application_style li#appkit_app_style_search input {

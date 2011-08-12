@@ -11,19 +11,25 @@
     <body class="application_style">
         <div id="page">
             <div id="header">
+                [% PROCESS application_style_menu.tt %]
                 <div id="application_home">
                     <a href="/"></a>
                 </div>
                 <div id="header_nav">
                     <ul>
+                        [% SET diary = c.controller('Modules::Diary') %]
+                        [% IF diary && c.can_access(diary.action_for('my_events')) %]
+                            <li>
+                            [% PROCESS modules/diary/diary_icon.tt %]
+                        [% END %]
                         [% SET notifications = c.controller('Modules::Notifications') %]
                         [% IF notifications && c.can_access(notifications.action_for('feed')) %]
-                        <li>
-                        [% PROCESS modules/notifications/message_icon.tt %]
+                            <li>
+                            [% PROCESS modules/notifications/message_icon.tt %]
                         [% END %]
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
-                        [% PROCESS intranet_search_box.tt %]
-                        </li>
+                            [% PROCESS intranet_search_box.tt %]
+                            </li>
                         [% END %]
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
                             <li id="appkit_app_style_search">
@@ -65,7 +71,6 @@
                     [% END %]
                 </div>
 
-                [% PROCESS application_style_menu.tt %]
 
             </div>
         </div>

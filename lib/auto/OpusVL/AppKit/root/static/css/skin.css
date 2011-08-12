@@ -1,3 +1,5 @@
+/* @override http://localhost:3210/static/css/skin.css */
+
 /* @override http://localhost:3000/static/css/skin.css */
 
 /* @override http://localhost:3333/static/css/skin.css */
@@ -64,7 +66,61 @@ div#header_nav a:hover {
 }
 /* @end */
 
+/* @group Diary */
 
+div#diary_control {
+	position: absolute;
+	top: 7px;
+	left: -46px;
+}
+
+div#diary_icon > ul > li > a {
+	width: 30px;
+	height: 38px;
+	background: url(/static/images/modules/diary/icon.png) no-repeat;
+}
+
+div#diary_icon > ul > li.appkit_mega_menu_open > a {
+	background: url(/static/images/modules/diary/icon-rollover.png) no-repeat;
+}
+
+div#diary_control div.appkit_mega_menu_content {
+	top: 46px;
+	left: 3px;
+}
+
+div#diary_menu {
+	width: 168px;
+}
+
+div#diary_menu span.appkit_mega_menu_group {
+	width: 148px;
+}
+
+div#diary_menu ul {
+	margin: 0;
+	padding: 0;
+}
+
+div#diary_menu ul li {
+	padding: 0;
+	margin: 0;
+	float: none;
+	height: auto;
+}
+
+div#diary_menu a {
+	padding: 0;
+	color: #777;
+	text-shadow: none;
+	display: block;
+}
+
+div#diary_menu a:hover {
+	color: #333;
+}
+
+/* @end */
 
 /* @end */
 
