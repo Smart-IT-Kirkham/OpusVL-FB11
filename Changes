@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.33
+
+* Renabled the table sorter for Linux.
+
 1.32
 
 * Fixed a goof in the role that pulls injects the DBIC objects into another

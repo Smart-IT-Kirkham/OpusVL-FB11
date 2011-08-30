@@ -33,18 +33,18 @@ END;
 IF features.appkitfeature_tablesorter;
     header.js.list.push( "/static/js/jquery.tablesorter.min.js");
     header.css.list.push( "/static/css/tablesorter/style.css");
-    UNLESS (c.request.user_agent.match('(?i)Linux'));
 -%]
 [%- tablesorter_jssrc = BLOCK -%]
     $(function() {
         $(".tablesorter").each(function(){
             var table = $(this);
+[%- UNLESS (c.request.user_agent.match('(?i)Linux')); %]
             $('<a></a>',{text: "Copy to clipboard", href: "<table>"+table.html()+"</table>"}).addClass('copy_to_clipboard').addClass('copy_button').insertBefore(table);
+[%- END ; %]
             table.tablesorter();
         });
     });
 [%- END;
-    END;
     header.jssrc.list.push( tablesorter_jssrc );
 END;
 
