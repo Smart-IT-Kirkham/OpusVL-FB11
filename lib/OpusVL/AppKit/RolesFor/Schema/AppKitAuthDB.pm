@@ -38,7 +38,7 @@ sub merge_authdb
     my $class = shift;
     $class->load_namespaces(
         result_namespace => '+OpusVL::AppKit::Schema::AppKitAuthDB::Result',
-        resultset_namespace => '+OpusVL::SysParams::Schema::AppKitAuthDB::ResultSet',
+        resultset_namespace => '+OpusVL::AppKit::Schema::AppKitAuthDB::ResultSet',
     );
 }
 

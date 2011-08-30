@@ -76,6 +76,7 @@ __PACKAGE__->add_columns(
   { data_type => "text", default_value => "active", is_nullable => 0 },
 );
 __PACKAGE__->set_primary_key("id");
+# FIXME: won't this be added automatically?
 __PACKAGE__->add_unique_constraint("sqlite_autoindex_users_1", ["username"]);
 
 =head1 RELATIONS
