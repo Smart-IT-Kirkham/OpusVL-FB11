@@ -101,6 +101,8 @@ sub _add_template_path
     unless ($self->view('Excel')->{etp_config}->{INCLUDE_PATH} ~~ $template_path) {
         push @{$self->view('Excel')->{etp_config}->{INCLUDE_PATH}}, $template_path;
     }
+    $self->view('Excel')->{etp_config}->{AUTO_FILTER} = 'html';
+    $self->view('Excel')->{etp_engine} = 'TTAutoFilter';
 
     unless ($self->view($tt_view)->include_path ~~ $template_path) {
         push @{$self->view($tt_view)->include_path}, $template_path;
