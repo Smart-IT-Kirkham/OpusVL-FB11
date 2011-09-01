@@ -1,5 +1,10 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.34 
+
+* Added autofilter of html for the xml templates used by Excel::Template::Plus
+  by default to prevent issues with < and & in data.
+
 1.33
 
 * Renabled the table sorter for Linux.
