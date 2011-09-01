@@ -24,6 +24,7 @@ requires 'DBIx::Class::TimeStamp';
 requires 'String::MkPasswd';
 requires 'Catalyst::View::TT::Alloy';
 requires 'Catalyst::View::Excel::Template::Plus';
+requires 'Template::AutoFilter';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.8002';
