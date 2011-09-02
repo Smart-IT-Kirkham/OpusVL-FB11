@@ -197,6 +197,7 @@ lib/auto/OpusVL/AppKit/root/templates/search/index.tt
 lib/auto/OpusVL/AppKit/root/templates/user_header.tt
 lib/auto/OpusVL/AppKit/root/templates/wrapper.tt
 lib/auto/OpusVL/AppKit/root/templates/wrapper_head.tt
+lib/Excel/Template/Plus/TTAutoFilter.pm
 lib/HTML/FormFu/Validator/OpusVL/AppKit/CurrentPasswordValidator.pm
 lib/OpusVL/AppKit.pm
 lib/OpusVL/AppKit/Action/AppKitForm.pm
