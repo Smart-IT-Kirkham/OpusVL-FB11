@@ -6,6 +6,11 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
   OpusVL::AppKit::RolesFor::Model::LDAPAuth to your model and apply the role
   OpusVL::AppKit::RolesFor::Schema::LDAPAuth to your schema class.
   Read the perldoc for the modules for more information on configuration.
+  The password changing facilities should obviously be turned off if you 
+  are managing your passwords via LDAP.  The 'Features' on the auth roles
+  have been split out to make this easy to do.  In the places where a form
+  is still essential and the password field normally appears, the password
+  field has been hidden.  This should avoid any confusion.
 
 1.34 
 
