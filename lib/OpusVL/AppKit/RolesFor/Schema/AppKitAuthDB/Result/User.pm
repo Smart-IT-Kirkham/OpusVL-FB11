@@ -227,6 +227,34 @@ sub roles_modifiable
     return $roles;
 }
 
+=head2 can_modify_user
+
+This method returns true if the user is allowed to modify the user in question.
+
+It determines this by checking the roles the current user is allowed to modify
+to the roles the other user has.  If it's not allowed to modify a role that user
+has then it will return false.
+
+    $user->can_modify_user('colin');
+
+=cut
+
+sub can_modify_user
+{
+    my ($self, $username) = @_;
+    my $schema = $self->result_source->schema;
+    my $other_user = $schema->resultset('User')->find({ username => $username});
+    die 'Unable to find user' unless $other_user;
+    my @roles = $other_user->roles->all;
+    my @allowed = $self->roles_modifiable->all;
+    my %allowed_hash = map { $_->role => 1 } @allowed;
+    for my $role (@roles)
+    {
+        return 0 unless $allowed_hash{$role->role};
+    }
+    return 1;
+}
+
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2010 OpusVL
