@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.35
+
 * Added ability to use LDAP auth for authentication while still storing
   user information in the database.
   To integrate this with Catalyst you need to add the trait 
