@@ -5,6 +5,9 @@ use Moose::Role;
 
 =head2 setup_authdb
 
+This need to be called as the User result class is being setup to 
+finish the table setup.
+
 =cut
 
 sub setup_authdb
@@ -21,13 +24,41 @@ sub setup_authdb
             encode_column => 1,
             encode_class  => 'Crypt::Eksblowfish::Bcrypt',
             encode_args   => { key_nul => 0, cost => 8 },
-            encode_check_method => 'check_password',
+            encode_check_method => '_local_check_password',
         }
     );
 
     $class->many_to_many( roles         => 'users_roles',       'role'       );
     $class->many_to_many( parameters    => 'users_parameters',  'parameter'  );
 }
+
+=head2 check_password
+
+The check_password function is usually called by Catalyst to determine
+if the password is correct for a user.  It returns 0 for false and 1 for
+true.  If the database schema has a check_password function that is used,
+otherwise the standard Bcrypt function is used to check the hash stored
+in the database.
+
+=cut
+
+sub check_password
+{
+    my $self = shift;
+    my $schema = $self->result_source->schema;
+    # see if the schema has been given a method for
+    # checking the password
+    if($schema->can('password_check') && $schema->password_check)
+    {
+        # look up ldap password.
+        return $schema->password_check->check_password($self->username, @_);
+    }
+    else
+    {
+        return $self->_local_check_password(@_);
+    }
+}
+
 
 =head2 getdata
 
