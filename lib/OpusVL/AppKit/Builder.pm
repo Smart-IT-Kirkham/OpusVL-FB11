@@ -184,6 +184,7 @@ override _build_config => sub
     $config->{'View::AppKitTT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
     $config->{'View::AppKitTT'}->{'PRE_PROCESS'}          = 'preprocess.tt';
+    $config->{'custom-error-message'}->{'view-name'} = 'AppKitTT';
 
     # Configure session handling..
     $config->{'session'} ||= {};
