@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Fixed issue with CustomErrorHandler finding view to use unreliably.
+
 1.35
 
 * Added ability to use LDAP auth for authentication while still storing
