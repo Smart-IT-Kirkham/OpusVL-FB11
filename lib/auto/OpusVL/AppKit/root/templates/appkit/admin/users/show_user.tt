@@ -25,9 +25,11 @@
                                 <td> 
                         <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('delete_user'),   [ myuser.id ] ) %] '>del</a>
                                 </td> 
+[% IF c.can_access(c.controller('AppKit::Admin::Users').action_for('reset_password')) %]
                                 <td> 
                         <a href='[% c.uri_for( c.controller('AppKit::Admin::Users').action_for('reset_password'),   [ myuser.id ] ) %] '>reset</a>
                                 </td> 
+[% END %]
                             </tr>
                     [% END %]
 
