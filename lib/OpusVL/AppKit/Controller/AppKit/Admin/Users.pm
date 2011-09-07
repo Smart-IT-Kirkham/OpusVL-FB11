@@ -66,13 +66,26 @@ sub adduser
 
     my $form = $c->stash->{form};
 
-    # add 'Required' constraint to form .. adding means you must have set a password...
-    $form->get_all_element('password')->constraint('Required');
+    my $ignore_password = $c->model('AppKitAuthDB')->schema->can('password_check');
+    if($ignore_password)
+    {
+        my $password = $form->get_all_element('password');
+        $password->parent->remove_element($password);
+    }
+    else
+    {
+        # add 'Required' constraint to form .. adding means you must have set a password...
+        $form->get_all_element('password')->constraint('Required');
+    }
     $form->process();
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
-        my $newuser = $c->model('AppKitAuthDB::User')->new_result( { password => $c->stash->{form}->param_value('password') } );
+        # FIXME: is this a security hole?
+        # should we be recording the fact we're not using the password field
+        # really?
+        my $password = $ignore_password ? mkpasswd : $form->param_value('password');
+        my $newuser = $c->model('AppKitAuthDB::User')->new_result( { password => $password } );
 
         $c->stash->{form}->model->update( $newuser );
 
@@ -152,7 +165,7 @@ sub show_user
 sub reset_password
     : Chained('user_specific')
     : PathPart('reset')
-    : AppKitFeature('User Administration')
+    : AppKitFeature('User Password Administration')
     : Args(0)
     : AppKitForm
 {
@@ -170,7 +183,7 @@ sub reset_password
 # breadcrumbs and passing their own url.
 sub reset_password_form
     : Action
-    : AppKitFeature('User Administration')
+    : AppKitFeature('User Password Administration')
 {
     my ($self, $c, $prev_url, $user) = @_;
 
@@ -212,22 +225,33 @@ sub edit_user
 {
     my ( $self, $c ) = @_;
 
+    my $form = $c->stash->{form};
+    my $ignore_password = $c->model('AppKitAuthDB')->schema->can('password_check');
+    if($ignore_password)
+    {
+        my $password = $form->get_all_element('password');
+        $password->parent->remove_element($password);
+    }
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('edit_user'), [ $c->stash->{thisuser}->id ] ) } );
 
-    if ( $c->stash->{form}->submitted_and_valid )
+    if ( $form->submitted_and_valid )
     {
         # update the user from the form..
-        $c->stash->{form}->model->update( $c->stash->{thisuser} );
+        $form->model->update( $c->stash->{thisuser} );
 
         # .. alter password if we have been passed one..
-        $c->stash->{thisuser}->update( { password => $c->stash->{form}->param_value('password') } )
-            if $c->stash->{form}->param_value('password');
+        unless($ignore_password) 
+        {
+            $c->stash->{thisuser}->update( 
+                { password => $c->stash->{form}->param_value('password') } 
+            ) if $c->stash->{form}->param_value('password');
+        }
 
         $c->stash->{status_msg} = "User updated";
     }
 
     # set default values..
-    $c->stash->{form}->model->default_values( $c->stash->{thisuser} );
+    $form->model->default_values( $c->stash->{thisuser} );
     $c->stash->{template} = "appkit/admin/users/user_form.tt";
 }
 
