@@ -4,11 +4,11 @@
         [% FOR app IN apps %]
             <li class="appkit_mega_menu_item">
                 <a href="#">[% app.controller.appkit_name %]</a>
-                <div class="appkit_mega_menu_content">
+                <div class="appkit_mega_menu_content [% c.generate_class_name(app.controller.appkit_name) %]">
                     <div>
                         [% FOR group IN app.actions %]
                             [% IF group.group %]
-                                <span class="appkit_mega_menu_group">
+                                <span class="appkit_mega_menu_group [% c.generate_class_name(group.group) %]">
                                     <p>
                                         [% group.group %]
                                     </p>

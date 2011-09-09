@@ -778,6 +778,22 @@ sub detach_to_appkit_access_denied
     $c->detach();
 }
 
+=head2 generate_class_name
+
+A simple utility function to turn a string into a css class by removing whitespace and non word characters, then lower casing it.
+
+This should provide a way to get predictable and legitimate css class names from data.
+
+=cut
+
+sub generate_class_name
+{
+    my $self = shift;
+    my $var = shift;
+    $var =~ s/\W+//; # remove all non word chars
+    return lc $var;
+}
+
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2010 OpusVL
