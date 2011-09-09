@@ -1,5 +1,11 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Update Mega Menu (application style) to work on Firefox and corrected
+  issue with menu option ordering at the same time.  This may require css
+  overrides for the individual menus within your applications css.
+  Extra classes have been added to the generated menu HTML to aid this.
+* Fixed issue with CustomErrorHandler finding view to use unreliably.
+
 1.35
 
 * Added ability to use LDAP auth for authentication while still storing

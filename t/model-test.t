@@ -91,6 +91,9 @@ use Test::More;
     my $dom_roles = $dom->roles_modifiable;
     is $dom_roles, 2, 'Should be able to modify the grunt and client roles';
 
+    ok $bill->can_modify_user($dom->username), 'Should be able to modify user';
+    ok !$dom->can_modify_user($bill->username), 'Shouln\'t be allowed to modify user';
+    
     $admin->delete_related('roles_allowed_roles', { role_allowed => $guest->id } );
     
     is $rich->roles_modifiable->count, 3, 'Should only be able to modify 3 roles now';
