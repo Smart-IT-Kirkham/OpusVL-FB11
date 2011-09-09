@@ -273,6 +273,11 @@ span.appkit_mega_menu_group {
 	margin-right: 20px;
 }
 
+.appkit_mega_menu_content {
+    width: 600px; /* default to be overriden */
+    left: 0;
+}
+
 /* @end */
 
 /* @group App-style search */
