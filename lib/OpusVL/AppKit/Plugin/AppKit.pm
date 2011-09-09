@@ -70,6 +70,47 @@ sub apps_allowed
 
 List of apps and the group data for the full blown menu
 
+    [
+        {
+            'controller' => bless( {
+                    'appkit_method_group' => 'Leads',
+                    'appkit_name' => 'Customers',
+                    }, 'Aquarius::Controller::Leads' ),
+                'actions' => [
+                {
+                    'actions' => [
+                        {
+                            'controller' => $controller,
+                            'actionname' => 'index',
+                            'value' => 'PO Approvers',
+                            'sort_index' => 1,
+                            'actionpath' => 'accounts/auth/index'
+                        },
+                        {
+                            'controller' => $controller,
+                            'actionname' => 'index',
+                            'value' => 'Next Item',
+                            'sort_index' => 1,
+                            'actionpath' => 'accounts/auth/index'
+                        },
+                        $VAR1->[4]{'controller'}{'navigation_actions'}[3],
+                        $VAR1->[4]{'controller'}{'navigation_actions'}[5],
+                        $VAR1->[4]{'controller'}{'navigation_actions'}[4]
+                    ],
+                    'group' => 'Leads'
+                },
+                {
+                    'actions' => [
+                        $VAR1->[4]{'controller'}{'navigation_actions'}[0],
+                        $VAR1->[4]{'controller'}{'navigation_actions'}[2],
+                        $VAR1->[4]{'controller'}{'navigation_actions'}[1]
+                    ],
+                    'group' => 'Customers'
+                }
+            ]
+        }
+    ];
+
 =cut
 sub menu_data
 {
@@ -77,7 +118,7 @@ sub menu_data
     # group info too.
     my $self = shift;
 
-    my @apps = sort { ($a->appkit_shared_module || '') cmp ($b->appkit_shared_module || '') } 
+    my @apps = sort { ($a->appkit_shared_module || '') cmp ($b->appkit_shared_module || '') || $b->appkit_order <=> $a->appkit_order } 
             @{$self->appkit_controllers};
     # now merge together the grouped controllers.
     my $i = 0;

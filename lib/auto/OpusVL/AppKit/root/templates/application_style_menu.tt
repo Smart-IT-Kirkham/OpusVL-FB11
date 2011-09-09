@@ -1,12 +1,12 @@
 <div id="appMenuBar">
     <ul class="appkit_mega_menu">
-        [% FOR app IN c.apps_allowed %]
+        [% apps = c.menu_data %]
+        [% FOR app IN apps %]
             <li class="appkit_mega_menu_item">
-                <a href="#">[% app.appkit_name %]</a>
+                <a href="#">[% app.controller.appkit_name %]</a>
                 <div class="appkit_mega_menu_content">
                     <div>
-                    
-                        [% FOR group IN app.navigation_actions_grouped %]
+                        [% FOR group IN app.actions %]
                             [% IF group.group %]
                                 <span class="appkit_mega_menu_group">
                                     <p>
