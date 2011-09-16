@@ -45,6 +45,8 @@ in the database.
 sub check_password
 {
     my $self = shift;
+    # FIXME: is our database inconsistent?
+    return 0 unless $self->status eq 'active' || $self->status eq 'enabled';
     my $schema = $self->result_source->schema;
     # see if the schema has been given a method for
     # checking the password

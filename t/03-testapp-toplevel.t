@@ -217,10 +217,99 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     $mech->get("/db/appkit_auth.db");
     is $mech->status, 404, 'Check we get a 404 for our db';
+
     # this would be so cool if it worked.  Unfortunately the mech
     # will only work if the page it's just downloaded has this
     # link contained.
     #$mech->link_status_is(['/admin/access/role/notthere/delrole'], 404, 'Check 404 on role that does not exist');
+
+    # FUCKME SIDEWAYS BUG 1057
+    # disable a user and ensure we cant' then log in as them!
+    $mech->get_ok('/appkit/admin/users/adduser', 'Go to add user page');
+    $mech->submit_form(form_number => 1, fields => {
+        username => 'deleteme',
+        password => 'secure',
+        status => 'enabled',
+        email => 'jj@opusvl.com',
+        name => 'JJ',
+        tel => '3213223',
+    }, button => 'submitbutton');
+
+    my $mech2 = Test::WWW::Mechanize::Catalyst->new();
+    $mech2->get_ok('/');
+    $mech2->content_like(qr|Access Denied|i);
+    $mech2->submit_form(form_number => 1,
+        fields => {
+            username => 'deleteme',
+            password => 'secure',
+            remember => 'remember',
+        },
+    );
+    $mech2->content_like(qr|Welcome.*JJ|);
+    $mech2->get_ok( '/logout', "Can logout");
+    $mech2->content_like(qr|Access Denied|i);
+
+    # now disable the user
+    $mech->follow_link_ok({ text_regex => qr|edit|i });
+    $mech->submit_form(form_number => 1, fields => {
+        username => 'deleteme',
+        status => 'disabled',
+        email => 'jj@opusvl.com',
+        name => 'JJ',
+        tel => '3213223',
+    }, button => 'submitbutton');
+    $mech->content_like(qr|User updated|i);
+
+    $mech2->submit_form(form_number => 1,
+        fields => {
+            username => 'deleteme',
+            password => 'secure',
+            remember => 'remember',
+        },
+    );
+    $mech2->content_unlike(qr|Welcome.*JJ|);
+    $mech2->content_like(qr|Wrong username or password|i);
+
+    # now 'delete' the user
+    $mech->submit_form(form_number => 1, fields => {
+        username => 'deleteme',
+        status => 'deleted',
+        email => 'jj@opusvl.com',
+        name => 'JJ',
+        tel => '3213223',
+    }, button => 'submitbutton');
+    $mech->content_like(qr|User updated|i);
+
+    $mech2->submit_form(form_number => 1,
+        fields => {
+            username => 'deleteme',
+            password => 'secure',
+            remember => 'remember',
+        },
+    );
+    $mech2->content_unlike(qr|Welcome.*JJ|);
+    $mech2->content_like(qr|Wrong username or password|i);
+
+    # now activate the user
+    $mech->submit_form(form_number => 1, fields => {
+        username => 'deleteme',
+        status => 'enabled',
+        email => 'jj@opusvl.com',
+        name => 'JJ',
+        tel => '3213223',
+    }, button => 'submitbutton');
+    $mech->content_like(qr|User updated|i);
+
+    $mech2->submit_form(form_number => 1,
+        fields => {
+            username => 'deleteme',
+            password => 'secure',
+            remember => 'remember',
+        },
+    );
+    $mech2->content_like(qr|Welcome.*JJ|);
+    $mech2->content_unlike(qr|Wrong username or password|i);
+    $mech2->content_unlike(qr|Access Denied|i);
 
     ## NEED TO ADD MANY MORE TESTS!!... think about all things that could and could not happen with the TestApp..
     # .. things I can think of now:
