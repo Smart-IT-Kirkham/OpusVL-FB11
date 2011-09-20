@@ -15,7 +15,9 @@
             <li id="help_link">
                 [% path = c.action.private_path %]
                 [% path = path.replace('^\/', '') %]
-                [% path = path.replace('/', c.config.help_link_separator) %]
+                [% IF c.config.help_link_separator %]
+                    [% path = path.replace('/', c.config.help_link_separator) %]
+                [% END %]
                 <a href="[% c.config.help_link_base_url %][% path %]"[% IF c.config.help_link_target %] target="[% c.config.help_link_target %]"[% END %]>[% c.config.help_link_text || 'Help' %]</a>
             </li>
         [% END %]
