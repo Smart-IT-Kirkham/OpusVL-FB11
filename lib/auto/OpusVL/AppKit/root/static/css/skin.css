@@ -1,3 +1,5 @@
+/* @override http://localhost:3030/static/css/skin.css */
+
 /* @override http://localhost:3210/static/css/skin.css */
 
 /* @override http://localhost:3000/static/css/skin.css */
@@ -206,6 +208,12 @@ div#breadcrumbs a:hover {
 	background: url(../images/icons/settings-med.png) no-repeat 1px 3px;
 	padding-left: 27px;
 }
+
+#help_link a {
+	background: url(../images/icons/help-med.png) no-repeat 1px 5px;
+	padding-left: 19px;
+}
+
 /* @end */
 
 div#user_nav a {
