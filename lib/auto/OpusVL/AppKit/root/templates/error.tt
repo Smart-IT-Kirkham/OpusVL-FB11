@@ -8,4 +8,4 @@ support tracker.
 </p>
 
 <p><strong>Error details:</strong></p>
-<code>[% finalize_error %]</code>
+<code>[% finalize_error | none %]</code>
