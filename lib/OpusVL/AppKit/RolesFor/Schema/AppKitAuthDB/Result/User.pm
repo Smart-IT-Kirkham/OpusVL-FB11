@@ -246,7 +246,7 @@ sub can_modify_user
     my ($self, $username) = @_;
     my $schema = $self->result_source->schema;
     my $other_user = $schema->resultset('User')->find({ username => $username});
-    die 'Unable to find user' unless $other_user;
+    die "Unable to find user '$username'" unless $other_user;
     my @roles = $other_user->roles->all;
     my @allowed = $self->roles_modifiable->all;
     my %allowed_hash = map { $_->role => 1 } @allowed;
