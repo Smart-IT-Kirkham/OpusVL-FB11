@@ -1,12 +1,12 @@
 tags
 META.yml
 Makefile
-pm_to_blib
 blib
 inc
 *.swp
-/pm_to_blib
-/MANIFEST.bak
 .DS_Store
 
+/MANIFEST.bak
 OpusVL-AppKit-*.tar.gz
+/pm_to_blib
+MYMETA.yml
