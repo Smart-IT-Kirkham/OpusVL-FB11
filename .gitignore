@@ -9,3 +9,4 @@ inc
 /MANIFEST.bak
 OpusVL-AppKit-*.tar.gz
 /pm_to_blib
+MYMETA.yml
