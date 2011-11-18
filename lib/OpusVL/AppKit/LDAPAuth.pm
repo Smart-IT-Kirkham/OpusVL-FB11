@@ -29,11 +29,15 @@ sub check_password
 {
     my ($self, $username, $password) = @_;
 
-    # return 0 or 1
-    my $user = sprintf "%s=%s,%s", $self->user_field, escape_dn_value($username), $self->user_base_dn;
-    my $mesg = $self->server->bind($user, password => $password);
-    return 0 if($mesg->is_error);
-    return 1;
+    my $query = sprintf("(%s=%s)", $self->user_field, escape_dn_value($username));
+    my $mesg  = $self->server->search(base => $self->user_base_dn, filter => $query);
+    
+    foreach my $entry ($mesg->entries) {
+        my $login = $self->server->bind($entry->dn, password => $password);
+        return 1 unless $login->is_error;
+    }
+    
+    return 0;
 }
 
 1;
