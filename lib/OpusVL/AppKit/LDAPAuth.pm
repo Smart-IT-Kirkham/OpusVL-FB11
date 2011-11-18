@@ -13,9 +13,7 @@ has ldap_server          => (is => 'rw', isa => 'Str', default => 'ldap');
 has user_base_dn    => (is => 'ro', isa => 'Str', default => 'ou=People,dc=opusvl');
 has user_field      => (is => 'ro', isa => 'Str', default => 'uid');
 
-has server     => (is => 'ro', isa => 'Net::LDAP', lazy_build => 1);
-
-sub _build_server
+sub server
 {
     my $self = shift;
     return Net::LDAP->new($self->ldap_server) or die $@;
