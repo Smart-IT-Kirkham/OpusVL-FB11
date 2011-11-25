@@ -1,5 +1,14 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.39
+
+* Added 'Description' attribute to actions. Use it to add a title attribute to the left-side menu links.
+    sub action_name
+        : Local
+        : Args(0)
+        : NavigationName('Blah')
+        : Description('This will be the title')
+
 1.37
 
 * Implemented enabled/disabled user controls so that users are now disabled
