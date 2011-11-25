@@ -1,5 +1,12 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.40
+
+* Added appkit_js option to load external Javascript sources from the controller
+    __PACKAGE__->config(
+        appkit_js => [qw( /static/js/main.js /static/js/jquery.tooltip.js )],
+    );
+
 1.39
 
 * Added 'Description' attribute to actions. Use it to add a title attribute to the left-side menu links.
