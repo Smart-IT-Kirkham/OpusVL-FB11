@@ -3,7 +3,7 @@
 <div id="application_nav">
     <ul>
         [% FOREACH nav IN actions %]
-            <li><a href="[% c.uri_for(nav.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
+            <li><a [% IF nav.title %] title="[% nav.title %]" [% END %] href="[% c.uri_for(nav.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
         [% END %]
     </ul>
 </div>

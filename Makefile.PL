@@ -9,6 +9,7 @@ requires 'Moose';
 requires 'File::ShareDir';
 requires 'File::Spec';
 requires 'List::Util';
+requires 'Net::LDAP';
 requires 'XML::Simple';
 requires 'Getopt::Compact';
 requires 'Tree::Simple';

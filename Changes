@@ -1,5 +1,43 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.41
+
+* Fixed a problem that caused the appkit to crash sometimes because the feature
+  list got blown away from the cache.
+
+1.40
+
+* Added appkit_js option to load external Javascript sources from the controller
+    __PACKAGE__->config(
+        appkit_js => [qw( /static/js/main.js /static/js/jquery.tooltip.js )],
+    );
+
+1.39
+
+* Added 'Description' attribute to actions. Use it to add a title attribute to the left-side menu links.
+    sub action_name
+        : Local
+        : Args(0)
+        : NavigationName('Blah')
+        : Description('This will be the title')
+
+1.37
+
+* Implemented enabled/disabled user controls so that users are now disabled
+  as suggested in the UI.
+* Help urls added which creates links to an on-line help system (e.g. a CMS or Wiki) 
+  based on the private_path of each page of your application.
+
+    To enable it, add the following settings to your app's config file:
+
+    help_link on
+    help_link_base_url http://172.16.128.132/index.php/
+    help_link_separator "_"
+    help_link_text Help
+    help_link_target "_aquarius_help"
+
+1.36
+
 * Update Mega Menu (application style) to work on Firefox and corrected
   issue with menu option ordering at the same time.  This may require css
   overrides for the individual menus within your applications css.

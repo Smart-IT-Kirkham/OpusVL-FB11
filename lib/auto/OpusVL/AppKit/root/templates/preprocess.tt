@@ -60,6 +60,9 @@
     FOR css IN c.controller.appkit_css;
         header.css.list.push( css );
     END;
+    FOR js IN c.controller.appkit_js;
+        header.js.list.push( js );
+    END;
     IF c.controller.appkit_features.list.grep('htmleditor').size;
         features.appkitfeature_htmleditor = 1;
     END;

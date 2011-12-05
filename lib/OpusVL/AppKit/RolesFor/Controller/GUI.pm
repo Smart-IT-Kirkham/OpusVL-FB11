@@ -173,6 +173,7 @@ before create_action  => sub
                 value       => $args{attributes}{NavigationName}->[0],
                 actionpath  => $args{reverse},
                 actionname  => $args{name},
+                title       => $args{attributes}{Description}->[0],
                 controller  => $self,
                 sort_index  => $order,
             }
