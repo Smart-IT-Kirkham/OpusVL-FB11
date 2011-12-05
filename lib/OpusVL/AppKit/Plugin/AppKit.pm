@@ -234,7 +234,13 @@ sub appkit_features
 {
     # NOTE: this property is setup when the appkit_actiontree is setup.
     my $self = shift;
-    return $self->cache->get('appkit_features');
+    my $features = $self->cache->get('appkit_features');
+    unless($features)
+    {
+        my $tree = $self->appkit_actiontree(1);
+        $features = $self->cache->get('appkit_features');
+    }
+    return $features;
 }
 
 =head2 appkit_actiontree
