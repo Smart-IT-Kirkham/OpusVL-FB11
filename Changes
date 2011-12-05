@@ -1,5 +1,10 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.41
+
+* Fixed a problem that caused the appkit to crash sometimes because the feature
+  list got blown away from the cache.
+
 1.40
 
 * Added appkit_js option to load external Javascript sources from the controller
