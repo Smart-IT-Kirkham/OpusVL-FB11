@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Switched to jQuery 1.7.1 - the motivation for doing this was the warnings
+  Webkit has been producing, complaining that a feature the old version was using 
+  is now deprecated.  More information is here, http://bugs.jquery.com/ticket/10531
+
 1.41
 
 * Fixed a problem that caused the appkit to crash sometimes because the feature
