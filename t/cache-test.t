@@ -15,8 +15,7 @@ sub server
         my ( $parent ) = @_;
 
         note ("Server started on port $port");
-        TestApp->setup_engine('PSGI');
-        my $app = sub { TestApp->run(@_) };
+        my $app = TestApp->psgi_app(@_);
         my $runner = Plack::Runner->new;
         my @args = @ARGV;
         push @args, ('--port', $port);

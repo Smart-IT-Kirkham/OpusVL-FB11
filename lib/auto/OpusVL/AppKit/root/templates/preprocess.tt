@@ -13,7 +13,7 @@
         title       => '',
         favicon     => '',
         css         => [],
-        js          => [ '/static/js/jquery-1.4.2.min.js', '/static/js/jquery-ui-1.8.custom.min.js', '/static/js/appkit.js'],
+        js          => [ '/static/js/jquery-1.7.1.min.js', '/static/js/jquery-ui-1.8.custom.min.js', '/static/js/appkit.js'],
         jssrc       => [],
     };
 
