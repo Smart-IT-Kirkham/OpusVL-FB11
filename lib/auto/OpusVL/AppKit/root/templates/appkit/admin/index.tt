@@ -4,7 +4,6 @@
     <h3>What would you like to change?</h3>
 
     <ul>
-        [% USE Dumper %]
         [% auth_model = 'Model::AppKitAuthDB' %]
         [% auth_config = c.config.$auth_model %]
         [% UNLESS auth_config.traits.match('(?i)LDAP') %]
