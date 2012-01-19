@@ -19,13 +19,10 @@
                         <li id="header_home">
                             <a href="/">Home</a>
                         </li>
-
-                        [% IF c.config.AppKit.customer == 'Eazy Collect' %]
-                            [% SET notifications = c.controller('Modules::Notifications') %]
-                            [% IF notifications && c.can_access(notifications.action_for('feed')) %]
-                                <li>
-                                [% PROCESS modules/notifications/message_icon.tt %]
-                            [% END %]
+                        [% SET notifications = c.controller('Modules::Notifications') %]
+                        [% IF notifications && c.can_access(notifications.action_for('feed')) %]
+                            <li>
+                            [% PROCESS modules/notifications/message_icon.tt %]
                         [% END %]
 
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
