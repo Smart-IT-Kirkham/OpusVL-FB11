@@ -1,3 +1,5 @@
+/* @override http://localhost:3030/static/css/layout.css */
+
 /* @override http://localhost:3210/static/css/layout.css */
 
 /* @override http://localhost:3000/static/css/layout.css */
@@ -386,11 +388,12 @@ form#roles ul {
 }
 
 form#roles li {
-    font-family: courier;
+	font-size: .9em;
 }
 
 form#roles li label{
     color: red;
+    width: 330px;
 }
 
 form#roles li.allowed label{

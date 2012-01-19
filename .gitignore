@@ -7,6 +7,7 @@ inc
 .DS_Store
 
 /MANIFEST.bak
+/MANIFEST
 OpusVL-AppKit-*.tar.gz
 /pm_to_blib
-MYMETA.yml
+MYMETA.*

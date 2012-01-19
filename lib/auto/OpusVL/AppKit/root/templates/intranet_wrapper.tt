@@ -19,6 +19,12 @@
                         <li id="header_home">
                             <a href="/">Home</a>
                         </li>
+                        [% SET notifications = c.controller('Modules::Notifications') %]
+                        [% IF notifications && c.can_access(notifications.action_for('feed')) %]
+                            <li>
+                            [% PROCESS modules/notifications/message_icon.tt %]
+                        [% END %]
+
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
                             <li id="header_search">
                                 <a href="#" id="appKitSearch_anchor">Search</a>
