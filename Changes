@@ -1,5 +1,9 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.47
+
+* Fixed minor alloy template problem with the global search.
+
 1.45
 
 * Added a small change to the intranet_wrapper.tt that checks for a customer using the Catalyst config file.
