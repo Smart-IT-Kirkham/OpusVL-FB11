@@ -14,7 +14,11 @@ IF features.appkitfeature_stdcss;
     header.css.list.push( "/static/css/vader/jquery-ui-1.8.custom.css");
     SET notifications = c.controller('Modules::Notifications');
     IF notifications && c.can_access(notifications.action_for('feed'));
-    header.css.list.push( "/static/css/notification.css");
+        IF c.config.application_style;
+            header.css.list.push( "/static/css/notification.css");
+        ELSE;
+            header.css.list.push( "/static/css/notification_intranet.css" );
+        END;
     END;
 END;
 

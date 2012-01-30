@@ -1,5 +1,14 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+1.47
+
+* Fixed minor alloy template problem with the global search.
+
+1.45
+
+* Added a small change to the intranet_wrapper.tt that checks for a customer using the Catalyst config file.
+  This was needed for Eazy Collect to include the Notifications in the top navigation.
+
 1.42
 
 * Switched to jQuery 1.7.1 - the motivation for doing this was the warnings
