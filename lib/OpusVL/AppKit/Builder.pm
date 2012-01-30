@@ -262,38 +262,4 @@ override _build_config => sub
     return $config;
 };
 
-# FUDGE: see Bug 1285 for more details.
-override inherited_path_to => sub 
-{
-    my $self = shift;
-
-    # XXX You have to have built the class
-    my $meta = Moose::Util::find_meta($self->appname);
-
-    my @inheritance;
-    foreach my $class ($meta->linearized_isa) {
-        next if ! $class->isa( 'Catalyst' );
-        next if $class eq 'Catalyst';
-
-        push @inheritance, $class;
-    }
-
-    my @paths = @_;
-    return map {
-        my $m = $_;
-        $m =~ s/::/\//g;
-        $m .= '.pm';
-        my $f = Path::Class::File->new($INC{$m})->parent;
-        while ($f) {
-            if (-f $f->file('Makefile.PL') ) {
-                $f = $f->subdir(@paths)->stringify;
-                last;
-            }
-            last if $f->stringify eq $f->parent->stringify;
-            $f = $f->parent;
-        }
-        $f;
-    } @inheritance;
-};
-
 1;
