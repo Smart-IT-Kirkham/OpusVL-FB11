@@ -92,6 +92,7 @@ lib/auto/OpusVL/AppKit/root/static/images/tablesorter/bg.gif
 lib/auto/OpusVL/AppKit/root/static/images/tablesorter/desc.gif
 lib/auto/OpusVL/AppKit/root/static/js/appkit.js
 lib/auto/OpusVL/AppKit/root/static/js/jquery-1.4.2.min.js
+lib/auto/OpusVL/AppKit/root/static/js/jquery-1.7.1.min.js
 lib/auto/OpusVL/AppKit/root/static/js/jquery-ui-1.8.custom.min.js
 lib/auto/OpusVL/AppKit/root/static/js/jquery.tablesorter.min.js
 lib/auto/OpusVL/AppKit/root/static/js/wymeditor/iframe/default/lbl-blockquote.png
