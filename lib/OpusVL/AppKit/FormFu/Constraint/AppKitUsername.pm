@@ -1,6 +1,18 @@
 
 package OpusVL::AppKit::FormFu::Constraint::AppKitUsername;
 
+=head1 NAME
+
+OpusVL::AppKit::FormFu::Constraint::AppKitUsername - constraint to prevent duplicate usernames.
+
+=head1 DESCRIPTION
+
+Ensures that duplicate user names aren't created.
+
+=head1 METHODS
+
+=cut
+
 use strict;
 use base 'HTML::FormFu::Constraint';
 
