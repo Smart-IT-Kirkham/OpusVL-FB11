@@ -780,6 +780,8 @@ sub detach_to_appkit_access_denied
     my $access_denied_action_path = $c->config->{'appkit_access_denied'};
     $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;
     my $message = "Access denied - Please login with an account that has permissions to access the requested area";
+    $message = $c->config->{AppKit}->{login_message}
+        if exists $c->config->{AppKit}->{login_message};
     $c->controller('Login')->login_redirect($c, $message);
     $c->detach();
 }
