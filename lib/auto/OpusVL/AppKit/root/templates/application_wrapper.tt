@@ -43,6 +43,8 @@
             </div>
             <div id="body">
                 [% PROCESS user_header.tt %]
+                
+                <div class="save_indicator">You have unsaved changes</div>
 
                 <div id="application">
                     [% IF before_content %]

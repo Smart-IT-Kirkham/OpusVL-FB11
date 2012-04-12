@@ -460,17 +460,31 @@ sub can_access
         $c->log->debug("can_access called with a non-string action path: $action_path .. converting..") if $c->debug;
         $action_path    = $action_path->reverse;
     }
-    return 1 if $c->is_unrestricted_action_name( $action_path );
+    if ($c->is_unrestricted_action_name( $action_path ))
+    {
+        $c->log->debug("Unrestricted action name: $action_path") if $c->debug;
+        return 1 
+    }
 
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
-    return 1 if ( $action_path eq $c->config->{'appkit_access_denied'} );
+    if ( $action_path eq $c->config->{'appkit_access_denied'} )
+    {
+        $c->log->debug("Access denied path: $action_path") if $c->debug;
+        return 1 
+    }
 
     # find this actions node in the tree ...
     my $action_node = $c->_find_node_in_appkit_actiontree( $action_path );
     if ( ! $action_node )
     {
-        $c->log->debug("Could not find ::Node in tree for: $action_path ") if $c->debug;
-        return 1;
+        # NOTE: this should fix cache issues.
+        $c->appkit_actiontree(1);
+        $action_node = $c->_find_node_in_appkit_actiontree( $action_path );
+        unless($action_node) 
+        {
+            $c->log->warn("Could not find ::Node in tree for: $action_path ");
+            return 0;
+        }
     }
 
     # Have we been told to "NOT APPLY ACCESS CONTROL" ?? ...
@@ -487,6 +501,7 @@ sub can_access
         {
             foreach my $allowed_path ( @{ $c->config->{'appkit_can_access_actionpaths'} } )
             {
+                $c->log->debug("Hit an action path that's automatically allowed - $allowed_path") if $c->debug;
                 return 1 if $action_path eq $allowed_path;
             }
         }
@@ -780,6 +795,8 @@ sub detach_to_appkit_access_denied
     my $access_denied_action_path = $c->config->{'appkit_access_denied'};
     $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;
     my $message = "Access denied - Please login with an account that has permissions to access the requested area";
+    $message = $c->config->{AppKit}->{login_message}
+        if exists $c->config->{AppKit}->{login_message};
     $c->controller('Login')->login_redirect($c, $message);
     $c->detach();
 }

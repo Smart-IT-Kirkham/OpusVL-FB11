@@ -1,5 +1,7 @@
 /* @override http://localhost:3030/static/css/layout.css */
 
+/* @override http://localhost:3030/static/css/layout.css */
+
 /* @override http://localhost:3210/static/css/layout.css */
 
 /* @override http://localhost:3000/static/css/layout.css */
@@ -404,3 +406,22 @@ form#roles li.app span {
     color: blue;
 }
 
+.save_indicator
+{
+    display: none;
+	position: absolute;
+	text-align: right;
+	right: 65px;
+	top: 85px;
+	font-size: 0.8em;
+	color: #e11f00;
+	background-color: white;
+	padding: 7px;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.save_indicator.unsaved
+{
+    display: block;
+}

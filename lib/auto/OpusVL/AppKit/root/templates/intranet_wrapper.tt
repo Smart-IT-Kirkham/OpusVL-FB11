@@ -39,6 +39,8 @@
             <div id="body">
                 [% PROCESS user_header.tt %]
 
+                <div class="save_indicator">You have unsaved changes</div>
+
                 <div id="application">
                     [% PROCESS intranet_left_menu.tt %]
 
@@ -63,7 +65,18 @@
                     </div>
                     [% IF version %]
                     <div class="version">
+                        [% IF c.config.AppKit.override_footer %]
+                            [% SET str_footer = c.config.AppKit.override_footer %]
+                            [% IF str_footer.search('AK_') %]
+                                [% USE date %]
+                                [% str_footer = str_footer.replace('AK_VERSION', version) %]
+                                [% str_footer = str_footer.replace('AK_YEAR', date.format(now(), "%Y")) %]
+                                [% str_footer = str_footer.replace('AK_COPY', '&copy;') %]
+                            [% END %]
+                        [% str_footer | none %]
+                        [% ELSE %]
                         This is [% c.config.name %] [% version | html %]
+                        [% END %]
                     </div>
                     [% END %]
                 </div>

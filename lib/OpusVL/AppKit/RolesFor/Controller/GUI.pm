@@ -166,6 +166,19 @@ before create_action  => sub
         {
             $order = $self->_default_order;
         }
+
+        my $hide = {};
+        if ($args{attributes}{Hide}) {
+            my ($key, $value) = split(':', $args{attributes}{Hide}->[0]);
+            if ($key && $value) {
+                $hide = {
+                    hidden => 1,
+                    as     => $key,
+                    with   => $value
+                };
+            }
+        }
+
         push 
         ( 
             @$array,
@@ -176,11 +189,14 @@ before create_action  => sub
                 title       => $args{attributes}{Description}->[0],
                 controller  => $self,
                 sort_index  => $order,
+                hide_as     => $hide->{as}||0,
+                hide_with   => $hide->{with}||0,
             }
         );
+
         $self->navigation_actions( $array );
     }
-
+    
     if ( defined $args{attributes}{PortletName} )
     {
         # This action has been identified as a Portlet action...
