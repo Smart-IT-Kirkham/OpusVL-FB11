@@ -3,10 +3,9 @@
 
     <div>
 
-        <div>
+        <div class="two_column">
 
-            <div style="width: 250px; float:left; clear:left;">
-
+            <div class="left_column">
                 <fieldset>
                     <legend>
                         Available Users
@@ -44,7 +43,7 @@
 
             </div>
 
-            <div style="float:right; clear:right;">
+            <div class="right_column">
 
                 [% IF c.stash.thisuser %]
 
