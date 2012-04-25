@@ -41,7 +41,7 @@
 [% END %]
 <div id="breadcrumbs">
     [% IF breadcrumbs %]
-        <a href="/">Home</a> &gt;
+        <a href="[% c.uri_for(c.controller('Root').action_for('index')) %]">Home</a> &gt;
         [% FOREACH crumb IN breadcrumbs %]
             [% IF loop.last %]
                 [% crumb.name | html %]
