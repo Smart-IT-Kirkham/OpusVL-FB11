@@ -10,7 +10,11 @@
                     <li>
                         <a href="[% result.url %]">[% result.name.replace(query_regex,'<strong>$1</strong>') | none %]</a>
                         <div class="search_result_description">
-                            [% result.description.replace(query_regex,'<strong>$1</strong>') or "No description" | none %]
+                            [% IF result.description %]
+                                [% result.description.replace(query_regex,'<strong>$1</strong>') | none %]
+                            [% ELSE %]
+                                No description
+                            [% END %]
                         </div>
                     </li>
                 [% END %]
