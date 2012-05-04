@@ -12,12 +12,12 @@
         <div id="page">
             <div id="header">
                 <div id="header_logo">
-                    <a href="/"></a>
+                    <a href="[% c.uri_for(c.controller('Root').action_for('index')) %]"></a>
                 </div>
                 <div id="header_nav">
                     <ul>
                         <li id="header_home">
-                            <a href="/">Home</a>
+                            <a href="[% c.uri_for(c.controller('Root').action_for('index')) %]">Home</a>
                         </li>
                         [% SET notifications = c.controller('Modules::Notifications') %]
                         [% IF notifications && c.can_access(notifications.action_for('feed')) %]
