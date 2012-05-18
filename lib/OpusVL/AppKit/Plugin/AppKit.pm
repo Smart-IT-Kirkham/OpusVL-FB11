@@ -792,6 +792,14 @@ sub detach_to_appkit_access_denied
 {
     my ( $c, $denied_access_to_action ) = @_;
 
+    if($c->action && $c->action->isa('Catalyst::Action::REST'))
+    {
+        $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - part of REST controller so sending plain 403.") if $c->debug;
+        $c->response->status(403);
+        $c->stash->{rest} = { message => 'Access Denied' };
+        $c->detach;
+    }
+
     my $access_denied_action_path = $c->config->{'appkit_access_denied'};
     $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;
     my $message = "Access denied - Please login with an account that has permissions to access the requested area";
