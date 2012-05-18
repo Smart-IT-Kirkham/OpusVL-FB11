@@ -10,6 +10,33 @@
     </head>
     <body>
         <div id="page">
+            [% IF c.config.AppKit.ie_compatability %]
+            <!--[if lte IE [% c.config.AppKit.ie_compatability %]]>
+                <style type="text/css">
+                    #browser-incompat {
+                        display:block;
+                        position:absolute;
+                        top:0;
+                        left:0;
+                        width:400px;
+                        background-color: #ffffcc;
+                        border: 1px solid #000;
+                        padding: 10px;
+                        z-index:9999;
+                        font-size:12px;
+                    }
+                    #browser-incompat a {
+                        font-weight:bold !important;
+                        color: #003962 !important;
+                        font-size: 12px !important;
+                    }
+                </style>
+                <div id="browser-incompat">
+                    <p>You are using an unsupported browser. To enjoy full use of this application, please upgrade to <a href="https://www.google.com/chrome">Google Chrome</a>, <a href="http://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a>, or <a href="http://windows.microsoft.com/en-US/internet-explorer/downloads/ie">Microsoft Internet Explorer</a> (version [% c.config.AppKit.ie_compatability + 1 %] or higher).</p>
+                    <p><small>Click anywhere in this box to close the message</small></p>
+                </div>
+            <![endif]-->
+            [% END %]
             <div id="header">
                 <div id="header_logo">
                     <a href="[% c.uri_for(c.controller('Root').action_for('index')) %]"></a>
@@ -92,6 +119,13 @@
         <script language="JavaScript">
             explorePerl.addEvents('explore_anchor', 'explorePerl');  
         </script>   -->
+        [% IF c.config.AppKit.ie_compatability %]
+        <script type="text/javascript">
+            $('#browser-incompat').click(function() {
+                $(this).fadeOut('fast');
+            });
+        </script>
+        [% END %]
     </body>
 </html>
 
