@@ -85,6 +85,8 @@ my %rules = (
     'extensiona/expansionaa/startchain',    => ['Administrator'],
     'extensiona/expansionaa/midchain',      => ['Administrator'],
     'extensiona/expansionaa/endchain',      => ['Administrator'],
+    'rest/vehicle',                         => ['Administrator'],
+    'rest/vehicle_GET',                     => ['Administrator'],
     'test/access_user_or_admin',            => ['Normal User'],
 );
 

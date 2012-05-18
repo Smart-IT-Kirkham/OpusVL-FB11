@@ -62,6 +62,7 @@ requires 'Catalyst::Model::DBIC::Schema';
 
 # Catalyst controllers
 requires 'Catalyst::Controller::HTML::FormFu';
+requires 'Catalyst::Action::REST';
 
 # CatalystX components
 requires 'CatalystX::AppBuilder';
@@ -69,6 +70,7 @@ requires 'CatalystX::VirtualComponents';
 requires 'CatalystX::SimpleLogin';
 
 requires 'Test::DBIx::Class';
+requires 'Test::Most';
 
 catalyst;
 
