@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Updated the authentication to not trip over REST controllers.
+
 1.47
 
 * Fixed minor alloy template problem with the global search.
