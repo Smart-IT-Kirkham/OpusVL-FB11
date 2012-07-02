@@ -35,7 +35,7 @@
         [% c.config.application_name %]
     </div>
 [% ELSE %]
-    <div class="appname" id="appname_[% c.controller.appkit_name | replace('\s+','_') | lower %]">
+    <div class="appname" id="appname_[% c.controller.appkit_name | replace('\s+','_') | lower | html %]">
         [% c.controller.appkit_name %]
     </div>
 [% END %]

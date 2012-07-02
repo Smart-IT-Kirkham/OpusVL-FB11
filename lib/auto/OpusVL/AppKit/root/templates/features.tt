@@ -10,7 +10,6 @@ IF features.appkitfeature_stdcss;
     header.css.list.push( "/static/css/layout.css");
     header.css.list.push( "/static/css/skin.css");
     header.css.list.push( "/static/css/appnav.css");
-    header.css.list.push( "/static/css/overrides.css");
     header.css.list.push( "/static/css/vader/jquery-ui-1.8.custom.css");
     SET notifications = c.controller('Modules::Notifications');
     IF notifications && c.can_access(notifications.action_for('feed'));
@@ -20,6 +19,7 @@ IF features.appkitfeature_stdcss;
             header.css.list.push( "/static/css/notification_intranet.css" );
         END;
     END;
+    header.css.list.push( "/static/css/overrides.css");
 END;
 
 IF features.appkitfeature_htmleditor;

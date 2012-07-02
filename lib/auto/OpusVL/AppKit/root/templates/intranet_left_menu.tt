@@ -4,7 +4,7 @@
     <ul>
         [% FOREACH nav IN actions %]
             [% IF nav.hide_as %]
-                [% stash_item = nav.hide_with | trim %]
+                [% stash_item = nav.hide_with | trim | html %]
                 [% UNLESS ! c.stash.$stash_item %]
                     <li><a [% IF nav.title %] title="[% nav.title %]" [% END %] href="[% c.uri_for(nav.controller.action_for(nav.actionname)) %]"[% IF (section == nav.value) %] class="active"[% END %]>[% nav.value %]</a>
                 [% END %]
