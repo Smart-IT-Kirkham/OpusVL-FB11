@@ -1,3 +1,7 @@
+/* @override http://localhost:3000/static/css/skin.css */
+
+/* @override http://localhost:3000/static/css/skin.css */
+
 /* @override http://localhost:3030/static/css/skin.css */
 
 /* @override http://localhost:3210/static/css/skin.css */
@@ -303,6 +307,13 @@ fieldset.radiogroup label {
 	padding-left: 0;
 }
 
+div.multi {
+	font-size: .8em;
+	padding-top: 3px;
+	padding-bottom: 4px;
+	padding-left: 7px;
+}
+
 div.label {
 	font-size: .8em;
 	padding-top: 3px;
@@ -392,6 +403,10 @@ textarea {
 	height: 100px;
 	border-style: ridge;
 	border-width: 2px;
+}
+
+.ui-widget textarea {
+	font-size: .9em !important;
 }
 
 input.inline_submit {
