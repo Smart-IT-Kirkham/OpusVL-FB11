@@ -425,3 +425,18 @@ form#roles li.app span {
 {
     display: block;
 }
+
+.multi.label label
+{
+    padding-left: 0px;
+}
+
+.multi.label label
+{
+    padding-left: 0px;
+}
+
+.multi.label span
+{
+    padding-left: 1px;
+}
