@@ -24,6 +24,8 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     # Request index page... not logged in so should redirect..
     $mech->get_ok("/");
+    my $cookie = $mech->cookie_jar->{COOKIES}->{'localhost.local'}->{'/'}->{'testapp_session'};
+
     is( $mech->ct, "text/html");
     $mech->content_contains("Please login", "Redirect to login page");
     $mech->content_contains('OpusVL::AppKit', 'App name and logo should be present');
@@ -46,6 +48,8 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
+    my $logged_in_cookie = $mech->cookie_jar->{COOKIES}->{'localhost.local'}->{'/'}->{'testapp_session'};
+    isnt $logged_in_cookie, $cookie;
     # can we see the admin..
     $mech->get_ok( '/appkit/admin', "Can see the admin index");
     $mech->content_contains("Settings", "Showing admin page");
