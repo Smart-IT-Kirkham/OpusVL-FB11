@@ -488,9 +488,9 @@ sub can_access
     }
 
     # Have we been told to "NOT APPLY ACCESS CONTROL" ?? ...
-    if ( exists $action_node->action_attrs->{AppKitAllAccess} )
+    if ( exists $action_node->action_attrs->{AppKitAllAccess} || exists $action_node->action_attrs->{Public} )
     {
-        $c->log->debug("The following action has AppKitAllAccess for $action_path . No access control being applied ") if $c->debug;
+        $c->log->debug("The following action has AppKitAllAccess / Public for $action_path . No access control being applied ") if $c->debug;
         return 1;
     }
 
