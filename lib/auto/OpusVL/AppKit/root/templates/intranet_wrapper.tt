@@ -127,22 +127,6 @@
             });
         </script>
         [% END %]
-    <script language="javascript">
-        $(function() {
-            var notifications = /notifications/;
-            $('.ajax_loading').ajaxSend(function(e, j, s) {
-                if(!s.url.match(notifications)) {
-                    console.log(s.url);
-                    $(this).show();
-                }
-            }).ajaxComplete(function(e, j, s) {
-                if(!s.url.match(notifications)) {
-                    console.log(s.url);
-                    $(this).hide();
-                }
-            }).hide();
-        });
-    </script>
     </body>
 </html>
 
