@@ -1,5 +1,6 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added an ajax ongoing indicator
 * Create a new session id when we login.
 * Updated the authentication to not trip over REST controllers.
 
