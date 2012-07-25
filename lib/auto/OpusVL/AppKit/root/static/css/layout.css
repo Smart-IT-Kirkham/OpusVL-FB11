@@ -425,3 +425,23 @@ form#roles li.app span {
 {
     display: block;
 }
+
+.ajax_indicator
+{
+    display: none;
+	position: absolute;
+	text-align: right;
+	right: 65px;
+	top: 85px;
+	font-size: 0.8em;
+	background-color: white;
+	padding: 7px;
+	border-style: solid;
+	border-width: 1px;
+}
+
+.ajax_indicator.ajax_loading
+{
+    display: block;
+}
+
