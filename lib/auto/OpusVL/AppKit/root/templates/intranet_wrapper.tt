@@ -66,6 +66,7 @@
             <div id="body">
                 [% PROCESS user_header.tt %]
 
+                <div class="ajax_indicator">Loading...</div>
                 <div class="save_indicator">You have unsaved changes</div>
 
                 <div id="application">
