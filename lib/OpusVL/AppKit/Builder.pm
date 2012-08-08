@@ -187,8 +187,8 @@ override _build_config => sub
     $config->{'custom-error-message'}->{'view-name'} = 'AppKitTT';
 
     # Configure session handling..
-    $config->{'session'} ||= {};
-    $config->{'session'}->{flash_to_stash} = 1;
+    $config->{'Plugin::Session'} ||= {};
+    $config->{'Plugin::Session'}->{flash_to_stash} = 1;
 
     $config->{'Plugin::Authentication'} =
     {
