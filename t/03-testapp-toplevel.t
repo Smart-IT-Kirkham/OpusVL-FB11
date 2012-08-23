@@ -249,7 +249,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok('/appkit/admin/users/adduser', 'Go to add user page');
     $mech->submit_form(form_number => 1, fields => {
         username => 'deleteme',
-        password => 'secure',
+        password => 'secure01',
         status => 'enabled',
         email => 'jj@opusvl.com',
         name => 'JJ',
@@ -262,7 +262,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );
@@ -284,7 +284,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );
@@ -304,7 +304,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );
@@ -324,7 +324,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );

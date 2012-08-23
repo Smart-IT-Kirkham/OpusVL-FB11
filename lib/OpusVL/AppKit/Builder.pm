@@ -252,6 +252,12 @@ override _build_config => sub
     $config->{'Plugin::Cache'}{backend} = {
         class => 'Cache::FastMmap',
     };
+
+    # Password constraint config
+    $config->{'AppKit'}->{'password_min_characters'} = 8;
+    $config->{'AppKit'}->{'password_force_numerics'} = 0;
+    $config->{'AppKit'}->{'password_force_symbols'}  = 0;
+    
     # NOTE: if you want to use Memcahced in your app add this to your builder,
     #
     # $config->{'Plugin::Cache'}{backend} = {
