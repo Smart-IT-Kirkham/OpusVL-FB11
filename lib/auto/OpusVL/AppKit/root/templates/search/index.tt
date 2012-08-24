@@ -1,3 +1,4 @@
+[% USE HTML %]
 <h1>Search results</h1>
 <div class="content_block">
     [% IF (search_results.size > 0) %]
@@ -8,10 +9,10 @@
             <ul class="search_results">
                 [% FOREACH result IN resultset.results %]
                     <li>
-                        <a href="[% result.url %]">[% result.name.replace(query_regex,'<strong>$1</strong>') | none %]</a>
+                        <a href="[% result.url %]">[% HTML.escape(result.name).replace(query_regex,'<strong>$1</strong>') | none %]</a>
                         <div class="search_result_description">
                             [% IF result.description %]
-                                [% result.description.replace(query_regex,'<strong>$1</strong>') | none %]
+                                [% HTML.escape(result.description).replace(query_regex,'<strong>$1</strong>') | none %]
                             [% ELSE %]
                                 No description
                             [% END %]
