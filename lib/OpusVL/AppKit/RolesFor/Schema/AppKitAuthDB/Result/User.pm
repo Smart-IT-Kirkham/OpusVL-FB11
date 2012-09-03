@@ -171,6 +171,14 @@ sub set_param_by_name
     return 1; 
 }
 
+sub get_parameter_value_by_name
+{
+    my $self = shift;
+    my $val = $self->get_parameter_by_name(@_);
+    return unless $val;
+    return $val->value;
+}
+
 sub get_parameter_by_name
 {
     my $self = shift;
