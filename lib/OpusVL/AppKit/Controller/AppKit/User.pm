@@ -24,8 +24,10 @@ sub change_password
     my ($self, $c ) = @_;
 
     if ( $c->stash->{form}->submitted_and_valid )
-    {   
-        $c->user->update( { password => $c->req->params->{'password'} } );
+    {
+        my $password = $c->req->params->{'password'};
+
+        $c->user->update( { password => $password } );
         $c->stash->{hide_form} = 1;
     }
 }

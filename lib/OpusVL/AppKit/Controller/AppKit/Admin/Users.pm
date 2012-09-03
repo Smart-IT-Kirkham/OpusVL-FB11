@@ -81,10 +81,12 @@ sub adduser
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
+        my $password = $ignore_password ? mkpasswd : $form->param_value('password');
+        
         # FIXME: is this a security hole?
         # should we be recording the fact we're not using the password field
         # really?
-        my $password = $ignore_password ? mkpasswd : $form->param_value('password');
+        
         my $newuser = $c->model('AppKitAuthDB::User')->new_result( { password => $password } );
 
         $c->stash->{form}->model->update( $newuser );
@@ -196,7 +198,9 @@ sub reset_password_form
     my $form = $c->stash->{form};
     if ( $form->submitted_and_valid )
     {
-        $user->update( { password => $form->param_value('newpassword') } );
+        my $password = $form->param_value('newpassword');
+
+        $user->update( { password => $password } );
         $c->flash->{status_msg} = 'Reset password';
         $c->response->redirect( $prev_url );
     }

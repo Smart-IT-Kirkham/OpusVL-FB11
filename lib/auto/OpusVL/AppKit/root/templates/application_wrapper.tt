@@ -44,6 +44,7 @@
             <div id="body">
                 [% PROCESS user_header.tt %]
                 
+                <div class="ajax_indicator">Loading...</div>
                 <div class="save_indicator">You have unsaved changes</div>
 
                 <div id="application">
@@ -76,10 +77,6 @@
 
             </div>
         </div>
-   <!--     <script language="JavaScript" type="text/javascript" src="js/appkit.js"></script>
-        <script language="JavaScript">
-            explorePerl.addEvents('explore_anchor', 'explorePerl');  
-        </script>   -->
     </body>
 </html>
 

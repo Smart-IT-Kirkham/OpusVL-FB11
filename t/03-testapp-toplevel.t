@@ -9,7 +9,7 @@
 
 use strict;
 use warnings;
-use Test::More;
+use Test::Most;
 
 
 use FindBin qw($Bin);
@@ -24,9 +24,16 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     # Request index page... not logged in so should redirect..
     $mech->get_ok("/");
+    my $cookie = $mech->cookie_jar->{COOKIES}->{'localhost.local'}->{'/'}->{'testapp_session'};
+
     is( $mech->ct, "text/html");
     $mech->content_contains("Please login", "Redirect to login page");
     $mech->content_contains('OpusVL::AppKit', 'App name and logo should be present');
+    $mech->add_header("Content-Type" => "application/json");
+    $mech->get("/rest/no_permission/30");
+    is $mech->status, 403;
+    is $mech->content, '{"message":"Access Denied"}';
+    $mech->delete_header("Content-Type");
 
     # Request public page... not logged but should allow access.
     $mech->get_ok("/test/publicaccess");
@@ -41,6 +48,8 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
+    my $logged_in_cookie = $mech->cookie_jar->{COOKIES}->{'localhost.local'}->{'/'}->{'testapp_session'};
+    isnt $logged_in_cookie, $cookie;
     # can we see the admin..
     $mech->get_ok( '/appkit/admin', "Can see the admin index");
     $mech->content_contains("Settings", "Showing admin page");
@@ -101,6 +110,18 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok('/user/3/show', 'Look at user details');
     $mech->post_ok('/user/3/show', { user_role => 1, savebutton => 'Save' }, 'Add role to user'); 
     $mech->content_contains('User Roles updated', 'Role should have been updated');
+
+    $mech->add_header("Content-Type" => "application/json");
+    $mech->get("/rest/no_permission/30");
+    is $mech->status, 403;
+    is $mech->content, '{"message":"Access Denied"}';
+    $mech->get_ok("/rest/vehicle/30");
+    my $r = $mech->content;
+    is $r, '{"source_code":"Test","stock_id":"30"}';
+    $mech->get("/rest/vehicle/1");
+    is $mech->status, 404;
+    is $mech->content, '{"error":"Vehicle not found"}';
+    $mech->delete_header("Content-Type");
 
     $mech->get_ok('/extensiona', 'Go to extension page');
     $mech->content_like(qr'Expanded Chained Action'i, 'Check we have menu along left');
@@ -228,7 +249,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok('/appkit/admin/users/adduser', 'Go to add user page');
     $mech->submit_form(form_number => 1, fields => {
         username => 'deleteme',
-        password => 'secure',
+        password => 'secure01',
         status => 'enabled',
         email => 'jj@opusvl.com',
         name => 'JJ',
@@ -241,7 +262,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );
@@ -263,7 +284,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );
@@ -283,7 +304,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );
@@ -303,7 +324,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->submit_form(form_number => 1,
         fields => {
             username => 'deleteme',
-            password => 'secure',
+            password => 'secure01',
             remember => 'remember',
         },
     );

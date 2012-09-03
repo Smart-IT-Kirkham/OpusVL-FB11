@@ -171,6 +171,15 @@ sub set_param_by_name
     return 1; 
 }
 
+sub get_parameter_by_name
+{
+    my $self = shift;
+    my $name = shift;
+
+    my $param = $self->users_parameters->find({ 'parameter.parameter' => $name }, { join => [ 'parameter' ] });
+    return $param;
+}
+
 =head2 delete_param_by_name
 
     Deltes a users parameter by the parameter name.
@@ -185,6 +194,7 @@ sub delete_param_by_name
     my $self  = shift;
     my ( $param_name ) = @_;
 
+    # FIXME: this code blows, use get_parameter_by_name instead.
     # find the param..
     my $param = $self->result_source->schema->resultset('Parameter')->find( { parameter => $param_name } );
 

@@ -488,9 +488,9 @@ sub can_access
     }
 
     # Have we been told to "NOT APPLY ACCESS CONTROL" ?? ...
-    if ( exists $action_node->action_attrs->{AppKitAllAccess} )
+    if ( exists $action_node->action_attrs->{AppKitAllAccess} || exists $action_node->action_attrs->{Public} )
     {
-        $c->log->debug("The following action has AppKitAllAccess for $action_path . No access control being applied ") if $c->debug;
+        $c->log->debug("The following action has AppKitAllAccess / Public for $action_path . No access control being applied ") if $c->debug;
         return 1;
     }
 
@@ -788,9 +788,30 @@ sub _appkit_stash_navigation
     $c->stash->{navigation} = \@navigations;
 }
 
+sub REST_403
+{
+    my ($c) = @_;
+    $c->response->status(403);
+    $c->stash->{rest} = { message => 'Access Denied' };
+    $c->detach;
+}
+
+sub in_REST_action
+{
+    my ($c) = @_;
+
+    return $c->action && $c->action->isa('Catalyst::Action::REST');
+}
+
 sub detach_to_appkit_access_denied
 {
     my ( $c, $denied_access_to_action ) = @_;
+
+    if($c->in_REST_action)
+    {
+        $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - part of REST controller so sending plain 403.") if $c->debug;
+        $c->REST_403;
+    }
 
     my $access_denied_action_path = $c->config->{'appkit_access_denied'};
     $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;

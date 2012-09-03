@@ -71,7 +71,7 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "text", is_nullable => 0 },
   "tel",
-  { data_type => "text", is_nullable => 0 },
+  { data_type => "text", is_nullable => 1 },
   "status",
   { data_type => "text", default_value => "active", is_nullable => 0 },
 );
