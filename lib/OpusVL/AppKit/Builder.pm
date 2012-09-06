@@ -180,7 +180,7 @@ override _build_config => sub
     # ...(add to include_path)..
     push(@$tt_dirs, $self->inherited_path_to('root','templates') );
     push(@$tt_dirs, $path . '/root/templates' );
-    $config->{'View::AppKitTT'}->{'INCLUDE_PATH'}         = $inc_path;
+    $config->{'View::AppKitTT'}->{'INCLUDE_PATH'}         = $tt_dirs;
     $config->{'View::AppKitTT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::AppKitTT'}->{'WRAPPER'}              = 'wrapper.tt';
     $config->{'View::AppKitTT'}->{'PRE_PROCESS'}          = 'preprocess.tt';
