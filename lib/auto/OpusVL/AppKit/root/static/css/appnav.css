@@ -195,6 +195,10 @@ div#application_home a {
 	top: 6px;
 }
 
+#header {
+    z-index: 4;
+}
+
 div#appMenuBar {
 	position: absolute;
 	top: 17px;
@@ -260,6 +264,7 @@ span.appkit_mega_menu_group p:not(:first-child) {
 
 li.appkit_mega_menu_open div.appkit_mega_menu_content {
 	display: table;
+    *display: block;
 	z-index: 10;
 }
 
