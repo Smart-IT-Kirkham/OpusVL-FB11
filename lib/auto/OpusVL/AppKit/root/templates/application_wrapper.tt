@@ -69,7 +69,7 @@
                     </div>
                     [% IF version %]
                     <div class="version">
-                        This is [% c.config.name %] [% version | html %]
+                        This is [% c.config.application_name || c.config.name %] [% version | html %]
                     </div>
                     [% END %]
                 </div>

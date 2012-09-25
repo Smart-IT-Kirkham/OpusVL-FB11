@@ -103,7 +103,7 @@
                             [% END %]
                         [% str_footer | none %]
                         [% ELSE %]
-                        This is [% c.config.name %] [% version | html %]
+                        This is [% c.config.application_name || c.config.name %] [% version | html %]
                         [% END %]
                     </div>
                     [% END %]
