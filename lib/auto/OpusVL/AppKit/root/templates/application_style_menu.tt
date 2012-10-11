@@ -6,22 +6,24 @@
                 <a href="#">[% app.controller.appkit_name %]</a>
                 <div class="appkit_mega_menu_content [% c.generate_class_name(app.controller.appkit_name) %]">
                     <div>
-                        [% FOR group IN app.actions %]
-                            [% IF group.group %]
-                                <span class="appkit_mega_menu_group [% c.generate_class_name(group.group) %]">
-                                    <p>
-                                        [% group.group %]
-                                    </p>
-                                    <ul>
-                                        [% FOR action IN group.actions %]
-                                            [% IF (action.controller.appkit_method_group == group.group) %]
-                                                <li><a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a></li>
+                        <div class="column">
+                            [% FOR group IN app.actions %]
+                                [% IF group.group %]
+                                    <div class="appkit_mega_menu_group [% c.generate_class_name(group.group) %]">
+                                        <p>
+                                            [% group.group %]
+                                        </p>
+                                        <ul>
+                                            [% FOR action IN group.actions %]
+                                                [% IF (action.controller.appkit_method_group == group.group) %]
+                                                    <li><a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a></li>
+                                                [% END %]
                                             [% END %]
-                                        [% END %]
-                                    </ul>
-                                </span>
+                                        </ul>
+                                    </div>
+                                [% END %]
                             [% END %]
-                        [% END %]
+                        </div>
                     
                     </div>
 
@@ -76,6 +78,14 @@
         $(window).click(function(){
             $('li.appkit_mega_menu_item').each(function(){$(this).removeClass('appkit_mega_menu_open')});
             appkit_mega_menu_open = false;
+        });
+
+        
+        $('.appkit_mega_menu_item').each(function() {
+            console.log('Menu');
+            $(this).find('.appkit_mega_menu_group').each(function() {
+                console.log($(this).height());
+            });
         });
     });
 </script>
