@@ -82,10 +82,27 @@
 
         
         $('.appkit_mega_menu_item').each(function() {
-            console.log('Menu');
-            $(this).find('.appkit_mega_menu_group').each(function() {
-                console.log($(this).height());
+            var total = 0;
+            var menu = $(this);
+            menu.find('.appkit_mega_menu_group').each(function() {
+                var height = $(this).height();
+                total += height;
             });
+            if(total > 200) { // split into 2 columns
+                var column = menu.find('.column');
+                var new_column = $('<div class="column"></div>');
+                column.after(new_column);
+                var half_height = total / 2;
+                var height_so_far = 0;
+                menu.find('.appkit_mega_menu_group').each(function() {
+                    if(height_so_far > half_height) {
+                        $(this).appendTo(new_column);
+                    } else {
+                        var height = $(this).height();
+                        height_so_far += height;
+                    }
+                });
+            }
         });
     });
 </script>

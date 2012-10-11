@@ -259,6 +259,10 @@ ul.appkit_mega_menu li.appkit_mega_menu_item.appkit_mega_menu_open div.appkit_me
 	padding-right: 10px;
 }
 
+div.appkit_mega_menu_group:not(:first-child) {
+	padding-top: 12px;
+}
+
 div.appkit_mega_menu_group p:not(:first-child) {
 	padding-top: 12px;
 }
@@ -309,5 +313,9 @@ li#appkit_app_style_search input {
 li#appkit_app_style_search input:focus {
 	background-color: white;
 }
+
+div.column {
+    float: left;
+};
 
 /* @end */
