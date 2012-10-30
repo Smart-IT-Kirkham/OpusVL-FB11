@@ -29,6 +29,7 @@ ok $c->can_access('appkit/admin/index'), 'can_access appkit/admin/index';
 
 note 'Now checking for paths that should not be allowed';
 ok !$c->can_access('/not_access_denied'), 'NOT can_access /not_access_denied';
+ok !$c->can_access('test/who_can_access_stuff'), 'NOT can_access test/who_can_access_stuff';
 
 my $controller = $c->controller('Root');
 my $action = $controller->action_for('index');
