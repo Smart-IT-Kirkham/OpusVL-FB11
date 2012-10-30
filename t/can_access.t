@@ -1,5 +1,7 @@
 use Test::Most;
 
+use FindBin;
+use lib "$FindBin::Bin";
 use FakePlugin;
 #use OpusVL::AppKit::Plugin::AppKit;
 
