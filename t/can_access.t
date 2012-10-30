@@ -1,23 +1,43 @@
 use Test::Most;
 
-use FindBin;
-use lib "$FindBin::Bin";
-use FakePlugin;
-#use OpusVL::AppKit::Plugin::AppKit;
+use FindBin qw($Bin);
+use lib "$Bin/lib";
 
-#my $plugin = OpusVL::AppKit::Plugin::AppKit->new();
-my $plugin = FakePlugin->new();
+use Catalyst::Test 'TestApp';
+use HTTP::Request::Common qw/POST/;
+
+my $request = POST '/login',
+             [ username   => 'appkitadmin',
+             password  => 'password' ];
+
+my($res, $c) = ctx_request($request);
+is $res->code, 302;
+
 
 note 'Testing the always allowed bits';
-ok $plugin->can_access('/default');
-ok $plugin->can_access('/begin');
-ok $plugin->can_access('/end');
-ok $plugin->can_access('/access_denied');
-ok $plugin->can_access('View::Download');
+ok $c->can_access('/default'), 'can_access /default';
+ok $c->can_access('/begin'), 'can_access /begin';
+ok $c->can_access('/end'), 'can_access /end';
+ok $c->can_access('/access_denied'), 'can_access /access_denied';
+ok $c->can_access('default'), 'can_access default';
+ok $c->can_access('begin'), 'can_access begin';
+ok $c->can_access('end'), 'can_access end';
+ok $c->can_access('access_denied'), 'can_access access_denied';
+ok $c->can_access('View::Download'), 'can_access View::Download';
+ok $c->can_access('index'), 'can_access index';
+ok $c->can_access('appkit/admin/index'), 'can_access appkit/admin/index';
 
 note 'Now checking for paths that should not be allowed';
-ok !$plugin->can_access('/not_access_denied');
+ok !$c->can_access('/not_access_denied'), 'NOT can_access /not_access_denied';
 
+my $controller = $c->controller('Root');
+my $action = $controller->action_for('index');
+ok $c->can_access($action), 'Lookup by action';
 # FIXME: also try passing action objects too.
+
+my @users = map { $_->username } $c->who_can_access('appkit/admin/index')->all;
+eq_or_diff \@users, [ 'appkitadmin', 'tester' ];
+
+request('/logout');
 
 done_testing;
