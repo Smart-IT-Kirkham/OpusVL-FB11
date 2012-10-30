@@ -33,7 +33,6 @@ ok !$c->can_access('/not_access_denied'), 'NOT can_access /not_access_denied';
 my $controller = $c->controller('Root');
 my $action = $controller->action_for('index');
 ok $c->can_access($action), 'Lookup by action';
-# FIXME: also try passing action objects too.
 
 my @users = map { $_->username } $c->who_can_access('appkit/admin/index')->all;
 eq_or_diff \@users, [ 'appkitadmin', 'tester' ];
