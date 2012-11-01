@@ -501,8 +501,12 @@ sub can_access
         {
             foreach my $allowed_path ( @{ $c->config->{'appkit_can_access_actionpaths'} } )
             {
-                $c->log->debug("Hit an action path that's automatically allowed - $allowed_path") if $c->debug;
-                return 1 if $action_path eq $allowed_path;
+                # FIXME: this logic looks broken.
+                if($action_path eq $allowed_path)
+                {
+                    $c->log->debug("Hit an action path that's automatically allowed - $allowed_path") if $c->debug;
+                    return 1 
+                }
             }
         }
 
@@ -556,17 +560,20 @@ sub who_can_access
     my $inside_rs = $c->model('AppKitAuthDB::UsersRole')->search
     (
         {
-            'role_id.role' => { 'IN' => $allowed_roles },
+            'role.role' => { 'IN' => $allowed_roles },
         },
         {
             select  => ['users_id'],
             as      => ['users_id'],
-            join    => ['role_id']
+            join    => ['role']
         }
     );
 
     # return all users with the roles..
-    return $c->model('AppKitAuthDB::User')->search( { 'id' => { 'IN' => $inside_rs->get_column('users_id')->as_query } }, { distinct => 1 } );
+    return $c->model('AppKitAuthDB::User')->search( 
+        { 'id' => 
+            { 'IN' => $inside_rs->get_column('users_id')->as_query } }, 
+            { distinct => 1 } );
 
 }
 
