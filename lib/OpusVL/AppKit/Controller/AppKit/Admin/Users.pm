@@ -362,8 +362,11 @@ sub get_parameter_input
     my $html = '';
     if ( $param->data_type eq 'boolean' )
     {
+        $html .= '<div class="radio label">';
         $html .= "<label for='parameter_value_true'>True</label><input type='radio' name='parameter_value' value='1' id='parameter_value_true' " . ( $value ? "checked='1'" : '') . ">";
+        $html .= '</div><div class="radio label">';
         $html .= "<label for='parameter_value_false'>False</label><input type='radio' name='parameter_value' value='0' id='parameter_value_false' " . ( $value ? '' : "checked='1'") . ">";
+        $html .= "</div>";
     }
     elsif ( $param->data_type eq 'select' )
     {
