@@ -36,6 +36,7 @@ END;
 
 IF features.appkitfeature_tablesorter;
     header.js.list.push( "/static/js/jquery.tablesorter.min.js");
+    header.js.list.push( "/static/js/tablesorter-date-parser.js");
     header.css.list.push( "/static/css/tablesorter/style.css");
 -%]
 [%- tablesorter_jssrc = BLOCK -%]
