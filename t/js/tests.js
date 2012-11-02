@@ -14,6 +14,7 @@ test('Match test', function() {
     ok( !$.tablesorter.getParser().is('') , 'Not a date' );
     ok( !$.tablesorter.getParser().is() , 'Not a date' );
 
+    ok( $.tablesorter.getParser().is('20-Jan-2012') , 'A date' );
     ok( $.tablesorter.getParser().is('20-Jan-2012 00:00') , 'A date' );
     ok( $.tablesorter.getParser().is('20-Jun-2012 00:00') , 'A date' );
     ok( $.tablesorter.getParser().is('20-Mar-2012 00:00') , 'A date' );
@@ -41,4 +42,5 @@ test('Format test', function() {
     equal( $.tablesorter.getParser().format('20-Oct-2012 00:00'), '2012-10-20 00:00', 'Reformatted date');
     equal( $.tablesorter.getParser().format('20-Nov-2012 00:00'), '2012-11-20 00:00', 'Reformatted date');
     equal( $.tablesorter.getParser().format('01-Dec-2012 10:00'), '2012-12-01 10:00', 'Reformatted date');
+    equal( $.tablesorter.getParser().format('01-Dec-2012'), '2012-12-01', 'Reformatted date');
 });
