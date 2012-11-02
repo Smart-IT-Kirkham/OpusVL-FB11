@@ -43,4 +43,7 @@ test('Format test', function() {
     equal( $.tablesorter.getParser().format('20-Nov-2012 00:00'), '2012-11-20 00:00', 'Reformatted date');
     equal( $.tablesorter.getParser().format('01-Dec-2012 10:00'), '2012-12-01 10:00', 'Reformatted date');
     equal( $.tablesorter.getParser().format('01-Dec-2012'), '2012-12-01', 'Reformatted date');
+
+    // check this just gets passed through unharmed rather than choking
+    ok( $.tablesorter.getParser().format('Cash (30-Oct-2012) - Print '), 'No crash');
 });
