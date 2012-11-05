@@ -717,7 +717,7 @@ div#application_nav ul li a.active {
 	font-size: 1em;
 }
 
-#application_body .ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active {
+#application_body .ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
 	background-image: none;
 	background-color: #fff;
 	-webkit-box-shadow: 3px 5px 10px rgba(0,0,0,0.2);
@@ -729,11 +729,11 @@ div#application_nav ul li a.active {
 	margin-top: -3px;
 }
 
-#application_body .ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active a {
+#application_body .ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active a {
 	color:  #414141;
 }
 
-#application_body .ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active a:focus {
+#application_body .ui-tabs.ui-widget.ui-widget-content.ui-corner-all ul.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all li.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active a:focus {
 	outline: none;
 }
 
@@ -762,7 +762,7 @@ div#application_nav ul li a.active {
 	height: 28px;
 }
 
-li.ui-state-default.ui-corner-top.ui-tabs-selected.ui-state-active {
+li.ui-state-default.ui-corner-top.ui-tabs-active.ui-state-active {
 	border-style: none;
 }
 
