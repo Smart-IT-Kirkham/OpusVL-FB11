@@ -46,4 +46,5 @@ test('Format test', function() {
 
     // check this just gets passed through unharmed rather than choking
     ok( $.tablesorter.getParser().format('Cash (30-Oct-2012) - Print '), 'No crash');
+    ok( $.tablesorter.getParser().format('not a date'), 'No crash');
 });
