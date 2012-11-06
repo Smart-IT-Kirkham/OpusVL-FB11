@@ -27,6 +27,19 @@ test('Match test', function() {
     ok( $.tablesorter.getParser().is('20-Oct-2012 00:00') , 'A date' );
     ok( $.tablesorter.getParser().is('20-Nov-2012 00:00') , 'A date' );
     ok( $.tablesorter.getParser().is('01-Dec-2012 10:00') , 'A date' );
+    ok( $.tablesorter.getParser().is('01-Dec-2012 10:00') , 'A date' );
+    ok( $.tablesorter.getParser().is('01-Dec-2012 10:00') , 'A date' );
+
+    ok( $.tablesorter.getParser().is('05-Nov-2012 14:50') , 'A date' );
+    ok( $.tablesorter.getParser().is('05-Nov-2012 14:53') , 'A date' );
+    ok( $.tablesorter.getParser().is("05-Nov-2012\t14:53") , 'A date' );
+
+    ok( !$.tablesorter.getParser().is('View') , 'Not a date' );
+    ok( !$.tablesorter.getParser().is('VMA000001') , 'Not a date' );
+    ok( !$.tablesorter.getParser().is('Delivery') , 'Not a date' );
+    ok( !$.tablesorter.getParser().is('Cardiff') , 'Not a date' );
+    ok( !$.tablesorter.getParser().is('Dominic Mason') , 'Not a date' );
+    ok( !$.tablesorter.getParser().is('View details') , 'Not a date' );
 });
 
 test('Format test', function() {
