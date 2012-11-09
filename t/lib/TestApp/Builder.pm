@@ -43,9 +43,9 @@ override _build_config => sub
     };
 
     # .. add static dir into the config for Static::Simple..
-    my $static_dirs = $config->{static}->{include_path};
+    my $static_dirs = $config->{'Plugin::Static::Simple'}->{include_path};
     push(@$static_dirs, $path . '/root' );
-    $config->{static}->{include_path} = $static_dirs;
+    $config->{'Plugin::Static::Simple'}->{include_path} = $static_dirs;
 
     # .. allow access regardless of ACL rules...
     $config->{'appkit_can_access_actionpaths'} = ['test/custom'];

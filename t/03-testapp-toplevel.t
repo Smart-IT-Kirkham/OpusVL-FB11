@@ -331,6 +331,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech2->content_like(qr|Welcome.*JJ|);
     $mech2->content_unlike(qr|Wrong username or password|i);
     $mech2->content_unlike(qr|Access Denied|i);
+    $mech->get_ok('/static/images/search_button_small.png');
 
     ## NEED TO ADD MANY MORE TESTS!!... think about all things that could and could not happen with the TestApp..
     # .. things I can think of now:

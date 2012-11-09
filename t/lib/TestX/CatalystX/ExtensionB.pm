@@ -38,9 +38,9 @@ after 'setup_components' => sub
     $config->{'View::AppKitTT'}->{'INCLUDE_PATH'} = $inc_path;
     
     # .. add static dir into the config for Static::Simple..
-    my $static_dirs = $config->{static}->{include_path};
+    my $static_dirs = $config->{'Plugin::Static::Simple'}->{include_path};
     push(@$static_dirs, $path . '/root' );
-    $config->{static}->{include_path} = $static_dirs;
+    $config->{'Plugin::Static::Simple'}->{include_path} = $static_dirs;
 
 };
 
