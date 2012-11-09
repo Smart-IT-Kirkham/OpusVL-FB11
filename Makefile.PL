@@ -49,7 +49,7 @@ requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
-requires 'Catalyst::Plugin::Static::Simple';
+requires 'Catalyst::Plugin::Static::Simple' => 0.30;
 requires 'Catalyst::Plugin::Cache';
 
 # really test dependencies.
