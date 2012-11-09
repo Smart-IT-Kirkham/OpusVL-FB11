@@ -51,6 +51,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 =cut
 
 use Moose::Role;
+use Carp;
 use File::ShareDir qw/module_dir/;
 
 # this method is provided for compatibility reassons
@@ -61,7 +62,7 @@ sub add_form_path
     my $self = shift;
     my $module = shift;
 
-    warn "Please change the module $module to use add_paths instead of add_form_path.";
+    carp "Please change the module $module to use add_paths instead of add_form_path.";
     my $module_dir = module_dir($module);
     $self->_add_form_path($module_dir);
 }
