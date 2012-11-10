@@ -158,10 +158,10 @@ override _build_config => sub
     $config->{'custom-error-message'}                               = { 'error-template' => 'error.tt' };
 
     # .. add static dir into the config for Static::Simple..
-    my $static_dirs = $config->{'Plugin::Static::Simple'}->{include_path};
+    my $static_dirs = $config->{static}->{include_path};
     push(@$static_dirs, $path . '/root' );
-    $config->{'Plugin::Static::Simple'}->{include_path}      = $static_dirs;
-    $config->{'Plugin::Static::Simple'}->{ignore_extensions} = [qw/tt tt2 db yml/];
+    $config->{static}->{include_path}      = $static_dirs;
+    $config->{static}->{ignore_extensions} = [qw/tt tt2 db yml/];
 
     # FIXME: this line appears to cause a problem
     #$config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path} = [ $path . '/root/forms' ];

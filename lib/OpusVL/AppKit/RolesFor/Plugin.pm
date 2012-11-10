@@ -116,9 +116,9 @@ sub _add_static_path
     my $module_dir = shift;
 
     # .. add static dir into the config for Static::Simple..
-    my $static_dirs = $self->config->{'Plugin::Static::Simple'}->{include_path};
+    my $static_dirs = $self->config->{static}->{include_path};
     unshift(@$static_dirs, File::Spec->rel2abs($module_dir . '/root' ));
-    $self->config->{'Plugin::Static::Simple'}->{include_path} = $static_dirs;
+    $self->config->{static}->{include_path} = $static_dirs;
 }
 
 1;
