@@ -97,7 +97,7 @@ sub execute
     if ( -r $form_file )
     {
         # .. load it..
-        $form->load_config_file ( $form_file );
+        $self->load_config_file ( $c, $form, $form_file );
     
         $self->process( $form );
         
@@ -113,6 +113,16 @@ sub execute
     my $r = $self->next::method(@_);
 
     return $r;
+}
+
+sub load_config_file
+{
+    my $self = shift;
+    my $c = shift;
+    my $form = shift;
+    my $form_file = shift;
+
+    $form->load_config_file ( $form_file );
 }
 
 sub process
