@@ -78,4 +78,11 @@ install_share 'lib/auto';
 
 #install_script glob('script/*.pl');
 auto_install;
+resources (
+    repository => {
+        url => 'ssh://git.rug-01.opusvl.net/srv/git/OpusVL-AppKit',
+        type => 'git',
+    },
+);
+
 WriteAll;
