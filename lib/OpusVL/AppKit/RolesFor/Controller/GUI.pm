@@ -395,6 +395,37 @@ sub add_final_crumb
     push @{$c->stash->{breadcrumbs}}, { name => $title, url => $c->req->uri };
 }
 
+=head2 flag_callback_error
+
+Flags an HTML::FormFu callback error.
+
+Setup a callback constraint on your form,
+
+  - type: Text
+    name: project
+    label: Project
+    constraints:
+      - type: Callback
+        message: Project is invalid
+
+Then within your controller you can do, 
+
+    $self->flag_callback_error($c, 'project');
+
+This will terminate the processing of the action too, by doing a $c->detach;
+
+=cut
+
+sub flag_callback_error
+{
+    my ($self, $c, $field_name) = @_;
+
+    my $form = $c->stash->{form};
+    $form->get_field($field_name)->get_constraint({ type => 'Callback' })->callback(sub { 0});
+    $form->process;
+    $c->detach;
+}
+
 =head1 SEE ALSO
 
     L<CatalystX::AppBuilder>,
