@@ -2,7 +2,7 @@ package OpusVL::AppKit;
 
 =head1 NAME
 
-    OpusVL::AppKit - Catalyst based application
+OpusVL::AppKit - Catalyst based application
 
 =head1 SYNOPSIS
 
