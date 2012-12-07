@@ -27,11 +27,15 @@ In your view, action.xml.tt
                 <cell>Customers</cell>
             </row>
             <row>
+                <cell>Created</cell>
                 <cell>Name</cell>
                 <cell>Channel</cell>
             </row>
             [% FOREACH customer IN data %]
             <row>
+                <format num_format="mm/dd/yyyy">
+                    <cell type="date_time">[% customer.created.iso8601 %]</cell>
+                </format>
                 <cell>[% customer.name %]</cell>
                 <cell>[% customer.details.channel %]</cell>
             </row>
