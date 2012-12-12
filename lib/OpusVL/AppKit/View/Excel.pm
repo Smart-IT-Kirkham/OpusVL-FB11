@@ -33,7 +33,7 @@ In your view, action.xml.tt
             </row>
             [% FOREACH customer IN data %]
             <row>
-                <format num_format="mm/dd/yyyy">
+                <format num_format="dd/mm/yyyy">
                     <cell type="date_time">[% customer.created.iso8601 %]</cell>
                 </format>
                 <cell>[% customer.name %]</cell>
