@@ -21,13 +21,16 @@
                         [% IF diary && c.can_access(diary.action_for('my_events')) %]
                             <li>
                             [% PROCESS modules/diary/diary_icon.tt %]
+                            </li>
                         [% END %]
                         [% SET notifications = c.controller('Modules::Notifications') %]
                         [% IF notifications && c.can_access(notifications.action_for('feed')) %]
                             <li>
                             [% PROCESS modules/notifications/message_icon.tt %]
+                            </li>
                         [% END %]
                         [% IF c.can_access(c.controller('Search').action_for('index')) %]
+                            <li>
                             [% PROCESS intranet_search_box.tt %]
                             </li>
                         [% END %]
