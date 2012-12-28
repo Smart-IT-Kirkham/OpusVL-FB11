@@ -418,10 +418,12 @@ This will terminate the processing of the action too, by doing a $c->detach;
 
 sub flag_callback_error
 {
-    my ($self, $c, $field_name) = @_;
+    my ($self, $c, $field_name, $message) = @_;
 
     my $form = $c->stash->{form};
-    $form->get_field($field_name)->get_constraint({ type => 'Callback' })->callback(sub { 0});
+    my $constraint = $form->get_field($field_name)->get_constraint({ type => 'Callback' });
+    $constraint->callback(sub { 0});
+    $constraint->message($message) if $message;
     $form->process;
     $c->detach;
 }
