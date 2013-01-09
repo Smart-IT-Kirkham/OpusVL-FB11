@@ -89,7 +89,7 @@ sub access_denied : Private
     delete $c->stash->{current_view} if defined $c->stash->{current_view}; # ensure default view.
     $c->response->status(403);
     $c->stash->{homepage} = 1;
-    $c->detach;
+    $c->detach('View::AppKitTT');
 }
 
 =head2 end
