@@ -15,6 +15,17 @@ sub deploy_with_data
     return $self;
 }
 
+sub clear_dataset
+{
+    my $self = shift;
+    for my $resultset ($self->sources)
+    {
+        my $rs = $self->resultset($resultset);
+        $rs->clear_dataset if $rs->can('clear_dataset');
+    }
+    return $self;
+}
+
 1;
 
 =head1 NAME
