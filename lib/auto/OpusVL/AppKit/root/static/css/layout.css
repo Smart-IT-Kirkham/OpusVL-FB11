@@ -445,3 +445,13 @@ form#roles li.app span {
     display: block;
 }
 
+.checkboxgroup span span
+{
+    display: block;
+}
+
+.checkboxgroup span span label
+{
+    font-size: 0.8em;
+    width: auto;
+}
