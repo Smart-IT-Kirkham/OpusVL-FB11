@@ -534,9 +534,16 @@ sub can_access
     }
 
     # return a test that will check for the roles
-    my $allow = $c->user && $c->check_any_user_role( @allowed )
-        || 'PUBLIC' ~~ @allowed;
+    my $allow = $c->check_roles(\@allowed);
     #$c->log->debug("************** can_access - DENIED Access to - " . $action_path ) if !$allow && $c->debug;
+    return $allow;
+}
+
+sub check_roles
+{
+    my ($c, $allowed) = @_;
+    my $allow = $c->user && $c->check_any_user_role( @$allowed )
+        || 'PUBLIC' ~~ @$allowed;
     return $allow;
 }
 
