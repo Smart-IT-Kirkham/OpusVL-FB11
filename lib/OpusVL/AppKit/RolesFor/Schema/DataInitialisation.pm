@@ -57,6 +57,13 @@ This method does a deploy and then checks your resultsets for initdb methods to 
 If they are found they are called.  This allows you to populate your newly deployed
 database with initial data.
 
+=head2 clear_dataset
+
+A method to call clear_dataset on all the resultsets that support the method.  The
+idea is to allow a method for clearing a dataset of all transient data while
+retaining all essential configuration.  This will vary by project and so is down
+to how you implement it.
+
 =head1 LICENSE AND COPYRIGHT
 
 Copyright 2012 OpusVL.
