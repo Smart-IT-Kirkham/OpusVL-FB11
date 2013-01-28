@@ -6,13 +6,19 @@ sub deploy_with_data
 {
     my $self = shift;
     $self->deploy;
+    $self->initdb;
+    return $self;
+}
+
+sub initdb
+{
+    my $self = shift;
     for my $resultset ($self->sources)
     {
         my $rs = $self->resultset($resultset);
         $rs->initdb if $rs->can('initdb');
         $rs->initdb_populate if $rs->can('initdb_populate');
     }
-    return $self;
 }
 
 sub clear_dataset
