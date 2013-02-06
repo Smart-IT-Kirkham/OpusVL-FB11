@@ -1,4 +1,4 @@
-
+<meta charset="utf-8">
 <title>[% IF homepage %][% title or c.config.application_name %][% ELSE %][% title or c.controller.appkit_name %][% END %]</title>
 
 [% IF header.favicon %]
