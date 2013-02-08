@@ -6,13 +6,19 @@ sub deploy_with_data
 {
     my $self = shift;
     $self->deploy;
+    $self->initdb;
+    return $self;
+}
+
+sub initdb
+{
+    my $self = shift;
     for my $resultset ($self->sources)
     {
         my $rs = $self->resultset($resultset);
         $rs->initdb if $rs->can('initdb');
         $rs->initdb_populate if $rs->can('initdb_populate');
     }
-    return $self;
 }
 
 sub clear_dataset
@@ -56,6 +62,13 @@ database and setting up any standard system parameters that are required.
 This method does a deploy and then checks your resultsets for initdb methods to call.
 If they are found they are called.  This allows you to populate your newly deployed
 database with initial data.
+
+=head2 clear_dataset
+
+A method to call clear_dataset on all the resultsets that support the method.  The
+idea is to allow a method for clearing a dataset of all transient data while
+retaining all essential configuration.  This will vary by project and so is down
+to how you implement it.
 
 =head1 LICENSE AND COPYRIGHT
 
