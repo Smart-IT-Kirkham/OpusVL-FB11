@@ -11,3 +11,5 @@ inc
 OpusVL-AppKit-*.tar.gz
 /pm_to_blib
 MYMETA.*
+
+/Makefile.old
