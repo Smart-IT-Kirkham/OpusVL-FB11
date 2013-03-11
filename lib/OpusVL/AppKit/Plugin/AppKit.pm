@@ -590,6 +590,9 @@ sub who_can_access
     .. or undef if not found.
 =cut
 
+use Memoize;
+memoize('_find_node_in_appkit_actiontree');
+
 sub _find_node_in_appkit_actiontree
 {   
     my $c               = shift;
