@@ -18,7 +18,7 @@
 <a title="Prev" href="[% c.request.uri_with( page => pager.previous_page ) %][% IF tab %]#[% tab %][% END %]" class="pager_prev"><img alt="Prev" src="/static/images/controls/pager_prev.png"></img></a>
     [% END %]
 [% END %]
-<span>Page [% pager.current_page | html %] of [% pager.last_page | html %]</span>
+<span>Page [% pager.current_page | html %][% IF pager.last_page %] of [% pager.last_page | html %][% END %]</span>
 [% IF pager.last_page == pager.current_page %]
 [% IF !suppress_first_and_last %]
     <img title="Next" alt="Next" src="/static/images/controls/pager_next_disabled.png"></img>
