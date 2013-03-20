@@ -12,7 +12,7 @@ __PACKAGE__->add_columns(
   {
     data_type => "INTEGER",
     default_value => undef,
-    is_nullable => 1,
+    is_nullable => 0,
     size => undef,
   },
   "first_name",
