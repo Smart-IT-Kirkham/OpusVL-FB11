@@ -89,6 +89,7 @@ sub _add_form_path
     $self->config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path} = [] if !$self->config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path};
     push @{$self->config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path}}, 
             $module_dir .  '/root/forms';
+    # FIXME: by this point the various controller may be built.
 }
 
 sub _add_template_path
@@ -99,15 +100,29 @@ sub _add_template_path
     my $tt_view       = $self->config->{default_view} || 'TT';
     my $template_path = $module_dir . '/root/templates';
 
-    unless ($self->view('Excel')->{etp_config}->{INCLUDE_PATH} ~~ $template_path) {
-        push @{$self->view('Excel')->{etp_config}->{INCLUDE_PATH}}, $template_path;
+    if($self->view('Excel'))
+    {
+        unless ($self->view('Excel')->{etp_config}->{INCLUDE_PATH} ~~ $template_path) {
+            push @{$self->view('Excel')->{etp_config}->{INCLUDE_PATH}}, $template_path;
+        }
+        $self->view('Excel')->{etp_config}->{AUTO_FILTER} = 'html';
+        $self->view('Excel')->{etp_engine} = 'TTAutoFilter';
+        unless ($self->view($tt_view)->include_path ~~ $template_path) {
+            push @{$self->view($tt_view)->include_path}, $template_path;
+        }
     }
-    $self->view('Excel')->{etp_config}->{AUTO_FILTER} = 'html';
-    $self->view('Excel')->{etp_engine} = 'TTAutoFilter';
+    else
+    {
+        my $excel_config = $self->config->{'View::Excel'};
+        unless ($excel_config->{etp_config}->{INCLUDE_PATH} ~~ $template_path) {
+            push @{$excel_config->{etp_config}->{INCLUDE_PATH}}, $template_path;
+        }
+        $excel_config->{etp_config}->{AUTO_FILTER} = 'html';
+        $excel_config->{etp_engine} = 'TTAutoFilter';
+        my $inc_path = $self->config->{'View::AppKitTT'}->{'INCLUDE_PATH'};
+        push(@$inc_path, $template_path );
+    }
 
-    unless ($self->view($tt_view)->include_path ~~ $template_path) {
-        push @{$self->view($tt_view)->include_path}, $template_path;
-    }
 }
 
 sub _add_static_path
