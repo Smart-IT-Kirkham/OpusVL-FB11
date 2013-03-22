@@ -25,6 +25,7 @@ use Tree::Simple;
 use Tree::Simple::Visitor::FindByPath;
 use OpusVL::AppKit::Plugin::AppKit::Node;
 use OpusVL::AppKit::Plugin::AppKit::FeatureList;
+with 'Catalyst::ClassData';
 
 ###########################################################################################################################
 # moose calls.
@@ -230,15 +231,16 @@ Returns a OpusVL::AppKit::Plugin::AppKit::FeatureList object that allows the que
 that sit on top of our roles management.
 
 =cut
+__PACKAGE__->mk_classdata('_appkit_features');
 sub appkit_features
 {
     # NOTE: this property is setup when the appkit_actiontree is setup.
     my $self = shift;
-    my $features = $self->cache->get('appkit_features');
+    my $features = $self->_appkit_features;
     unless($features)
     {
         my $tree = $self->appkit_actiontree(1);
-        $features = $self->cache->get('appkit_features');
+        $features = $self->_appkit_features;
     }
     return $features;
 }
@@ -258,31 +260,43 @@ sub appkit_actiontree
     my ($c, $rebuild) = @_;
 
     # 'state' var means this will only be called once .. if Perl encounters this line again it knows not to run again..
-    my $cache = $c->cache;
-    state $appkit_actiontree = $cache->get('actiontree');
-    if(!$appkit_actiontree)
+    state $appkit_actiontree = $c->_build_appkit_actiontree;
+    state $created = time;
+    # force a re-read of the tree.. (for example, if access control changes)...
+    if($rebuild || $c->_are_permissions_modified($created))
     {
         $appkit_actiontree = $c->_build_appkit_actiontree;
-        $cache->set('actiontree', $appkit_actiontree);
-    }
-    else
-    {
-        # force a re-read of the tree.. (for example, if access control changes)...
+        $created = time;
         if($rebuild)
         {
-            $appkit_actiontree = $c->_build_appkit_actiontree;
-            $cache->set('actiontree', $appkit_actiontree);
-        }
-        else
-        {
-            # convoluted way to prevent cache failure
-            # causing a recalc every time.
-            my $actions = $cache->get('actiontree');
-            $appkit_actiontree = $actions if $actions;
+            $c->_set_permissions_modified($created);
         }
     }
 
     return $appkit_actiontree;
+}
+
+sub _set_permissions_modified
+{
+    my $c = shift;
+    my $updated = shift;
+    state $key = $c->config->{name} . 'permissions_modified';
+    $c->cache->set($key, $updated);
+}
+
+sub _are_permissions_modified
+{
+    my $c = shift;
+    my $updated = shift;
+
+    state $key = $c->config->{name} . 'permissions_modified';
+    my $ts = $c->cache->get($key);
+    unless($ts)
+    {
+        $ts = 0;
+        $c->cache->set($key, $ts); # is this a good idea?
+    }
+    return $ts > $updated;
 }
 
 =head2 _build_appkit_actiontree
@@ -291,7 +305,7 @@ sub appkit_actiontree
 =cut
 
 sub _build_appkit_actiontree
-{   
+{
     my ( $c ) = shift;
 
     # get the vistor..
@@ -409,7 +423,7 @@ sub _build_appkit_actiontree
         }
     }
 
-    $c->cache->set('appkit_features', $features);
+    $c->_appkit_features($features);
 
     # finished :) 
     return $root;
