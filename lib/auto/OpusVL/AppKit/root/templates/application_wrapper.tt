@@ -49,6 +49,7 @@
                 
                 <div class="ajax_indicator">Loading...</div>
                 <div class="save_indicator">You have unsaved changes</div>
+                <div class="form_indicator"><p><strong>Working...</strong></p><p>Do not click "Refresh" in your browser.</p></div>
 
                 <div id="application">
                     [% IF before_content %]
