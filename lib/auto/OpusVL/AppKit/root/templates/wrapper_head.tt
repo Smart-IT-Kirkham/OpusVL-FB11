@@ -3,6 +3,8 @@
 
 [% IF header.favicon %]
     <link rel="shortcut icon" href="[% header.favicon %]" type="image/png" />
+[% ELSE %]
+    <link rel="shortcut icon" href="/static/images/favicon.png" type="image/png" />
 [% END %]
 
 [% FOR css IN header.css %]
