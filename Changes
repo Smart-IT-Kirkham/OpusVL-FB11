@@ -1,5 +1,8 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added extra javascript to the tab setup to highlight errors appearing
+  in the tabs.
+
 * Fixed flash to stash config setting so it uses newer config setting - that 
   also prevents setting the secure cookies setting in the config from 
   causing the setting from being dropped.
