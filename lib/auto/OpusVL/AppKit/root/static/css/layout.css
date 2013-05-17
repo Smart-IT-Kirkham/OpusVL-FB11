@@ -455,3 +455,9 @@ form#roles li.app span {
     font-size: 0.8em;
     width: auto;
 }
+
+div#opusvl {
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
