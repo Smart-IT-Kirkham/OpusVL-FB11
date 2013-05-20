@@ -345,6 +345,11 @@ form div.error label {
 	font-style: normal;
 }
 
+a.ui-tabs-anchor.error {
+	color: red !important;
+	font-weight: bold;
+};
+
 span.error_message {
 	display: block;
 	padding-left: 7px;
