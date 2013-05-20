@@ -91,6 +91,9 @@ UNLESS (c.request.user_agent.match('(?i)Linux'));
     END;
 END;
 
+IF c.config.favicon;
+    header.favicon = c.config.favicon;
+END;
 
 
     # END
