@@ -119,7 +119,7 @@
         </div>
         
         <div id="opusvl">
-            <a href="http://www.opusvl.com"><img src="/static/images/built_with_flexibase.png" border="0"></a>
+            <a href="http://www.opusvl.com" target="_blank"><img src="/static/images/built_with_flexibase.png" border="0"></a>
         </div>
         
    <!--     <script language="JavaScript" type="text/javascript" src="js/appkit.js"></script>
