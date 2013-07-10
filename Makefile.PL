@@ -65,7 +65,7 @@ requires 'Catalyst::Controller::HTML::FormFu';
 requires 'Catalyst::Action::REST';
 
 # CatalystX components
-requires 'CatalystX::AppBuilder';
+requires 'CatalystX::AppBuilder' => '0.00009';
 requires 'CatalystX::VirtualComponents';
 requires 'CatalystX::SimpleLogin';
 
