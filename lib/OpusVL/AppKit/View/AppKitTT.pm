@@ -42,5 +42,6 @@ __PACKAGE__->config->{AUTO_FILTER} = 'html';
         eg.  [% FOR row IN rs.search().as_list %]
 =cut
 $Template::Stash::LIST_OPS->{as_list} = sub { return ref( $_[0] ) eq 'ARRAY' ? shift : [shift]; };
+$Template::Directive::WHILE_MAX = 100000;
 
 1;
