@@ -26,4 +26,13 @@ sub home
     $c->stash->{template} = 'extensiona.tt';
 }
 
+sub table
+    : Local
+    : Args(0)
+    : NavigationName('Table test')
+    : AppKitFeature('Extension A')
+{
+    my ($self, $c) = @_;
+}
+
 __END__
