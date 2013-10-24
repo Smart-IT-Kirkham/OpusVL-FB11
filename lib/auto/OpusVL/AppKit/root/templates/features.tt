@@ -48,7 +48,7 @@ IF features.appkitfeature_tablesorter;
 [%- END ; %]
             table.tablesorter();
         });
-        $('.tablesorter th select,.tablesorter th input').closest('th').unbind();
+        $('.tablesorter th select,.tablesorter th a,.tablesorter th input').closest('th').unbind();
     });
 [%- END;
     header.jssrc.list.push( tablesorter_jssrc );
