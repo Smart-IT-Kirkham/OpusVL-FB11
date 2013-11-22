@@ -26,9 +26,10 @@ requires 'String::MkPasswd';
 requires 'Catalyst::View::TT::Alloy';
 requires 'Catalyst::View::Excel::Template::Plus';
 requires 'Template::AutoFilter';
+requires 'Template::Alloy' => '1.020';
 
 # Base Catalyst components
-requires 'Catalyst::Runtime' => '5.8002';
+requires 'Catalyst::Runtime' => '5.90051';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Authentication::Store::DBIx::Class';
 
@@ -41,7 +42,7 @@ requires 'Catalyst::View::PDF::Reuse';
 
 # Catalyst plugins
 requires 'Catalyst::Plugin::ConfigLoader';
-requires 'Catalyst::Plugin::Unicode';
+requires 'Catalyst::Plugin::Unicode::Encoding';
 requires 'Catalyst::Plugin::CustomErrorMessage';
 requires 'Catalyst::Plugin::Authentication';
 requires 'Catalyst::Plugin::Authorization::Roles';

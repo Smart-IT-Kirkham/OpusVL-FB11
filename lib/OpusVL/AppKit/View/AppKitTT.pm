@@ -35,6 +35,7 @@ BEGIN {
 }
 
 __PACKAGE__->config->{AUTO_FILTER} = 'html';
+__PACKAGE__->config->{ENCODING} = 'UTF-8';
 
 =head as_list
     Little help vmethod for TemplateToolkit to force array context.

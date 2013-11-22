@@ -11,7 +11,6 @@ package OpusVL::AppKit::Builder;
     Inheriting this app using AppBuilder will give your application the following:
 
         Catalyst::Plugin::Static::Simple
-        Catalyst::Plugin::Unicode
         Catalyst::Plugin::CustomErrorMessage
         Catalyst::Plugin::Authentication
         Catalyst::Plugin::Authorization::Roles
@@ -128,7 +127,6 @@ override _build_plugins => sub
 
     push @$plugins, qw(
         Static::Simple
-        Unicode
         CustomErrorMessage
         Authentication
         Authorization::Roles
@@ -162,6 +160,7 @@ override _build_config => sub
     push(@$static_dirs, $path . '/root' );
     $config->{static}->{include_path}      = $static_dirs;
     $config->{static}->{ignore_extensions} = [qw/tt tt2 db yml/];
+    $config->{encoding} = 'UTF-8';
 
     # FIXME: this line appears to cause a problem
     #$config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path} = [ $path . '/root/forms' ];
