@@ -43,53 +43,12 @@ IF features.appkitfeature_tablesorter;
     $(function() {
         $(".tablesorter").each(function(){
             var table = $(this);
-[%- UNLESS (c.request.user_agent.match('(?i)Linux')); %]
-            $('<a></a>',{text: "Copy to clipboard", href: "<table>"+table.html()+"</table>"}).addClass('copy_to_clipboard').addClass('copy_button').insertBefore(table);
-[%- END ; %]
             table.tablesorter();
         });
         $('.tablesorter th select,.tablesorter th a,.tablesorter th input').closest('th').unbind();
     });
 [%- END;
     header.jssrc.list.push( tablesorter_jssrc );
-END;
-
-UNLESS (c.request.user_agent.match('(?i)Linux'));
-    IF features.appkitfeature_clipboard;
-        header.js.list.push( "/static/js/ZeroClipboard.js");
-    -%]
-    [%- clipboard_jssrc = BLOCK -%]
-            $(function() {
-              ZeroClipboard.setMoviePath('/static/ZeroClipboard.swf');
-              
-              $(".copy_to_clipboard").click(function() {
-                appKit.windowClick();
-                return false;
-              });
-              
-              $(".copy_to_clipboard").mouseover(function() {
-                var element = $(this);
-                var clip    = new ZeroClipboard.Client();
-                
-                clip.addEventListener('onMouseOut', function(myClip) {
-                  setTimeout(function(){myClip.destroy()},0);
-                });
-                
-                clip.addEventListener('onComplete', function(myClip) {
-                  setTimeout(function() {
-                    myClip.destroy();
-                    element.removeClass('hover');
-                    appKit.windowClick();
-                  },0);
-                });
-            
-                clip.setText(element.attr('href'));
-                clip.glue(this);
-              });  
-            });
-    [%- END;
-        header.jssrc.list.push( clipboard_jssrc );
-    END;
 END;
 
 IF c.config.favicon;
