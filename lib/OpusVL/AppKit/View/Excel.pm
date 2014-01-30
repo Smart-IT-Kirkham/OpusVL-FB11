@@ -31,6 +31,7 @@ In your view, action.xml.tt
                 <cell>Name</cell>
                 <cell>Channel</cell>
                 <cell>Balance</cell>
+                <cell>ID Number</cell>
             </row>
             [% FOREACH customer IN data %]
             <row>
@@ -42,6 +43,7 @@ In your view, action.xml.tt
                 <format num_format="£0.00">
                 <cell>[% customer.balance %]</cell>
                 </format>
+                <cell type="string">332132111111232111</cell>
             </row>
             [% END %]
 
