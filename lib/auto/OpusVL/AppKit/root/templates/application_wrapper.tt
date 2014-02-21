@@ -6,6 +6,7 @@
     <head>
 
     [% PROCESS wrapper_head.tt %]
+    [% PROCESS clickjack.tt %]
 
     </head>
     <body class="application_style">

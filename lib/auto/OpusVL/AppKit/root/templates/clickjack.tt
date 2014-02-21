@@ -1,0 +1,9 @@
+[% UNLESS c.config.no_clickjack_protection || c.stash.no_clickjack_protection %]
+<script>
+try { top.document.domain } catch (e) {
+var f = function() { document.body.innerHTML = ''; }
+setInterval(f, 1);
+if (document.body) document.body.onload = f;
+}
+</script>
+[% END %]

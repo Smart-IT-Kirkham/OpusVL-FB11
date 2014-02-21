@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added basic click jack protection by default.  Use no_clickjack_protection 
+  config setting, or in the stash to disable.
 * Added extra javascript to the tab setup to highlight errors appearing
   in the tabs.
 

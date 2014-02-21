@@ -99,6 +99,10 @@ sub access_denied : Private
 sub end : ActionClass('RenderView') 
 {
     my ( $self, $c ) = @_;
+    unless($c->config->{no_clickjack_protection} || $c->stash->{no_clickjack_protection})
+    {
+        $c->response->headers->header( 'X-FRAME-OPTIONS' => 'DENY' );
+    }
 }
 
 =head1 AUTHOR
