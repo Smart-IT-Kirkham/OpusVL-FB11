@@ -52,6 +52,7 @@ requires 'Catalyst::Plugin::Session::Store::FastMmap';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Static::Simple' => 0.30;
 requires 'Catalyst::Plugin::Cache';
+requires 'Try::Tiny';
 
 # really test dependencies.
 requires 'Catalyst::Engine::PSGI';
