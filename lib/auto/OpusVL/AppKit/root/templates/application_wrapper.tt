@@ -9,7 +9,7 @@
     [% PROCESS clickjack.tt %]
 
     </head>
-    <body class="application_style">
+    <body class="application_style[% IF c.config.installation_type %] [% c.config.installation_type | lc | html %][% END %]">
         <div id="page">
             <div id="header">
                 [% PROCESS application_style_menu.tt %]

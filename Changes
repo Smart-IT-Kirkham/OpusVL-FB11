@@ -1,5 +1,8 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added installation_type configuration setting that will be inserted into
+  the class of the body element on the application style apps.  This allows
+  for differences in config to be targetted by CSS.  e.g. staging and live.
 * Added basic click jack protection by default.  Use no_clickjack_protection 
   config setting, or in the stash to disable.
 * Added extra javascript to the tab setup to highlight errors appearing
