@@ -98,6 +98,16 @@ sub execute
     {
         # .. load it..
         $self->load_config_file ( $c, $form, $form_file );
+        unless($c->config->{no_formfu_classes})
+        {
+            $form->auto_container_class('%t');
+            $form->auto_container_label_class('label');
+            $form->auto_container_comment_class('comment');
+            $form->auto_comment_class('comment');
+            $form->auto_container_error_class('error');
+            $form->auto_container_per_error_class('error_%s_%t');
+            $form->auto_error_class('error_message error_%s_%t');
+        }
     
         $self->process( $form );
         
