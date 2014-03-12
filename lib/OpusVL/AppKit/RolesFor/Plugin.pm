@@ -53,6 +53,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 use Moose::Role;
 use Carp;
 use File::ShareDir qw/module_dir/;
+use Try::Tiny;
 
 # this method is provided for compatibility reassons
 # you should switch to using add_paths instead since it does this
@@ -73,10 +74,16 @@ sub add_paths
     my $module = shift;
 
     # FIXME: should I do a rel2abs here?
-    my $module_dir = module_dir($module);
-    $self->_add_form_path($module_dir);
-    $self->_add_static_path($module_dir);
-    $self->_add_template_path($module_dir);
+    my $module_dir = try
+    {
+        module_dir($module);
+    };
+    if($module_dir)
+    {
+        $self->_add_form_path($module_dir);
+        $self->_add_static_path($module_dir);
+        $self->_add_template_path($module_dir);
+    }
 }
 
 sub _add_form_path
