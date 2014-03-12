@@ -9,7 +9,7 @@
     [% PROCESS clickjack.tt %]
 
     </head>
-    <body>
+    <body[% IF c.config.installation_type %] class="[% c.config.installation_type | lc | html %]"[% END %]>
         <div id="page">
             [% IF c.config.AppKit.ie_compatability %]
             <!--[if lte IE [% c.config.AppKit.ie_compatability %]]>
