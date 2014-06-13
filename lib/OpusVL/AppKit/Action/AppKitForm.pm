@@ -49,6 +49,7 @@ use namespace::autoclean;
 use MRO::Compat; 
 extends 'Catalyst::Action';
 use File::ShareDir;
+use List::MoreUtils qw/uniq/;
 
 ############################################################################################################################
 # Methods
@@ -68,7 +69,6 @@ sub execute
     
     # Configure the form to generate IDs automatically
     $form->auto_id("formfield_%n_%r_%c");
-    
     # The action attribute should point the path of the config file...
     my $config_file = $self->attributes->{AppKitForm}->[0];
 
@@ -120,6 +120,29 @@ sub execute
             }
         }
     
+        my $previous_indicator = $form->indicator;
+        $form->indicator(sub 
+        {
+            my $self = shift;
+            my $query = shift;
+            if($form->method eq 'POST') {
+                unless($c->req->method eq 'POST')
+                {
+                    # check form is a post, if not return false.
+                    return 0;
+                }
+            }
+            if($previous_indicator) 
+            {
+                return $query->param($previous_indicator);
+            }
+            else
+            {
+                my @names = uniq grep {defined} map { $_->nested_name } @{ $self->get_fields };
+                return grep { defined $query->param($_) } @names;
+            }
+        });
+
         $self->process( $form );
         
         # .. stash it..
