@@ -125,8 +125,8 @@ sub execute
         {
             my $self = shift;
             my $query = shift;
-            if($form->method eq 'POST') {
-                unless($c->req->method eq 'POST')
+            if(uc $form->method eq 'POST') {
+                unless(uc $c->req->method eq 'POST')
                 {
                     # check form is a post, if not return false.
                     return 0;
