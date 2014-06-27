@@ -49,6 +49,7 @@ use namespace::autoclean;
 use MRO::Compat; 
 extends 'Catalyst::Action';
 use File::ShareDir;
+use List::MoreUtils qw/uniq/;
 
 ############################################################################################################################
 # Methods
@@ -68,7 +69,6 @@ sub execute
     
     # Configure the form to generate IDs automatically
     $form->auto_id("formfield_%n_%r_%c");
-    
     # The action attribute should point the path of the config file...
     my $config_file = $self->attributes->{AppKitForm}->[0];
 
@@ -98,7 +98,51 @@ sub execute
     {
         # .. load it..
         $self->load_config_file ( $c, $form, $form_file );
+        my $new_formfu = $form->can('auto_container_comment_class');
+        if($c->config->{no_formfu_classes})
+        {
+            unless($new_formfu)
+            {
+                $c->log->warn('no_formfu_classes feature will not work without upgrade to HTML::FormFu 1.0');
+            }
+        }
+        else
+        {
+            if($new_formfu)
+            {
+                $form->auto_container_class('%t');
+                $form->auto_container_label_class('label');
+                $form->auto_container_comment_class('comment');
+                $form->auto_comment_class('comment');
+                $form->auto_container_error_class('error');
+                $form->auto_container_per_error_class('error_%s_%t');
+                $form->auto_error_class('error_message error_%s_%t');
+            }
+        }
     
+        my $previous_indicator = $form->indicator;
+        $form->indicator(sub 
+        {
+            my $self = shift;
+            my $query = shift;
+            if(uc $form->method eq 'POST') {
+                unless(uc $c->req->method eq 'POST')
+                {
+                    # check form is a post, if not return false.
+                    return 0;
+                }
+            }
+            if($previous_indicator) 
+            {
+                return $query->param($previous_indicator);
+            }
+            else
+            {
+                my @names = uniq grep {defined} map { $_->nested_name } @{ $self->get_fields };
+                return grep { defined $query->param($_) } @names;
+            }
+        });
+
         $self->process( $form );
         
         # .. stash it..

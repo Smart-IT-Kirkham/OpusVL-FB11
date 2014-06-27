@@ -99,6 +99,13 @@ sub access_denied : Private
 sub end : ActionClass('RenderView') 
 {
     my ( $self, $c ) = @_;
+    unless($c->config->{no_clickjack_protection} || $c->stash->{no_clickjack_protection})
+    {
+        $c->response->headers->header( 'X-FRAME-OPTIONS' => 'DENY' );
+    }
+    $c->response->headers->header('X-XSS-Protection' => '1; mode=block');
+    $c->response->headers->header('Strict-Transport-Security' => 'max-age=31536000; includeSubDomains');
+    $c->response->headers->header('X-Content-Type-Options' => 'nosniff');
 }
 
 =head1 AUTHOR

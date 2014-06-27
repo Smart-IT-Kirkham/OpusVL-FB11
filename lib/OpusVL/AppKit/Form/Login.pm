@@ -3,9 +3,12 @@ package OpusVL::AppKit::Form::Login;
 use strict;
 use warnings;
 use Moose;
+use HTML::FormHandler::Moose;
 
 use CatalystX::SimpleLogin::Form::Login;
 extends 'CatalystX::SimpleLogin::Form::Login';
+
+has_field '+password' => ( element_attr => { autocomplete => 'off' } );
 
 override 'validate' => sub 
 {
