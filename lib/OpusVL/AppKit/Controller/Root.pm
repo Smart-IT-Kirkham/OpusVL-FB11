@@ -104,7 +104,10 @@ sub end : ActionClass('RenderView')
         $c->response->headers->header( 'X-FRAME-OPTIONS' => 'DENY' );
     }
     $c->response->headers->header('X-XSS-Protection' => '1; mode=block');
-    $c->response->headers->header('Strict-Transport-Security' => 'max-age=31536000; includeSubDomains');
+    if($c->config->{ssl_only})
+    {
+        $c->response->headers->header('Strict-Transport-Security' => 'max-age=31536000; includeSubDomains');
+    }
     $c->response->headers->header('X-Content-Type-Options' => 'nosniff');
 }
 

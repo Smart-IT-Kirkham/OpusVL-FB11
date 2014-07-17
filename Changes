@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Allow HSTS header Strict-Transport-Security to be turned on with ssl_only config setting.
+
 * Ensured our applications continue to work with HTML::FormFu.  If you want to 
   ditch all it's classes set the 'no_formfu_classes' config setting and FormFu
   will stop adding all the extra classes onto all the html it renders.
