@@ -78,7 +78,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 use strict;
 use warnings;
 use OpusVL::AppKit::Builder;
-our $VERSION = '2.03';
+our $VERSION = '2.04';
 
 ##################################################################################################################################
 # main #
