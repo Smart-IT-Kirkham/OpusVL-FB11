@@ -101,7 +101,14 @@ sub end : ActionClass('RenderView')
     my ( $self, $c ) = @_;
     unless($c->config->{no_clickjack_protection} || $c->stash->{no_clickjack_protection})
     {
-        $c->response->headers->header( 'X-FRAME-OPTIONS' => 'DENY' );
+        if($c->config->{clickjack_same_origin})
+        {
+            $c->response->headers->header( 'X-FRAME-OPTIONS' => 'SAMEORIGIN' );
+        }
+        else
+        {
+            $c->response->headers->header( 'X-FRAME-OPTIONS' => 'DENY' );
+        }
     }
     $c->response->headers->header('X-XSS-Protection' => '1; mode=block');
     if($c->config->{ssl_only})
