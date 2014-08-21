@@ -55,7 +55,6 @@ requires 'Catalyst::Plugin::Cache';
 requires 'Try::Tiny';
 
 # really test dependencies.
-requires 'Catalyst::Engine::PSGI';
 requires 'Plack';
 requires 'Child';
 
