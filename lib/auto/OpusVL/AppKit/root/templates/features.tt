@@ -58,3 +58,18 @@ END;
 
     # END
 -%]
+[%- IF features.appkitfeature_splitselect;
+    header.js.list.push( "/static/js/jquery.sortBy.js");
+    header.js.list.push( "/static/js/jquery.split-select.js");
+    header.css.list.push( "/static/css/splitselect/style.css");
+-%]
+[%- splitselect_jssrc = BLOCK -%]
+
+    $(function() {
+        $('.split-select').each(function() {
+            $(this).splitSelect();
+        });
+    });
+[%- END; 
+    header.jssrc.list.push( splitselect_jssrc );
+END -%]

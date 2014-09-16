@@ -42,6 +42,7 @@
         appkitfeature_htmleditor    => 0,
         appkitfeature_tablesorter   => 0,
         appkitfeature_clipboard     => 0,
+        appkitfeature_splitselect   => 0,
     };
 
     # the above 'feature' hashref is a list of available features in this template.
