@@ -109,6 +109,7 @@ $mech2->post_ok('http://localhost:9002/admin/access/role/Administrator/show', {
 }, 'Allow deleting roles.');
 
 $mech->get_ok('http://localhost:9001/admin/access/role/Administrator/show');
+$mech->get_ok('http://localhost:9001/admin/access/role/Administrator/show');
 ok $first_load ne $mech->content, "Content should have changed.";
 if($first_load eq $mech->content)
 {
