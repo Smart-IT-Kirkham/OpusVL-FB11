@@ -75,9 +75,9 @@ __PACKAGE__->add_columns(
   "status",
   { data_type => "text", default_value => "active", is_nullable => 0 },
   "last_login",
-  { data_type => 'datetime', is_nullable => 1 },
+  { data_type => 'timestamp', is_nullable => 1 },
   "last_failed_login",
-  { data_type => 'datetime', is_nullable => 1 },
+  { data_type => 'timestamp', is_nullable => 1 },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint("user_index", ["username"]);
