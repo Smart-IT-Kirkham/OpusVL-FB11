@@ -946,6 +946,10 @@ div.search_result_url {
 	color: #1c7004;
 }
 
+.hidden {
+    display: none;
+}
+
 /* @end */
 
 
