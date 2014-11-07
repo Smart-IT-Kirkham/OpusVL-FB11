@@ -560,7 +560,7 @@ a.link_next {
 
 /* @group Submit buttons */
 
-input.submit {
+input.submit, input.main_button {
 	background-color: white;
 	display: inline-block;
 	font-size: .9em;
@@ -609,7 +609,7 @@ input.submit_back {
 	padding-left: 47px;	
 }
 
-input.submit_add {
+input.submit_add, input.main_button.add {
 	background: url(/static/images/controls/add-med.png) no-repeat -4px -6px;
 	padding-left: 42px;	
 }
