@@ -89,6 +89,19 @@
                             </tr>
                         </table>
                     </fieldset>
+                    <fieldset>
+                        <legend>Log in attempts</legend>
+                        <table>
+                            <tr>
+                                <td>Last Login:</td>
+                                <td>[% date_long(thisuser.last_login) %]</td>
+                            </tr>
+                            <tr>
+                                <td>Last Failed Login:</td>
+                                <td>[% date_long(thisuser.last_failed_login) %]</td>
+                            </tr>
+                        </table>
+                    </fieldset>
 
 
                     <fieldset>

@@ -50,15 +50,37 @@ sub check_password
     my $schema = $self->result_source->schema;
     # see if the schema has been given a method for
     # checking the password
+    my $result;
     if($schema->can('password_check') && $schema->password_check)
     {
         # look up ldap password.
-        return $schema->password_check->check_password($self->username, @_);
+        $result = $schema->password_check->check_password($self->username, @_);
     }
     else
     {
-        return $self->_local_check_password(@_);
+        $result = $self->_local_check_password(@_);
     }
+    if($result)
+    {
+        $self->successful_login;
+    }
+    else
+    {
+        $self->failed_login;
+    }
+    return $result;
+}
+
+sub failed_login
+{
+    my $self = shift;
+    $self->update({ last_failed_login => DateTime->now() });
+}
+
+sub successful_login
+{
+    my $self = shift;
+    $self->update({ last_login => DateTime->now() });
 }
 
 
