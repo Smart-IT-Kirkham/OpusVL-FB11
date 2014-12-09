@@ -28,6 +28,9 @@ requires 'Catalyst::View::Excel::Template::Plus';
 requires 'Template::AutoFilter';
 requires 'Template::Alloy' => '1.020';
 
+# This might be a dependency from somewhere else ... not sure
+requires 'HTML::FormFu::MultiForm' => '1.00';
+
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';
 requires 'Catalyst::Action::RenderView';

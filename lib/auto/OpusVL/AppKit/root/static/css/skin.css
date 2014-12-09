@@ -950,6 +950,10 @@ div.search_result_url {
     display: none;
 }
 
+.chosen-container-single .chosen-default {
+    color: #4F586E;
+}
+
 /* @end */
 
 
