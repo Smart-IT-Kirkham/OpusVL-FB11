@@ -1,5 +1,7 @@
 This file documents the revision history for Perl extension OpusVL::AppKit.
 
+* Added support for new config parameter to allow the insertion of extra
+  css files into the head section.  This is extra_css.
 * Allow HSTS header Strict-Transport-Security to be turned on with ssl_only config setting.
 
 * Ensured our applications continue to work with HTML::FormFu.  If you want to 

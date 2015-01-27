@@ -18,6 +18,9 @@
     };
 
     # read in any header modifications from the $c..
+    FOR css IN c.config.extra_css
+        header.css.push( css );
+    END ;
     FOR css IN c.stash.header.css.list;
         header.css.push( css );
     END;
