@@ -1,4 +1,4 @@
-package OpusVL::FB11::Plugin::AppKit::Node;
+package OpusVL::FB11::Plugin::FB11::Node;
 
 use Moose;
 

@@ -19,7 +19,7 @@ package OpusVL::FB11::Builder;
         Catalyst::Plugin::Session::State::Cookie
         CatalystX::SimpleLogin
         CatalystX::VirtualComponents
-        OpusVL::FB11::Plugin::AppKit
+        OpusVL::FB11::Plugin::FB11
 
         Controller::Root
 
@@ -67,14 +67,14 @@ package OpusVL::FB11::Builder;
         L<Catalyst::Plugin::Session::State::Cookie>
         L<CatalystX::SimpleLogin>
         L<CatalystX::VirtualComponents>
-        L<OpusVL::FB11::Plugin::AppKit>
+        L<OpusVL::FB11::Plugin::FB11>
 
     This also configures the application in the following way:
 
         default_view                    - Set to 'AppKitTT'
         custom-error-message            - enable customer error msg.
         static                          - set static to auto dir
-        OpusVL::FB11::Plugin::AppKit  - used to config ACL rules.
+        OpusVL::FB11::Plugin::FB11  - used to config ACL rules.
         View::AppKitTT                  - set include paths, wrapper, etc.
         Plugin::Authentication          - used to authenicate users.
         View::Email                     - use to send any emails
@@ -136,8 +136,8 @@ override _build_plugins => sub
         Cache
         +CatalystX::SimpleLogin
         +CatalystX::VirtualComponents
-        +OpusVL::FB11::Plugin::AppKit
-        +OpusVL::FB11::Plugin::AppKitControllerSorter
+        +OpusVL::FB11::Plugin::FB11
+        +OpusVL::FB11::Plugin::FB11ControllerSorter
     );
 
     return $plugins;

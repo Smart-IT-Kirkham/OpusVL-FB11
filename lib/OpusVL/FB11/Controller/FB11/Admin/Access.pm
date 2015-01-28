@@ -1,4 +1,4 @@
-package OpusVL::FB11::Controller::AppKit::Admin::Access;
+package OpusVL::FB11::Controller::FB11::Admin::Access;
 
 use Moose;
 use namespace::autoclean;

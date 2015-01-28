@@ -60,9 +60,9 @@ sub index
 =head2 access_notallowed
     This called by the ACL method when an access control rule is broken. (including not being logged in!)
     Configured in myapp.conf     :
-        <OpusVL::FB11::Plugin::AppKit>
+        <OpusVL::FB11::Plugin::FB11>
             access_denied   "access_notallowed"
-        </OpusVL::FB11::Plugin::AppKit>
+        </OpusVL::FB11::Plugin::FB11>
 =cut
 
 sub default :Path 

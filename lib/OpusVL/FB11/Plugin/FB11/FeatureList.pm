@@ -1,8 +1,8 @@
-package OpusVL::FB11::Plugin::AppKit::FeatureList;
+package OpusVL::FB11::Plugin::FB11::FeatureList;
 
 =head1 NAME
 
-OpusVL::FB11::Plugin::AppKit::FeatureList;
+OpusVL::FB11::Plugin::FB11::FeatureList;
 
 =head1 DESCRIPTION
 
@@ -11,7 +11,7 @@ system.
 
 =head1 SYNOPSIS
 
-    my $features = OpusVL::FB11::Plugin::AppKit::FeatureList->new;
+    my $features = OpusVL::FB11::Plugin::FB11::FeatureList->new;
 
 =head1 METHODS
 

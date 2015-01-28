@@ -1,4 +1,4 @@
-package OpusVL::FB11::Plugin::AppKitControllerSorter;
+package OpusVL::FB11::Plugin::FB11ControllerSorter;
 
 
 use strict;

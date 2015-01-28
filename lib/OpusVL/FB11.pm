@@ -29,14 +29,14 @@ OpusVL::FB11 - Catalyst based application
 
     F<myapp.conf>:
     
-        <OpusVL::FB11::Plugin::AppKit>
+        <OpusVL::FB11::Plugin::FB11>
             access_denied   "access_notallowed"
             <acl_rules>
                 somecontroller/someaction       "somerole"
                 somecontroller/someaction       "someotherrole"
                 somecontroller/someotheraction  "somerole"
             </acl_rules>
-        </OpusVL::FB11::Plugin::AppKit>
+        </OpusVL::FB11::Plugin::FB11>
   
 
 
@@ -54,7 +54,7 @@ OpusVL::FB11 - Catalyst based application
 
 =head1 SEE ALSO
 
-    L<OpusVL::FB11::Plugin::AppKit>,
+    L<OpusVL::FB11::Plugin::FB11>,
     L<OpusVL::FB11::Base::Controller::GUI>,
     L<OpusVL::FB11::Controller::Root>, 
     L<Catalyst>

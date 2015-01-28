@@ -1,4 +1,4 @@
-package OpusVL::FB11::Controller::AppKit;
+package OpusVL::FB11::Controller::FB11;
 
 use Moose;
 use namespace::autoclean;

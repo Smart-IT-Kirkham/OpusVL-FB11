@@ -1,8 +1,8 @@
-package OpusVL::FB11::Plugin::AppKit;
+package OpusVL::FB11::Plugin::FB11;
 
 =head1 NAME
 
-    OpusVL::FB11::Plugin::AppKit - Common functions to get OpusVL::AppKit working.
+    OpusVL::FB11::Plugin::FB11 - Common functions to get OpusVL::AppKit working.
 
 =head1 DESCRIPTION
 
@@ -23,8 +23,8 @@ use namespace::autoclean;
 use 5.010;
 use Tree::Simple;
 use Tree::Simple::Visitor::FindByPath;
-use OpusVL::FB11::Plugin::AppKit::Node;
-use OpusVL::FB11::Plugin::AppKit::FeatureList;
+use OpusVL::FB11::Plugin::FB11::Node;
+use OpusVL::FB11::Plugin::FB11::FeatureList;
 with 'Catalyst::ClassData';
 
 ###########################################################################################################################
@@ -227,7 +227,7 @@ sub execute
 
 =head2 appkit_features
 
-Returns a OpusVL::FB11::Plugin::AppKit::FeatureList object that allows the querying of the features permissions
+Returns a OpusVL::FB11::Plugin::FB11::FeatureList object that allows the querying of the features permissions
 that sit on top of our roles management.
 
 =cut
@@ -246,7 +246,7 @@ sub appkit_features
 }
 
 =head2 appkit_actiontree
-    This returns a Tree::Simple of OpusVL::FB11::Plugin::AppKit::Node's.
+    This returns a Tree::Simple of OpusVL::FB11::Plugin::FB11::Node's.
     Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
     This attribute is used to define access to actions.(but could be used for many more things)
 
@@ -313,7 +313,7 @@ sub _build_appkit_actiontree
 
     # make a tree root (based on code from Catalyst::Plugin::Authorization::ACL::Engine)
     my $root = Tree::Simple->new('AppKit', Tree::Simple->ROOT);
-    my $features = OpusVL::FB11::Plugin::AppKit::FeatureList->new;
+    my $features = OpusVL::FB11::Plugin::FB11::FeatureList->new;
 
     AKCONTROLLERS: foreach my $cont ( @{ $c->appkit_controllers } )
     {   
@@ -332,7 +332,7 @@ sub _build_appkit_actiontree
             my $name = pop @path;
 
             # build AppKit::Node object...
-            my $appkit_action_object = OpusVL::FB11::Plugin::AppKit::Node->new
+            my $appkit_action_object = OpusVL::FB11::Plugin::FB11::Node->new
             (
                 node_name       => $name,
                 action_path     => $action_path,
@@ -399,7 +399,7 @@ sub _build_appkit_actiontree
                 {
 
                     # build AppKit::Node object...
-                    my $branch_appkit_action_object = OpusVL::FB11::Plugin::AppKit::Node->new
+                    my $branch_appkit_action_object = OpusVL::FB11::Plugin::FB11::Node->new
                     (
                         node_name   => $path_part,
                         in_feature => 0,
@@ -600,7 +600,7 @@ sub who_can_access
 
 
 =head2 _find_node_in_appkit_actiontree
-    Returns OpusVL::FB11::Plugin::AppKit::Node that represents the action_path.
+    Returns OpusVL::FB11::Plugin::FB11::Node that represents the action_path.
     .. or undef if not found.
 =cut
 
