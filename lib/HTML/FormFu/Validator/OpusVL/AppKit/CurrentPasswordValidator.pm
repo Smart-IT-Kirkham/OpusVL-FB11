@@ -1,4 +1,4 @@
-package HTML::FormFu::Validator::OpusVL::AppKit::CurrentPasswordValidator;
+package HTML::FormFu::Validator::OpusVL::FB11::CurrentPasswordValidator;
 
 use strict;
 use warnings;

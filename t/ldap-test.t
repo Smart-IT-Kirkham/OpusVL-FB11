@@ -11,7 +11,7 @@ use FindBin;
 use lib "$FindBin::Bin/lib";
 use Term::ReadKey;
 use Scope::Guard;
-use OpusVL::AppKit::LDAPAuth;
+use OpusVL::FB11::LDAPAuth;
 
 
 diag('Enter username');
@@ -20,7 +20,7 @@ chomp $user;
 diag('Enter password');
 my $password = get_password();
 
-my $test = OpusVL::AppKit::LDAPAuth->new();
+my $test = OpusVL::FB11::LDAPAuth->new();
 ok $test->check_password($user, $password);
 
 done_testing;

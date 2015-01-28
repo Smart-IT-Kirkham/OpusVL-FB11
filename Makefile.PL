@@ -3,7 +3,7 @@
 use inc::Module::Install;
 
 name 'OpusVL-AppKit';
-all_from 'lib/OpusVL/AppKit.pm';
+all_from 'lib/OpusVL/FB11.pm';
 
 requires 'Moose';
 requires 'File::ShareDir';

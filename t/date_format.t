@@ -2,7 +2,7 @@ use Moose;
 use DateTime;
 use Test::More;
 
-with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 
 sub create_action

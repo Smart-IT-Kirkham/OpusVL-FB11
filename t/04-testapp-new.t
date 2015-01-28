@@ -1,6 +1,6 @@
 
 ##########################################################################################################################
-# This set of tests should be run against the TestApp within the 't' directory of the OpusVL::AppKit Catalyst app.
+# This set of tests should be run against the TestApp within the 't' directory of the OpusVL::FB11 Catalyst app.
 #
 # This set of tests is based around building the Catalyst object (with the inheritance AppBuilder brings)
 # WARNING!... These tests are only for functions, etc that AppKit has, not "functionallity" as we are using the Catalyst

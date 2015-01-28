@@ -1,10 +1,10 @@
 use Test::More;
-use OpusVL::AppKit::Plugin::AppKit::FeatureList;
+use OpusVL::FB11::Plugin::AppKit::FeatureList;
 use Catalyst::Action;
 use Test::Differences;
 use Cache::FastMmap;
 
-my $feature = OpusVL::AppKit::Plugin::AppKit::FeatureList->new;
+my $feature = OpusVL::FB11::Plugin::AppKit::FeatureList->new;
 
 my $action = Catalyst::Action->new(
     class => 'TestApp::Controller::ExtensionA',

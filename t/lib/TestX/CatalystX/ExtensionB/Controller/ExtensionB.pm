@@ -4,7 +4,7 @@ use Moose;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
-with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (

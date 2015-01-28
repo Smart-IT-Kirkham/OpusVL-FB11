@@ -6,7 +6,7 @@ use File::ShareDir;
 use FindBin qw($Bin);
 use lib "$Bin/lib";
 
-use_ok 'OpusVL::AppKit::Schema::AppKitAuthDB';
+use_ok 'OpusVL::FB11::Schema::AppKitAuthDB';
 use_ok 'TestApp';
 
 ##########################################################################################################################
@@ -30,7 +30,7 @@ my $authdb_config->{connect_info} =
 };
 
 
-ok( $authdb = OpusVL::AppKit::Schema::AppKitAuthDB->connect( $authdb_config->{connect_info} ),     "Got handle to AppKitAuthDB" );
+ok( $authdb = OpusVL::FB11::Schema::AppKitAuthDB->connect( $authdb_config->{connect_info} ),     "Got handle to AppKitAuthDB" );
 
 $authdb->txn_begin;
 

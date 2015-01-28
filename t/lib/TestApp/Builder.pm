@@ -3,10 +3,10 @@ package TestApp::Builder;
 use Moose;
 use File::ShareDir;
 
-extends 'OpusVL::AppKit::Builder';
+extends 'OpusVL::FB11::Builder';
 
 override _build_superclasses => sub {
-    return [ 'OpusVL::AppKit' ]
+    return [ 'OpusVL::FB11' ]
 };
 
 override _build_plugins => sub
@@ -32,7 +32,7 @@ override _build_config => sub
     # .. point the AppKitAuth Model to the correct DB file....
     $config->{'Model::AppKitAuthDB'} = 
     {
-        schema_class => 'OpusVL::AppKit::Schema::AppKitAuthDB',
+        schema_class => 'OpusVL::FB11::Schema::AppKitAuthDB',
         connect_info =>
         {   
             dsn             => 'dbi:SQLite:' . $path . '/root/db/appkit_auth.db',

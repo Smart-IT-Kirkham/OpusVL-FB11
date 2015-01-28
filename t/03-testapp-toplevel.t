@@ -1,6 +1,6 @@
 
 ##########################################################################################################################
-# This set of tests should be run against the TestApp within the 't' directory of the OpusVL::AppKit Catalyst app.
+# This set of tests should be run against the TestApp within the 't' directory of the OpusVL::FB11 Catalyst app.
 #
 # I couldn't figure out why we couldn't run the tests in the usual way so 
 # I flipped it to do so.  I guess the problem we had was fixed somehow?
@@ -28,7 +28,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     is( $mech->ct, "text/html");
     $mech->content_contains("Please login", "Redirect to login page");
-    $mech->content_contains('OpusVL::AppKit', 'App name and logo should be present');
+    $mech->content_contains('OpusVL::FB11', 'App name and logo should be present');
     $mech->add_header("Content-Type" => "application/json");
     $mech->get("/rest/no_permission/30");
     is $mech->status, 403;

@@ -19,7 +19,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     is( $mech->ct, "text/html");
     $mech->content_contains("Please login", "Redirect to login page");
-    $mech->content_contains('OpusVL::AppKit', 'App name and logo should be present');
+    $mech->content_contains('OpusVL::FB11', 'App name and logo should be present');
 
      # Send some login information..
     $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");

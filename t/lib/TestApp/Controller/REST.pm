@@ -7,7 +7,7 @@ use Try::Tiny;
 
 BEGIN {
     extends 'Catalyst::Controller::REST';
-    with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+    with 'OpusVL::FB11::RolesFor::Controller::GUI';
 }
 
 __PACKAGE__->config(

@@ -1,8 +1,8 @@
 use Test::Most;
 
-use OpusVL::AppKit::Plugin::AppKit;
+use OpusVL::FB11::Plugin::AppKit;
 
-my $plugin = OpusVL::AppKit::Plugin::AppKit->new();
+my $plugin = OpusVL::FB11::Plugin::AppKit->new();
 
 my @unrestricted = qw{
 end

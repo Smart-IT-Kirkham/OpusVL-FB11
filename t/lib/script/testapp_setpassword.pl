@@ -3,7 +3,7 @@ use strict;
 use File::ShareDir;
 use Getopt::Compact;
 use TestApp;
-use OpusVL::AppKit::Schema::AppKitAuthDB;
+use OpusVL::FB11::Schema::AppKitAuthDB;
 
 my $username;
 my $password;
@@ -26,7 +26,7 @@ die ( $go->usage() ) unless $username && $password;
 my $path = File::ShareDir::module_dir( 'TestApp' );
 
 # get the DBIx::Class schema..
-my $schema = OpusVL::AppKit::Schema::AppKitAuthDB->connect
+my $schema = OpusVL::FB11::Schema::AppKitAuthDB->connect
 (
   'dbi:SQLite:' . $path . '/root/db/appkit_auth.db',
   '',

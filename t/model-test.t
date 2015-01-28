@@ -5,7 +5,7 @@ use Test::More;
     use warnings;
 
     use Test::DBIx::Class {
-        schema_class => 'OpusVL::AppKit::Schema::AppKitAuthDB',
+        schema_class => 'OpusVL::FB11::Schema::AppKitAuthDB',
     }, 'Role', 'RoleAllowed', 'User';
 
     fixtures_ok { 

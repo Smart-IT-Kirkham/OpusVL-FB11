@@ -10,7 +10,7 @@ elements:
     label: Username
     constraints:
       - Required
-      - type: '+OpusVL::AppKit::FormFu::Constraint::AppKitUsername'
+      - type: '+OpusVL::FB11::FormFu::Constraint::AppKitUsername'
         user_stashkey: thisuser
 
   - type: Password
@@ -19,7 +19,7 @@ elements:
     model_config:
       read_only: 1
     constraints:
-      - type: '+OpusVL::AppKit::FormFu::Constraint::AppKitPassword'
+      - type: '+OpusVL::FB11::FormFu::Constraint::AppKitPassword'
 
   - type: Text
     name: name

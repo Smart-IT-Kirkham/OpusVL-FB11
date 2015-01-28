@@ -4,7 +4,7 @@ use Moose;
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; }
-with 'OpusVL::AppKit::RolesFor::Controller::GUI';
+with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
@@ -13,15 +13,15 @@ __PACKAGE__->config
 
 =head1 NAME
 
-    OpusVL::AppKit::Controller::Test - Test Controller for OpusVL::AppKit
+    OpusVL::FB11::Controller::Test - Test Controller for OpusVL::AppKit
 
 =head1 DESCRIPTION
 
-    The OpusVL::AppKit is intended to be inherited by another Catalyst App using AppBuilder.
+    The OpusVL::FB11 is intended to be inherited by another Catalyst App using AppBuilder.
 
     This controller is only used for testing.
 
-    You can see I have 'extended' OpusVL::AppKit::Base::Controller::GUI. Doing this allows the 
+    You can see I have 'extended' OpusVL::FB11::Base::Controller::GUI. Doing this allows the 
     AppKit to tell the controller should be part of the GUI
 
 =head1 METHODS

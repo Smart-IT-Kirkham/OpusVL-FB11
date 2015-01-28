@@ -3,11 +3,11 @@
 use strict;
 use warnings;
 use Test::More;
-use_ok 'OpusVL::AppKit::Form::Login';
-use_ok 'OpusVL::AppKit';
-use_ok 'OpusVL::AppKit::View::SimpleXML';
-use_ok 'HTML::FormFu::Validator::OpusVL::AppKit::CurrentPasswordValidator';
-use_ok 'OpusVL::AppKit::TraitFor::Controller::Login::SetHomePageFlag';
-use_ok 'OpusVL::AppKit::View::Excel';
+use_ok 'OpusVL::FB11::Form::Login';
+use_ok 'OpusVL::FB11';
+use_ok 'OpusVL::FB11::View::SimpleXML';
+use_ok 'HTML::FormFu::Validator::OpusVL::FB11::CurrentPasswordValidator';
+use_ok 'OpusVL::FB11::TraitFor::Controller::Login::SetHomePageFlag';
+use_ok 'OpusVL::FB11::View::Excel';
 
 done_testing;

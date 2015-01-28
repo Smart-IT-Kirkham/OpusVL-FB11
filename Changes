@@ -1,4 +1,4 @@
-This file documents the revision history for Perl extension OpusVL::AppKit.
+This file documents the revision history for Perl extension OpusVL::FB11.
 
 * Added support for new config parameter to allow the insertion of extra
   css files into the head section.  This is extra_css.
@@ -87,8 +87,8 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 * Added ability to use LDAP auth for authentication while still storing
   user information in the database.
   To integrate this with Catalyst you need to add the trait 
-  OpusVL::AppKit::RolesFor::Model::LDAPAuth to your model and apply the role
-  OpusVL::AppKit::RolesFor::Schema::LDAPAuth to your schema class.
+  OpusVL::FB11::RolesFor::Model::LDAPAuth to your model and apply the role
+  OpusVL::FB11::RolesFor::Schema::LDAPAuth to your schema class.
   Read the perldoc for the modules for more information on configuration.
   The password changing facilities should obviously be turned off if you 
   are managing your passwords via LDAP.  The 'Features' on the auth roles
@@ -131,7 +131,7 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 1.29
 
 * Added a new role to allow the easy merging of the AppKitAuthDB into another schema.
-  OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB
+  OpusVL::FB11::RolesFor::Schema::AppKitAuthDB
 * Switched view template engine from TT2 to Template::Alloy
   Note that this has slightly different syntax in places and doesn't like
   spaced after function names.  i.e. c.uri_for (action) won't work.
@@ -144,7 +144,7 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 
 * Integrated Excel view that makes use of Excel::Template::Plus.
 * Added a method to the role for making plugins easier to setup.
-  OpusVL::AppKit::RolesFor::Plugin->add_paths(__PACKAGE__).  This replaces
+  OpusVL::FB11::RolesFor::Plugin->add_paths(__PACKAGE__).  This replaces
   the add_form_path method in the previous release.
 
 1.27
@@ -157,12 +157,12 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
   setup_components.
 
     # at the top
-    with 'OpusVL::AppKit::RolesFor::Plugin';
+    with 'OpusVL::FB11::RolesFor::Plugin';
 
     # in after 'setup_components'
     $class->add_form_path(__PACKAGE__); # ''
 
-  For an example of it in use look at OpusVL::AppKitX::ResultsetSearch
+  For an example of it in use look at OpusVL::FB11X::ResultsetSearch
 
 * Added hooks for the notification system in the application wrapper html.
 * Added a standard 'delete.yml' template in the root folder for most of the
@@ -271,10 +271,10 @@ This file documents the revision history for Perl extension OpusVL::AppKit.
 0.20
 
 * Moved the date_short, date_long, time_short and time_long DateTime formatting functions
-  to the controller (via OpusVL::AppKit::RolesFor::Controller::GUI) and update the macros
+  to the controller (via OpusVL::FB11::RolesFor::Controller::GUI) and update the macros
   to call those functions so that we have consistency.  You can now access those functions
   from both your controllers and your TT templates.
-* Fixed the module version number reporting so if you do perl -MOpusVL::AppKit\ 9999 it will
+* Fixed the module version number reporting so if you do perl -MOpusVL::FB11\ 9999 it will
   report the correct version number.
 
 0.19
