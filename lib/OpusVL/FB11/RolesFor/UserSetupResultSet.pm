@@ -17,7 +17,7 @@ package OpusVL::FB11::RolesFor::UserSetupResultSet;
         my $self = shift;
 
         my $permissions = {
-            "AppKit/Home Page" => ["Admin"],
+            "FB11/Home Page" => ["Admin"],
             ...
             "System Parameters/System Parameters" => ["Admin"],
         };
@@ -28,9 +28,9 @@ package OpusVL::FB11::RolesFor::UserSetupResultSet;
         };
         my $users = [
             { 
-                username => 'appkitadmin',
+                username => 'fb11admin',
                 ...
-                name => 'AppKit Admin',
+                name => 'FB11 Admin',
                 roles => [ 'Admin' ],
             }
         ];
@@ -44,7 +44,7 @@ package OpusVL::FB11::RolesFor::UserSetupResultSet;
 =head1 DESCRIPTION
 
 This role provides a simple way to setup default users and set of roles
-for an AppKit auth database.  The idea is to call it from an initdb function
+for an FB11 auth database.  The idea is to call it from an initdb function
 which gets called when the database is built by your script.
 
 =head1 METHODS
@@ -52,11 +52,11 @@ which gets called when the database is built by your script.
 =head2 setup_users
 
     my $permissions = {
-        "AppKit/Home Page" => ["Admin"],
-        "AppKit/Password Change" => ["Admin"],
-        "AppKit/Role Administration" => ["Admin"],
-        "AppKit/User Administration" => ["Admin"],
-        "AppKit/User Password Administration" => ["Admin"],
+        "FB11/Home Page" => ["Admin"],
+        "FB11/Password Change" => ["Admin"],
+        "FB11/Role Administration" => ["Admin"],
+        "FB11/User Administration" => ["Admin"],
+        "FB11/User Password Administration" => ["Admin"],
         "Search/Search box" => ["Admin"],
         "System Parameters/System Parameters" => ["Admin"],
     };
@@ -68,9 +68,9 @@ which gets called when the database is built by your script.
     };
     my $users = [
         { 
-            username => 'appkitadmin',
+            username => 'fb11admin',
             ...
-            name => 'AppKit Admin',
+            name => 'FB11 Admin',
             roles => [ 'Admin' ],
         }
     ];

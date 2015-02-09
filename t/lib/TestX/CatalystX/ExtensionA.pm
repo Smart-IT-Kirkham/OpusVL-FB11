@@ -28,10 +28,10 @@ after 'setup_components' => sub
     # .. get the path for this name space..
     my $path = File::ShareDir::module_dir( __PACKAGE__ );
 
-    # .. add template dir into the config for View::AppKitTT...
-    my $inc_path = $config->{'View::AppKitTT'}->{'INCLUDE_PATH'};
+    # .. add template dir into the config for View::FB11TT...
+    my $inc_path = $config->{'View::FB11TT'}->{'INCLUDE_PATH'};
     push(@$inc_path, $path . '/root/templates' );
-    $config->{'View::AppKitTT'}->{'INCLUDE_PATH'} = $inc_path;
+    $config->{'View::FB11TT'}->{'INCLUDE_PATH'} = $inc_path;
 
     # .. add static dir into the config for Static::Simple..
     my $static_dirs = $config->{"Plugin::Static::Simple"}->{include_path};

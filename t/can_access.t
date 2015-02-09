@@ -7,7 +7,7 @@ use Catalyst::Test 'TestApp';
 use HTTP::Request::Common qw/POST/;
 
 my $request = POST '/login',
-             [ username   => 'appkitadmin',
+             [ username   => 'fb11admin',
              password  => 'password' ];
 
 my($res, $c) = ctx_request($request);
@@ -25,7 +25,7 @@ ok $c->can_access('end'), 'can_access end';
 ok $c->can_access('access_denied'), 'can_access access_denied';
 ok $c->can_access('View::Download'), 'can_access View::Download';
 ok $c->can_access('index'), 'can_access index';
-ok $c->can_access('appkit/admin/index'), 'can_access appkit/admin/index';
+ok $c->can_access('fb11/admin/index'), 'can_access fb11/admin/index';
 
 note 'Now checking for paths that should not be allowed';
 ok !$c->can_access('/not_access_denied'), 'NOT can_access /not_access_denied';
@@ -35,8 +35,8 @@ my $controller = $c->controller('Root');
 my $action = $controller->action_for('index');
 ok $c->can_access($action), 'Lookup by action';
 
-my @users = map { $_->username } $c->who_can_access('appkit/admin/index')->all;
-eq_or_diff \@users, [ 'appkitadmin', 'tester' ];
+my @users = map { $_->username } $c->who_can_access('fb11/admin/index')->all;
+eq_or_diff \@users, [ 'fb11admin', 'tester' ];
 
 request('/logout');
 

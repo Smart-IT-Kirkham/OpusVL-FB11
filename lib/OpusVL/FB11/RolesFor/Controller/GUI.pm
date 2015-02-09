@@ -2,7 +2,7 @@ package OpusVL::FB11::RolesFor::Controller::GUI;
 
 =head1 NAME
 
-    OpusVL::FB11::RolesFor::Controller::GUI - Role for Controllers wanting to interact with AppKit
+    OpusVL::FB11::RolesFor::Controller::GUI - Role for Controllers wanting to interact with FB11
 
 =head1 SYNOPSIS
 
@@ -11,17 +11,17 @@ package OpusVL::FB11::RolesFor::Controller::GUI;
     BEGIN{ extends 'Catalyst::Controller' };
     with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
-    __PACKAGE__->config( appkit_name        => 'My Funky App' );
-    __PACKAGE__->config( appkit_icon        => 'static/funkster/me.gif' );
-    __PACKAGE__->config( appkit_myclass     => 'MyApp' );
+    __PACKAGE__->config( fb11_name        => 'My Funky App' );
+    __PACKAGE__->config( fb11_icon        => 'static/funkster/me.gif' );
+    __PACKAGE__->config( fb11_myclass     => 'MyApp' );
     
     sub index
         :Path
         :Args(0)
         :NavigationHome
         :NavigationName("Funky Home")
-        :PortletName("Funky Portlet")
-        :AppKitForm
+        :Widget("Funky Widget")
+        :FB11Form
     {   
         # .. do some funky stuff .. 
     }
@@ -35,7 +35,7 @@ package OpusVL::FB11::RolesFor::Controller::GUI;
         with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
     Give your Controller a name within the GUI:
-        __PACKAGE__->config( appkit_name => 'Some Name' );
+        __PACKAGE__->config( fb11_name => 'Some Name' );
 
     To make use of the additional features you will have to use one of the following
     action method attributes:
@@ -46,13 +46,13 @@ package OpusVL::FB11::RolesFor::Controller::GUI;
         NavigationName
             Tells the GUI this action is a navigation item and what its name should be.
 
-        PortletName
-            Tells the GUI this action is a portlet action, so calling is only garented to fill
-            out the 'portlet' stash key.
+        Widget
+            Tells the GUI this action is a widget action, so calling is only garented to fill
+            out the 'widget' stash key.
 
-        AppKitForm
+        FB11Form
             Behaves like FormConfig option in FormFu Controller, except it loads form from the 
-            ShareDir of namespace passed in 'appkit_myclass'
+            ShareDir of namespace passed in 'fb11_myclass'
             
         SearchName
             Tells the GUI this action is a search action and what its name should be
@@ -71,14 +71,14 @@ use Moose::Role;
 # moose calls.
 ##################################################################################################################################
 
-has appkit                      => ( is => 'ro',    isa => 'Int',                       default => 1 );
-has appkit_name                 => ( is => 'rw',    isa => 'Str',                       default => 'AppKit' );
-has appkit_myclass              => ( is => 'ro',    isa => 'Str',                       );
-has appkit_shared_module        => ( is => 'rw',    isa => 'Str');
+has fb11                      => ( is => 'ro',    isa => 'Int',                       default => 1 );
+has fb11_name                 => ( is => 'rw',    isa => 'Str',                       default => 'FB11' );
+has fb11_myclass              => ( is => 'ro',    isa => 'Str',                       );
+has fb11_shared_module        => ( is => 'rw',    isa => 'Str');
 has navigation_items_merged     => ( is => 'rw',    isa => 'Bool', default => 0 );
-has appkit_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
-has appkit_method_group         => ( is => 'rw',    isa => 'Str', default => '');
-has appkit_order                => ( is => 'rw',    isa => 'Int', default => 0);
+has fb11_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
+has fb11_method_group         => ( is => 'rw',    isa => 'Str', default => '');
+has fb11_order                => ( is => 'rw',    isa => 'Int', default => 0);
 
 has _default_order              => ( is => 'rw',    isa => 'Int', default => 0);
 
@@ -102,7 +102,7 @@ has navigation_actions      => ( is => 'rw',    isa => 'ArrayRef',  default => s
 =head2 navigation_actions_grouped
 
     This should be an Array Ref of HashRef's pertaining the actions that make up the navigation
-    grouped by appkit_method_group.
+    grouped by fb11_method_group.
 
 =cut
 
@@ -110,7 +110,7 @@ has navigation_actions_grouped      => ( is => 'rw',    isa => 'ArrayRef',  defa
 
 =head2 portlet_actions
 
-    This should be an Array Ref of HashRef's pertaining the actions that are Portlet's
+    This should be an Array Ref of HashRef's pertaining the actions that are Widgets
 
 =cut
 
@@ -118,7 +118,7 @@ has portlet_actions         => ( is => 'rw',    isa => 'ArrayRef',  default => s
 
 =head2 search_actions
 
-    This should be an Array Ref of HashRef's pertaining the actions that are Portlet's
+    This should be an Array Ref of HashRef's pertaining the actions that are Widgets
 
 =cut
 
@@ -137,7 +137,7 @@ before create_action  => sub
     my %args = @_;
 
     # add any ActionClass's to this action.. so when it is called, some extra code is excuted....
-    if ( defined $args{attributes}{AppKitForm} ) { push @{ $args{attributes}{ActionClass} }, "OpusVL::FB11::Action::AppKitForm"; }
+    if ( defined $args{attributes}{FB11Form} ) { push @{ $args{attributes}{ActionClass} }, "OpusVL::FB11::Action::FB11Form"; }
 
     if ( defined $args{attributes}{NavigationHome} )
     {
@@ -197,16 +197,16 @@ before create_action  => sub
         $self->navigation_actions( $array );
     }
     
-    if ( defined $args{attributes}{PortletName} )
+    if ( defined $args{attributes}{Widget} )
     {
-        # This action has been identified as a Portlet action...
+        # This action has been identified as a Widget action...
         my $array = $self->portlet_actions;
         $array = [] unless defined $array;
         push 
         ( 
             @$array,
             {
-                value       => $args{attributes}{PortletName}->[0],
+                value       => $args{attributes}{Widget}->[0],
                 actionpath  => $args{reverse},
                 actionname  => $args{name},
             }
@@ -438,6 +438,39 @@ sub flag_callback_error_ex
     $c->detach unless $no_detach;
 }
 
+sub has_forms {
+    my (%forms) = @_;
+    {
+        no strict 'refs';
+        for my $method (keys %forms) {
+            my $form = $forms{$method};
+            my $caller = scalar caller;
+            # absolute module
+            if (substr($form, 0, 1) eq '+') {
+                $form =~ s/^\+//g;
+            }
+            else {
+                my $base = $caller;
+                $base =~ s/::Controller::(.+)//g;
+                $form = "${base}::Form::${form}";
+            }
+            eval "use $form";
+            if ($@) {
+                die "Could not use form $form: $@\n";
+            }
+            *{"${caller}::${method}"} = sub { $form->new(name => $method) };
+            #Moose::Meta::Attribute->new($method,
+            #is => 'ro',
+            #Moose::Meta::Attribute->new($method,
+            #is => 'ro',
+            #isa => $form,
+            #isa => $form,
+            #lazy => 1,
+            #default => sub { $form->new }
+            #);
+        }
+    }
+}
 =head1 SEE ALSO
 
     L<CatalystX::AppBuilder>,

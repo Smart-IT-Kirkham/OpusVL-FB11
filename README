@@ -19,7 +19,7 @@
       bash$ perldoc ./lib/OpusVL/FB11/Builder.pm
       bash$ perldoc ./lib/OpusVL/FB11/Base/Controller/GUI.pm
       bash$ perldoc ./lib/OpusVL/FB11/Controller/Root.pm
-      bash$ perldoc ./lib/OpusVL/FB11/Plugin/AppKit.pm
+      bash$ perldoc ./lib/OpusVL/FB11/Plugin/FB11.pm
     
     Run the tests as detailed below, a high level, will-it-complete test might be:
       bash$ prove -l -I t/lib
@@ -34,16 +34,16 @@
  Authenication Details
 ---------------------------------------------------------------------------------------------------------------------
     To populate the authenication db I have done this before:
-        bash$ rm t/lib/auto/TestApp/root/db/appkit_auth.db
-        bash$ sqlite3 t/lib/auto/TestApp/root/db/appkit_auth.db < lib/auto/OpusVL/FB11/root/db/appkit_auth.sql
+        bash$ rm t/lib/auto/TestApp/root/db/fb11_auth.db
+        bash$ sqlite3 t/lib/auto/TestApp/root/db/fb11_auth.db < lib/auto/OpusVL/FB11/root/db/fb11_auth.sql
 
     As the passwords are now encrypted there is a script to help set the passwords in the TestApp
-        bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_setpassword.pl --user appkitadmin --password password
+        bash$ PERL5LIB="$PERL5LIB:./lib:./t/lib" perl ./t/lib/script/testapp_setpassword.pl --user fb11admin --password password
 
-    Database - The AppKitAuthDB is a strange beast.. you can use the model available from within AppKit.. or you can make your model AppKitAuthDB compatible.
+    Database - The FB11AuthDB is a strange beast.. you can use the model available from within AppKit.. or you can make your model AppKitAuthDB compatible.
 
-    To recreate the AppKitAuthDB result files I have done the following before (it works from the TestApp db)
-        bash$ ./scripts/appkit_create.pl model AppKitAuthDB DBIC::Schema OpusVL::FB11::Schema::AppKitAuthDB create=static components="TimeStamp" "dbi:SQLite:./t/lib/auto/TestApp/root/db/appkit_auth.db" "" ""
+    To recreate the FB11AuthDB result files I have done the following before (it works from the TestApp db)
+        bash$ ./scripts/fb11_create.pl model FB11AuthDB DBIC::Schema OpusVL::FB11::Schema::AppKitAuthDB create=static components="TimeStamp" "dbi:SQLite:./t/lib/auto/TestApp/root/db/fb11_auth.db" "" ""
 
 ---------------------------------------------------------------------------------------------------------------------
  TestApp

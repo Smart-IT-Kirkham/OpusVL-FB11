@@ -8,9 +8,9 @@ with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
-    appkit_name                 => 'Extension Bee',
-    appkit_icon                 => 'static/images/flagB.jpg',
-    appkit_myclass              => 'TestX::CatalystX::ExtensionB',
+    fb11_name                 => 'Extension Bee',
+    fb11_icon                 => 'static/images/flagB.jpg',
+    fb11_myclass              => 'TestX::CatalystX::ExtensionB',
 );
 
 
@@ -45,7 +45,7 @@ sub formpage
     :Local
     :Args(0)
     :NavigationName('Form Page')
-    :AppKitForm
+    :FB11Form
 {
     my ($self, $c) = @_;
 

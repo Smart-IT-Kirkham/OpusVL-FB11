@@ -6,7 +6,7 @@ use File::ShareDir;
 use FindBin qw($Bin);
 use lib "$Bin/lib";
 
-use_ok 'OpusVL::FB11::Schema::AppKitAuthDB';
+use_ok 'OpusVL::FB11::Schema::FB11AuthDB';
 use_ok 'TestApp';
 
 ##########################################################################################################################
@@ -23,14 +23,14 @@ my ($parameter_int, $parameter_boo, $parameter_sel, $parameter_str);
 my $path            = File::ShareDir::module_dir( 'TestApp' );
 my $authdb_config->{connect_info} =
 {   
-    dsn             => 'dbi:SQLite:' . $path . '/root/db/appkit_auth.db',
+    dsn             => 'dbi:SQLite:' . $path . '/root/db/fb11_auth.db',
     user            => '',
     password        => '',
     on_connect_call => 'use_foreign_keys',
 };
 
 
-ok( $authdb = OpusVL::FB11::Schema::AppKitAuthDB->connect( $authdb_config->{connect_info} ),     "Got handle to AppKitAuthDB" );
+ok( $authdb = OpusVL::FB11::Schema::FB11AuthDB->connect( $authdb_config->{connect_info} ),     "Got handle to AppKitAuthDB" );
 
 $authdb->txn_begin;
 
@@ -51,25 +51,25 @@ my %rules = (
     'index'                                 => ['Administrator'],
     'default',                              => ['Administrator'],
     'auto',                                 => ['Administrator'],
-    'appkit/auto',                          => ['Administrator'],
-    'appkit/admin/auto',                    => ['Administrator'],
-    'appkit/admin/index',                   => ['Administrator'],
-    'appkit/admin/access/auto',             => ['Administrator'],
-    'appkit/admin/access/index',            => ['Administrator'],
-    'appkit/admin/access/addrole',          => ['Administrator'],
-    'appkit/admin/access/role_specific',    => ['Administrator'],
-    'appkit/admin/access/show_role',        => ['Administrator'],
-    'appkit/admin/users/index',             => ['Administrator'],
-    'appkit/admin/users/adduser',           => ['Administrator'],
-    'appkit/admin/users/show_user',         => ['Administrator'],
-    'appkit/admin/users/auto',              => ['Administrator'],
-    'appkit/admin/users/user_specific',     => ['Administrator'],
-    'appkit/admin/users/edit_user',         => ['Administrator'],
-    'appkit/admin/users/delete_user',       => ['Administrator'],
-    'appkit/admin/users/delete_parameter',  => ['Administrator'],
-    'appkit/admin/users/add_parameter',     => ['Administrator'],
-    'appkit/admin/users/get_parameter_input', => ['Administrator'],
-    'appkit/user/change_password',          => ['Administrator'],
+    'fb11/auto',                          => ['Administrator'],
+    'fb11/admin/auto',                    => ['Administrator'],
+    'fb11/admin/index',                   => ['Administrator'],
+    'fb11/admin/access/auto',             => ['Administrator'],
+    'fb11/admin/access/index',            => ['Administrator'],
+    'fb11/admin/access/addrole',          => ['Administrator'],
+    'fb11/admin/access/role_specific',    => ['Administrator'],
+    'fb11/admin/access/show_role',        => ['Administrator'],
+    'fb11/admin/users/index',             => ['Administrator'],
+    'fb11/admin/users/adduser',           => ['Administrator'],
+    'fb11/admin/users/show_user',         => ['Administrator'],
+    'fb11/admin/users/auto',              => ['Administrator'],
+    'fb11/admin/users/user_specific',     => ['Administrator'],
+    'fb11/admin/users/edit_user',         => ['Administrator'],
+    'fb11/admin/users/delete_user',       => ['Administrator'],
+    'fb11/admin/users/delete_parameter',  => ['Administrator'],
+    'fb11/admin/users/add_parameter',     => ['Administrator'],
+    'fb11/admin/users/get_parameter_input', => ['Administrator'],
+    'fb11/user/change_password',          => ['Administrator'],
     'custom/custom',                        => ['Administrator'],
     'custom/custom_access_denied',          => ['Administrator'],
     'custom/custom_link',                   => ['Administrator'],
@@ -114,12 +114,12 @@ $parameter_sel = $authdb->resultset('Parameter')->find_or_create( { data_type =>
 $parameter_sel->add_to_parameter_defaults( { data => 'Option 1' } );
 $parameter_sel->add_to_parameter_defaults( { data => 'Option 2' } );
 
-$adminuser = $authdb->resultset('User')->create( { username => 'appkitadmin', password => 'password', email => 'appkit@opusvl.com', name => 'AppKit Admin', tel => '07720061678' } );
+$adminuser = $authdb->resultset('User')->create( { username => 'fb11admin', password => 'password', email => 'fb11@opusvl.com', name => 'FB11 Admin', tel => '07720061678' } );
 ok( $adminuser,     "Created Admin user" );
 $adminuser->set_roles( $adminrole );
 ok( $adminuser->roles->find( { role => 'Administrator'} ), "Check admin user has admin role");
 
-$normaluser = $authdb->resultset('User')->create( { username => 'appkituser', password => 'password', email => 'appkit@opusvl.com', name => 'AppKit User', tel => '07720061678' } );
+$normaluser = $authdb->resultset('User')->create( { username => 'fb11user', password => 'password', email => 'fb11@opusvl.com', name => 'FB11 User', tel => '07720061678' } );
 ok( $normaluser,     "Created Normal user" );
 $normaluser->set_roles( $normalrole );
 ok( $normaluser->roles->find( { role => 'Normal User'} ), "Check normal user has normal role");

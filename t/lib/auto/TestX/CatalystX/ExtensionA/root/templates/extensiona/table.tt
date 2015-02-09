@@ -1,4 +1,4 @@
-[% META appkitfeature_tablesorter = 1 %]
+[% META fb11feature_tablesorter = 1 %]
 <h1>Testing the tables</h1>
 <fieldset>
     <legend>Table test</legend>

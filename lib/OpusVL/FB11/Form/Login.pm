@@ -8,14 +8,23 @@ use HTML::FormHandler::Moose;
 use CatalystX::SimpleLogin::Form::Login;
 extends 'CatalystX::SimpleLogin::Form::Login';
 
-has_field '+password' => ( element_attr => { autocomplete => 'off' } );
+has '+widget_wrapper' => ( default => 'Bootstrap3' );
+has_field '+password' => ( element_attr => { class => 'off' } );
+
+has_field 'submit'   => (
+    type => 'Submit',
+    widget => "ButtonTag",
+    widget_wrapper => "None",
+    value => '<i class="fa fa-lock"></i> Login',
+    element_attr => { class => ['btn', 'btn-primary'] }
+);
 
 override 'validate' => sub 
 {
     my $self = shift;
 
     my %values = %{$self->values}; # copy the values
-    my $rs = $self->ctx->model('AppKitAuthDB::User')->search(
+    my $rs = $self->ctx->model('FB11AuthDB::User')->search(
         \[
             'lower(username) = ?', [ dummy => lc ($self->values->{username}) ]
         ]

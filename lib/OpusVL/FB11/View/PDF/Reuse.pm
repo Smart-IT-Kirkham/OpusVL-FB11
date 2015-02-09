@@ -5,7 +5,7 @@ use base 'Catalyst::View::PDF::Reuse';
 
 =head1 NAME
 
-OpusVL::FB11::View::PDF::Reuse - PDF::Reuse View for OpusVL::AppKit
+OpusVL::FB11::View::PDF::Reuse - PDF::Reuse View for OpusVL::FB11
 
 =head1 DESCRIPTION
 

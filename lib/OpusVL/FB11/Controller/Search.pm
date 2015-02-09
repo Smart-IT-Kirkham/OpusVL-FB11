@@ -7,12 +7,12 @@ BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config(
-    appkit_name => 'Search',
+    fb11_name => 'Search',
 );
 
 sub auto 
     : Action 
-    : AppKitFeature('Search box')
+    : FB11Feature('Search box')
 {
     my ($self, $c) = @_;
     
@@ -24,11 +24,11 @@ sub auto
 
 
 sub index :Path 
-    : AppKitFeature('Search box')
+    : FB11Feature('Search box')
 {
     my ($self, $c) = @_;
     
-    $c->_appkit_stash_searches($c->req->param('q'));
+    $c->_fb11_stash_searches($c->req->param('q'));
     $c->stash->{query} = $c->req->param('q');
 }
 

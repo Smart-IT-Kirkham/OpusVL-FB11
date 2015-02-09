@@ -1,4 +1,4 @@
-^OpusVL-AppKit-.*
+^OpusVL-FB11-.*
 ^.gitignore
 .git/
 .svn

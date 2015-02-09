@@ -40,14 +40,14 @@ This file documents the revision history for Perl extension OpusVL::FB11.
 
 1.41
 
-* Fixed a problem that caused the appkit to crash sometimes because the feature
+* Fixed a problem that caused the fb11 to crash sometimes because the feature
   list got blown away from the cache.
 
 1.40
 
-* Added appkit_js option to load external Javascript sources from the controller
+* Added fb11_js option to load external Javascript sources from the controller
     __PACKAGE__->config(
-        appkit_js => [qw( /static/js/main.js /static/js/jquery.tooltip.js )],
+        fb11_js => [qw( /static/js/main.js /static/js/jquery.tooltip.js )],
     );
 
 1.39
@@ -123,15 +123,15 @@ This file documents the revision history for Perl extension OpusVL::FB11.
   to simplify adding breadcrumbs to an application.
 * Added yml files and .db files to the list of ignored extensions when serving
   static content to slightly mitigate the risk posed by bug 1014.  
-* Added appkit form directory so forms from it's directory can be included in 
+* Added fb11 form directory so forms from it's directory can be included in 
   other modules.  They can not be used directly as the form for an action, but 
-  can be sucked in as part of an include.  That's down to the way the AppKitForm
+  can be sucked in as part of an include.  That's down to the way the FB11Form
   attribute works.
 
 1.29
 
-* Added a new role to allow the easy merging of the AppKitAuthDB into another schema.
-  OpusVL::FB11::RolesFor::Schema::AppKitAuthDB
+* Added a new role to allow the easy merging of the FB11AuthDB into another schema.
+  OpusVL::FB11::RolesFor::Schema::FB11AuthDB
 * Switched view template engine from TT2 to Template::Alloy
   Note that this has slightly different syntax in places and doesn't like
   spaced after function names.  i.e. c.uri_for (action) won't work.
@@ -152,7 +152,7 @@ This file documents the revision history for Perl extension OpusVL::FB11.
 * Added a new role for the plugin to allow the update of the HTML::FormFu config to 
   allow multiple paths to be used.  Call add_form_path to use it.
 
-  If you want the forms from your AppKitX module to be included in the general forms
+  If you want the forms from your FB11X module to be included in the general forms
   search path for all modules add this into the main modules code where you do your 
   setup_components.
 
@@ -180,7 +180,7 @@ This file documents the revision history for Perl extension OpusVL::FB11.
 * not_found and access_denied actions now clear current_view stash setting to prevent
   issues if you get an access denied or not found bounce after setting that in the auto for
   something like a json view.
-* Fixed the final private action that was broken by the new AppKitFeature attributes.
+* Fixed the final private action that was broken by the new FB11Feature attributes.
 
 1.24
 
@@ -199,7 +199,7 @@ This file documents the revision history for Perl extension OpusVL::FB11.
 
 1.21
 
-* IMPORTANT: This release has changed the appkit auth db so if you have it stored in Postgres you 
+* IMPORTANT: This release has changed the fb11 auth db so if you have it stored in Postgres you 
   will need to add a couple of tables and if you have your own DBIx::Class classes for the authdb
   you will need to regenerate them.
 
@@ -228,12 +228,12 @@ This file documents the revision history for Perl extension OpusVL::FB11.
     __PACKAGE__->many_to_many( roles => 'aclfeature_roles', 'role');
 
 * Added 2 level access permissions that allow the grouping of related actions into features to make
-  role administration simpler.  To do this apply the AppKitFeature attribute.  Specify multiple features
+  role administration simpler.  To do this apply the FB11Feature attribute.  Specify multiple features
   like this,
 
   sub action_name 
     : Local
-    : AppKitFeature('Feature 1,Feature 2')
+    : FB11Feature('Feature 1,Feature 2')
 
   Note that what you put here is what is displayed on the user interface.  Apply the feature to all 
   actions you need to execute as part of your feature, including the various auto actions.
@@ -244,24 +244,24 @@ This file documents the revision history for Perl extension OpusVL::FB11.
 
 * Added method groups for the new application style menus.  Menus are divided into applications, 
   groups, then actions.  Applications are defined as they are now.  Groups are defined as a class
-  attribute, appkit_method_group.  
+  attribute, fb11_method_group.  
   
 * It is also possible to sort all the parts of the menu.  To sort the actions use the 
-  :NavigationOrder(2) attribute.  To sort the groups use the appkit_method_group_order attribute on 
+  :NavigationOrder(2) attribute.  To sort the groups use the fb11_method_group_order attribute on 
   the class.
 
-  To sort the applicaitons use the appkit_app_order configuration setting.  This should be a list 
+  To sort the applicaitons use the fb11_app_order configuration setting.  This should be a list 
   of classes (using the injected names).  If you're unsure what to put add the key and put in a 
   bogus value and when your app is run it will complain and tell you what classes it is expecting.
 
-    $config->{appkit_app_order} = [
+    $config->{fb11_app_order} = [
         qw/TestApp::Controller::ExtensionA TestApp::Controller::ExtensionB TestApp::Controller::Test/
     ];
 
   If you have less classes mentioned than there are you will get a warning like this after catalyst has
   loaded,
 
-    [warn] Application order is not completely set.  Update your appkit_app_order config setting
+    [warn] Application order is not completely set.  Update your fb11_app_order config setting
     [warn] Expecting these controllers to be specified TestApp::Controller::ExtensionB, TestApp::Controller::ExtensionA, TestApp::Controller::Test
 
 * Moved permissions cache to a proper cache.  This prevents the issue where permissions were
@@ -282,7 +282,7 @@ This file documents the revision history for Perl extension OpusVL::FB11.
 * Added a facility for managing which roles can manage other roles.  This allows users to 
   manage roles without needing to have them assigned.  See bug 235 for more details.
   Two new tables have been added to support this facility.  The need to be added to your
-  appkit auth schema.
+  fb11 auth schema.
 
   CREATE TABLE roles_allowed 
   (
@@ -332,8 +332,8 @@ The previous revisions changes are rolled up into this release for simplicity.
 * Prevent users from being able to create a blank role.
 * Wide applications menu should no longer visually glitch.
 * A subtle application version number footer is now possible by turning on 
-  the appkit_display_app_version parameter
-* Added a facility to allow the AppKitForm attribute to be extended to allow 
+  the fb11_display_app_version parameter
+* Added a facility to allow the FB11Form attribute to be extended to allow 
   an attribute to be generated that doesn't call process on the form.
 * Added a facility to poke in a bit of HTML content as 'before_content' before 
   the application_body div.
@@ -341,10 +341,10 @@ The previous revisions changes are rolled up into this release for simplicity.
 * Added a pager control.  Simply process pager.tt, i.e,
   [% PROCESS pager.tt pager = mypager %]
 * Login process now redirects the user to the page they were trying to access before.
-* Fixed a bug where the appkit menu on the left wouldn't display if there was only a 
+* Fixed a bug where the fb11 menu on the left wouldn't display if there was only a 
   single element.
 * Added a facility to allow the menu options from multiple controllers to be merged
-  using by setting the appkit_shared_module property on the controllers to the same
+  using by setting the fb11_shared_module property on the controllers to the same
   string.
 * Added a facility to allow for pages to be available to users that aren't logged in.
   To do this create a role called PUBLIC.

@@ -38,20 +38,20 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     # Request public page... not logged but should allow access.
     $mech->get_ok("/test/publicaccess");
     is( $mech->ct, "text/html");
-    $mech->content_contains("Controller: Test Action: access_public", "Runs a action with 'AppKitAllAccess' specified ");
+    $mech->content_contains("Controller: Test Action: access_public", "Runs a action with 'FB11AllAccess' specified ");
 
     # Send incorrect login information..
-    $mech->post_ok( '/login', { username => 'appkitadmin', password => 'passwordnotcorrect' }, "Submit to login page");
+    $mech->post_ok( '/login', { username => 'fb11admin', password => 'passwordnotcorrect' }, "Submit to login page");
     $mech->content_contains("Wrong username or password", "Not Logged after giving incorrect details");
 
     # Send some login information..
-    $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
+    $mech->post_ok( '/login', { username => 'fb11admin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
     my $logged_in_cookie = $mech->cookie_jar->{COOKIES}->{'localhost.local'}->{'/'}->{'testapp_session'};
     isnt $logged_in_cookie, $cookie;
     # can we see the admin..
-    $mech->get_ok( '/appkit/admin', "Can see the admin index");
+    $mech->get_ok( '/fb11/admin', "Can see the admin index");
     $mech->content_contains("Settings", "Showing admin page");
 
     # can we see the ExtensionA chained actoin
@@ -68,7 +68,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     # Request a page (we should not have an ACL rule for this action)...
     $mech->get_ok( '/test/custom', "Get Custom page" );
-    $mech->content_contains("Test Controller from TestApp - custom action", "Request action with no ACL but be allowed via the 'appkit_can_access_actionpaths' config var.");
+    $mech->content_contains("Test Controller from TestApp - custom action", "Request action with no ACL but be allowed via the 'fb11_can_access_actionpaths' config var.");
 
     # can we logout.
     $mech->get_ok( '/logout', "Can logout");
@@ -80,8 +80,8 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->post_ok( '/login', { username => 'APPKITadmin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
-    $mech->get_ok('/appkit/admin/users/adduser', 'Go to add user page');
-    $mech->post_ok('/appkit/admin/users/adduser', 
+    $mech->get_ok('/fb11/admin/users/adduser', 'Go to add user page');
+    $mech->post_ok('/fb11/admin/users/adduser', 
         {
             username     => 'tester',
             password     => 'password',
@@ -93,7 +93,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     );
     $mech->content_contains("This field is required", "Not all fields filled in on add user page") 
         || diag $mech->content;
-    $mech->post_ok('/appkit/admin/users/adduser', 
+    $mech->post_ok('/fb11/admin/users/adduser', 
         {
             username     => 'tester',
             password     => 'password',
@@ -138,30 +138,30 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     $mech->get_ok( '/logout', "Can logout");
 
-    $mech->get_ok('/appkit/user/changepword', 'Get change password page');
+    $mech->get_ok('/fb11/user/changepword', 'Get change password page');
     $mech->content_contains('Access denied');
     $mech->post_ok( '/login', { username => 'tester', password => 'password' }, "Login as tester");
-    $mech->base_is('http://localhost/appkit/user/changepword', 'Should have redirected to url I was trying to access');
+    $mech->base_is('http://localhost/fb11/user/changepword', 'Should have redirected to url I was trying to access');
     $mech->content_contains("Current password", "Change password page")
         || diag $mech->content;
 
-    $mech->post_ok('/appkit/user/changepword', { password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query' }, 'Try to change password without mentioning current password');
+    $mech->post_ok('/fb11/user/changepword', { password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query' }, 'Try to change password without mentioning current password');
     $mech->content_contains('required', 'Should complain about current password being missing')
         || diag $mech->content;
 
-    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => '', passwordconfirm => '', submitbutton => 'Submit Query' }, 'Try to change password to blank');
+    $mech->post_ok('/fb11/user/changepword', { originalpassword => 'password', password => '', passwordconfirm => '', submitbutton => 'Submit Query' }, 'Try to change password to blank');
     $mech->content_contains('required', 'Should complain about password being missing')
         || diag $mech->content;
 
 
-    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'nomatch', submitbutton => 'Submit Query'  }, 'Try to change password with dodgy passwords');
+    $mech->post_ok('/fb11/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'nomatch', submitbutton => 'Submit Query'  }, 'Try to change password with dodgy passwords');
     $mech->content_contains('Does not match', 'Should complain about differing password inputs')
         || diag $mech->content;
 
-    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query'  }, 'Try to change password');
+    $mech->post_ok('/fb11/user/changepword', { originalpassword => 'password', password => 'newpassword', passwordconfirm => 'newpassword', submitbutton => 'Submit Query'  }, 'Try to change password');
     $mech->content_contains('your password has been changed', 'Password changed okay');
 
-    $mech->post_ok('/appkit/user/changepword', { originalpassword => 'wrong', password => 'newpassword2', passwordconfirm => 'newpassword2', submitbutton => 'Submit Query'  }, 'Try to change password using wrong original password');
+    $mech->post_ok('/fb11/user/changepword', { originalpassword => 'wrong', password => 'newpassword2', passwordconfirm => 'newpassword2', submitbutton => 'Submit Query'  }, 'Try to change password using wrong original password');
     $mech->content_contains('Invalid password', 'Password not changed');
 
     $mech->get_ok( '/logout', "Can logout");
@@ -169,21 +169,21 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     ##################################################
     # test the blank role fix.
 
-    $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
+    $mech->post_ok( '/login', { username => 'fb11admin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
-    $mech->get_ok('/appkit/admin/access/addrole', 'Go to roles page');
-    $mech->post_ok('/appkit/admin/access/addrole', {
+    $mech->get_ok('/fb11/admin/access/addrole', 'Go to roles page');
+    $mech->post_ok('/fb11/admin/access/addrole', {
         addrolebutton => 'Add Role',
         rolename => 'blah',
     }, 'Create a new role');
     $mech->content_like(qr'Access Tree for blah'i, 'Check we have created role');
-    $mech->post_ok('/appkit/admin/access/addrole', {
+    $mech->post_ok('/fb11/admin/access/addrole', {
         addrolebutton => 'Add Role',
         rolename => 'blah',
     }, 'Create a new role');
     $mech->content_like(qr'Role already exists'i, 'Check we cannot create role again');
-    $mech->post_ok('/appkit/admin/access/addrole', {
+    $mech->post_ok('/fb11/admin/access/addrole', {
         addrolebutton => 'Add Role',
         rolename => '',
     }, 'Try to create a blank role');
@@ -196,24 +196,24 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok('/admin/access/role/Administrator/show', 'Lets give ourselves permission to do it, we are admin after all');
     $mech->post_ok('/admin/access/role/Administrator/show', {
             savebutton => 'Save',
-            'action_appkit/admin/access/auto'=>'allow',
-            'action_appkit/admin/access/addrole'=>'allow',
-            'action_appkit/admin/access/delete_role'=>'allow',
-            'action_appkit/admin/access/index'=>'allow',
-            'action_appkit/admin/access/role_specific'=>'allow',
-            'action_appkit/admin/access/show_role'=>'allow',
-            'action_appkit/admin/index'=>'allow',
-            'action_appkit/admin/users/add_parameter'=>'allow',
-            'action_appkit/admin/users/adduser'=>'allow',
-            'action_appkit/admin/users/auto'=>'allow',
-            'action_appkit/admin/users/delete_parameter'=>'allow',
-            'action_appkit/admin/users/delete_user'=>'allow',
-            'action_appkit/admin/users/edit_user'=>'allow',
-            'action_appkit/admin/users/get_parameter_input'=>'allow',
-            'action_appkit/admin/users/index'=>'allow',
-            'action_appkit/admin/users/show_user'=>'allow',
-            'action_appkit/admin/users/user_specific'=>'allow',
-            'action_appkit/user/change_password'=>'allow',
+            'action_fb11/admin/access/auto'=>'allow',
+            'action_fb11/admin/access/addrole'=>'allow',
+            'action_fb11/admin/access/delete_role'=>'allow',
+            'action_fb11/admin/access/index'=>'allow',
+            'action_fb11/admin/access/role_specific'=>'allow',
+            'action_fb11/admin/access/show_role'=>'allow',
+            'action_fb11/admin/index'=>'allow',
+            'action_fb11/admin/users/add_parameter'=>'allow',
+            'action_fb11/admin/users/adduser'=>'allow',
+            'action_fb11/admin/users/auto'=>'allow',
+            'action_fb11/admin/users/delete_parameter'=>'allow',
+            'action_fb11/admin/users/delete_user'=>'allow',
+            'action_fb11/admin/users/edit_user'=>'allow',
+            'action_fb11/admin/users/get_parameter_input'=>'allow',
+            'action_fb11/admin/users/index'=>'allow',
+            'action_fb11/admin/users/show_user'=>'allow',
+            'action_fb11/admin/users/user_specific'=>'allow',
+            'action_fb11/user/change_password'=>'allow',
             'action_extensiona/expansionaa/endchain'=>'allow',
             'action_extensiona/expansionaa/home'=>'allow',
             'action_extensiona/expansionaa/midchain'=>'allow',
@@ -236,7 +236,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get('/admin/access/role/notthere/delrole');
     is $mech->status, 404, 'Check we get a 404 for a non existent role';
 
-    $mech->get("/db/appkit_auth.db");
+    $mech->get("/db/fb11_auth.db");
     is $mech->status, 404, 'Check we get a 404 for our db';
 
     # this would be so cool if it worked.  Unfortunately the mech
@@ -246,7 +246,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     # FUCKME SIDEWAYS BUG 1057
     # disable a user and ensure we cant' then log in as them!
-    $mech->get_ok('/appkit/admin/users/adduser', 'Go to add user page');
+    $mech->get_ok('/fb11/admin/users/adduser', 'Go to add user page');
     $mech->submit_form(form_number => 1, fields => {
         username => 'deleteme',
         password => 'secure01',

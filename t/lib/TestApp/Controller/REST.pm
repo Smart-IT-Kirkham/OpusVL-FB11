@@ -11,21 +11,21 @@ BEGIN {
 }
 
 __PACKAGE__->config(
-    appkit_name               => 'Vehicles',
-    appkit_shared_module      => 'Vehicle',
-    appkit_myclass            => 'Cygnus::AppKitX::Vehicle',
-    appkit_method_group       => 'Manage vehicles',
+    fb11_name               => 'Vehicles',
+    fb11_shared_module      => 'Vehicle',
+    fb11_myclass            => 'Cygnus::FB11X::Vehicle',
+    fb11_method_group       => 'Manage vehicles',
 );
 
 sub vehicle
     : Local
     : ActionClass('REST')
     : Args(1) 
-    : AppKitFeature('Raise VMA')
+    : FB11Feature('Raise VMA')
 { }
 
 sub vehicle_GET
-    : AppKitFeature('Raise VMA')
+    : FB11Feature('Raise VMA')
 {
     my ($self, $c, $id) = @_;
 
@@ -47,7 +47,7 @@ sub no_permission
     : Local
     : ActionClass('REST')
     : Args(1) 
-    : AppKitFeature('Feature Not allowed')
+    : FB11Feature('Feature Not allowed')
 { }
 
 sub no_permission_GET

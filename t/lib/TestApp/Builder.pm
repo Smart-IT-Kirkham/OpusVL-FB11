@@ -29,13 +29,13 @@ override _build_config => sub
     # .. get the path for this name space..
     my $path = File::ShareDir::module_dir( 'TestApp' );
 
-    # .. point the AppKitAuth Model to the correct DB file....
-    $config->{'Model::AppKitAuthDB'} = 
+    # .. point the FB11Auth Model to the correct DB file....
+    $config->{'Model::FB11AuthDB'} = 
     {
-        schema_class => 'OpusVL::FB11::Schema::AppKitAuthDB',
+        schema_class => 'OpusVL::FB11::Schema::FB11AuthDB',
         connect_info =>
         {   
-            dsn             => 'dbi:SQLite:' . $path . '/root/db/appkit_auth.db',
+            dsn             => 'dbi:SQLite:' . $path . '/root/db/fb11_auth.db',
             user            => '',
             password        => '',
             on_connect_call => 'use_foreign_keys',
@@ -48,13 +48,13 @@ override _build_config => sub
     $config->{"Plugin::Static::Simple"}->{include_path} = $static_dirs;
 
     # .. allow access regardless of ACL rules...
-    $config->{'appkit_can_access_actionpaths'} = ['test/custom'];
-    $config->{'appkit_display_app_version'} = 1;
+    $config->{'fb11_can_access_actionpaths'} = ['test/custom'];
+    $config->{'fb11_display_app_version'} = 1;
 
     # DEBUGIN!!!!
-    $config->{'appkit_can_access_everything'} = 0;  
+    $config->{'fb11_can_access_everything'} = 0;  
 
-    $config->{appkit_app_order} = [
+    $config->{fb11_app_order} = [
         qw/TestApp::Controller::ExtensionA TestApp::Controller::ExtensionB TestApp::Controller::Test/
     ];
 

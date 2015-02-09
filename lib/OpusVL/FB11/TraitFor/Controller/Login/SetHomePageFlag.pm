@@ -23,7 +23,7 @@ OpusVL::FB11::TraitFor::Controller::Login::SetHomePageFlag
 =head1 DESCRIPTION
 
 Simple controller role to allow make the homepage logo visible on 
-the login page of AppKit applications.
+the login page of FB11 applications.
 
 =head1 METHODS
 

@@ -9,7 +9,7 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-OpusVL::FB11::View::Email - Email View for OpusVL::AppKit
+OpusVL::FB11::View::Email - Email View for OpusVL::FB11
 
 =head1 DESCRIPTION
 

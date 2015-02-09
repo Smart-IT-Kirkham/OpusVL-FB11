@@ -11,10 +11,10 @@ default
 login
 logout
 access_denied
-appkit/admin/access/_END
-TestApp::View::AppKitTT->process
+fb11/admin/access/_END
+TestApp::View::FB11TT->process
 not_found
-appkit/admin/access/auto
+fb11/admin/access/auto
 };
 
 note 'Checking unrestricted urls';
@@ -27,7 +27,7 @@ my @restricted = qw{
 test_default
 search/test_default
 search/index
-appkit/admin/access/check_auto
+fb11/admin/access/check_auto
 };
 
 

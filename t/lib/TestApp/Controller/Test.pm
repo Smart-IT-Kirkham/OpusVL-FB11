@@ -8,12 +8,12 @@ with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
-    appkit_name                 => 'Test Controller (within TestApp)',
+    fb11_name                 => 'Test Controller (within TestApp)',
 );
 
 =head1 NAME
 
-    OpusVL::FB11::Controller::Test - Test Controller for OpusVL::AppKit
+    OpusVL::FB11::Controller::Test - Test Controller for OpusVL::FB11
 
 =head1 DESCRIPTION
 
@@ -22,7 +22,7 @@ __PACKAGE__->config
     This controller is only used for testing.
 
     You can see I have 'extended' OpusVL::FB11::Base::Controller::GUI. Doing this allows the 
-    AppKit to tell the controller should be part of the GUI
+    FB11 to tell the controller should be part of the GUI
 
 =head1 METHODS
 
@@ -66,7 +66,7 @@ PORTLET
 };
 
 =head2 index
-    This is a test action for something that would appear in the AppKit Navigation
+    This is a test action for something that would appear in the FB11 Navigation
     All you need to do is include ':NavigationName("Some Name")' as a method attribute
     and the action should be included in the navigation (which are effected by ACL rules)
 =cut
@@ -119,8 +119,8 @@ sub access_none
 sub access_public
     :Path('publicaccess') 
     :Args(0)
-    :NavigationName("Test AppKitAllAccess")
-    :AppKitAllAccess
+    :NavigationName("Test FB11AllAccess")
+    :FB11AllAccess
 { 
     my ($self, $c) = @_;
     $c->res->body('Controller: Test Action: access_public');

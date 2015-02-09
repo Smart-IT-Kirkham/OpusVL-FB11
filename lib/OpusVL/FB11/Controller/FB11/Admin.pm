@@ -12,12 +12,12 @@ with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 sub auto
     : Action
-    : AppKitFeature('Role Administration,User Administration,Password Change')
+    : FB11Feature('Role Administration,User Administration,Password Change')
 {
     my ( $self, $c ) = @_;
 
     # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Settings', url => $c->uri_for( $c->controller('AppKit::Admin')->action_for('index') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Settings', url => $c->uri_for( $c->controller('FB11::Admin')->action_for('index') ) } );
 }
 
 =head2 index
@@ -29,7 +29,7 @@ sub auto
 sub index
     : Path
     : Args(0)
-    : AppKitFeature('Role Administration,User Administration,Password Change')
+    : FB11Feature('Role Administration,User Administration,Password Change')
 {
     my ( $self, $c ) = @_;
 

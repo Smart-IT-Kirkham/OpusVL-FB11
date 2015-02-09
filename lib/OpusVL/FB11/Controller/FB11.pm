@@ -8,7 +8,7 @@ with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
-    appkit_myclass              => 'OpusVL::FB11',
+    fb11_myclass              => 'OpusVL::FB11',
 );
 
 
@@ -16,7 +16,7 @@ __PACKAGE__->config
 =cut
 sub auto 
     : Action 
-    : AppKitFeature('Password Change,User Administration,Role Administration')
+    : FB11Feature('Password Change,User Administration,Role Administration')
 {
     my ($self, $c) = @_;
 }

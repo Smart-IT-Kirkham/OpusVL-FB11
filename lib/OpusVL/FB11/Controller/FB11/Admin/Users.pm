@@ -9,7 +9,7 @@ with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
-    appkit_myclass              => 'OpusVL::FB11',
+    fb11_myclass              => 'OpusVL::FB11',
 );
 
 =head2 auto
@@ -20,15 +20,15 @@ __PACKAGE__->config
 
 sub auto
     : Action
-    : AppKitFeature('User Administration')
+    : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
 
     # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('AppKit::Admin::Users')->action_for('index') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('index') ) } );
 
     # stash all users..
-    my $users_rs = $c->model('AppKitAuthDB::User')->search;
+    my $users_rs = $c->model('FB11AuthDB::User')->search;
     $users_rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     my @users = $users_rs->all;
     $c->stash->{users} = \@users;
@@ -44,10 +44,10 @@ sub auto
 sub index
     : Path
     : Args(0)
-    : AppKitFeature('User Administration')
+    : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
-    $c->stash->{template} = 'appkit/admin/users/show_user.tt';
+    $c->stash->{template} = 'fb11/admin/users/show_user.tt';
 }
 
 =head2 adduser
@@ -57,16 +57,16 @@ sub index
 sub adduser
     : Local
     : Args(0)
-    : AppKitFeature('User Administration')
-    : AppKitForm("appkit/admin/users/user_form.yml")
+    : FB11Feature('User Administration')
+    : FB11Form("fb11/admin/users/user_form.yml")
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('adduser') ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('adduser') ) } );
 
     my $form = $c->stash->{form};
 
-    my $ignore_password = $c->model('AppKitAuthDB')->schema->can('password_check');
+    my $ignore_password = $c->model('FB11AuthDB')->schema->can('password_check');
     if($ignore_password)
     {
         my $password = $form->get_all_element('password');
@@ -87,15 +87,15 @@ sub adduser
         # should we be recording the fact we're not using the password field
         # really?
         
-        my $newuser = $c->model('AppKitAuthDB::User')->new_result( { password => $password } );
+        my $newuser = $c->model('FB11AuthDB::User')->new_result( { password => $password } );
 
         $c->stash->{form}->model->update( $newuser );
 
         $c->stash->{status_msg} = "User added";
         $c->stash->{thisuser}   = $newuser;
-        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::Users')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
+        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
     }
-    $c->stash->{template} = "appkit/admin/users/user_form.tt";
+    $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
 =head2 user_specific
@@ -108,10 +108,10 @@ sub user_specific
     : Chained('/')
     : PathPart('user')
     : CaptureArgs(1)
-    : AppKitFeature('User Administration')
+    : FB11Feature('User Administration')
 {
     my ( $self, $c, $user_id ) = @_;
-    ( $c->stash->{thisuser} ) = $c->model('AppKitAuthDB::User')->find( $user_id );
+    ( $c->stash->{thisuser} ) = $c->model('FB11AuthDB::User')->find( $user_id );
 }
 
 =head2 show_user
@@ -124,12 +124,12 @@ sub user_specific
 sub show_user
     : Chained('user_specific')
     : PathPart('show')
-    : AppKitFeature('User Administration')
+    : FB11Feature('User Administration')
     : Args(0)
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{thisuser}->username, url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{thisuser}->username, url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) } );
 
     # test if need to process user submission...
     if ( $c->req->method eq 'POST' )
@@ -167,25 +167,25 @@ sub show_user
 sub reset_password
     : Chained('user_specific')
     : PathPart('reset')
-    : AppKitFeature('User Password Administration')
+    : FB11Feature('User Password Administration')
     : Args(0)
-    : AppKitForm
+    : FB11Form
 {
     my ( $self, $c ) = @_;
 
     my $user = $c->stash->{thisuser};
     my $prev_url = $c->uri_for( $self->action_for('show_user'), [ $user->id ] );
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Reset password', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('reset_password'), [ $user->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Reset password', url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('reset_password'), [ $user->id ] ) } );
 
-    $c->forward('/appkit/admin/users/reset_password_form', [ $prev_url, $user ] );
+    $c->forward('/fb11/admin/users/reset_password_form', [ $prev_url, $user ] );
 }
 
 # to allow other controllers to forward to this setting their own 
 # breadcrumbs and passing their own url.
 sub reset_password_form
     : Action
-    : AppKitFeature('User Password Administration')
+    : FB11Feature('User Password Administration')
 {
     my ($self, $c, $prev_url, $user) = @_;
 
@@ -224,19 +224,19 @@ sub edit_user
     : Chained('user_specific')
     : PathPart('form')
     : Args(0)
-    : AppKitForm("appkit/admin/users/user_form.yml")
-    : AppKitFeature('User Administration')
+    : FB11Form("fb11/admin/users/user_form.yml")
+    : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
 
     my $form = $c->stash->{form};
-    my $ignore_password = $c->model('AppKitAuthDB')->schema->can('password_check');
+    my $ignore_password = $c->model('FB11AuthDB')->schema->can('password_check');
     if($ignore_password)
     {
         my $password = $form->get_all_element('password');
         $password->parent->remove_element($password);
     }
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('AppKit::Admin::Access')->action_for('edit_user'), [ $c->stash->{thisuser}->id ] ) } );
+    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('edit_user'), [ $c->stash->{thisuser}->id ] ) } );
 
     if ( $form->submitted_and_valid )
     {
@@ -256,7 +256,7 @@ sub edit_user
 
     # set default values..
     $form->model->default_values( $c->stash->{thisuser} );
-    $c->stash->{template} = "appkit/admin/users/user_form.tt";
+    $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
 =head2 delete_user
@@ -269,24 +269,24 @@ sub delete_user
     : Chained('user_specific')
     : PathPart('delete')
     : Args(0)
-    : AppKitForm("appkit/admin/confirm.yml")
-    : AppKitFeature('User Administration')
+    : FB11Form("fb11/admin/confirm.yml")
+    : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
 
     $c->stash->{question} = "Are you sure you want to delete the user:" . $c->stash->{thisuser}->username;
-    $c->stash->{template} = 'appkit/admin/confirm.tt';
+    $c->stash->{template} = 'fb11/admin/confirm.tt';
 
     if ( $c->stash->{form}->submitted_and_valid )
     {
         $c->stash->{thisuser}->delete;
         $c->flash->{status_msg} = "User deleted";
-        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('index') ) );
+        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
     }
     elsif( $c->req->method eq 'POST' )
     {
          $c->flash->{status_msg} = "User NOT deleted";
-        $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('index') ) );
+        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
     }
 
 }
@@ -301,13 +301,13 @@ sub delete_parameter
     : Chained('user_specific')
     : PathPart('deleteparameter')
     : Args(1)
-    : AppKitFeature('User Administration')
+    : FB11Feature('User Administration')
 {
     my ( $self, $c, $param_id ) = @_;
 
     $c->stash->{thisuser}->delete_related('users_parameters', { parameter_id => $param_id } );
     $c->flash->{status_msg} = "Parameter deleted";
-    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) );
+    $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) );
 }
 
 =head2 add_parameter
@@ -320,7 +320,7 @@ sub add_parameter
     : Chained('user_specific')
     : PathPart('addparameter')
     : Args(0)
-    : AppKitFeature('User Administration')
+    : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
 
@@ -333,7 +333,7 @@ sub add_parameter
     }
 
     # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('AppKit::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
+    $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
 }
 
 =head2 get_parameter_input
@@ -347,11 +347,11 @@ sub get_parameter_input
     : Chained('user_specific')
     : PathPart('addparaminput')
     : Args(1)
-    : AppKitFeature('User Administration')
+    : FB11Feature('User Administration')
 {
     my ( $self, $c, $param_id ) = @_;
 
-    my $param = $c->model('AppKitAuthDB::Parameter')->find( $param_id );
+    my $param = $c->model('FB11AuthDB::Parameter')->find( $param_id );
     return undef unless $param;
 
     # get and values ther might be (for the user in the stash)...

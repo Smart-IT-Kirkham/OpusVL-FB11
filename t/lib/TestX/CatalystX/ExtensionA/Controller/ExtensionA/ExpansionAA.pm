@@ -8,22 +8,22 @@ with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
-    appkit_name                 => 'ExtensionA',
-    appkit_order                => 10,
-    appkit_icon                 => 'static/images/flagA.jpg',
-    appkit_myclass              => 'TestX::CatalystX::ExtensionA::ExpansionAA',
-    appkit_method_group         => 'Extension A sub controller',
-    appkit_method_group_order   => 1,
-    appkit_shared_module        => 'ExtensionA',
+    fb11_name                 => 'ExtensionA',
+    fb11_order                => 10,
+    fb11_icon                 => 'static/images/flagA.jpg',
+    fb11_myclass              => 'TestX::CatalystX::ExtensionA::ExpansionAA',
+    fb11_method_group         => 'Extension A sub controller',
+    fb11_method_group_order   => 1,
+    fb11_shared_module        => 'ExtensionA',
 );
 
 sub home
     :Path
     :Args(0)
     :NavigationName('Expanded Action')
-    :AppKitFeature('Extension A')
+    :FB11Feature('Extension A')
     :NavigationOrder(1)
-#    :AppKitRolesAllowed('Administrator')
+#    :FB11RolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{template} = 'extensiona.tt';
@@ -34,8 +34,8 @@ sub startchain
     :Chained('/')
     :PathPart('start')
     :CaptureArgs(0)
-    :AppKitFeature('Extension A')
-#    :AppKitRolesAllowed('Administrator')
+    :FB11Feature('Extension A')
+#    :FB11RolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{template} = 'extensiona.tt';
@@ -45,8 +45,8 @@ sub midchain
     :Chained('startchain')
     :PathPart('mid')
     :CaptureArgs(0)
-#    :AppKitRolesAllowed('Administrator')
-    :AppKitFeature('Extension A')
+#    :FB11RolesAllowed('Administrator')
+    :FB11Feature('Extension A')
 {
     my ($self, $c) = @_;
     $c->stash->{custom_string} .= 'Middle of Chained actions...';
@@ -57,8 +57,8 @@ sub endchain
     :Args(0)
     :NavigationName('Expanded Chained Action')
     :NavigationOrder(2)
-    :AppKitFeature('Extension A')
-#    :AppKitRolesAllowed('Administrator')
+    :FB11Feature('Extension A')
+#    :FB11RolesAllowed('Administrator')
 {
     my ($self, $c) = @_;
     $c->stash->{custom_string} .= 'End of Chained actions.';

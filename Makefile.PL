@@ -2,7 +2,7 @@
 
 use inc::Module::Install;
 
-name 'OpusVL-AppKit';
+name 'OpusVL-FB11';
 all_from 'lib/OpusVL/FB11.pm';
 
 requires 'Moose';
@@ -81,7 +81,7 @@ install_share 'lib/auto';
 auto_install;
 resources (
     repository => {
-        url => 'ssh://git.rug-01.opusvl.net/srv/git/OpusVL-AppKit',
+        url => 'ssh://git.rug-01.opusvl.net/srv/git/OpusVL-FB11',
         type => 'git',
     },
 );

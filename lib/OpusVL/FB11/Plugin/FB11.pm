@@ -2,11 +2,11 @@ package OpusVL::FB11::Plugin::FB11;
 
 =head1 NAME
 
-    OpusVL::FB11::Plugin::FB11 - Common functions to get OpusVL::AppKit working.
+    OpusVL::FB11::Plugin::FB11 - Common functions to get OpusVL::FB11 working.
 
 =head1 DESCRIPTION
 
-    People not developing the actual AppKit should not really need to know much about this plugin.
+    People not developing the actual FB11 should not really need to know much about this plugin.
 
     It is used by the OpusVL::FB11 which intended to be inherited by another Catalyst App using 
     CatalystX::AppBuilder..
@@ -31,8 +31,8 @@ with 'Catalyst::ClassData';
 # moose calls.
 ###########################################################################################################################
 
-has appkit_controllers => ( is => 'ro',    isa => 'ArrayRef',  lazy_build => 1 );
-sub _build_appkit_controllers
+has fb11_controllers => ( is => 'ro',    isa => 'ArrayRef',  lazy_build => 1 );
+sub _build_fb11_controllers
 {   
     my ( $c ) = shift;
 
@@ -41,10 +41,10 @@ sub _build_appkit_controllers
     # Get all the components for this app... sorted by length of the name of the componant so they are in hierarchical order (bit hacky, but think it should work)
     foreach my $comp ( sort { length($a) <=> length($b) } values %{ $c->components } )
     {   
-        # Check this is a controller for AppKit.... (not sure if we need to ignore others, but it just seems cleaner)..
+        # Check this is a controller for FB11.... (not sure if we need to ignore others, but it just seems cleaner)..
         if  (
                 ( $comp->isa('Catalyst::Controller')    )               &&
-                ( $comp->can('appkit') )
+                ( $comp->can('fb11') )
             )
         {   
             push( @controllers, $comp );
@@ -55,16 +55,16 @@ sub _build_appkit_controllers
 
 =head2 apps_allowed
 
-Returns a list of the appkit controllers the user has access to sorted as the app config
+Returns a list of the fb11 controllers the user has access to sorted as the app config
 specifies.  Generally used for building up the menu.
 
 =cut
 sub apps_allowed
 {
     my $self = shift;
-    # return a sorted list of appkit controllers the user can use.
-    return sort { $a->appkit_order <=> $b->appkit_order } 
-            grep { $_->home_action && $self->can_access($_->home_action->{actionpath}) } @{$self->appkit_controllers};
+    # return a sorted list of fb11 controllers the user can use.
+    return sort { $a->fb11_order <=> $b->fb11_order } 
+            grep { $_->home_action && $self->can_access($_->home_action->{actionpath}) } @{$self->fb11_controllers};
 }
 
 =head2 menu_data
@@ -74,8 +74,8 @@ List of apps and the group data for the full blown menu
     [
         {
             'controller' => bless( {
-                    'appkit_method_group' => 'Leads',
-                    'appkit_name' => 'Customers',
+                    'fb11_method_group' => 'Leads',
+                    'fb11_name' => 'Customers',
                     }, 'Aquarius::Controller::Leads' ),
                 'actions' => [
                 {
@@ -119,14 +119,14 @@ sub menu_data
     # group info too.
     my $self = shift;
 
-    my @apps = sort { ($a->appkit_shared_module || '') cmp ($b->appkit_shared_module || '') || $b->appkit_order <=> $a->appkit_order } 
-            @{$self->appkit_controllers};
+    my @apps = sort { ($a->fb11_shared_module || '') cmp ($b->fb11_shared_module || '') || $b->fb11_order <=> $a->fb11_order } 
+            @{$self->fb11_controllers};
     # now merge together the grouped controllers.
     my $i = 0;
     while($i + 1 < scalar @apps)
     {
-        if($apps[$i]->appkit_shared_module && $apps[$i+1]->appkit_shared_module && 
-            ($apps[$i]->appkit_shared_module eq $apps[$i+1]->appkit_shared_module))
+        if($apps[$i]->fb11_shared_module && $apps[$i+1]->fb11_shared_module && 
+            ($apps[$i]->fb11_shared_module eq $apps[$i+1]->fb11_shared_module))
         {
             splice @apps, $i + 1, 1;
         }
@@ -135,7 +135,7 @@ sub menu_data
             $i++;
         }
     }
-    @apps = sort { $a->appkit_order <=> $b->appkit_order } @apps;
+    @apps = sort { $a->fb11_order <=> $b->fb11_order } @apps;
     my $menu = [];
 
     for my $app (@apps)
@@ -149,11 +149,11 @@ sub menu_data
     return $menu;
 }
 
-=head2 appkit_actiontree_visitor
-    Use for find node in the appkit_actiontree...
+=head2 fb11_actiontree_visitor
+    Use for find node in the fb11_actiontree...
 =cut
 
-has appkit_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor::FindByPath',  default => sub
+has fb11_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor::FindByPath',  default => sub
 {
     my $visitor = Tree::Simple::Visitor::FindByPath->new;
     $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
@@ -196,7 +196,7 @@ sub execute
     my ( $c, $class, $action ) = @_;
 
     $c->stash->{version} = eval '$' . $c->config->{name}. '::VERSION'
-            if $c->config->{appkit_display_app_version};
+            if $c->config->{fb11_display_app_version};
     #  to check roles we need the plugin!
     $c->isa("Catalyst::Plugin::Authorization::Roles") or die "Please use the Authorization::Roles plugin.";
 
@@ -208,12 +208,12 @@ sub execute
         if ( $c->can_access( $action->reverse ) )
         {
             # do nothing..
-            $c->log->debug("************** AppKit - Allows Access to - " . $action->reverse ) if $c->debug;
+            $c->log->debug("************** FB11 - Allows Access to - " . $action->reverse ) if $c->debug;
         }
         else
         {
-            $c->log->debug("************** AppKit - DENIED Access to - " . $action->reverse ) if $c->debug;
-            $c->detach_to_appkit_access_denied( $action ) if !$c->user;
+            $c->log->debug("************** FB11 - DENIED Access to - " . $action->reverse ) if $c->debug;
+            $c->detach_to_fb11_access_denied( $action ) if !$c->user;
 
             $c->detach('/access_denied');
         }
@@ -225,27 +225,27 @@ sub execute
 # plugin methods.
 ###########################################################################################################################
 
-=head2 appkit_features
+=head2 fb11_features
 
 Returns a OpusVL::FB11::Plugin::FB11::FeatureList object that allows the querying of the features permissions
 that sit on top of our roles management.
 
 =cut
-__PACKAGE__->mk_classdata('_appkit_features');
-sub appkit_features
+__PACKAGE__->mk_classdata('_fb11_features');
+sub fb11_features
 {
-    # NOTE: this property is setup when the appkit_actiontree is setup.
+    # NOTE: this property is setup when the fb11_actiontree is setup.
     my $self = shift;
-    my $features = $self->_appkit_features;
+    my $features = $self->_fb11_features;
     unless($features)
     {
-        my $tree = $self->appkit_actiontree(1);
-        $features = $self->_appkit_features;
+        my $tree = $self->fb11_actiontree(1);
+        $features = $self->_fb11_features;
     }
     return $features;
 }
 
-=head2 appkit_actiontree
+=head2 fb11_actiontree
     This returns a Tree::Simple of OpusVL::FB11::Plugin::FB11::Node's.
     Based on code from Catalyst::Plugin::Authorization::ACL::Engine, it is basically a Tree of this apps actions.
     This attribute is used to define access to actions.(but could be used for many more things)
@@ -255,17 +255,17 @@ sub appkit_features
         $_[1]   -   Optional flag to say "re-read the tree"
 =cut
 
-sub appkit_actiontree 
+sub fb11_actiontree 
 {
     my ($c, $rebuild) = @_;
 
     # 'state' var means this will only be called once .. if Perl encounters this line again it knows not to run again..
-    state $appkit_actiontree = $c->_build_appkit_actiontree;
+    state $fb11_actiontree = $c->_build_fb11_actiontree;
     state $created = time;
     # force a re-read of the tree.. (for example, if access control changes)...
     if($rebuild || $c->_are_permissions_modified($created))
     {
-        $appkit_actiontree = $c->_build_appkit_actiontree;
+        $fb11_actiontree = $c->_build_fb11_actiontree;
         $created = time;
         if($rebuild)
         {
@@ -273,7 +273,7 @@ sub appkit_actiontree
         }
     }
 
-    return $appkit_actiontree;
+    return $fb11_actiontree;
 }
 
 sub _set_permissions_modified
@@ -299,25 +299,25 @@ sub _are_permissions_modified
     return $ts > $updated;
 }
 
-=head2 _build_appkit_actiontree
-    internal only method that supports the appkit_actiontree routine.
+=head2 _build_fb11_actiontree
+    internal only method that supports the fb11_actiontree routine.
     This basically builds a tree of actions/controllers in the current catalyst app.           
 =cut
 
-sub _build_appkit_actiontree
+sub _build_fb11_actiontree
 {
     my ( $c ) = shift;
 
     # get the vistor..
-    my $visitor = $c->appkit_actiontree_visitor;
+    my $visitor = $c->fb11_actiontree_visitor;
 
     # make a tree root (based on code from Catalyst::Plugin::Authorization::ACL::Engine)
-    my $root = Tree::Simple->new('AppKit', Tree::Simple->ROOT);
+    my $root = Tree::Simple->new('FB11', Tree::Simple->ROOT);
     my $features = OpusVL::FB11::Plugin::FB11::FeatureList->new;
 
-    AKCONTROLLERS: foreach my $cont ( @{ $c->appkit_controllers } )
+    AKCONTROLLERS: foreach my $cont ( @{ $c->fb11_controllers } )
     {   
-        # Loop through all this AppKit controllers actionmethods...
+        # Loop through all this FB11 controllers actionmethods...
         AKACTIONS: foreach my $action_method ( $cont->get_action_methods )
         {   
             # skip internal type action names...
@@ -331,21 +331,21 @@ sub _build_appkit_actiontree
             my @path = split '/', $action_path;
             my $name = pop @path;
 
-            # build AppKit::Node object...
-            my $appkit_action_object = OpusVL::FB11::Plugin::FB11::Node->new
+            # build FB11::Node object...
+            my $fb11_action_object = OpusVL::FB11::Plugin::FB11::Node->new
             (
                 node_name       => $name,
                 action_path     => $action_path,
                 action_attrs    => $action->attributes,
                 access_only     => [],  # default to "no roles allowed"
-                in_feature      => defined $action->attributes->{AppKitFeature},
+                in_feature      => defined $action->attributes->{FB11Feature},
             );
-            $features->add_action($cont->appkit_name, $action);
+            $features->add_action($cont->fb11_name, $action);
 
             ## look for any ACL rules for this action_path...
             if ( my $allowed_roles = $c->_allowed_roles_from_db( $action_path ) )
             {
-                $appkit_action_object->access_only( $allowed_roles );
+                $fb11_action_object->access_only( $allowed_roles );
             }
 
             # If this is deeper than a top level action_path...
@@ -364,7 +364,7 @@ sub _build_appkit_actiontree
                     # final 'belt and braces' check to see if we have already added it..
                     foreach my $kid ( $namespace_node->getAllChildren )
                     {
-                        if ( $kid->getNodeValue->node_name eq $appkit_action_object->node_name )
+                        if ( $kid->getNodeValue->node_name eq $fb11_action_object->node_name )
                         {   
                             $c->debug->error("Action path $action_path, already in tree!!!??.. not a massive problem, but strange that it is happening");
                             next AKACTIONS
@@ -372,7 +372,7 @@ sub _build_appkit_actiontree
                     }
 
                     # add a child to the already created tree node....
-                    $namespace_node->addChild( Tree::Simple->new( $appkit_action_object ) );
+                    $namespace_node->addChild( Tree::Simple->new( $fb11_action_object ) );
                     next;
                 }
             }
@@ -398,20 +398,20 @@ sub _build_appkit_actiontree
                 else
                 {
 
-                    # build AppKit::Node object...
-                    my $branch_appkit_action_object = OpusVL::FB11::Plugin::FB11::Node->new
+                    # build FB11::Node object...
+                    my $branch_fb11_action_object = OpusVL::FB11::Plugin::FB11::Node->new
                     (
                         node_name   => $path_part,
                         in_feature => 0,
                     );
 
                     # add tree branch..
-                    $node = Tree::Simple->new( $branch_appkit_action_object, $node);
+                    $node = Tree::Simple->new( $branch_fb11_action_object, $node);
                 }
             }
 
             # add the child/action name to the node we have found/created..
-            $node->addChild( Tree::Simple->new( $appkit_action_object ) );
+            $node->addChild( Tree::Simple->new( $fb11_action_object ) );
         }
     }
     my $feature_list = $features->feature_names_with_app;
@@ -423,7 +423,7 @@ sub _build_appkit_actiontree
         }
     }
 
-    $c->_appkit_features($features);
+    $c->_fb11_features($features);
 
     # finished :) 
     return $root;
@@ -435,11 +435,11 @@ sub _allowed_feature_roles_from_db
     my $c = shift;
     my $feature = shift;
 
-    my $aclfeature = $c->model('AppKitAuthDB::Aclfeature')->find( { feature => $feature } );
+    my $aclfeature = $c->model('FB11AuthDB::Aclfeature')->find( { feature => $feature } );
     # return undef if not match found..
     return undef unless $aclfeature;
 
-    $c->log->debug("AppKit Feature ACL : Matched Rule: " . $aclfeature->id . " FOR: $feature ") if $c->debug;
+    $c->log->debug("FB11 Feature ACL : Matched Rule: " . $aclfeature->id . " FOR: $feature ") if $c->debug;
 
     #.. pull out all the allowed roles for this rule..
     my $allowed_roles = [ map { $_->role } $aclfeature->roles ];
@@ -481,19 +481,19 @@ sub can_access
     }
 
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
-    if ( $action_path eq $c->config->{'appkit_access_denied'} )
+    if ( $action_path eq $c->config->{'fb11_access_denied'} )
     {
         $c->log->debug("Access denied path: $action_path") if $c->debug;
         return 1 
     }
 
     # find this actions node in the tree ...
-    my $action_node = $c->_find_node_in_appkit_actiontree( $action_path );
+    my $action_node = $c->_find_node_in_fb11_actiontree( $action_path );
     if ( ! $action_node )
     {
         # NOTE: this should fix cache issues.
-        $c->appkit_actiontree(1);
-        $action_node = $c->_find_node_in_appkit_actiontree( $action_path );
+        $c->fb11_actiontree(1);
+        $action_node = $c->_find_node_in_fb11_actiontree( $action_path );
         unless($action_node) 
         {
             $c->log->warn("Could not find ::Node in tree for: $action_path ");
@@ -502,18 +502,18 @@ sub can_access
     }
 
     # Have we been told to "NOT APPLY ACCESS CONTROL" ?? ...
-    if ( exists $action_node->action_attrs->{AppKitAllAccess} || exists $action_node->action_attrs->{Public} )
+    if ( exists $action_node->action_attrs->{FB11AllAccess} || exists $action_node->action_attrs->{Public} )
     {
-        $c->log->debug("The following action has AppKitAllAccess / Public for $action_path . No access control being applied ") if $c->debug;
+        $c->log->debug("The following action has FB11AllAccess / Public for $action_path . No access control being applied ") if $c->debug;
         return 1;
     }
 
     # check if we have list of actionpaths to allow (regardless of rules)...
     if(  $c->user )
     {
-        if ( $c->config->{'appkit_can_access_actionpaths'} )
+        if ( $c->config->{'fb11_can_access_actionpaths'} )
         {
-            foreach my $allowed_path ( @{ $c->config->{'appkit_can_access_actionpaths'} } )
+            foreach my $allowed_path ( @{ $c->config->{'fb11_can_access_actionpaths'} } )
             {
                 # FIXME: this logic looks broken.
                 if($action_path eq $allowed_path)
@@ -525,7 +525,7 @@ sub can_access
         }
 
         # check if we have been told to allow everything...
-        if ( $c->config->{'appkit_can_access_everything'} )
+        if ( $c->config->{'fb11_can_access_everything'} )
         {
             $c->log->debug("Allowing Access to EVERYTHING! - Turn off in the config if you do not want this!") if $c->debug;
             return 1;
@@ -538,7 +538,7 @@ sub can_access
     my $allowed_roles = $c->_allowed_roles_from_tree( $action_path );
     my @allowed;
     push @allowed, @$allowed_roles;
-    push @allowed, @{$c->appkit_features->roles_allowed_for_action( $action_path )};
+    push @allowed, @{$c->fb11_features->roles_allowed_for_action( $action_path )};
 
     # if none found.. do NOT allow access..
     unless (@allowed)
@@ -578,7 +578,7 @@ sub who_can_access
     return undef unless defined $allowed_roles;
 
     # get an resultset of user_id's...
-    my $inside_rs = $c->model('AppKitAuthDB::UsersRole')->search
+    my $inside_rs = $c->model('FB11AuthDB::UsersRole')->search
     (
         {
             'role.role' => { 'IN' => $allowed_roles },
@@ -591,7 +591,7 @@ sub who_can_access
     );
 
     # return all users with the roles..
-    return $c->model('AppKitAuthDB::User')->search( 
+    return $c->model('FB11AuthDB::User')->search( 
         { 'id' => 
             { 'IN' => $inside_rs->get_column('users_id')->as_query } }, 
             { distinct => 1 } );
@@ -599,22 +599,22 @@ sub who_can_access
 }
 
 
-=head2 _find_node_in_appkit_actiontree
+=head2 _find_node_in_fb11_actiontree
     Returns OpusVL::FB11::Plugin::FB11::Node that represents the action_path.
     .. or undef if not found.
 =cut
 
 use Memoize;
-memoize('_find_node_in_appkit_actiontree');
+memoize('_find_node_in_fb11_actiontree');
 
-sub _find_node_in_appkit_actiontree
+sub _find_node_in_fb11_actiontree
 {   
     my $c               = shift;
     my ($action_path)   = @_;
 
     # get the important bits...
-    my $visitor = $c->appkit_actiontree_visitor;
-    my $root = $c->appkit_actiontree;
+    my $visitor = $c->fb11_actiontree_visitor;
+    my $root = $c->fb11_actiontree;
 
     # look for action path in the tree...
     my @path = split '/', $action_path;
@@ -629,13 +629,13 @@ sub _find_node_in_appkit_actiontree
     }
 
     # .. can't find it!
-    $c->log->debug("AppKit ACL : Could not find node for: " . $action_path ) if $c->debug;
+    $c->log->debug("FB11 ACL : Could not find node for: " . $action_path ) if $c->debug;
     return undef;
 }
 
 =head2 _allowed_roles_from_tree
     Returns ArrayRef of roles that can access the passed action path. 
-    This checks the 'appkit_actiontree' .. so should be quick.
+    This checks the 'fb11_actiontree' .. so should be quick.
 =cut
 
 sub _allowed_roles_from_tree
@@ -644,7 +644,7 @@ sub _allowed_roles_from_tree
     my ($action_path)   = @_;
 
     # find the node in the tree..
-    my $node = $c->_find_node_in_appkit_actiontree( $action_path );
+    my $node = $c->_find_node_in_fb11_actiontree( $action_path );
 
     return [] if ( ! defined $node );
 
@@ -674,12 +674,12 @@ sub _allowed_roles_from_db
     return undef if $action_name =~ /^_/;
 
     # we are looking for an exact match for this action path..
-    my $aclrule = $c->model('AppKitAuthDB::Aclrule')->find( { actionpath => $action_path } );
+    my $aclrule = $c->model('FB11AuthDB::Aclrule')->find( { actionpath => $action_path } );
 
     # return undef if not match found..
     return undef unless $aclrule;
 
-    $c->log->debug("AppKit ACL : Matched Rule: " . $aclrule->id . " FOR: $action_path ") if $c->debug;
+    $c->log->debug("FB11 ACL : Matched Rule: " . $aclrule->id . " FOR: $action_path ") if $c->debug;
 
     #.. pull out all the allowed roles for this rule..
     my $allowed_roles = [ map { $_->role } $aclrule->roles ];
@@ -688,8 +688,8 @@ sub _allowed_roles_from_db
     return $allowed_roles;
 }
 
-=head2 _appkit_stash_portlets
-    Put all the AppKit Controller Portlets data in the stash
+=head2 _fb11_stash_portlets
+    Put all the FB11 Controller Portlets data in the stash
     If you forward to this action, you should end up with a stash value keyed by 'portlets'.
         eg. $c->forward('stash_portlets');
     The value of 'portlets' is an ArrayRef of HashRefs.
@@ -698,15 +698,15 @@ sub _allowed_roles_from_db
         html    = The HTML content of the portlet
 =cut
 
-sub _appkit_stash_portlets 
+sub _fb11_stash_portlets 
 {
     my ( $c ) = @_;
     my @portlets;
-    foreach my $apc ( @{ $c->appkit_controllers } )
+    foreach my $apc ( @{ $c->fb11_controllers } )
     {   
         next unless $apc->portlet_actions;
 
-        $c->log->debug("AppKit - RREALLY LOOKING FOR PORTLETS IN : " . $apc ) if $c->debug;
+        $c->log->debug("FB11 - RREALLY LOOKING FOR PORTLETS IN : " . $apc ) if $c->debug;
 
         foreach my $portlet ( @{ $apc->portlet_actions } )
         {   
@@ -738,13 +738,53 @@ sub _appkit_stash_portlets
     $c->stash->{portlets} = \@portlets;
 }
 
+sub _fb11_fetch_portlets 
+{
+    my ( $c ) = @_;
+    my @portlets;
+    foreach my $apc ( @{ $c->fb11_controllers } )
+    {   
+        next unless $apc->portlet_actions;
 
-sub _appkit_stash_searches 
+        $c->log->debug("FB11 - RREALLY LOOKING FOR PORTLETS IN : " . $apc ) if $c->debug;
+
+        foreach my $portlet ( @{ $apc->portlet_actions } )
+        {   
+            my $portlet_action = $apc->action_for( $portlet->{actionname} );
+
+            # dont stash if we can't access it..
+            next unless $c->can_access( $portlet_action->reverse );
+
+            # forward to the portlet action..
+            {
+                local $c->stash->{breadcrumbs};
+                local $c->stash->{output_type} = 'plain';
+                $c->visit( $portlet_action );
+            }
+
+            # take things from the stash (that the action should have just filled out)
+            push
+            (   
+                @portlets,
+                {   
+                    name    => $portlet->{value},
+                    html    => $c->res->body,
+                }
+            ) if($c->res->status == 200);
+            $c->res->status(200);
+            $c->res->body(undef);
+        }
+    }
+    return \@portlets;
+}
+
+
+sub _fb11_stash_searches 
 {
     my ( $c, $q ) = @_;
 
     my @search_results;
-    foreach my $apc ( @{ $c->appkit_controllers } )
+    foreach my $apc ( @{ $c->fb11_controllers } )
     {
         next unless $apc->search_actions;
         foreach my $search ( @{ $apc->search_actions } )
@@ -781,8 +821,8 @@ sub _appkit_stash_searches
     $c->stash->{search_results} = \@search_results;
 }
 
-=head2 _appkit_stash_navigation
-    Put all the AppKit Controller Navigation data in the stash
+=head2 _fb11_stash_navigation
+    Put all the FB11 Controller Navigation data in the stash
     If you forward to this action, you should end up with a stash value keyed by 'navigation'.
         eg. $c->forward('stash_navigation');
     The value of 'navigation' is an ArrayRef of HashRefs.
@@ -791,11 +831,11 @@ sub _appkit_stash_searches
         uri     = The uri if the action the navigation relates to.
 =cut
 
-sub _appkit_stash_navigation
+sub _fb11_stash_navigation
 {
     my ( $c ) = @_;
     my @navigations;
-    foreach my $apc ( @{ $c->appkit_controllers } )
+    foreach my $apc ( @{ $c->fb11_controllers } )
     {   
         next unless $apc->navigation_actions;
         foreach my $nav ( @{ $apc->navigation_actions } )
@@ -834,21 +874,21 @@ sub in_REST_action
     return $c->action && $c->action->isa('Catalyst::Action::REST');
 }
 
-sub detach_to_appkit_access_denied
+sub detach_to_fb11_access_denied
 {
     my ( $c, $denied_access_to_action ) = @_;
 
     if($c->in_REST_action)
     {
-        $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - part of REST controller so sending plain 403.") if $c->debug;
+        $c->log->debug("FB11 - Not Allowed Access to " . $denied_access_to_action->reverse . " - part of REST controller so sending plain 403.") if $c->debug;
         $c->REST_403;
     }
 
-    my $access_denied_action_path = $c->config->{'appkit_access_denied'};
-    $c->log->debug("AppKit - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;
+    my $access_denied_action_path = $c->config->{'fb11_access_denied'};
+    $c->log->debug("FB11 - Not Allowed Access to " . $denied_access_to_action->reverse . " - Detaching to $access_denied_action_path  ") if $c->debug;
     my $message = "Access denied - Please login with an account that has permissions to access the requested area";
-    $message = $c->config->{AppKit}->{login_message}
-        if exists $c->config->{AppKit}->{login_message};
+    $message = $c->config->{FB11}->{login_message}
+        if exists $c->config->{FB11}->{login_message};
     $c->controller('Login')->login_redirect($c, $message);
     $c->detach();
 }

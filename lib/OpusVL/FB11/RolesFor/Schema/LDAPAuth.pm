@@ -24,7 +24,7 @@ OpusVL::FB11::RolesFor::Schema::LDAPAuth
 
 =head1 DESCRIPTION
 
-This role extends your DBIC Schema to allow the AppKitAuthDB to make use of alternative
+This role extends your DBIC Schema to allow the FB11AuthDB to make use of alternative
 authentication methods.  You can for example use LDAP
 for it's password authentication while still storing user information in the database.
 

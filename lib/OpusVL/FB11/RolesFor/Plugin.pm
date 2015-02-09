@@ -28,13 +28,13 @@ This sets up the paths for the TT templates and the L<Excel::Template::Plus> vie
 are setup to point to the same directory, named C<templates>.  It also sets up the static content path
 to point to the static directory.
 
-It sets up the HTML::FormFu include directory so that it will pick up your forms.  The AppKitForm attribute
+It sets up the HTML::FormFu include directory so that it will pick up your forms.  The FB11Form attribute
 also has some logic to pull forms from the current module but that doesn't allow you to do includes on other forms,
 either within your own module, or across modules.  
 
 =head2 add_form_path
 
-This sets up the HTML::FormFu include directory so that it will pick up your forms.  The AppKitForm attribute
+This sets up the HTML::FormFu include directory so that it will pick up your forms.  The FB11Form attribute
 also has some logic to pull forms from the current module but that doesn't allow you to do includes on other forms,
 either within your own module, or across modules.  
 
@@ -126,7 +126,7 @@ sub _add_template_path
         }
         $excel_config->{etp_config}->{AUTO_FILTER} = 'html';
         $excel_config->{etp_engine} = 'TTAutoFilter';
-        my $inc_path = $self->config->{'View::AppKitTT'}->{'INCLUDE_PATH'};
+        my $inc_path = $self->config->{'View::FB11TT'}->{'INCLUDE_PATH'};
         push(@$inc_path, $template_path );
     }
 

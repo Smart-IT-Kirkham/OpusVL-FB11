@@ -25,7 +25,7 @@ die "Failed to connect to $host on port $port\n"
     unless $memsock;
 
 print "OK\n";
-print $memsock "delete appkit_features\r\n";
+print $memsock "delete fb11_features\r\n";
 print $memsock "delete actiontree\r\n";
 
 my $max   = 2; # number of times to receive DELETED message

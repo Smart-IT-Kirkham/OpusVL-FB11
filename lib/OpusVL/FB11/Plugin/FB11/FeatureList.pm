@@ -6,7 +6,7 @@ OpusVL::FB11::Plugin::FB11::FeatureList;
 
 =head1 DESCRIPTION
 
-Object to manage the features in AppKit to provide a less granular view of our access control 
+Object to manage the features in FB11 to provide a less granular view of our access control 
 system.
 
 =head1 SYNOPSIS
@@ -34,7 +34,7 @@ sub add_action
     my $app = shift;
     my $action = shift;
 
-    my $features = $action->attributes->{AppKitFeature};
+    my $features = $action->attributes->{FB11Feature};
     return if !$features || !@$features;
     my $list = $features->[0];
     my @features = split /,/, $list;

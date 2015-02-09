@@ -19,7 +19,7 @@ my $menu = $c->menu_data;
 is scalar @$menu, 0, 'Should have no apps.';
 
 
-($res, $c) = ctx_request(POST ('/login', [ username => 'appkitadmin', password => 'password'] ));
+($res, $c) = ctx_request(POST ('/login', [ username => 'fb11admin', password => 'password'] ));
 ok $res, 'Check response';
 $menu = $c->menu_data;
 is scalar @$menu, 1, 'Should have 1 apps.';

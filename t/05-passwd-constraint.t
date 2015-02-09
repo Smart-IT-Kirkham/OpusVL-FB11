@@ -22,18 +22,18 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->content_contains('OpusVL::FB11', 'App name and logo should be present');
 
      # Send some login information..
-    $mech->post_ok( '/login', { username => 'appkitadmin', password => 'password' }, "Submit to login page");
+    $mech->post_ok( '/login', { username => 'fb11admin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
     my $logged_in_cookie = $mech->cookie_jar->{COOKIES}->{'localhost.local'}->{'/'}->{'testapp_session'};
     isnt $logged_in_cookie, $cookie;
 
     # can we see the admin..
-    $mech->get_ok( '/appkit/admin', "Can see the admin index");
+    $mech->get_ok( '/fb11/admin', "Can see the admin index");
     $mech->content_contains("Settings", "Showing admin page");
 
     # Visit change password page
-    $mech->post_ok('/appkit/user/changepword', "Can see the change password page");
+    $mech->post_ok('/fb11/user/changepword', "Can see the change password page");
     $mech->content_contains("Change Your Password", "Showing Change Password Page");
     $mech->submit_form_ok({
         button => 'submitbutton',

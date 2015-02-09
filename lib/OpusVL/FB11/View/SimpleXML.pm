@@ -2,7 +2,7 @@ package OpusVL::FB11::View::SimpleXML;
 
 =head1 NAME
 
-    OpusVL::FB11::View::SimpleXML - Simple XML view for OpusVL::AppKit
+    OpusVL::FB11::View::SimpleXML - Simple XML view for OpusVL::FB11
 
 =head1 DESCRIPTION
 
@@ -14,7 +14,7 @@ package OpusVL::FB11::View::SimpleXML;
 
     The XMLout call is made with the NoAttr => 1 and XMLDecl => 1 settings.
 
-    Included is the 'AppKit' ShareDir path to include distributed files.
+    Included is the 'FB11' ShareDir path to include distributed files.
 
 =head1 SEE ALSO
 

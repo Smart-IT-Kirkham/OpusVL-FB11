@@ -2,13 +2,13 @@ package OpusVL::FB11::Controller::Root;
 
 =head1 NAME
 
-    OpusVL::FB11::Controller::Root - Root Controller for OpusVL::AppKit
+    OpusVL::FB11::Controller::Root - Root Controller for OpusVL::FB11
 
 =head1 DESCRIPTION
 
     The OpusVL::FB11 is intended to be inherited by another Catalyst App using AppBuilder.
 
-    The current intention is that Apps that use AppKit do not need to have their own Root Controller,
+    The current intention is that Apps that use FB11 do not need to have their own Root Controller,
     but use this one. 
     If you app requires its own Root.pm Controller, you should inherite this one    
 
@@ -34,25 +34,37 @@ __PACKAGE__->config->{namespace}    = '';
 =cut
 sub auto 
     : Action 
-    : AppKitAllAccess
+    : FB11AllAccess
 {
     my ( $self, $c ) = @_;
+    if ($c->user) {
+        my $fav_rs = $c->model('FB11AuthDB::UsersFavourite')->search({ user_id => $c->user->id });
+        $c->stash->{page_is_favourite} = 1
+            if $fav_rs->find({ page => $c->req->uri->path });
+
+        if ($fav_rs->count > 0) {
+            $c->stash->{favourites} = [ $fav_rs->all ];
+        }
+    }
+
     return 1;
 }
 
+sub stash_portlets :Public {
+    my ($self, $c) = @_;
+    $c->_fb11_stash_portlets;
+}
 =head2 index
-    This is intended to be seen as the AppKit home page.
+    This is intended to be seen as the FB11 home page.
 =cut
 
 sub index 
     :Path 
     :Args(0) 
-    : AppKitFeature('Home Page')
+    : FB11Feature('Home Page')
 {
     my ( $self, $c ) = @_;
-
-    $c->_appkit_stash_portlets;
-
+    #$c->_fb11_stash_portlets;
     $c->stash->{template} = 'index.tt';
     $c->stash->{homepage} = 1;
 }
@@ -89,7 +101,7 @@ sub access_denied : Private
     delete $c->stash->{current_view} if defined $c->stash->{current_view}; # ensure default view.
     $c->response->status(403);
     $c->stash->{homepage} = 1;
-    $c->detach('View::AppKitTT');
+    $c->detach('View::FB11TT');
 }
 
 =head2 end
