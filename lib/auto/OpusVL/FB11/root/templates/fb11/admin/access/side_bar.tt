@@ -1,0 +1,34 @@
+[% manage = c.can_access(c.controller.action_for('role_management')) %]
+            <div class="role_sidebar">
+
+                <fieldset>
+                    <legend>
+                        Available Roles
+                    </legend>
+
+                    [% FOR role IN c.user.roles_modifiable.all %]
+                        [% role.role %]
+                        <a href='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('show_role'),     [ role.role ] ) %] '>access</a>
+                        [% IF manage %]
+                        <a href='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('role_management'),     [ role.role ] ) %] '>management</a>
+                        [% END %]
+                        <a href='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('delete_role'),   [ role.role ] ) %] '>del</a>
+                        <br>
+                    [% END %]
+
+                </fieldset>
+
+                <fieldset>
+                    <legend>
+                        New Role
+                    </legend>
+
+                    <form method='POST' action='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('addrole') )  %]'>
+                        <input type='text' name='rolename' value=''>
+                        <input type='submit' name='addrolebutton' value='Add Role'>
+                    </form>
+                </fieldset>
+
+            </div>
+
+

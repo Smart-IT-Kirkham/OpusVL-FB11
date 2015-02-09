@@ -1,0 +1,44 @@
+<div class="navbar navbar-default yamm" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="/">[% UNLESS c.user %]OPUS<span class="opusvl-blue">VL</span>[% ELSE %][% c.config.name %][% END %]</a>
+  </div>
+  <div class="navbar-collapse collapse">
+
+    <!-- Left nav -->
+    <ul class="nav navbar-nav">
+      <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
+      [% IF c.user %]
+        [% apps = c.menu_data %]
+        [% FOR app IN apps %]
+            <li class="dropdown">
+              <a class="dropdown-toggle" data-toggle="dropdown" href="/[% app.controller.action_namespace %]">[% IF (app.controller.fb11_icon) %]<i class="fa fa-[% app.controller.fb11_icon %]"></i> [% END %][% app.controller.fb11_name %] <span class="caret"></span></a>
+              <ul class="dropdown-menu yamm-fw">
+                <div class="yamm-content">
+                  <div class="row">
+              [% FOR group IN app.actions %]
+                  [% IF group.group %]
+                        <ul class="col-md-[% IF app.actions.size > 1 %]6[% ELSE %]12[% END %] list-unstyled">
+                          <li><h4>[% group.group %]</strong></h4>
+                          [% FOR action IN group.actions %]
+                              [% IF (action.controller.fb11_method_group == group.group) %]
+                                  <li><a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a></li>
+                              [% END %]
+                          [% END %]
+                        </ul>
+                  [% END %]
+              [% END %]
+                </div> <!-- /row -->
+              </div>  <!-- /yamm-content -->
+              </ul>
+            </li>
+        [% END %]
+      [% END %]
+    </ul>
+  </div>
+</div>

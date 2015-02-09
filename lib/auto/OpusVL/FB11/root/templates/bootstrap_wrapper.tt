@@ -1,0 +1,52 @@
+[% c.forward('/stash_portlets') %]
+<!doctype html>
+[%- USE today = DateTime(today = 1); -%]
+<html lang="en">
+    <head>
+
+    [% PROCESS wrapper_head.tt %]
+    [% PROCESS clickjack.tt %]
+
+    </head>
+    <body>
+        <!-- Container -->
+        <div class="container">
+            [% PROCESS bootstrap_navbar.tt %]
+            <!-- Content -->
+            <div class="row[% UNLESS c.user %] row-centered[% END %]">
+                <!-- Main Content -->
+
+                <div class="[% IF c.user %]col-md-8[% ELSE %]col-md-4[% END %][% UNLESS c.user %] col-centered[% END %]">
+                    [% IF c.stash.status_msg %]<div class="alert alert-success">[% status_msg %] <div class="pull-right"><a href="javascript:;" class="hide-alert"><i class="fa fa-remove"></i></a></div></div>[% END %]
+                    [% IF c.stash.error_msg %]<div class="alert alert-danger">[% error_msg %] <div class="pull-right"><a href="javascript:;" class="hide-alert"><i class="fa fa-remove"></i></a></div></div>[% END %]
+                    [% UNLESS c.user %]
+                    <h1>[% c.config.name %]</h1>
+                    <div class="well">
+                    [% END %]
+                    [% content | none %]
+                    [% UNLESS c.user %]
+                    </div>
+                    [% END %]
+                </div>
+
+                <!-- Side bar -->
+                [% IF c.user %]
+                <div class="col-md-4">
+                    [% PROCESS bootstrap_sidebar.tt %]
+                </div>
+                [% END %]
+            </div>
+            <!-- /Content -->
+            <!-- Footer -->
+            <div class="footer">
+                <div class="row[% UNLESS c.user %] row-centered[% END %]">
+                    <div class="[% IF c.user %]col-md-8[% ELSE %]col-md-4[% END %][% UNLESS c.user %] col-centered[% END %]">
+                        <a href="http://www.opusvl.com" target="_blank"><img class="center-block" src="/static/images/built_with_flexibase.png" border="0"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Container -->
+    </body>
+</html>
+

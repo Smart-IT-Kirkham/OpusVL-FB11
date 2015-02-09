@@ -1,0 +1,58 @@
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">[% c.user.name %]</h3>
+  </div>
+  <div class="panel-body">
+  	<div class="panel-icons">
+      <a href="/fb11/admin"><i class="fa fa-cog"></i></a>
+      <a href="#"><i class="fa fa-question-circle"></i></a>
+      <a href="#" class="favourite-link"><i class="fa fa-heart[% IF page_is_favourite %] favourited[% END %]"></i></a>
+      <a href="/logout"><i class="fa fa-power-off"></i></a>
+      <a href="#"><i class="fa fa-user"></i></a>
+    </div>
+  </div>
+</div>
+
+[% FOR widget IN c.stash.portlets %]
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">[% widget.name %]</h3>
+  </div>
+  <div class="panel-body">
+    [% widget.html | none %]
+  </div>
+</div>
+[% END %]
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Notifications</h3>
+  </div>
+  <div class="panel-body">
+    Panel content
+  </div>
+</div>
+
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">Favourites</h3>
+  </div>
+  <div class="panel-body">
+    [% IF favourites %]
+      <ul>
+      [% FOREACH fav IN favourites %]
+        <li><a href="[% fav.page %]">[% fav.name %]</a></li>
+      [% END %]
+      </ul>
+      [% ELSE %]
+      <p>You have no favourites</p>
+      [% END %]
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function() {
+    var h1Text = $('h1').first().text();
+    $('.favourite-link').attr("href", "/fb11/user/favourite?name=" + h1Text + "&page=[% c.req.uri.path %]");
+  });
+</script>

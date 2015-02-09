@@ -1,0 +1,7 @@
+[%- IF ( output_type == 'plain' or c.stash.no_wrapper ) -%]
+[%-    debug("Passing page through as text: $template.name \n"); -%]
+[%-    content | none -%]
+[%- ELSE -%]
+[%-    debug("Applying HTML page layout wrappers to $template.name \n"); -%]
+[% PROCESS bootstrap_wrapper.tt %]
+[%- END -%]
