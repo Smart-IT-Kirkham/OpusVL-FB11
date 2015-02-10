@@ -17,6 +17,22 @@ __PACKAGE__->config
     fb11_shared_module        => 'ExtensionA',
 );
 
+sub expanded_search :FB11Feature('Extension A') :SearchName('Expanded Search')
+{
+    my ($self, $c, $q) = @_;
+
+    $c->stash->{search_results} = [
+        {
+            url     => $c->uri_for($self->action_for('home')),
+            name    => 'The expanded action home',
+        },
+        {
+            url     => $c->uri_for($c->controller('ExtensionA')->action_for('table')),
+            name    => 'Table examples',
+        }
+    ];
+}
+
 sub home
     :Path
     :Args(0)

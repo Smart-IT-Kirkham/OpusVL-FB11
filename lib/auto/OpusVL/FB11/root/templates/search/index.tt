@@ -1,37 +1,36 @@
 [% USE HTML %]
-<h1>Search results</h1>
-    [% USE Dumper %]
-    <pre>[% Dumper.dump(search_results) %]</pre>
-    [% IF (search_results.size > 0) %]
-        [% PROCESS search_form message = 'Here are your results for query:' %]
-        [% query_regex = '(?i)(' _ query.split('\s+').join('|') _ ')' %]
-        [% FOREACH resultset IN search_results %]
-            <h3>[% resultset.name %]</h3>
-            <ul class="search_results">
-                [% FOREACH result IN resultset.results %]
-                    <li>
-                        <a href="[% result.url %]">[% HTML.escape(result.name).replace(query_regex,'<strong>$1</strong>') | none %]</a>
-                        <div class="search_result_description">
-                            [% IF result.description %]
-                                [% HTML.escape(result.description).replace(query_regex,'<strong>$1</strong>') | none %]
-                            [% ELSE %]
-                                No description
-                            [% END %]
-                        </div>
-                    </li>
-                [% END %]
-            </ul>
+    <h1>Search results</h1>
+        [% IF (search_results.size > 0) %]
+            <p style="font-style: italic">Here are your results for query: "[% query %]"</p>
+            <div class="well">
+            [% query_regex = '(?i)(' _ query.split('\s+').join('|') _ ')' %]
+            [% FOREACH resultset IN search_results %]
+                <h3>[% resultset.name %]</h3>
+                <ul class="search_results">
+                    [% FOREACH result IN resultset.results %]
+                        <li>
+                            <a href="[% result.url %]">[% HTML.escape(result.name).replace(query_regex,'<strong>$1</strong>') | none %]</a>
+                            <div class="search_result_description">
+                                [% IF result.description %]
+                                    [% HTML.escape(result.description).replace(query_regex,'<strong>$1</strong>') | none %]
+                                [% ELSE %]
+                                    No description
+                                [% END %]
+                            </div>
+                        </li>
+                    [% END %]
+                </ul>
+            [% END %]
+        [% ELSE %]
+            [% PROCESS search_form message = 'Sorry, no documents matched your query:' %]
         [% END %]
-    [% ELSE %]
-        [% PROCESS search_form message = 'Sorry, no documents matched your query:' %]
+        </div>
+    [% BLOCK search_form %]
+        <form>
+            <p>
+                [% message %]
+                <input type="text" name="q" value="[% query %]">
+                <input type="submit" value="Search">
+            </p>
+        </form>
     [% END %]
-
-[% BLOCK search_form %]
-    <form>
-        <p>
-            [% message %]
-            <input type="text" name="q" value="[% query %]">
-            <input type="submit" value="Search">
-        </p>
-    </form>
-[% END %]
