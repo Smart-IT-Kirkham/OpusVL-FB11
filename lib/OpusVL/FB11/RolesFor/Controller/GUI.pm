@@ -229,6 +229,7 @@ before create_action  => sub
             }
         );
         $self->search_actions ( $array );
+        $DB::single = 1;
     }
 };
 

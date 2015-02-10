@@ -802,7 +802,7 @@ sub _fb11_stash_searches
                 
                 # Stop the default end action from rendering a view
                 $c->res->body('do_not_render');
-                $c->visit( $search_action, [], [$q] );
+                $c->forward( $search_action, [], [$q] );
                 $c->res->body(undef);
             }
 

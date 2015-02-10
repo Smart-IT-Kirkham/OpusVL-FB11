@@ -1,6 +1,7 @@
 [% USE HTML %]
 <h1>Search results</h1>
-<div class="content_block">
+    [% USE Dumper %]
+    <pre>[% Dumper.dump(search_results) %]</pre>
     [% IF (search_results.size > 0) %]
         [% PROCESS search_form message = 'Here are your results for query:' %]
         [% query_regex = '(?i)(' _ query.split('\s+').join('|') _ ')' %]
@@ -24,7 +25,6 @@
     [% ELSE %]
         [% PROCESS search_form message = 'Sorry, no documents matched your query:' %]
     [% END %]
-</div>
 
 [% BLOCK search_form %]
     <form>
