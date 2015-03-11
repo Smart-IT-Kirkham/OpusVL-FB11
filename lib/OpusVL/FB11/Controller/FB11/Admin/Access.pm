@@ -4,9 +4,14 @@ use Moose;
 use namespace::autoclean;
 use Tree::Simple::View::HTML;
 use Tree::Simple::VisitorFactory;
+use HTML::FormHandler;
 
 BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
+
+has_forms(
+    'confirm_form'      => 'Confirm',
+);
 
 __PACKAGE__->config
 (
@@ -69,6 +74,7 @@ sub addrole
 
             if ( $role )
             {
+                $c->flash->{status_msg} = "Successfully created new role '$rolename'";
                 $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('show_role'), [ $rolename ] ) );
             }
             else
@@ -117,47 +123,73 @@ sub role_management
     : Chained('role_specific')
     : PathPart('management')
     : Args(0)
-    : FB11Form
     : FB11Feature('Role Administration')
 {
     my ($self, $c) = @_;
-
-    my $form = $c->stash->{form};
     my $role = $c->stash->{role};
+    my $can_change_any_role = $role->can_change_any_role;
+    my @allowed_roles = $role->roles_allowed_roles->get_column('role_allowed')->all;
+    my @all_roles = $c->model('FB11AuthDB::Role')->all;
+    my @options;
+    for my $role (@all_roles) {
+        push @options, {
+            value => $role->id,
+            label => $role->role,
+            checked => (grep { $_ == $role->id } @allowed_roles) ? 1 : 0,
+        };
+    }
 
+    my $can_change_any_role_opts = {
+        type    => 'Boolean',
+        label   => 'Can change any role',
+    };
+
+    $can_change_any_role_opts->{element_attr}->{checked} = 'checked'
+        if $role->can_change_any_role;
+
+    my $form = HTML::FormHandler->new(
+        widget_wrapper => 'Bootstrap3',
+        name => 'role_management_form',
+        field_list => [
+            'can_change_any_role' => $can_change_any_role_opts,
+
+            'roles_allowed_roles' => {
+                label   => 'Roles allowed to modify/apply',
+                type    => 'Multiple',
+                widget  => 'HorizCheckboxGroup',
+                options => \@options,
+            },
+
+            'confirm' => {
+                type => 'Submit',
+                widget => "ButtonTag",
+                widget_wrapper => "None",
+                value => '<i class="fa fa-check"></i> Save',
+                element_attr => { value => 'confirm', class => ['btn', 'btn-success'] }
+            },
+        ],
+    );
+
+    $c->stash->{form} = $form;
+    $form->process($c->req->params);    
     if($c->req->param('cancel'))
     {
         $c->response->redirect($c->uri_for($self->action_for('show_role'), [ $role->role ]));
         $c->detach;
     }
-    my $selection = $form->get_all_element({ type => 'Checkboxgroup', name => 'roles_allowed_roles'});
-    my @all_roles = $c->model('FB11AuthDB::Role')->all;
-    my @options = map { [ $_->id, $_->role ] } @all_roles;
-    $selection->options(\@options);
-    my @selected = $role->roles_allowed_roles->get_column('role_allowed')->all;
-    my $can_change_any_role = $role->can_change_any_role;
-    if(@selected || $can_change_any_role)
-    {
-        my $defaults = { can_change_any_role => $can_change_any_role };
-        $defaults->{ roles_allowed_roles } = \@selected if @selected;
-        $form->default_values( { 
-            roles_allowed_roles => \@selected,
-            can_change_any_role => $can_change_any_role,
-        } );
-    }
-    $form->process;
-
-    if($form->submitted_and_valid)
-    {
-        my $ids = $form->param_array('roles_allowed_roles');
-        my $can_change_any_role = $form->param_value('can_change_any_role');
-        if(!$can_change_any_role)
-        {
+    
+    if ($form->validated) {
+        my $selection = $form->field('roles_allowed_roles');
+        my $ids = $form->field('roles_allowed_roles')->value;
+        my $can_change_any_role = $form->field('can_change_any_role')->value;
+        if (not $can_change_any_role) {
             $role->delete_related('roles_allowed_roles');
             $role->create_related('roles_allowed_roles', { role_allowed => $_}) for @$ids;
         }
+
         $role->can_change_any_role($can_change_any_role);
         $c->flash->{status_msg} = 'Permissions changed';
+        $c->res->redirect($c->req->uri);
     }
 
 }
@@ -209,26 +241,25 @@ sub delete_role
     : Chained('role_specific')
     : PathPart('delrole')
     : Args(0)
-    : FB11Form("fb11/admin/confirm.yml")
     : FB11Feature('Role Administration')
 {   
     my ( $self, $c ) = @_;
-
+    my $form = $self->confirm_form;
     $c->stash->{question} = "Are you sure you want to delete the role: " . $c->stash->{role}->role;
     $c->stash->{template} = 'fb11/admin/confirm.tt';
+    $c->stash->{form}     = $form;
 
-    if ( $c->stash->{form}->submitted_and_valid )
-    {   
-        $c->stash->{role}->delete;
-        $c->flash->{status_msg} = "Role deleted";
-        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('index') ) );
+    $form->process($c->req->params);
+    if ($form->validated) {
+        if ($c->req->params->{submitok}) {
+            $c->stash->{role}->delete;
+            $c->flash->{status_msg} = "Role deleted";
+            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('index') ) );
+        }
+        else {
+            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('index') ) );
+        }
     }
-    elsif( $c->req->method eq 'POST' )
-    {
-        $c->flash->{status_msg} = "Role NOT deleted";
-        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('index') ) );
-    }
-
 }
 
 =head2 user_add_to_role
@@ -314,7 +345,10 @@ sub show_role
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{role}->role, url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->id ] ) } );
+    push @{$c->stash->{breadcrumbs}}, {
+        name    => $c->stash->{role}->role,
+        url     => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->id ] )
+    };
 
     # stash the tree..
     $c->stash->{action_tree} = $c->fb11_actiontree;
@@ -428,7 +462,7 @@ sub show_role
         $display_tree => 
         (
             list_css                => "list-style: circle;",
-            list_item_css           => "font-family: courier;",
+            #list_item_css           => "font-family: courier;",
             node_formatter          => sub 
             {
                 my ($tree) = @_;
@@ -438,7 +472,7 @@ sub show_role
                 my $checkbox_name = $path2root_visitor->getPathAsString("/");
 
                 my $checked             = '';
-                my $color               = 'blue';
+                my $color               = '#81BEF7';
 
                 if($tree->getNodeValue->in_feature)
                 {
@@ -447,7 +481,7 @@ sub show_role
                 }
                 elsif ( defined $tree->getNodeValue->action_path )
                 {
-                    $color = 'red';
+                    $color = '#FA5882';
                     if ( my $roles = $tree->getNodeValue->access_only )
                     {
                        my $matched_role = 0;
@@ -458,10 +492,10 @@ sub show_role
                        if ( $matched_role ) # rules and a matched.. therefore, access :)..
                        {
                            $checked = 'checked';
-                           $color   = 'green';
+                           $color   = '#3fb618';
                        }
                     }
-                    $node_string = "<input type='checkbox' name='action_$checkbox_name' value='allow' $checked>" . $node_string;
+                    $node_string = qq{<div class="checkbox"><label><input type="checkbox" name="action_$checkbox_name" value="allow" $checked> $node_string</label></div>};
                 }
                 else
                 {

@@ -28,7 +28,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
 
     is( $mech->ct, "text/html");
     $mech->content_contains("Please login", "Redirect to login page");
-    $mech->content_contains('OpusVL::FB11', 'App name and logo should be present');
+    $mech->content_contains('TestApp', 'App name and logo should be present');
     $mech->add_header("Content-Type" => "application/json");
     $mech->get("/rest/no_permission/30");
     is $mech->status, 403;
@@ -77,7 +77,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->get_ok("/");
     $mech->content_like(qr/Access denied/i, 'check not logged in');
 
-    $mech->post_ok( '/login', { username => 'APPKITadmin', password => 'password' }, "Submit to login page");
+    $mech->post_ok( '/login', { username => 'fb11admin', password => 'password' }, "Submit to login page");
     $mech->content_contains("Welcome to", "Logged in, showing index page");
 
     $mech->get_ok('/fb11/admin/users/adduser', 'Go to add user page');

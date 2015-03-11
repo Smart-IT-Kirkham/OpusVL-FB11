@@ -460,18 +460,35 @@ sub has_forms {
                 die "Could not use form $form: $@\n";
             }
             *{"${caller}::${method}"} = sub { $form->new(name => $method) };
-            #Moose::Meta::Attribute->new($method,
-            #is => 'ro',
-            #Moose::Meta::Attribute->new($method,
-            #is => 'ro',
-            #isa => $form,
-            #isa => $form,
-            #lazy => 1,
-            #default => sub { $form->new }
-            #);
         }
     }
 }
+
+sub form {
+    my ($self, $c, $form) = @_;
+    my $base = scalar caller;
+    $base =~ s/::Controller::(.+)//g;
+
+    #if (not ref $c eq $base) {
+    #    die "form() expects '${base}' object as second parameter. Received " . ref($c) . " instead\n";
+    #}
+
+    my $caller = scalar caller;
+    # absolute module
+    if (substr($form, 0, 1) eq '+') {
+        $form =~ s/^\+//g;
+    }
+    else {
+        $form = "${base}::Form::${form}";
+    }
+    eval "use $form";
+    if ($@) {
+        die "Could not use form $form: $@\n";
+    }
+
+    return $form->new(ctx => $c);
+}
+
 =head1 SEE ALSO
 
     L<CatalystX::AppBuilder>,

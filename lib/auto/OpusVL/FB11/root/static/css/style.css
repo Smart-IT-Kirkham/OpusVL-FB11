@@ -62,3 +62,23 @@ img.responsive-img {
  */
 
  .favourited { color: #a94442; }
+
+/*.fb11-option-list {
+	transition: all 0.3s ease-in;
+	cursor: pointer;
+}*/
+
+.fb11-option-list > .col-sm-6 { padding-top: 5px; padding-bottom: 5px; }
+/*.fb11-option-list:hover {
+ 	background-color: #3e444c;
+ 	color: #fff;
+}*/
+
+#fb11-admin-menu { padding-right: 10px; }
+#fb11-admin-menu > i { font-size: 25px; }
+
+/*@media (min-width: 992px) {
+	.fb11-admin-dropdown > .col-md-6 {
+		min-width: 180px;
+	}
+}*/

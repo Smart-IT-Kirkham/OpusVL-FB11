@@ -267,7 +267,6 @@ override _build_config => sub
 
     # set this up empty for now.
     $config->{'View::Excel'} = { etp_config => { INCLUDE_PATH => [] }};
-
     return $config;
 };
 

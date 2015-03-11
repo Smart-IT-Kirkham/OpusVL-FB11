@@ -12,6 +12,11 @@ __PACKAGE__->config
     fb11_myclass              => 'OpusVL::FB11',
 );
 
+has_forms (
+    user_role_form => 'Admin::Users',
+    confirm_form   => 'Confirm',
+);
+
 =head2 auto
 
     Default action for this controller.
@@ -58,43 +63,44 @@ sub adduser
     : Local
     : Args(0)
     : FB11Feature('User Administration')
-    : FB11Form("fb11/admin/users/user_form.yml")
 {
     my ( $self, $c ) = @_;
 
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('adduser') ) } );
 
-    my $form = $c->stash->{form};
+    my $form = $self->form($c, 'Admin::AddUser');
 
-    my $ignore_password = $c->model('FB11AuthDB')->schema->can('password_check');
-    if($ignore_password)
-    {
-        my $password = $form->get_all_element('password');
-        $password->parent->remove_element($password);
-    }
-    else
-    {
-        # add 'Required' constraint to form .. adding means you must have set a password...
-        $form->get_all_element('password')->constraint('Required');
-    }
-    $form->process();
-
-    if ( $c->stash->{form}->submitted_and_valid )
-    {
-        my $password = $ignore_password ? mkpasswd : $form->param_value('password');
-        
-        # FIXME: is this a security hole?
-        # should we be recording the fact we're not using the password field
-        # really?
-        
-        my $newuser = $c->model('FB11AuthDB::User')->new_result( { password => $password } );
-
-        $c->stash->{form}->model->update( $newuser );
-
-        $c->stash->{status_msg} = "User added";
-        $c->stash->{thisuser}   = $newuser;
-        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
-    }
+    $c->stash->{form} = $form;
+    $form->process($c->req->params);
+    #my $ignore_password = $c->model('FB11AuthDB')->schema->can('password_check');
+    #if($ignore_password)
+    #{
+    #    my $password = $form->get_all_element('password');
+    #    $password->parent->remove_element($password);
+    #}
+    #else
+    #{
+    #    # add 'Required' constraint to form .. adding means you must have set a password...
+    #    $form->get_all_element('password')->constraint('Required');
+    #}
+    #$form->process;
+#
+    #if ( $c->stash->{form}->submitted_and_valid )
+    #{
+    #    my $password = $ignore_password ? mkpasswd : $form->param_value('password');
+    #    
+    #    # FIXME: is this a security hole?
+    #    # should we be recording the fact we're not using the password field
+    #    # really?
+    #    
+    #    my $newuser = $c->model('FB11AuthDB::User')->new_result( { password => $password } );
+#
+    #    $c->stash->{form}->model->update( $newuser );
+#
+    #    $c->stash->{status_msg} = "User added";
+    #    $c->stash->{thisuser}   = $newuser;
+    #    $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
+    #}
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
@@ -128,40 +134,41 @@ sub show_user
     : Args(0)
 {
     my ( $self, $c ) = @_;
+    my $form = $self->user_role_form;
+    $c->stash->{form} = $form;
+    push @{ $c->stash->{breadcrumbs} }, {
+        name    => $c->stash->{thisuser}->username,
+        url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ])
+    };
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => $c->stash->{thisuser}->username, url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) } );
+    my @options;
+    for my $role ($c->user->roles_modifiable->all) {
+        my $opts = {
+            value => $role->id,
+            label => $role->role,
+        };
 
-    # test if need to process user submission...
-    if ( $c->req->method eq 'POST' )
-    {   
-        # add related user lookup for the submitted roles...
-        my $user_roles = $c->req->params->{user_role};
-        $user_roles = [ $user_roles ] if defined $user_roles && ! ref $user_roles;
-        foreach my $role_id ( @$user_roles )
-        {
-            $c->stash->{thisuser}->find_or_create_related('users_roles', { role_id => $role_id } );
+        if ($c->stash->{thisuser}->search_related('users_roles', { role_id => $role->id })->count > 0) {
+            $opts->{attributes}->{checked} = 'checked';
         }
 
-        #$c->log->debug("************************** SUBMITTED ROLES: $#$user_roles :" . join('|', @$user_roles) );
-
-        #.. delete any roles not required..
-        $c->stash->{thisuser}->search_related('users_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
-
-        $c->stash->{status_msg} = "User Roles updated";
+        push @options, $opts;
     }
 
-    # capture and stash role information for the user..
-    my @roles;
-    foreach my $role_rs ( $c->user->roles_modifiable->all )
-    {
-        my $checked = '';
-        if ( $c->stash->{thisuser}->search_related('users_roles', { role_id => $role_rs->id } )->count > 0 )
-        {
-            $checked = 'checked';
-        }
-        push( @roles, { role => $role_rs->role, input => "<INPUT TYPE='checkbox' NAME='user_role' VALUE='".$role_rs->id."' $checked>" } );
+    $form->field('user_roles')->options(\@options);
+    $form->process($c->req->params);
+
+    if ($form->validated) {   
+        my $user_roles = $form->field('user_roles')->value;
+        if (scalar @$user_roles > 0) {
+            foreach my $role_id (@$user_roles) {
+                $c->stash->{thisuser}->find_or_create_related('users_roles', { role_id => $role_id } );
+            }
+
+            $c->stash->{thisuser}->search_related('users_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
+            $c->stash->{status_msg} = "User Roles updated";
+        }   
     }
-    $c->stash->{roles} = \@roles;
 }
 
 sub reset_password
@@ -269,26 +276,25 @@ sub delete_user
     : Chained('user_specific')
     : PathPart('delete')
     : Args(0)
-    : FB11Form("fb11/admin/confirm.yml")
     : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
 
     $c->stash->{question} = "Are you sure you want to delete the user:" . $c->stash->{thisuser}->username;
     $c->stash->{template} = 'fb11/admin/confirm.tt';
-
-    if ( $c->stash->{form}->submitted_and_valid )
-    {
-        $c->stash->{thisuser}->delete;
-        $c->flash->{status_msg} = "User deleted";
-        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
+    $c->stash->{form} = $self->confirm_form;
+    my $form = $c->stash->{form};
+    $form->process($c->req->params);
+    if ($form->validated) {
+        if ($c->req->params->{submitok}) {
+            $c->stash->{thisuser}->delete;
+            $c->flash->{status_msg} = "User deleted";
+            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
+        }
+        else {
+            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
+        }
     }
-    elsif( $c->req->method eq 'POST' )
-    {
-         $c->flash->{status_msg} = "User NOT deleted";
-        $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
-    }
-
 }
 
 =head2 delete_parameter

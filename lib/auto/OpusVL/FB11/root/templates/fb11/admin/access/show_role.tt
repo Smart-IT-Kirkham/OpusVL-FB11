@@ -1,46 +1,38 @@
 
-<h1> Access Roles  </h1>
+[% PROCESS fb11/admin/access/side_bar.tt %]
+<div class="col-sm-6">
+    [% IF access_control_role_tree.defined %]
 
-    <div>
-
-        <div>
-
-            [% PROCESS fb11/admin/access/side_bar.tt %]
-
-            <div style="float:left; clear:right;">
-            [% IF access_control_role_tree.defined %]
-
-                <fieldset>
-                    <legend>
-                        Access Tree for [% c.stash.role.role %] 
-                    </legend>
-
-                    <form id="roles" method='POST' action='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('show_role'), [ c.stash.role.role ] )  %]'>
-                        [% IF fb11_features  %]
-                        <ul>
-                        [% FOREACH app IN fb11_features.keys %]
-                        <li class="app"><span>[% app | html %]<span></li>
-                        <ul>
-                        [% FOREACH feature IN fb11_features.$app.keys %]
-                        <li [% IF fb11_features.$app.$feature %]class="allowed"[% END %]><input type="checkbox" id="feature_[% app| html %]/[% feature| html %]" name="feature_[% app| html %]/[% feature| html %]"[% IF fb11_features.$app.$feature %] checked="checked"[% END %] value="allow">
-                        <label for="feature_[% app| html %]/[% feature| html %]">[% feature| html %]</label>
-                        </li>
-                        [% END %]
-                        </ul>
-                        [% END %]
-                        [% END %]
-                        </ul>
-                        [% access_control_role_tree.expandAll | none %]
-                        <input type='submit' name='savebutton'      value='Save'>
-                        <input type='submit' name='cancelbutton'    value='Cancel'>
-                    </form>
-
-                </fieldset>
-
-            [% END %]
-
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Access Tree for [% c.stash.role.role %]</div>
             </div>
-        </div> 
-    </div>
+            <form id="roles" class="form" role="form" method='POST' action='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('show_role'), [ c.stash.role.role ] )  %]'>
+            <div class="panel-body">
+                    [% IF fb11_features  %]
+                    <ul>
+                    [% FOREACH app IN fb11_features.keys %]
+                    <li class="app"><span>[% app | html %]<span></li>
+                    <ul>
+                    [% FOREACH feature IN fb11_features.$app.keys %]
+                    <li [% IF fb11_features.$app.$feature %]class="allowed"[% END %]><input type="checkbox" id="feature_[% app| html %]/[% feature| html %]" name="feature_[% app| html %]/[% feature| html %]"[% IF fb11_features.$app.$feature %] checked="checked"[% END %] value="allow">
+                    <label for="feature_[% app| html %]/[% feature| html %]">[% feature| html %]</label>
+                    </li>
+                    [% END %]
+                    </ul>
+                    [% END %]
+                    [% END %]
+                    </ul>
+                    [% access_control_role_tree.expandAll | none %]
+
+            </div> <!-- panel body -->
+        </div>
+
+        <button class="btn btn-success" type='submit' name='savebutton'><i class="fa fa-check"></i> Save</button>
+            </form>
+
+    [% END %]
+</div>
+</div><!-- end div from side bar -->
 
 

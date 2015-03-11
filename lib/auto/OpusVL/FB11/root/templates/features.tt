@@ -34,17 +34,12 @@ IF features.fb11feature_htmleditor;
 END;
 
 IF features.fb11feature_tablesorter;
-    header.js.list.push( "/static/js/jquery.tablesorter.min.js");
-    header.js.list.push( "/static/js/tablesorter-date-parser.js");
-    header.css.list.push( "/static/css/tablesorter/style.css");
+    header.js.list.push( "/static/js/jquery.tablesorter.js");
 -%]
 [%- tablesorter_jssrc = BLOCK -%]
     $(function() {
-        $(".tablesorter").each(function(){
-            var table = $(this);
-            table.tablesorter();
-        });
-        $('.tablesorter th select,.tablesorter th a,.tablesorter th input').closest('th').unbind();
+        $(".tablesorter").tablesorter();
+        //$('.tablesorter th select,.tablesorter th a,.tablesorter th input').closest('th').unbind();
     });
 [%- END;
     header.jssrc.list.push( tablesorter_jssrc );

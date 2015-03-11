@@ -1,10 +1,6 @@
 package OpusVL::FB11::Form::Login;
 
-use strict;
-use warnings;
-use Moose;
-use HTML::FormHandler::Moose;
-
+use OpusVL::FB11::Plugin::FormHandler;
 use CatalystX::SimpleLogin::Form::Login;
 extends 'CatalystX::SimpleLogin::Form::Login';
 

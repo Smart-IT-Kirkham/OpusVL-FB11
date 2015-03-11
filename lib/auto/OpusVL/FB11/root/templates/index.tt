@@ -1,0 +1,5 @@
+<div class="row">
+    <div class="col-sm-12">
+        <h1>Welcome to [% c.config.name %]</h1>
+    </div>
+</div>

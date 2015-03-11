@@ -18,6 +18,7 @@ sub auto
 
     # add to the bread crumb..
     push ( @{ $c->stash->{breadcrumbs} }, { name => 'Settings', url => $c->uri_for( $c->controller('FB11::Admin')->action_for('index') ) } );
+    $c->stash->{hide_sidebar} = 1;
 }
 
 =head2 index

@@ -38,6 +38,22 @@
               </ul>
             </li>
         [% END %]
+        [% IF c.can_access(c.controller('FB11::Admin::Access').action_for('index')) || c.can_access(c.controller('FB11::Admin::Users').action_for('index')) %]
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="/[% app.controller.action_namespace %]"><i class="fa fa-cog"></i> Administration <span class="caret"></span></a>
+            <ul class="dropdown-menu yamm-fw">
+              <div class="yamm-content">
+                <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]">Change Password</a></li>
+                [% IF c.can_access(c.controller('FB11::Admin::Access').action_for('index')) %]
+                <li><a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('index') ) %]">Roles</a></li>
+                [% END %]
+                [% IF c.can_access(c.controller('FB11::Admin::Users').action_for('index')) %]
+                <li><a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('index') ) %]">Users</a></li>
+                [% END %]
+                </div>
+            </ul>
+        </li>
+        [% END %]
       [% END %]
     </ul>
     <div class="col-sm-3 col-md-3">
