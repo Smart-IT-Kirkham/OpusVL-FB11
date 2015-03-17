@@ -8,7 +8,7 @@
                 [% FOR user IN c.stash.users %]
                 <div class="row fb11-option-list">
                     <div class="col-sm-6">
-                        [% user.username %]
+                        <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ user.id ]) %]">[% user.username %]</a>
                     </div>
 
                     <div class="col-sm-6">
@@ -35,12 +35,50 @@
     <div class="col-sm-7">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <div class="panel-title">Roles for [% thisuser.username %]</div>
+                <div class="panel-title">Roles for [% thisuser.name %]</div>
             </div>
             <div class="panel-body">
                 [% form.render | none %]
             </div>
         </div>
+    </div>
+
+    <div class="col-sm-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">Details for [% thisuser.name %]</div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>Name</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        [% thisuser.name %]
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>Email</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        [% thisuser.email %]
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <strong>Telephone</strong>
+                    </div>
+                    <div class="col-sm-6">
+                        [% thisuser.tel %]
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>
+        <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ thisuser.id ]) %]" class="btn btn-primary"><i class="fa fa-wrench"></i> Edit user</a>
+        </p>
+    </div>
     </div>
     [% END %]
 </div>

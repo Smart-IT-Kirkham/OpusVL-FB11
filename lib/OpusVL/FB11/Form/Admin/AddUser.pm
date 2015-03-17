@@ -47,7 +47,7 @@ has_field 'submit'   => (
     type => 'Submit',
     widget => "ButtonTag",
     widget_wrapper => "None",
-    value => '<i class="fa fa-plus"></i> Add user',
+    value => '<i class="fa fa-check"></i> Submit',
     element_attr => { value => 'submitok', class => ['btn', 'btn-primary'] }
 );
 

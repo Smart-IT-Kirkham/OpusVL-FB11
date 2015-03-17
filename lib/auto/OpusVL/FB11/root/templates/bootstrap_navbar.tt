@@ -43,7 +43,7 @@
             <a class="dropdown-toggle" data-toggle="dropdown" href="/[% app.controller.action_namespace %]"><i class="fa fa-cog"></i> Administration <span class="caret"></span></a>
             <ul class="dropdown-menu yamm-fw">
               <div class="yamm-content">
-                <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]">Change Password</a></li>
+                <!-- <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]">Change Password</a></li> -->
                 [% IF c.can_access(c.controller('FB11::Admin::Access').action_for('index')) %]
                 <li><a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('index') ) %]">Roles</a></li>
                 [% END %]
@@ -66,5 +66,18 @@
         </div>
         </form>
     </div>
+
+    [% IF page_options && page_options.size > 0 %]
+    <ul class="nav navbar-nav navbar-right">
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-bars"></i></a>
+        <ul class="dropdown-menu">
+          [% FOREACH option IN page_options %]
+          <li><a href="[% option.url %]">[% option.title %]</a></li>
+          [% END %]
+        </ul>
+      </li>
+    </ul>
+    [% END %]
   </div>
 </div>

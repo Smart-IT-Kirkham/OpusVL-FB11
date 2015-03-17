@@ -66,41 +66,35 @@ sub adduser
 {
     my ( $self, $c ) = @_;
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Add', url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('adduser') ) } );
+    push @{$c->stash->{breadcrumbs}}, {
+        name    => 'Add',
+        url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('adduser'))
+    };
 
     my $form = $self->form($c, 'Admin::AddUser');
 
     $c->stash->{form} = $form;
     $form->process($c->req->params);
-    #my $ignore_password = $c->model('FB11AuthDB')->schema->can('password_check');
-    #if($ignore_password)
-    #{
-    #    my $password = $form->get_all_element('password');
-    #    $password->parent->remove_element($password);
-    #}
-    #else
-    #{
-    #    # add 'Required' constraint to form .. adding means you must have set a password...
-    #    $form->get_all_element('password')->constraint('Required');
-    #}
-    #$form->process;
 #
-    #if ( $c->stash->{form}->submitted_and_valid )
-    #{
-    #    my $password = $ignore_password ? mkpasswd : $form->param_value('password');
-    #    
-    #    # FIXME: is this a security hole?
-    #    # should we be recording the fact we're not using the password field
-    #    # really?
-    #    
-    #    my $newuser = $c->model('FB11AuthDB::User')->new_result( { password => $password } );
-#
-    #    $c->stash->{form}->model->update( $newuser );
-#
-    #    $c->stash->{status_msg} = "User added";
-    #    $c->stash->{thisuser}   = $newuser;
-    #    $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
-    #}
+    if ($form->validated) {
+        my $password = $form->field('password')->value;
+        my $new_user = $c->model('FB11AuthDB::User')->create({
+            username => $form->field('username')->value,
+            password => $password,
+            email    => $form->field('email')->value,
+            name     => $form->field('name')->value,
+            tel      => $form->field('tel')->value,
+            status   => $form->field('status')->value,
+        });
+
+        $c->flash(
+            status_msg => 'User added',
+            thisuser   => $new_user,
+        );
+        
+        $c->res->redirect($c->uri_for($self->action_for('show_user'), [ $new_user->id ]));
+    }
+
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
@@ -176,7 +170,6 @@ sub reset_password
     : PathPart('reset')
     : FB11Feature('User Password Administration')
     : Args(0)
-    : FB11Form
 {
     my ( $self, $c ) = @_;
 
@@ -196,28 +189,29 @@ sub reset_password_form
 {
     my ($self, $c, $prev_url, $user) = @_;
 
-    if ($c->req->param('cancel'))
-    {
+    if ($c->req->param('cancel')) {
         $c->response->redirect( $prev_url );
         $c->detach;
     }
 
-    my $form = $c->stash->{form};
-    if ( $form->submitted_and_valid )
-    {
-        my $password = $form->param_value('newpassword');
+    my $form = $self->form($c, 'Admin::Users::PasswordReset');
+    $c->stash->{form} = $form;
+    $form->process($c->req->params);
+    if ($form->validated) {
+        my $password = $form->field('newpassword')->value;
 
         $user->update( { password => $password } );
         $c->flash->{status_msg} = 'Reset password';
         $c->response->redirect( $prev_url );
     }
-    else
-    {
-        $c->stash->{form}->default_values( {
-                newpassword => mkpasswd,
-                user => $user->username,
-            });
-    }
+    # FIXME: wut is this?
+    #else
+    #{
+    #    $c->stash->{form}->default_values( {
+    #            newpassword => mkpasswd,
+    #            user => $user->username,
+    #        });
+    #}
 }
 
 =head2 edit_user
@@ -231,38 +225,37 @@ sub edit_user
     : Chained('user_specific')
     : PathPart('form')
     : Args(0)
-    : FB11Form("fb11/admin/users/user_form.yml")
     : FB11Feature('User Administration')
-{
+{   
     my ( $self, $c ) = @_;
+    $c->stash->{page_options} = [
+        { url => $c->uri_for($self->action_for('show_user'), [ $c->stash->{thisuser}->id ]), title => 'Back to ' . $c->stash->{thisuser}->name },
+        { url => $c->uri_for($self->action_for('index')), title => 'Show users' },
+    ];
+    my $form = $self->form($c, 'Admin::AddUser', { update => 1 });
+    $c->stash->{form} = $form;
 
-    my $form = $c->stash->{form};
-    my $ignore_password = $c->model('FB11AuthDB')->schema->can('password_check');
-    if($ignore_password)
-    {
-        my $password = $form->get_all_element('password');
-        $password->parent->remove_element($password);
+    push @{$c->stash->{breadcrumbs}}, {
+        name    => 'Edit',
+        url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('edit_user'), [ $c->stash->{thisuser}->id ])
+    };
+
+    my @fields = qw<username password name email tel status>;
+
+    my $defaults = {};
+    $defaults->{$_} = $c->stash->{thisuser}->$_
+        for @fields;
+
+    $form->process(init_object => $defaults, params => $c->req->params);
+    if ($form->validated) {
+        $c->stash->{thisuser}->$_($form->field($_)->value)
+            for @fields;
+
+        $c->stash->{thisuser}->update;
+        $c->flash->{status_msg} = "User updated";
+        $c->res->redirect($c->req->uri);
     }
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Edit', url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('edit_user'), [ $c->stash->{thisuser}->id ] ) } );
 
-    if ( $form->submitted_and_valid )
-    {
-        # update the user from the form..
-        $form->model->update( $c->stash->{thisuser} );
-
-        # .. alter password if we have been passed one..
-        unless($ignore_password) 
-        {
-            $c->stash->{thisuser}->update( 
-                { password => $c->stash->{form}->param_value('password') } 
-            ) if $c->stash->{form}->param_value('password');
-        }
-
-        $c->stash->{status_msg} = "User updated";
-    }
-
-    # set default values..
-    $form->model->default_values( $c->stash->{thisuser} );
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 

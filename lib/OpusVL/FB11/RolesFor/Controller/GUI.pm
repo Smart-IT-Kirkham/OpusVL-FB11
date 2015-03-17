@@ -465,7 +465,7 @@ sub has_forms {
 }
 
 sub form {
-    my ($self, $c, $form) = @_;
+    my ($self, $c, $form, $opts) = @_;
     my $base = scalar caller;
     $base =~ s/::Controller::(.+)//g;
 
@@ -486,7 +486,12 @@ sub form {
         die "Could not use form $form: $@\n";
     }
 
-    return $form->new(ctx => $c);
+    my %args = ( ctx => $c );
+    if ($opts) {
+        if ($opts->{update}) { $args{update_only} = 1; }
+    }
+
+    return $form->new(%args);
 }
 
 =head1 SEE ALSO

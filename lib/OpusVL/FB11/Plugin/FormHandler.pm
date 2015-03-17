@@ -14,15 +14,13 @@ sub import {
 		no strict 'refs';
 		HTML::FormHandler::Moose->import::into($caller);
 		@{"${caller}::ISA"} = qw(HTML::FormHandler);
-		*{"${caller}::widget_wrapper"} = sub { "Bootstrap4" };
 
 		my $has = *{"${caller}::has"}{CODE};
 		$has->("+widget_wrapper", is => 'rw', default => sub { "Bootstrap3" });
 		$has->("ctx", is => 'rw');
+		$has->("update_only", is => 'rw', default => sub { 0 });
 	}
 }
-
-#has '+widget_wrapper' => ( default => 'Bootstrap3' );
 
 1;
 __END__
