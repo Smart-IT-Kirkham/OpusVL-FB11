@@ -35,14 +35,14 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     # Visit change password page
     $mech->post_ok('/fb11/user/changepword', "Can see the change password page");
     $mech->content_contains("Change Your Password", "Showing Change Password Page");
-    $mech->submit_form_ok({
-        button => 'submitbutton',
-        with_fields => {
-            originalpassword => 'password',
-            password         => 'passwd',
+    $mech->post_ok(
+        '/fb11/user/changepword',
+        {
+            newpassword      => 'passwd',
             passwordconfirm  => 'passwd',
         },
-    });
+        'Submit change password form',
+    );
 
     $mech->content_contains("Minimum length for password is", "Password constraint matched OK") or diag $mech->content;
 }
