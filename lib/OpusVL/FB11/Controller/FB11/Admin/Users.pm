@@ -288,10 +288,10 @@ sub delete_user
         if ($c->req->params->{submitok}) {
             $c->stash->{thisuser}->status('deleted');
             $c->flash->{status_msg} = "User deleted";
-            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
+            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('index') ) );
         }
         else {
-            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
+            $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('index') ) );
         }
     }
 }
