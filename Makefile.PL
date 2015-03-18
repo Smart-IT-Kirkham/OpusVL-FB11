@@ -76,6 +76,7 @@ requires 'HTML::FormHandler';
 requires 'HTML::FormHandler::Moose';
 requires 'HTML::FormHandler::Widget::Field::HorizCheckboxGroup';
 requires 'HTML::FormHandler::Widget::Wrapper::Bootstrap3';
+requires 'HTML::FormHandler::TraitFor::Model::DBIC';
 
 catalyst;
 
