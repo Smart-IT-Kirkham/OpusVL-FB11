@@ -7,11 +7,11 @@
             <div class="panel-body">
                 [% FOR user IN c.stash.users %]
                 <div class="row fb11-option-list">
-                    <div class="col-sm-6">
-                        <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ user.id ]) %]">[% user.username %]</a>
+                    <div class="col-sm-6 col-xs-6">
+                        [% user.username %]
                     </div>
 
-                    <div class="col-sm-6">
+                    <div class="col-sm-6 col-xs-6">
                         <div class="btn-group" role="group" aria-label="...">
                             <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('show_user'), [ user.id ] ) %]" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Show User"><i class="fa fa-user"></i></a>
 

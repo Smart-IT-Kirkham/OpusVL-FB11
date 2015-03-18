@@ -71,11 +71,15 @@ sub adduser
         url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('adduser'))
     };
 
+    $c->stash->{page_options} = [
+        { url => $c->uri_for($self->action_for('index')), title => 'Back to users' },
+    ];
+
     my $form = $self->form($c, 'Admin::AddUser');
 
     $c->stash->{form} = $form;
     $form->process($c->req->params);
-#
+
     if ($form->validated) {
         my $password = $form->field('password')->value;
         my $new_user = $c->model('FB11AuthDB::User')->create({
@@ -248,9 +252,11 @@ sub edit_user
 
     $form->process(init_object => $defaults, params => $c->req->params);
     if ($form->validated) {
-        $c->stash->{thisuser}->$_($form->field($_)->value)
-            for @fields;
-
+        for (@fields) {
+            if (my $res = $form->field($_)->value) {
+                $c->stash->{thisuser}->$_($res);
+            }
+        }
         $c->stash->{thisuser}->update;
         $c->flash->{status_msg} = "User updated";
         $c->res->redirect($c->req->uri);
@@ -280,7 +286,7 @@ sub delete_user
     $form->process($c->req->params);
     if ($form->validated) {
         if ($c->req->params->{submitok}) {
-            $c->stash->{thisuser}->delete;
+            $c->stash->{thisuser}->status('deleted');
             $c->flash->{status_msg} = "User deleted";
             $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('index') ) );
         }

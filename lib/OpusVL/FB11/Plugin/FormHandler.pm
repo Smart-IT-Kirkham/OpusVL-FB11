@@ -16,7 +16,7 @@ sub import {
 		@{"${caller}::ISA"} = qw(HTML::FormHandler);
 
 		my $has = *{"${caller}::has"}{CODE};
-		$has->("+widget_wrapper", is => 'rw', default => sub { "Bootstrap3" });
+		$has->("widget_wrapper", is => 'rw', default => sub { "Bootstrap3" });
 		$has->("ctx", is => 'rw');
 		$has->("update_only", is => 'rw', default => sub { 0 });
 	}

@@ -30,14 +30,15 @@ my $authdb_config->{connect_info} =
 };
 
 
-ok( $authdb = OpusVL::FB11::Schema::FB11AuthDB->connect( $authdb_config->{connect_info} ),     "Got handle to AppKitAuthDB" );
+ok( $authdb = OpusVL::FB11::Schema::FB11AuthDB->connect($authdb_config->{connect_info}),     "Got handle to AppKitAuthDB" );
 
 $authdb->txn_begin;
 
 ok( $authdb->resultset('Role')->search()->delete,       "Deleted all Role's " );
-ok( $authdb->resultset('User')->search()->delete,       "Deleted all User's " );
-ok( $authdb->resultset('Parameter')->search()->delete,  "Deleted all Parameter's " );
 ok( $authdb->resultset('Aclrule')->search()->delete,    "Deleted all Aclrule's " );
+ok( $authdb->resultset('Parameter')->search()->delete,  "Deleted all Parameter's " );
+ok( $authdb->resultset('UsersFavourite')->search()->delete, "Deleted all Favourites" );
+ok( $authdb->resultset('User')->search()->delete,       "Deleted all User's " );
 
 $adminrole = $authdb->resultset('Role')->create( { role => 'Administrator' } );
 ok( $adminrole, "Created Administrator Role");
@@ -48,10 +49,10 @@ ok( $normalrole, "Created Normal User Role");
 diag("Created Roles");
 
 my %rules = (
-    'index'                                 => ['Administrator'],
-    'default',                              => ['Administrator'],
-    'auto',                                 => ['Administrator'],
-    'fb11/auto',                          => ['Administrator'],
+    'index'                                 => ['Administrator', 'Normal User'],
+    'default',                              => ['Administrator', 'Normal User'],
+    'auto',                                 => ['Administrator', 'Normal User'],
+    'fb11/auto',                          => ['Administrator', 'Normal User'],
     'fb11/admin/auto',                    => ['Administrator'],
     'fb11/admin/index',                   => ['Administrator'],
     'fb11/admin/access/auto',             => ['Administrator'],
@@ -79,7 +80,7 @@ my %rules = (
     'extensionb/home',                      => ['Administrator'],
     'extensionb/formpage',                  => ['Administrator'],
     'search/index',                         => ['Administrator'],
-    'test/index',                           => ['Administrator'],
+    'test/index',                           => ['Administrator', 'Normal User'],
     'test/access_admin',                    => ['Administrator'],
     'test/cause_error',                     => ['Administrator'],
     'extensiona/expansionaa/startchain',    => ['Administrator'],

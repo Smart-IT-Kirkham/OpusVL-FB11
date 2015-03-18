@@ -51,6 +51,15 @@ has_field 'submit'   => (
     element_attr => { value => 'submitok', class => ['btn', 'btn-primary'] }
 );
 
+before 'validate_form' => sub {
+    my ($self) = @_;
+    if ($self->update_only) {
+        my @fields = qw(username password name email tel status);
+        $self->field($_)->required(0)
+            for @fields;
+    }
+};
+
 no HTML::FormHandler::Moose;
 1;
 __END__

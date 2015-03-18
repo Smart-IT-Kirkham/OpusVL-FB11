@@ -45,7 +45,6 @@ sub formpage
     :Local
     :Args(0)
     :NavigationName('Form Page')
-    :FB11Form
 {
     my ($self, $c) = @_;
 
@@ -53,9 +52,15 @@ sub formpage
     my $rs = $c->model('BookDB::Book')->search;
     $rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     my @books = $rs->all;
+    my @authors = $c->model('BookDB::Author')->all;
     $c->stash->{books} = \@books;
 
-    # draw the form page...
+    my $form = $self->form($c, '+OpusVL::FB11::Form::Test::ExtensionB', { item => $c->model('BookDB::Author')->search });
+    my @options = map { { value => $_->id, label => $_->full_name } } @authors;
+    $form->field('author')->options(\@options);
+    $c->stash->{form} = $form;
+    $form->process($c->req->params);
+
     $c->stash->{template} = 'formpage.tt';
 }
 

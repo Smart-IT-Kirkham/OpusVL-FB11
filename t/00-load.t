@@ -6,7 +6,6 @@ use Test::More;
 use_ok 'OpusVL::FB11::Form::Login';
 use_ok 'OpusVL::FB11';
 use_ok 'OpusVL::FB11::View::SimpleXML';
-use_ok 'HTML::FormFu::Validator::OpusVL::FB11::CurrentPasswordValidator';
 use_ok 'OpusVL::FB11::TraitFor::Controller::Login::SetHomePageFlag';
 use_ok 'OpusVL::FB11::View::Excel';
 

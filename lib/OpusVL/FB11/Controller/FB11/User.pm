@@ -18,16 +18,16 @@ __PACKAGE__->config
 sub change_password
     : Path('changepword')
     : Args(0)
-    : FB11Form("fb11/user/change_password.yml")
     : FB11Feature('Password Change')
 {
     my ($self, $c ) = @_;
+    my $form = $self->form($c, 'Admin::Users::PasswordReset');
+    $c->stash->{form} = $form;
+    $form->process($c->req->params);
+    if ($form->validated) {
+        my $password = $c->req->params->{'newpassword'};
 
-    if ( $c->stash->{form}->submitted_and_valid )
-    {
-        my $password = $c->req->params->{'password'};
-
-        $c->user->update( { password => $password } );
+        $c->user->update({ password => $password });
         $c->stash->{hide_form} = 1;
     }
 }
