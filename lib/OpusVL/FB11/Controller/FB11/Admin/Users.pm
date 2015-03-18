@@ -68,7 +68,7 @@ sub adduser
 
     push @{$c->stash->{breadcrumbs}}, {
         name    => 'Add',
-        url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('adduser'))
+        url     => $c->uri_for($c->controller('FB11::Admin::Users')->action_for('adduser'))
     };
 
     $c->stash->{page_options} = [

@@ -96,7 +96,7 @@ foreach my $rule ( keys %rules)
     my $ra_roles = $rules{$rule};
     foreach my $role_name ( $ra_roles )
     {
-        my $role = $authdb->resultset('Role')->find({ role => $role_name });
+        my $role = $authdb->resultset('Role')->search({ role => $role_name })->first;
 
         # .. create rule..
         my $aclrule = $authdb->resultset('Aclrule')->find_or_create( { actionpath => $rule } );

@@ -55,7 +55,7 @@ sub formpage
     my @authors = $c->model('BookDB::Author')->all;
     $c->stash->{books} = \@books;
 
-    my $form = $self->form($c, '+OpusVL::FB11::Form::Test::ExtensionB', { item => $c->model('BookDB::Author')->search });
+    my $form = $self->form($c, '+OpusVL::FB11::Form::Test::ExtensionB');
     my @options = map { { value => $_->id, label => $_->full_name } } @authors;
     $form->field('author')->options(\@options);
     $c->stash->{form} = $form;
