@@ -72,6 +72,10 @@ requires 'CatalystX::SimpleLogin';
 
 requires 'Test::DBIx::Class';
 requires 'Test::Most';
+requires 'HTML::FormHandler';
+requires 'HTML::FormHandler::Moose';
+requires 'HTML::FormHandler::Widget::Field::HorizCheckboxGroup';
+requires 'HTML::FormHandler::Widget::Wrapper::Bootstrap3';
 
 catalyst;
 
