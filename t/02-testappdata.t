@@ -38,6 +38,7 @@ ok( $authdb->resultset('Role')->search()->delete,       "Deleted all Role's " );
 ok( $authdb->resultset('Aclrule')->search()->delete,    "Deleted all Aclrule's " );
 ok( $authdb->resultset('Parameter')->search()->delete,  "Deleted all Parameter's " );
 ok( $authdb->resultset('UsersFavourite')->search()->delete, "Deleted all Favourites" );
+ok( $authdb->resultset('UserAvatar')->search()->delete, "Deleted all users' avatars" );
 ok( $authdb->resultset('User')->search()->delete,       "Deleted all User's " );
 
 $adminrole = $authdb->resultset('Role')->create( { role => 'Administrator' } );
@@ -124,6 +125,39 @@ $normaluser = $authdb->resultset('User')->create( { username => 'fb11user', pass
 ok( $normaluser,     "Created Normal user" );
 $normaluser->set_roles( $normalrole );
 ok( $normaluser->roles->find( { role => 'Normal User'} ), "Check normal user has normal role");
+
+my $buff;
+my $imageopen = 1;
+open my $image, '<', 'lib/auto/OpusVL/FB11/root/static/images/profile.png' or do {
+    ok $!, "Failed to open profile.png: $!";
+    $imageopen = 0;
+};
+
+diag "Skipping image tests because it failed to open"
+    if not $imageopen;
+
+if ($imageopen) {
+    my $blob;
+    while(read $image, $buff, 1024) {
+        $blob .= $buff;
+    }
+
+    close $image;
+    ## insert default profile pic into all users
+    for my $user ($authdb->resultset('User')->all) {
+        # remove it first
+        if (my $avatar = $authdb->resultset('UserAvatar')->find({ user_id => $user->id })) {
+            $avatar->delete;
+        }
+
+        $user->create_related('avatar', {
+            id        => $user->id,
+            user_id   => $user->id,
+            mime_type => 'image/png',
+            data      => $blob,
+        });
+    }
+}
 
 $authdb->txn_commit;
 

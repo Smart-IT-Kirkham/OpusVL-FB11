@@ -5,7 +5,7 @@
   <div class="panel-body">
   	<div class="panel-icons">
       <span class="dropdown">
-      <a id="fb11-admin-menu" data-target="#" href="http://example.com" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
+      <a id="fb11-admin-menu" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
       <ul class="dropdown-menu" role="menu" aria-labelledby="fb11-admin-menu">
         <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]"><i class="fa fa-lock"></i> Change Password</a></li>
         <li><a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('index') ) %]"><i class="fa fa-user"></i> Roles</a></li>
@@ -15,7 +15,7 @@
       <a href="#"><i class="fa fa-question-circle"></i></a>
       <a href="#" class="favourite-link"><i class="fa fa-heart[% IF page_is_favourite %] favourited[% END %]"></i></a>
       <a href="/logout"><i class="fa fa-power-off"></i></a>
-      <a href="#"><i class="fa fa-user"></i></a>
+      <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('show_user'), [ c.user.id ] ) %]"><img class="fb11-avatar-sidebar" alt="[% c.user.name %] Avatar" src="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('user_avatar'), [ c.user.id ]) %]"></a>
     </div>
   </div>
 </div>

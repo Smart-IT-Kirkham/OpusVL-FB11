@@ -99,6 +99,7 @@ sub adduser
         $c->res->redirect($c->uri_for($self->action_for('show_user'), [ $new_user->id ]));
     }
 
+    $c->stash->{h1}       = "Add User";
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
@@ -133,7 +134,9 @@ sub show_user
 {
     my ( $self, $c ) = @_;
     my $form = $self->user_role_form;
+    my $upload_form = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
     $c->stash->{form} = $form;
+    $c->stash->{upload_form} = $upload_form;
     push @{ $c->stash->{breadcrumbs} }, {
         name    => $c->stash->{thisuser}->username,
         url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ])
@@ -155,6 +158,23 @@ sub show_user
 
     $form->field('user_roles')->options(\@options);
     $form->process($c->req->params);
+    $upload_form->process($c->req->params);
+
+
+    if (my $upload = $c->req->upload('file')) {
+        my @params = ( file => $upload );
+        $upload_form->process(params => { @params });
+
+        if ($upload_form->validated) {
+            $c->stash->{thisuser}->avatar->update({
+                user_id   => $c->stash->{thisuser}->id,
+                mime_type => $upload->type,
+                data      => $upload->slurp,
+            });
+            $c->flash->{status_msg} = "Successfully updated avatar";
+            $c->res->redirect($c->req->uri);
+        }
+    }
 
     if ($form->validated) {   
         my $user_roles = $form->field('user_roles')->value;
@@ -166,6 +186,20 @@ sub show_user
             $c->stash->{thisuser}->search_related('users_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
             $c->stash->{status_msg} = "User Roles updated";
         }   
+    }
+}
+
+sub user_avatar
+    : Chained('user_specific')
+    : PathPart('avatar')
+    : FB11Feature('User Avatars')
+    : Args(0)
+{
+    my ($self, $c) = @_;
+    my $user = $c->stash->{thisuser};
+    if (my $avatar = $user->avatar) {
+        $c->res->content_type($avatar->mime_type);
+        $c->res->body($avatar->data);
     }
 }
 
@@ -262,6 +296,7 @@ sub edit_user
         $c->res->redirect($c->req->uri);
     }
 
+    $c->stash->{h1}       = "Edit User";
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 

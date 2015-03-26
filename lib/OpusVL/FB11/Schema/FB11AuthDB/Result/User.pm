@@ -129,14 +129,43 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
+__PACKAGE__->has_one(
+    'avatar',
+    'OpusVL::FB11::Schema::FB11AuthDB::Result::UserAvatar',
+    { 'foreign.user_id' => 'self.id' },
+    { cascade_copy => 0, cascade_delete => 0 },
+);
 
 # Created by DBIx::Class::Schema::Loader v0.07000 @ 2010-05-24 12:56:09
 # DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UaxbxFRL86+fBRmFpWtSSQ
 
 use Moose;
+use File::ShareDir 'module_dir';
 use OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User;
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
 __PACKAGE__->setup_authdb;
+
+# create an avatar for new users
+# default to profile.png
+after 'insert' => sub {
+    my ($self) = @_;
+    require OpusVL::FB11;
+    my $image  = module_dir('OpusVL::FB11') . '/root/static/images/profile.png';
+    my $image_data;
+    my $buff;
+
+    open my $fh, '<', $image or die ("Could not open profile.png: $!\n");
+    while(read $fh, $buff, 1024) {
+        $image_data .= $buff;
+    }
+    close $fh;
+
+    $self->create_related('avatar', {
+        user_id     => $self->id,
+        mime_type   => 'image/png',
+        data        => $image_data, 
+    });
+};
 
 =head1 COPYRIGHT and LICENSE
 

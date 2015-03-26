@@ -53,32 +53,39 @@ img.responsive-img {
 
 .alert > div > a.hide-alert { color: inherit; }
 
-/*
- * Auto un/hiding of dropdown menus
- ul.nav li.dropdown:hover .dropdown-menu {
-    display: block;
-    margin-top:0;
- }
- */
 
  .favourited { color: #a94442; }
 
-/*.fb11-option-list {
-	transition: all 0.3s ease-in;
-	cursor: pointer;
-}*/
 
 .fb11-option-list > .col-sm-6 { padding-top: 5px; padding-bottom: 5px; }
-/*.fb11-option-list:hover {
- 	background-color: #3e444c;
- 	color: #fff;
-}*/
 
 #fb11-admin-menu { padding-right: 10px; }
 #fb11-admin-menu > i { font-size: 25px; }
 
-/*@media (min-width: 992px) {
-	.fb11-admin-dropdown > .col-md-6 {
-		min-width: 180px;
+/**
+ * We add margin below the left panel so that the right ones 
+ * align correctly. Obviously this looks weird on mobiles, so let's
+ * remove the margin.
+ */
+
+.fb11-available-users {
+	margin-bottom: 350px;
+}
+
+@media screen and (max-width: 640px) {
+	.fb11-available-users {
+		margin-bottom: 10px;
 	}
-}*/
+}
+
+.fb11-user-avatar {
+	height: 100px;
+	width: 100px;
+}
+
+.fb11-avatar-sidebar {
+	height: 25px;
+	width: 25px;
+	position: absolute;
+	top: 50px;
+}

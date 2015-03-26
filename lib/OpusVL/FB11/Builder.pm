@@ -131,7 +131,7 @@ override _build_plugins => sub
         Authentication
         Authorization::Roles
         Session
-        Session::Store::FastMmap
+        Session::Store::Memcached
         Session::State::Cookie
         Cache
         +CatalystX::SimpleLogin
@@ -188,6 +188,9 @@ override _build_config => sub
     # Configure session handling..
     $config->{'Plugin::Session'} ||= {};
     $config->{'Plugin::Session'}->{flash_to_stash} = 1;
+    $config->{'Plugin::Session'}->{memached_new_args} = {
+        'data' => [ "localhost:11211" ],
+    };
 
     $config->{'Plugin::Authentication'} =
     {
