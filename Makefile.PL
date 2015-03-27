@@ -49,6 +49,7 @@ requires 'Catalyst::Plugin::Authorization::Roles';
 requires 'Catalyst::Plugin::Authorization::ACL';
 requires 'Catalyst::Plugin::Session';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
+required 'Catalyst::Plugin::Session::Store::Memcached';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Static::Simple' => 0.30;
 requires 'Catalyst::Plugin::Cache';
