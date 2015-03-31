@@ -38,6 +38,7 @@ requires 'Catalyst::View::TT';
 requires 'Catalyst::View::JSON';
 requires 'Catalyst::View::Email';
 requires 'Catalyst::View::Download';
+requires 'Catalyst::View::Thumbnail';
 requires 'Catalyst::View::PDF::Reuse';
 
 # Catalyst plugins
