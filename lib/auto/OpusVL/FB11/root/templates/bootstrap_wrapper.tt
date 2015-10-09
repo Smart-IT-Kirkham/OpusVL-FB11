@@ -16,7 +16,7 @@
             <div class="row[% UNLESS c.user %] row-centered[% END %]">
                 <!-- Main Content -->
 
-                <div class="fb-main-content [% IF hide_sidebar %]col-sm-12[% ELSE %][% IF c.user %]col-md-8[% ELSE %]col-md-4[% END %][% UNLESS c.user %] col-centered[% END %][% END %]">
+                <div class="fb11-main-content [% IF hide_sidebar %]col-sm-12[% ELSE %][% IF c.user %]col-md-8[% ELSE %]col-md-4[% END %][% UNLESS c.user %] col-centered[% END %][% END %]">
                     [% IF c.stash.status_msg %]<div class="alert alert-success">[% status_msg %] <div class="pull-right"><a href="javascript:;" class="hide-alert"><i class="fa fa-remove"></i></a></div></div>[% END %]
                     [% IF c.stash.error_msg %]<div class="alert alert-danger">[% error_msg %] <div class="pull-right"><a href="javascript:;" class="hide-alert"><i class="fa fa-remove"></i></a></div></div>[% END %]
                     [% UNLESS c.user %]
@@ -32,7 +32,7 @@
                 <!-- Side bar -->
                 [% IF c.user %]
                 [% UNLESS hide_sidebar %]
-                <div class="fb-sidebar col-md-4">
+                <div class="fb11-sidebar col-md-4">
                     [% PROCESS bootstrap_sidebar.tt %]
                 </div>
                 [% END %]
