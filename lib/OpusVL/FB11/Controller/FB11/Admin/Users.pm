@@ -166,7 +166,7 @@ sub show_user
         $upload_form->process(params => { @params });
 
         if ($upload_form->validated) {
-            $c->stash->{thisuser}->avatar->update({
+            $c->stash->{thisuser}->get_or_default_avatar->update({
                 user_id   => $c->stash->{thisuser}->id,
                 mime_type => $upload->type,
                 data      => $upload->slurp,
@@ -197,7 +197,7 @@ sub user_avatar
 {
     my ($self, $c) = @_;
     my $user = $c->stash->{thisuser};
-    if (my $avatar = $user->avatar) {
+    if (my $avatar = $user->get_or_default_avatar) {
         $c->res->content_type($avatar->mime_type);
         $c->res->body($avatar->data);
     }

@@ -148,6 +148,10 @@ __PACKAGE__->setup_authdb;
 # create an avatar for new users
 # default to profile.png
 after 'insert' => sub {
+    shift->set_default_avatar();
+};
+
+sub set_default_avatar {
     my ($self) = @_;
     require OpusVL::FB11;
     my $image  = module_dir('OpusVL::FB11') . '/root/static/images/profile.png';
@@ -160,12 +164,20 @@ after 'insert' => sub {
     }
     close $fh;
 
-    $self->create_related('avatar', {
+    return $self->create_related('avatar', {
         user_id     => $self->id,
         mime_type   => 'image/png',
         data        => $image_data, 
     });
-};
+}
+
+sub get_or_default_avatar {
+    my ($self) = @_;
+    if (my $avatar = $self->avatar) {
+        return $avatar;
+    }
+    return $self->set_default_avatar();
+}
 
 =head1 COPYRIGHT and LICENSE
 
