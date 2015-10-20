@@ -89,7 +89,7 @@ Related object: L<OpusVL::FB11::Schema::Result::User>
 
 __PACKAGE__->belongs_to(
   "user",
-  "OpusVL::FB11::Schema::Result::User",
+  "OpusVL::FB11::Schema::FB11AuthDB::Result::User",
   { id => "user_id" },
   { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
 );
