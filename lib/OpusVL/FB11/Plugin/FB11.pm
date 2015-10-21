@@ -31,8 +31,7 @@ with 'Catalyst::ClassData';
 # moose calls.
 ###########################################################################################################################
 
-has fb11_controllers => ( is => 'ro',    isa => 'ArrayRef',  lazy_build => 1 );
-sub _build_fb11_controllers
+sub fb11_controllers
 {   
     my ( $c ) = shift;
 
@@ -153,12 +152,12 @@ sub menu_data
     Use for find node in the fb11_actiontree...
 =cut
 
-has fb11_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor::FindByPath',  default => sub
+sub fb11_actiontree_visitor
 {
     my $visitor = Tree::Simple::Visitor::FindByPath->new;
     $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
     return $visitor;
-} );
+}
 
 =head2 is_unrestricted_action_name
     Little helper to ascertain if an action's name is one we dont apply access control to.
