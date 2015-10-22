@@ -89,3 +89,7 @@ img.responsive-img {
 	position: absolute;
 	top: 50px;
 }
+
+i.superpose {
+    margin-left: -0.5em;
+}
