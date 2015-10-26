@@ -93,3 +93,14 @@ img.responsive-img {
 i.superpose {
     margin-left: -0.5em;
 }
+
+/**
+ * Tabify stuff
+ */
+
+.js-tab {
+    display: none;
+}
+.js-tab.current {
+    display: block !important;
+}
