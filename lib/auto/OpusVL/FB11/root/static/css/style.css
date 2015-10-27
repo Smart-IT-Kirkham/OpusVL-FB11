@@ -94,6 +94,11 @@ i.superpose {
     margin-left: -0.5em;
 }
 
+.grab-handle {
+    cursor: -webkit-grab;
+    cursor: grab;
+}
+
 /**
  * Tabify stuff
  */
