@@ -11,10 +11,13 @@ ul.records, ol.records, dl.records {
     counter-reset: record-list-counter;
 }
 
+.record {
+    counter-increment: record-list-counter;
+}
+
 .records li.record span.list-number:before,
 .records dt.record:before {
     content: counter(record-list-counter);
-    counter-increment: record-list-counter;
 }
 
 div.list-header {
