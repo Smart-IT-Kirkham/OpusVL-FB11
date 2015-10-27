@@ -12,8 +12,15 @@
     {
         title       => '',
         favicon     => '',
-        css         => [ '/static/css/units.css' ],
-        js          => [ '/static/js/jquery-2.1.4.min.js', '/static/js/jquery-ui-1.9.0.custom.min.js', '/static/js/fb11.js'],
+        css         => [ 
+            '/static/css/units.css',
+            '/static/css/records-fields.css'
+        ],
+        js          => [ 
+            '/static/js/jquery-2.1.4.min.js',
+            '/static/js/jquery-ui.min.js', 
+            '/static/js/fb11.js'
+        ],
         jssrc       => [],
     };
 
