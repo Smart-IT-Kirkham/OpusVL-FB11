@@ -225,6 +225,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
             'action_test/access_admin'=>'allow',
             'action_test/cause_error'=>'allow',
             'action_test/index'=>'allow',
+            'feature_FB11/User Avatars' => 'allow',
     }, 'Allow deleting roles.');
 
     $mech->get_ok('/admin/access/role/blah/delrole', 'Delete the role');
@@ -267,6 +268,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
     $mech->post_ok(
         '/admin/access/role/Normal User/show',
         {
+            'feature_FB11/User Avatars' => 'allow',
             'feature_FB11/Home Page' => 'allow',
             'savebutton' => 'Save',
         },

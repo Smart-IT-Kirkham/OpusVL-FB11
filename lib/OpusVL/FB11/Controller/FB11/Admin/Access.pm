@@ -461,7 +461,7 @@ sub show_role
     (
         $display_tree => 
         (
-            list_css                => "list-style: circle;",
+            list_css                => "list-style: none;",
             #list_item_css           => "font-family: courier;",
             node_formatter          => sub 
             {

@@ -1,6 +1,6 @@
 <div class="row">
     <div class="col-sm-5">
-        <div class="panel panel-default fb11-available-users">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="panel-title">Available Users</div>
             </div>
@@ -25,6 +25,54 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('adduser')) %]" class="btn btn-primary"><i class="fa fa-plus"></i> Add new user</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel panel-default fb11-available-users">
+                    <div class="panel-heading">
+                        <div class="panel-title">User parameters</div>
+                    </div>
+                    <div class="panel-body">
+                            [% IF parameters.size > 0 %]
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <th>Parameter</th>
+                                        <th>Data type</th>
+                                    </thead>
+                                    <tbody>
+                                    [% FOREACH param IN parameter_defaults %]
+                                        <tr>
+                                            <td>[% param.data %]</td>
+                                            <td>[% param.parameter.parameter %]</td>
+                                        </tr>
+                                    [% END %]
+                                    </tbody>
+                                </table>
+                            [% ELSE %]
+                                <p>There are currently no parameters defined</p>
+                            [% END %]
+
+                            <form class="form" action="" method="post">
+                                <div class="form-group">
+                                    <label for="parameter-name-new">New parameter</label>
+                                    <input type="text" id="parameter-name-new" class="form-control" name="parameter_name_new">
+                                </div>
+                                <div class="form-group">
+                                    <label for="parameter-type-new">Parameter type</label>
+                                    <select name="parameter_type_new" class="form-control" id="parameter-type-new">
+                                    [% FOREACH popt IN parameters %]
+                                        <option value="[% popt.id %]">[% popt.parameter %]</option>
+                                    [% END %]
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-default" name="submit_new_params" value="submit"><i class="fa fa-check"></i> Submit</button>
+                                </div>
+                            </form>
                     </div>
                 </div>
             </div>
@@ -101,62 +149,97 @@
             </div>
         </div>
     </div>
+
+    <div class="col-sm-7">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">User parameters for [% thisuser.name %]</div>
+            </div>
+            <div class="panel-body">
+                <ul>
+                 [% FOR up IN c.stash.thisuser.users_parameters %]
+                    <li>
+                        [% up.parameter.parameter %]
+                           ( [% up.value %] )
+                        <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('delete_parameter'), [ c.stash.thisuser.id ] ) _ "/" _ up.parameter.id  %]"> Remove </a>
+                    </li>
+                [% END %]
+                </ul>
+
+                <form method="post" class="form" action="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('add_parameter'), [ c.stash.thisuser.id ] )  %]">
+                    <select id="parameter-id" name="parameter_id">
+                        <option value=""> -- Please Select -- </option>
+                    [% FOR param IN parameter_defaults %]
+                        <option value="[% param.parameter.id %]">[% param.data %]</option>
+                    [% END %]
+                    </select>
+
+                    <div class="form-group" id="param_value">
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
+    <script>
+    $(function() {
+        function get_param_value_entry_box( paramid )
+        {
+            var spanid = 'param_value';
+            var wrapper = document.getElementById(spanid);
+
+            if ( ! wrapper )
+            {
+                alert ("could not find wrapping span by id:" + spanid );    
+                return 0;
+            }
+
+            // clear out wrapper..
+            while ( wrapper.childNodes.length >= 1 )
+            {
+                wrapper.removeChild( wrapper.firstChild );       
+            } 
+
+            // if we have a param id, lets draw a method to input a value.....
+            if ( paramid )
+            {
+                // create the submit button..
+                var subbutt = document.createElement('input');
+                subbutt.setAttribute ("type", "submit");
+                subbutt.setAttribute ("name", "add_parameter");
+                subbutt.setAttribute ("value", "Add/Update Value");
+                subbutt.setAttribute ("class", "btn btn-primary");
+
+                // create the input..
+                // var input = document.createElement('input');
+                // input.setAttribute ("type", "text");
+                // input.setAttribute ("name", "parameter_value");
+                // input.setAttribute ("value", "");
+
+                // create span to hold input value..
+                var input = document.createElement('span');
+                input.setAttribute ("id", "parameter_value_wrapper");
+                
+                // add the new elements to the wrapper..
+                wrapper.appendChild( input );
+                wrapper.appendChild( subbutt );
+
+                [% IF c.stash.thisuser %]
+                var ajax_url = "[% c.uri_for( c.controller('FB11::Admin::Users').action_for('get_parameter_input'), [ c.stash.thisuser.id ] ) %]" + "/" + paramid;
+                [% END %]
+                // make ajax call to get input box(s)..
+                $.ajax({
+                    url: ajax_url,
+                    success: function(data) {
+                        $('#parameter_value_wrapper').html(data);
+                    }
+                });
+            }
+        }
+
+        $('#parameter-id').change(function() {
+            get_param_value_entry_box($(this).val());
+        });
+    });
+</script>
     [% END %]
 </div>
-                    
-<script language="text/javascript">
-function get_param_value_entry_box( paramid )
-{
-
-    var spanid = 'param_value';
-    var wrapper = document.getElementById(spanid);
-
-    if ( ! wrapper )
-    {
-        alert ("could not find wrapping span by id:" + spanid );    
-        return 0;
-    }
-
-    // clear out wrapper..
-    while ( wrapper.childNodes.length >= 1 )
-    {
-        wrapper.removeChild( wrapper.firstChild );       
-    } 
-
-    // if we have a param id, lets draw a method to input a value.....
-    if ( paramid )
-    {
-        // create the submit button..
-        var subbutt = document.createElement('input');
-        subbutt.setAttribute ("type", "submit");
-        subbutt.setAttribute ("name", "add_parameter");
-        subbutt.setAttribute ("value", "Add/Update Value");
-
-        // create the input..
-        // var input = document.createElement('input');
-        // input.setAttribute ("type", "text");
-        // input.setAttribute ("name", "parameter_value");
-        // input.setAttribute ("value", "");
-
-        // create span to hold input value..
-        var input = document.createElement('span');
-        input.setAttribute ("id", "parameter_value_wrapper");
-        
-        // add the new elements to the wrapper..
-        wrapper.appendChild( input );
-        wrapper.appendChild( subbutt );
-
-        [% IF c.stash.thisuser %]
-        var ajax_url = "[% c.uri_for( c.controller('FB11::Admin::Users').action_for('get_parameter_input'), [ c.stash.thisuser.id ] ) %]" + "/" + paramid;
-        [% END %]
-        // make ajax call to get input box(s)..
-        $.ajax({
-            url: ajax_url,
-            success: function(data) {
-                $('#parameter_value_wrapper').html(data);
-            }
-        });
-    }
-}
-</script>

@@ -1,5 +1,46 @@
-body { font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif; }
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
+  font-size: 13px;
+}
 
+a { color: #b3b3b3; }
+a:focus, a:hover { color: #737070; }
+h1 { font-weight: 700; }
+/*
+button.btn-nav:before, a.btn-nav:before { content: "\f0c9\00a0"; }
+button.btn-ok:before, a.btn-ok:before { content: "\f058\00a0"; }
+button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
+
+.navbar-default .navbar-collapse {
+  border-color: #b3b3b3;
+}
+
+.navbar-default {
+  border-color: #b3b3b3;
+  background-color: #fafafa;
+}
+
+.well, .btn-primary {
+  border: 1px solid #b3b3b3;
+  background-color: #fafafa;
+  color: #333;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+  color: #fff;
+  background-color: #b3b3b3;
+  border: 1px solid #b3b3b3;
+}
+
+.panel-default, .panel-default>.panel-heading { border-color: #b3b3b3; }
+.panel-default>.panel-heading {
+  background-color: #b3b3b3;
+  color: #fff;
+  text-align: right;
+}
+
+
+.panel-title { font-size: 14px; }
 .fb11-center {
 	position: relative;
 	left: 0;
@@ -63,13 +104,13 @@ img.responsive-img {
 #fb11-admin-menu > i { font-size: 25px; }
 
 /**
- * We add margin below the left panel so that the right ones 
+ * We add margin below the left panel so that the right ones
  * align correctly. Obviously this looks weird on mobiles, so let's
  * remove the margin.
  */
 
 .fb11-available-users {
-	margin-bottom: 350px;
+	margin-bottom: 300px;
 }
 
 @media screen and (max-width: 640px) {
@@ -86,6 +127,26 @@ img.responsive-img {
 .fb11-avatar-sidebar {
 	height: 25px;
 	width: 25px;
-	position: absolute;
-	top: 50px;
+	/*position: absolute;
+	top: 50px;*/
 }
+
+.error-msg, .success-msg { display: none; }
+.error-msg-text, .success-msg-text {
+    display: inline-block;
+    visibility: hidden;
+}
+
+fieldset > legend {
+    /*border-style: none;
+    border-width: 0;*/
+    border-bottom: 1px solid;
+    width: auto;
+    font-size: 16px;
+    line-height: 20px;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.toggle-panel { float: right; }
+.user-name { padding-bottom: 5px; }

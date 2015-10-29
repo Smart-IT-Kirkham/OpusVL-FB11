@@ -11,6 +11,7 @@
     [% IF c.config.fb11_theme_css %]<link rel="stylesheet" type="text/css" href="[% c.config.fb11_theme_css %]">[% END %]
     [% IF c.config.fb11_bootswatch_theme %]
         <link rel="stylesheet" type="text/css" href="/static/css/bootswatch/[% c.config.fb11_bootswatch_theme %]/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="/static/css/bootstrap-table.min.css">
     [% END %]
     <link rel="stylesheet" href="/static/css/font-awesome.min.css" type="text/css">
     <link rel="stylesheet" href="/static/css/yamm.css" type="text/css">
@@ -24,7 +25,6 @@
 [% FOR js IN header.js %]
     <script type="text/javascript" src="[% js %]"></script>
 [% END %]
-    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <!-- SmartMenus jQuery plugin
     <script type="text/javascript" src="/static/js/jquery.smartmenus.min.js"></script>
     <script type="text/javascript" src="/static/js/jquery.smartmenus.bootstrap.min.js"></script>-->
@@ -35,6 +35,7 @@
 [% END %]
 </script>
 
+<script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
 <script type="text/javascript">
     $(function() {
         if (document.title == '[% c.controller.fb11_name %]') {

@@ -37,6 +37,10 @@ sub auto
     $users_rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     my @users = $users_rs->all;
     $c->stash->{users} = \@users;
+    my $param_def_rs = $c->model('FB11AuthDB::ParameterDefault');
+    $c->stash->{parameter_defaults} = [ $param_def_rs->all ];
+    my $param_rs = $c->model('FB11AuthDB::Parameter');
+    $c->stash->{parameters} = [ $param_rs->all ];
 
 }
 
@@ -52,6 +56,7 @@ sub index
     : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
+    $self->_submit_param_form($c);
     $c->stash->{template} = 'fb11/admin/users/show_user.tt';
 }
 
@@ -134,6 +139,7 @@ sub show_user
 {
     my ( $self, $c ) = @_;
     my $form = $self->user_role_form;
+    $self->_submit_param_form($c);
     my $upload_form = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
     $c->stash->{form} = $form;
     $c->stash->{upload_form} = $upload_form;
@@ -189,6 +195,24 @@ sub show_user
     }
 }
 
+sub _submit_param_form :Private
+{
+    my ($self, $c) = @_;
+
+    if ($c->req->params->{submit_new_params}) {
+        my $new_param_value = $c->req->params->{parameter_name_new};
+        my $new_param_type  = $c->req->params->{parameter_type_new};
+        if ($new_param_value and $new_param_type) {
+            $c->model('FB11AuthDB::ParameterDefault')->create({
+                data            => $new_param_value,
+                parameter_id    => $new_param_type,
+            });
+            $c->flash->{status_msg} = "New parameter ${new_param_value} created";
+            $c->res->redirect($c->req->uri);
+        }
+    }
+}
+
 sub user_avatar
     : Chained('user_specific')
     : PathPart('avatar')
@@ -198,8 +222,15 @@ sub user_avatar
     my ($self, $c) = @_;
     my $user = $c->stash->{thisuser};
     if (my $avatar = $user->avatar) {
-        $c->res->content_type($avatar->mime_type);
-        $c->res->body($avatar->data);
+        #$c->res->content_type($avatar->mime_type);
+        #$c->res->body($avatar->data);
+        $c->stash(
+            x => 100,
+            y => 100,
+            image => $avatar->data,
+        );
+
+        $c->detach('View::Thumbnail');2
     }
 }
 
@@ -402,30 +433,30 @@ sub get_parameter_input
     my $html = '';
     if ( $param->data_type eq 'boolean' )
     {
-        $html .= '<div class="radio label">';
-        $html .= "<label for='parameter_value_true'>True</label><input type='radio' name='parameter_value' value='1' id='parameter_value_true' " . ( $value ? "checked='1'" : '') . ">";
-        $html .= '</div><div class="radio label">';
-        $html .= "<label for='parameter_value_false'>False</label><input type='radio' name='parameter_value' value='0' id='parameter_value_false' " . ( $value ? '' : "checked='1'") . ">";
-        $html .= "</div>";
+        #$html .= q{<div class="btn-group" data-toggle="buttons">};
+        $html .= "<div class='radio'><label><input type='radio' class='form-control' name='parameter_value' value='1' id='parameter_value_true' " . ( $value ? "checked='1'" : '') . ">True</label></div>";
+        $html .= "<div class='radio'><label><input type='radio' class='form-control' name='parameter_value' value='0' id='parameter_value_false' " . ( $value ? '' : "checked='1'") . ">False</label></div>";
+        $html .= "</label>";
     }
     elsif ( $param->data_type eq 'select' )
     {
-        $html .= "<select name='parameter_value'> \n";
+        $html .= q{<div class="form-group">};
+        $html .= "<select class='form-control' name='parameter_value'> \n";
         foreach my $pdef ( $param->parameter_defaults )
         {
             my $thisval = $pdef->data;
             my $selected = $thisval eq $value ? 'selected' : '';
             $html .= "<option $selected value='$thisval'> $thisval</option>\n";
         }
-        $html .= "</select> \n";
+        $html .= "</select></div> \n";
     }
     elsif ( $param->data_type eq 'integer' )
     {
-        $html .= "<input type='text' name='parameter_value' value='$value' id='parameter_value' size='5'>";
+        $html .= "<div class='form-group'><input type='text' class='form-control' name='parameter_value' value='$value' id='parameter_value' size='5'></div>";
     }
     else 
     {
-        $html .= "<input type='text' name='parameter_value' value='$value' id='parameter_value'>";
+        $html .= "<div class='form-group'><input type='text' class='form-control' name='parameter_value' value='$value' id='parameter_value'></div>";
     }
 
     $c->stash->{no_wrapper} = 1;

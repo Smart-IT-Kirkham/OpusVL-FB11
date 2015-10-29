@@ -39,7 +39,7 @@ has_field 'status' => (
     options     => [
         { value => 'enabled', label => 'Enabled', attributes => { checked => 'checked' } },
         { value => 'disabled', label => 'Disabled' },
-        { value => 'deleted', label => 'Deleted' },
+        #{ value => 'deleted', label => 'Deleted' },
     ],
 );
 

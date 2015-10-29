@@ -71,6 +71,7 @@ my %rules = (
     'fb11/admin/users/delete_parameter',  => ['Administrator'],
     'fb11/admin/users/add_parameter',     => ['Administrator'],
     'fb11/admin/users/get_parameter_input', => ['Administrator'],
+    'fb11/admin/users/user_avatar'        => ['Administrator', 'Normal User'],
     'fb11/user/change_password',          => ['Administrator'],
     'custom/custom',                        => ['Administrator'],
     'custom/custom_access_denied',          => ['Administrator'],
