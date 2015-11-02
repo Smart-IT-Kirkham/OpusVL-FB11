@@ -61,7 +61,7 @@
   $(function() {
     var h1Text = $('h1').first().text();
     if (! (h1Text))
-        h1Text = $('legend').first().text();
+        h1Text = $('title').text();
     $('.favourite-link').attr("data-link", "/fb11/ajax/core/favourite?title=" + h1Text + "&url=[% c.req.uri.path %]");
   });
 </script>
