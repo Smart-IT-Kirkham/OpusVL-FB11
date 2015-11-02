@@ -52,7 +52,7 @@ override _build_config => sub
     $config->{'fb11_display_app_version'} = 1;
 
     # DEBUGIN!!!!
-    $config->{'fb11_can_access_everything'} = 1;  
+    $config->{'fb11_can_access_everything'} = 0;  
 
     $config->{fb11_bootswatch_theme} = 'paper';
     $config->{fb11_app_order} = [
