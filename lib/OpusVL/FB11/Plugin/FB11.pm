@@ -31,25 +31,27 @@ with 'Catalyst::ClassData';
 # moose calls.
 ###########################################################################################################################
 
-has fb11_controllers => ( is => 'ro',    isa => 'ArrayRef',  lazy_build => 1 );
-sub _build_fb11_controllers
+sub fb11_controllers
 {   
     my ( $c ) = shift;
 
-    my @controllers;
+    state @controllers;
 
-    # Get all the components for this app... sorted by length of the name of the componant so they are in hierarchical order (bit hacky, but think it should work)
-    foreach my $comp ( sort { length($a) <=> length($b) } values %{ $c->components } )
-    {   
-        # Check this is a controller for FB11.... (not sure if we need to ignore others, but it just seems cleaner)..
-        if  (
-                ( $comp->isa('Catalyst::Controller')    )               &&
-                ( $comp->can('fb11') )
-            )
+    if (not @controllers) {
+        # Get all the components for this app... sorted by length of the name of the componant so they are in hierarchical order (bit hacky, but think it should work)
+        foreach my $comp ( sort { length($a) <=> length($b) } values %{ $c->components } )
         {   
-            push( @controllers, $comp );
+            # Check this is a controller for FB11.... (not sure if we need to ignore others, but it just seems cleaner)..
+            if  (
+                    ( $comp->isa('Catalyst::Controller')    )               &&
+                    ( $comp->can('fb11') )
+                )
+            {   
+                push( @controllers, $comp );
+            }
         }
     }
+
     return \@controllers;
 }
 
@@ -153,12 +155,15 @@ sub menu_data
     Use for find node in the fb11_actiontree...
 =cut
 
-has fb11_actiontree_visitor => ( is => 'ro',    isa => 'Tree::Simple::Visitor::FindByPath',  default => sub
+sub fb11_actiontree_visitor
 {
-    my $visitor = Tree::Simple::Visitor::FindByPath->new;
-    $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
+    state $visitor;
+    if (not $visitor) {
+        $visitor = Tree::Simple::Visitor::FindByPath->new;
+        $visitor->setNodeFilter( sub { my ($t) = @_; return $t->getNodeValue()->node_name } );
+    }
     return $visitor;
-} );
+}
 
 =head2 is_unrestricted_action_name
     Little helper to ascertain if an action's name is one we dont apply access control to.

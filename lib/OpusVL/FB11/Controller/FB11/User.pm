@@ -32,7 +32,10 @@ sub change_password
     }
 }
 
-sub favourite_page :Path('favourite') :Args(0)
+sub favourite_page
+    : Path('favourite')
+    : Args(0)
+    : FB11Feature('Add Page to Favourites')
 {
     my ($self, $c) = @_;
     if (my $page = $c->req->query_params->{page} and my $name = $c->req->query_params->{name}) {

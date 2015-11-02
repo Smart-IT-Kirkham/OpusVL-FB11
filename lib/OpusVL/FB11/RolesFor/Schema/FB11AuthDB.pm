@@ -36,7 +36,8 @@ requires 'load_namespaces';
 sub merge_authdb
 {
     my $class = shift;
-    $class->load_namespaces(
+    my $package = shift;
+    $package->load_namespaces(
         result_namespace => '+OpusVL::FB11::Schema::FB11AuthDB::Result',
         resultset_namespace => '+OpusVL::FB11::Schema::FB11AuthDB::ResultSet',
     );

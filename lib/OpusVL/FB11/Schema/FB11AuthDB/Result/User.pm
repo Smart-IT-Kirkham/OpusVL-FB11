@@ -148,6 +148,21 @@ __PACKAGE__->setup_authdb;
 # create an avatar for new users
 # default to profile.png
 after 'insert' => sub {
+    shift->set_default_avatar();
+};
+
+=head1 METHODS
+
+=head2 set_default_avatar
+
+Create an avatar record with the defaults set, and return it.
+Uses root/static/images/profile.png as the default avatar.
+
+Be sure to check the ->avatar field is null before you call this.
+
+=cut
+
+sub set_default_avatar {
     my ($self) = @_;
     require OpusVL::FB11;
     my $image  = module_dir('OpusVL::FB11') . '/root/static/images/profile.png';
@@ -160,12 +175,31 @@ after 'insert' => sub {
     }
     close $fh;
 
-    $self->create_related('avatar', {
+    return $self->create_related('avatar', {
         user_id     => $self->id,
         mime_type   => 'image/png',
         data        => $image_data, 
     });
-};
+}
+
+
+=head2 get_or_default_avatar
+
+This will return the avatar record for this user if one is already set, otherwise
+it will create a new default one (see C<set_default_avatar>) and return that.
+
+Recommendation is usually to use this in preference to straight ->avatar, to ensure you
+always get one.
+
+=cut
+
+sub get_or_default_avatar {
+    my ($self) = @_;
+    if (my $avatar = $self->avatar) {
+        return $avatar;
+    }
+    return $self->set_default_avatar();
+}
 
 =head1 COPYRIGHT and LICENSE
 

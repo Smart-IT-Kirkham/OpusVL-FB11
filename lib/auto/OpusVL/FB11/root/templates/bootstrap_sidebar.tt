@@ -11,7 +11,7 @@
       </ul>
       </span>
       <a href="#"><i class="fa fa-question-circle"></i></a>
-      <a href="#" class="favourite-link"><i class="fa fa-heart[% IF page_is_favourite %] favourited[% END %]"></i></a>
+      <a href="javascript:;" class="favourite-link"><i class="fa fa-heart[% IF page_is_favourite %] favourited[% END %]"></i></a>
       <a href="/logout"><i class="fa fa-power-off"></i></a>
       <div class="pull-right"><a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('show_user'), [ c.user.id ] ) %]"><img class="fb11-avatar-sidebar" alt="[% c.user.name %] Avatar" src="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('user_avatar'), [ c.user.id ]) %]"></a></div>
     </div>
@@ -44,7 +44,7 @@
   <div class="panel-heading">
     <h3 class="panel-title">Favourites</h3>
   </div>
-  <div class="panel-body">
+  <div class="panel-body favourites">
     [% IF favourites %]
       <ul>
       [% FOREACH fav IN favourites %]
@@ -60,9 +60,8 @@
 <script type="text/javascript">
   $(function() {
     var h1Text = $('h1').first().text();
-    console.log("Got heading %s", h1Text);
     if (! (h1Text))
         h1Text = $('legend').first().text();
-    $('.favourite-link').attr("href", "/fb11/user/favourite?name=" + h1Text + "&page=[% c.req.uri.path %]");
+    $('.favourite-link').attr("data-link", "/fb11/ajax/core/favourite?title=" + h1Text + "&url=[% c.req.uri.path %]");
   });
 </script>

@@ -127,26 +127,26 @@ img.responsive-img {
 .fb11-avatar-sidebar {
 	height: 25px;
 	width: 25px;
-	/*position: absolute;
-	top: 50px;*/
+	position: absolute;
+	top: 50px;
 }
 
-.error-msg, .success-msg { display: none; }
-.error-msg-text, .success-msg-text {
-    display: inline-block;
-    visibility: hidden;
+i.superpose {
+    margin-left: -0.5em;
 }
 
-fieldset > legend {
-    /*border-style: none;
-    border-width: 0;*/
-    border-bottom: 1px solid;
-    width: auto;
-    font-size: 16px;
-    line-height: 20px;
-    margin-bottom: 10px;
-    font-weight: 700;
+.grab-handle {
+    cursor: -webkit-grab;
+    cursor: grab;
 }
 
-.toggle-panel { float: right; }
-.user-name { padding-bottom: 5px; }
+/**
+ * Tabify stuff
+ */
+
+.js-tab {
+    display: none;
+}
+.js-tab.current {
+    display: block !important;
+}

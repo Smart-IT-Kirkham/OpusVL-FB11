@@ -1,0 +1,25 @@
+/**
+ * List styling
+ */
+
+/* List counting */
+ul.records, ol.records, dl.records {
+    list-style-type: none;
+}
+
+.records {
+    counter-reset: record-list-counter;
+}
+
+.records li.record span.list-number:before,
+.records dt.record:before {
+    content: counter(record-list-counter);
+    counter-increment: record-list-counter;
+}
+
+div.list-header {
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+}
