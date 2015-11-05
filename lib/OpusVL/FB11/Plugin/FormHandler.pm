@@ -19,6 +19,7 @@ sub import {
 		$has->("widget_wrapper", is => 'rw', default => sub { "Bootstrap3" });
 		$has->("ctx", is => 'rw');
 		$has->("update_only", is => 'rw', default => sub { 0 });
+		$has->("+is_html5", is => 'rw', default => sub { 1 });
 	}
 }
 
