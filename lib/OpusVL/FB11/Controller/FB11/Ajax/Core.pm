@@ -1,7 +1,7 @@
 package OpusVL::FB11::Controller::FB11::Ajax::Core;
 
 use Moose;
-use JSON::XS 'encode_json';
+use Cpanel::JSON::XS 'encode_json';
 use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller'; };
