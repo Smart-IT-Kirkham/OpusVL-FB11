@@ -73,6 +73,8 @@ requires 'CatalystX::AppBuilder' => '0.00009';
 requires 'CatalystX::VirtualComponents';
 requires 'CatalystX::SimpleLogin';
 
+requires 'Import::Into';
+
 requires 'Test::DBIx::Class';
 requires 'Test::Most';
 requires 'HTML::FormHandler';
