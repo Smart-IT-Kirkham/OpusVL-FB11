@@ -23,14 +23,7 @@
                     [% IF error_msg %]<div class="alert alert-danger">[% error_msg %] <div class="pull-right"><a href="javascript:;" class="hide-alert"><i class="fa fa-remove"></i></a></div></div>[% END %]
                     <div class="alert alert-success success-msg"><div class="success-msg-text"></div><div class="pull-right"><a href="javascript:;" class="hide-alert"><i class="fa fa-remove"></i></a></div></div>
                     <div class="alert alert-danger error-msg"><div class="error-msg-text"></div><div class="pull-right"><a href="javascript:;" class="hide-alert"><i class="fa fa-remove"></i></a></div></div>
-                    [% UNLESS c.user %]
-                    <h1>[% c.config.name %]</h1>
-                    <div class="well">
-                    [% END %]
                     [% content | none %]
-                    [% UNLESS c.user %]
-                    </div>
-                    [% END %]
                 </div>
 
                 <!-- Side bar -->
