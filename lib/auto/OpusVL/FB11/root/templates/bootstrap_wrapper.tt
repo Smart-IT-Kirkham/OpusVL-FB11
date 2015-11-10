@@ -18,6 +18,14 @@
             <div class="row">
                 <!-- Main Content -->
 
+                [% 
+                    # Hide the sidebar when no user - unless explicitly
+                    # requested
+                    IF ! c.user && ! hide_sidebar.defined;
+                        hide_sidebar = 1;
+                    END 
+                %]
+
                 <div class="fb11-main-content [% IF hide_sidebar %]col-sm-12[% ELSE %]col-md-8[% END %]">
                     [% IF status_msg %]
                         <div class="alert alert-success">

@@ -244,7 +244,8 @@ override _build_config => sub
         traits => [ 
         '+OpusVL::FB11::TraitFor::Controller::Login::SetHomePageFlag', 
         '+OpusVL::FB11::TraitFor::Controller::Login::NewSessionIdOnLogin', 
-        '-Login::WithRedirect' 
+        '-Login::WithRedirect',
+        '-RenderAsTTTemplate',
         ],
         login_form_class => 'OpusVL::FB11::Form::Login',
     };
