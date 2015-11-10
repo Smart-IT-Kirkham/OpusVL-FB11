@@ -2,7 +2,7 @@ package OpusVL::FB11::Action::FB11Form;
 
 =head1 NAME
 
-    OpusVL::FB11::Action::FB11Form - Action class for OpusVL::AppKit FormConfig Loading
+    OpusVL::FB11::Action::FB11Form - Action class for OpusVL::FB11 FormConfig Loading
 
 =head1 SYNOPSIS
 

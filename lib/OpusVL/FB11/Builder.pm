@@ -15,7 +15,6 @@ package OpusVL::FB11::Builder;
         Catalyst::Plugin::Authentication
         Catalyst::Plugin::Authorization::Roles
         Catalyst::Plugin::Session
-        Catalyst::Plugin::Session::Store::FastMmap
         Catalyst::Plugin::Session::State::Cookie
         CatalystX::SimpleLogin
         CatalystX::VirtualComponents
@@ -63,7 +62,6 @@ package OpusVL::FB11::Builder;
         L<Catalyst::Plugin::Authentication>
         L<Catalyst::Plugin::Authorization::Roles>
         L<Catalyst::Plugin::Session>
-        L<Catalyst::Plugin::Session::Store::FastMmap>
         L<Catalyst::Plugin::Session::State::Cookie>
         L<CatalystX::SimpleLogin>
         L<CatalystX::VirtualComponents>
