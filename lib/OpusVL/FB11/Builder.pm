@@ -131,7 +131,7 @@ override _build_plugins => sub
         Authentication
         Authorization::Roles
         Session
-        Session::Store::Memcached
+        Session::Store::Cache
         Session::State::Cookie
         Cache
         +CatalystX::SimpleLogin
