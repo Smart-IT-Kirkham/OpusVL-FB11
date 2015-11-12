@@ -28,6 +28,7 @@ requires 'Catalyst::View::Excel::Template::Plus';
 requires 'Template::AutoFilter';
 requires 'Template::Alloy' => '1.020';
 requires 'Cpanel::JSON::XS';
+requires 'Data::Munge';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';

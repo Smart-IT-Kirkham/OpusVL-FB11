@@ -23,6 +23,7 @@ use namespace::autoclean;
 use 5.010;
 use Tree::Simple;
 use Tree::Simple::Visitor::FindByPath;
+use Data::Munge qw/elem/;
 use OpusVL::FB11::Plugin::FB11::Node;
 use OpusVL::FB11::Plugin::FB11::FeatureList;
 with 'Catalyst::ClassData';
@@ -562,7 +563,7 @@ sub check_roles
 {
     my ($c, $allowed) = @_;
     my $allow = $c->user && $c->check_any_user_role( @$allowed )
-        || 'PUBLIC' ~~ @$allowed;
+        || elem('PUBLIC' => $allowed);
     return $allow;
 }
 

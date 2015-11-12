@@ -54,6 +54,7 @@ use Moose::Role;
 use Carp;
 use File::ShareDir qw/module_dir/;
 use Try::Tiny;
+use Data::Munge qw/elem/;
 
 # this method is provided for compatibility reassons
 # you should switch to using add_paths instead since it does this
@@ -109,19 +110,19 @@ sub _add_template_path
 
     if($self->view('Excel'))
     {
-        unless ($self->view('Excel')->{etp_config}->{INCLUDE_PATH} ~~ $template_path) {
+        unless (elem $template_path => $self->view('Excel')->{etp_config}->{INCLUDE_PATH}) {
             push @{$self->view('Excel')->{etp_config}->{INCLUDE_PATH}}, $template_path;
         }
         $self->view('Excel')->{etp_config}->{AUTO_FILTER} = 'html';
         $self->view('Excel')->{etp_engine} = 'TTAutoFilter';
-        unless ($self->view($tt_view)->include_path ~~ $template_path) {
+        unless (elem $template_path => $self->view($tt_view)->include_path) {
             push @{$self->view($tt_view)->include_path}, $template_path;
         }
     }
     else
     {
         my $excel_config = $self->config->{'View::Excel'};
-        unless ($excel_config->{etp_config}->{INCLUDE_PATH} ~~ $template_path) {
+        unless (elem $template_path => $excel_config->{etp_config}->{INCLUDE_PATH}) {
             push @{$excel_config->{etp_config}->{INCLUDE_PATH}}, $template_path;
         }
         $excel_config->{etp_config}->{AUTO_FILTER} = 'html';
