@@ -192,22 +192,23 @@ override _build_config => sub
 
     $config->{'Plugin::Authentication'} =
     {
-            default_realm   => 'fb11',
-            fb11          => 
+        %{ $config->{'Plugin::Authentication'} || {} },
+        default_realm   => 'fb11',
+        fb11          => 
+        {
+            credential => 
             {
-                credential => 
-                {
-                   class              => 'Password',
-                   password_type      => 'self_check',
-                },
-                store => 
-                {
-                   class              => 'DBIx::Class',
-                   user_model         => 'FB11AuthDB::User',   
-                   role_relation      => 'roles',
-                   role_field         => 'role',
-                }
+               class              => 'Password',
+               password_type      => 'self_check',
             },
+            store => 
+            {
+               class              => 'DBIx::Class',
+               user_model         => 'FB11AuthDB::User',   
+               role_relation      => 'roles',
+               role_field         => 'role',
+            }
+        },
     };
 
     $config->{'View::Email'} =
