@@ -36,7 +36,6 @@ button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
 .panel-default>.panel-heading {
   background-color: #b3b3b3;
   color: #fff;
-  text-align: right;
 }
 
 
