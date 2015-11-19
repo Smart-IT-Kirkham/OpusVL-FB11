@@ -137,8 +137,6 @@ before create_action  => sub
     my %args = @_;
 
     # add any ActionClass's to this action.. so when it is called, some extra code is excuted....
-    if ( defined $args{attributes}{FB11Form} ) { push @{ $args{attributes}{ActionClass} }, "OpusVL::FB11::Action::FB11Form"; }
-
     if ( defined $args{attributes}{NavigationHome} )
     {
         # This action has been identified as a Home action...
