@@ -37,11 +37,14 @@ BEGIN {
 __PACKAGE__->config->{AUTO_FILTER} = 'html';
 __PACKAGE__->config->{ENCODING} = 'UTF-8';
 
-=head as_list
+=head2 as_list
+
     Little help vmethod for TemplateToolkit to force array context.
     Helps when DBIx::Class ->search method return only 1 result.
         eg.  [% FOR row IN rs.search().as_list %]
+
 =cut
+
 $Template::Stash::LIST_OPS->{as_list} = sub { return ref( $_[0] ) eq 'ARRAY' ? shift : [shift]; };
 $Template::Directive::WHILE_MAX = 100000;
 

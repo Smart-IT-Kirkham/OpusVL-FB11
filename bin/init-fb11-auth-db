@@ -4,6 +4,7 @@ use warnings;
 use 5.014;
 use Getopt::Long;
 
+# PODNAME: init-fb11-auth-db
 # Not sure whether to handle other models or resultsets, because this script
 # will give all permissions to the new user, which is only really useful for
 # fb11admin. Plus, FB11AuthDB is the only one we can guarantee is using this
@@ -87,3 +88,4 @@ performed.
 
 The default password is password because we'd mostly expect you to do this in
 dev. Use this to override that.
+
