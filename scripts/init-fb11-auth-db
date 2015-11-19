@@ -14,14 +14,14 @@ my %option = (
     #    resultset => 'User',
 );
 
-GetOpts (
+GetOptions (
     \%option,
     'password|p=s',
     #    'model|m=s',
     #    'resultset|rs=s',
 );
 my $app = shift;
-eval "require $app";
+eval "require $app" or die $@;
 
 my $users = $app->model('FB11AuthDB')->resultset('User');
 my $user = $users->find({ username => 'fb11admin' });
