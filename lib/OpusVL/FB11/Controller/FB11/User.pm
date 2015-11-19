@@ -3,7 +3,7 @@ package OpusVL::FB11::Controller::FB11::User;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
+BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config

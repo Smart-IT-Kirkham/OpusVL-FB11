@@ -6,7 +6,7 @@ use Tree::Simple::View::HTML;
 use Tree::Simple::VisitorFactory;
 use HTML::FormHandler;
 
-BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
+BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 has_forms(

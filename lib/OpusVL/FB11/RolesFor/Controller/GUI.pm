@@ -50,10 +50,6 @@ package OpusVL::FB11::RolesFor::Controller::GUI;
             Tells the GUI this action is a widget action, so calling is only garented to fill
             out the 'widget' stash key.
 
-        FB11Form
-            Behaves like FormConfig option in FormFu Controller, except it loads form from the 
-            ShareDir of namespace passed in 'fb11_myclass'
-            
         SearchName
             Tells the GUI this action is a search action and what its name should be
     
@@ -392,49 +388,6 @@ sub add_final_crumb
     my $c = shift;
     my $title = shift;
     push @{$c->stash->{breadcrumbs}}, { name => $title, url => $c->req->uri };
-}
-
-=head2 flag_callback_error
-
-Flags an HTML::FormFu callback error.
-
-Setup a callback constraint on your form,
-
-  - type: Text
-    name: project
-    label: Project
-    constraints:
-      - type: Callback
-        message: Project is invalid
-
-Then within your controller you can do, 
-
-    $self->flag_callback_error($c, 'project');
-
-This will terminate the processing of the action too, by doing a $c->detach;
-
-=cut
-
-sub flag_callback_error
-{
-    my ($self, $c, $field_name, $message) = @_;
-    return $self->flag_callback_error_ex($c, $field_name, { message => $message });
-}
-
-sub flag_callback_error_ex
-{
-    my ($self, $c, $field_name, $args) = @_;
-
-    $args //= {};
-    my $message = $args->{message};
-    my $no_detach = $args->{no_detach};
-
-    my $form = $c->stash->{form};
-    my $constraint = $form->get_field($field_name)->get_constraint({ type => 'Callback' });
-    $constraint->callback(sub { 0});
-    $constraint->message($message) if $message;
-    $form->process;
-    $c->detach unless $no_detach;
 }
 
 sub has_forms {

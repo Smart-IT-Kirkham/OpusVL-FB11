@@ -160,9 +160,6 @@ override _build_config => sub
     $config->{"Plugin::Static::Simple"}->{ignore_extensions} = [qw/tt tt2 db yml/];
     $config->{encoding} = 'UTF-8';
 
-    # FIXME: this line appears to cause a problem
-    #$config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path} = [ $path . '/root/forms' ];
-
     # .. add template dir into the config for View::PDF::Reuse...
     my $pdf_path = $config->{'View::PDF::Reuse'}->{'INCLUDE_PATH'};
     push(@$pdf_path, $path . '/root/templates' );

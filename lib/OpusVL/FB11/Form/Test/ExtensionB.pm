@@ -9,9 +9,6 @@ has '+item_class' => ( default => 'Author' );
 has_field 'foo' => ( type => 'Text', label => 'Foo' );
 has_field 'author' => ( type => 'Select', label => 'Authors' );
 
-#sub options_author {
-#	return ('', '-- Testing FormFu/DBIx --');
-#}
 
 has_field 'submitbutton' => (
 	type	=> 'Submit',

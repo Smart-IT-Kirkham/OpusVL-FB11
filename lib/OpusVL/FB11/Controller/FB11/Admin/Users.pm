@@ -4,7 +4,7 @@ use Moose;
 use namespace::autoclean;
 use String::MkPasswd qw/mkpasswd/;
 
-BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; };
+BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
