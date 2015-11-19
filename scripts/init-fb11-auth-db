@@ -1,0 +1,49 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use 5.014;
+
+my $app = shift;
+eval "require $app";
+
+# theoretically, all the modular DB stuff is added to the main model via roles
+
+my $users = $app->model('FB11AuthDB')->resultset('User');
+my $user = $users->find({ username => 'fb11admin' });
+unless($user)
+{
+    $user = $users->create({
+        username => 'fb11admin', 
+        email    => 'fb11admin@localhost',
+        name     => 'Administrator',
+        password => 'password',
+    });
+}
+
+my $feature_list = $app->fb11_features->feature_list;
+
+for my $section (keys %$feature_list) {
+    my $roles = $feature_list->{$section};
+
+    for my $role (keys %$roles) {
+        $app->model('FB11AuthDB')->resultset('Aclfeature')->find_or_create({
+            feature => $section . '/' . $role
+        });
+    }
+}
+
+my $admin_role = $app->model('FB11AuthDB')->resultset('Role')->find_or_create({
+    role => 'Admin'
+});
+
+$app->model('FB11AuthDB')->schema->txn_do(sub {
+    for my $feature ( $app->model('FB11AuthDB')->resultset('Aclfeature')->all ) {
+        $admin_role->add_to_aclfeatures($feature)
+            unless $admin_role->aclfeatures->find($feature->id);
+    }
+});
+
+$user->add_to_roles($admin_role)
+    unless $user->roles->find($admin_role->id);
+
+# PODNAME: admin-role-permissions.pl
