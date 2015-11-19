@@ -28,14 +28,6 @@ This sets up the paths for the TT templates and the L<Excel::Template::Plus> vie
 are setup to point to the same directory, named C<templates>.  It also sets up the static content path
 to point to the static directory.
 
-=head2 add_form_path
-
-This doesn't do anything any more.
-
-This is called by the add_paths method.  The primary reason this method is exposed is that this was originaly 
-the only method on this role.  Now I've added the add_paths method you should change any existing modules calling 
-this method to use the add_paths call instead.
-
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2011 OpusVL
@@ -50,19 +42,6 @@ use File::ShareDir qw/module_dir/;
 use Try::Tiny;
 use Data::Munge qw/elem/;
 
-# this method is provided for compatibility reassons
-# you should switch to using add_paths instead since it does this
-# and sets up all the other paths too.
-sub add_form_path
-{
-    my $self = shift;
-    my $module = shift;
-
-    carp "Please change the module $module to use add_paths instead of add_form_path.";
-    my $module_dir = module_dir($module);
-    $self->_add_form_path($module_dir);
-}
-
 sub add_paths
 {
     my $self = shift;
@@ -75,18 +54,9 @@ sub add_paths
     };
     if($module_dir)
     {
-        $self->_add_form_path($module_dir);
         $self->_add_static_path($module_dir);
         $self->_add_template_path($module_dir);
     }
-}
-
-sub _add_form_path
-{
-    my $self = shift;
-    my $module_dir = shift;
-
-    # NOTE: does nothing.
 }
 
 sub _add_template_path
