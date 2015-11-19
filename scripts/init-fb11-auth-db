@@ -2,21 +2,37 @@
 use strict;
 use warnings;
 use 5.014;
+use Getopt::Long;
 
+# Not sure whether to handle other models or resultsets, because this script
+# will give all permissions to the new user, which is only really useful for
+# fb11admin. Plus, FB11AuthDB is the only one we can guarantee is using this
+# ACL setup.
+my %option = (
+    password  => 'password',
+    #    model     => 'FB11AuthDB',
+    #    resultset => 'User',
+);
+
+GetOpts (
+    \%option,
+    'password|p=s',
+    #    'model|m=s',
+    #    'resultset|rs=s',
+);
 my $app = shift;
 eval "require $app";
 
-# theoretically, all the modular DB stuff is added to the main model via roles
-
 my $users = $app->model('FB11AuthDB')->resultset('User');
 my $user = $users->find({ username => 'fb11admin' });
+
 unless($user)
 {
     $user = $users->create({
         username => 'fb11admin', 
         email    => 'fb11admin@localhost',
         name     => 'Administrator',
-        password => 'password',
+        password => $option{password},
     });
 }
 
@@ -46,4 +62,24 @@ $app->model('FB11AuthDB')->schema->txn_do(sub {
 $user->add_to_roles($admin_role)
     unless $user->roles->find($admin_role->id);
 
-# PODNAME: admin-role-permissions.pl
+=head1 SYNOPSIS
+
+    init-fb11-auth-db [--password|-p secretpass] MyApp
+
+=head1 DESCRIPTION
+
+Creates a default fb11admin user in the given app, then registers all
+C<FB11Feature> features from the application into the Admin role, then gives the
+fb11admin user the admin role.
+
+The script may be run multiple times; steps that are not required are not
+performed.
+
+=head1 OPTIONS
+
+=head2 --password
+
+=head2 -p
+
+The default password is password because we'd mostly expect you to do this in
+dev. Use this to override that.
