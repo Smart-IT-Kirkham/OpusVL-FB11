@@ -62,6 +62,10 @@ $app->model('FB11AuthDB')->schema->txn_do(sub {
 $user->add_to_roles($admin_role)
     unless $user->roles->find($admin_role->id);
 
+=head1 NAME
+
+init-fb11-auth-db - Initialise the FB11AuthDB in your newly-deployed database.
+
 =head1 SYNOPSIS
 
     init-fb11-auth-db [--password|-p secretpass] MyApp
