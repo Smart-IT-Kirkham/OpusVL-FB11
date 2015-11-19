@@ -89,7 +89,7 @@ requires 'HTML::FormHandler::TraitFor::Model::DBIC';
 
 install_share 'lib/auto';
 
-#install_script glob('script/*.pl');
+install_script 'bin';
 auto_install;
 resources (
     repository => {
