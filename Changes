@@ -2,3 +2,4 @@
 
   - Switched to Dist::Zilla, and thus reset the Changes file
   - Removed FB11Form into a new module OpusVL::FB11::FormFu
+    and removed all the FormFu references.
