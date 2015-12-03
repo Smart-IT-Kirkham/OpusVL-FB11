@@ -139,6 +139,10 @@ i.superpose {
     cursor: grab;
 }
 
+div.dataTables_wrapper {
+    padding-top: 1em;
+}
+
 /**
  * Tabify stuff
  */
@@ -148,4 +152,27 @@ i.superpose {
 }
 .js-tab.current {
     display: block !important;
+}
+
+/* DataTables overrides */
+
+table.dataTable thead .field.sorting,
+table.dataTable thead .field.sorting_asc, 
+table.dataTable thead .field.sorting_desc,
+table.dataTable thead .field.sorting_asc_disabled, 
+table.dataTable thead .field.sorting_desc_disabled {
+    white-space: nowrap;
+}
+
+table.dataTable thead .field.sorting:after,
+table.dataTable thead .field.sorting_asc:after, 
+table.dataTable thead .field.sorting_desc:after,
+table.dataTable thead .field.sorting_asc_disabled:after, 
+table.dataTable thead .field.sorting_desc_disabled:after {
+    position: static;
+    right: initial;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 0.4em;
+    font-size: 90%;
 }
