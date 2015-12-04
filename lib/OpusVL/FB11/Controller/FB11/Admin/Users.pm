@@ -149,6 +149,7 @@ sub show_user
     };
 
     my @options;
+    my @selected;
     for my $role ($c->user->roles_modifiable->all) {
         my $opts = {
             value => $role->id,
@@ -156,13 +157,14 @@ sub show_user
         };
 
         if ($c->stash->{thisuser}->search_related('users_roles', { role_id => $role->id })->count > 0) {
-            $opts->{attributes}->{checked} = 'checked';
+            push @selected, $role->id;
         }
 
         push @options, $opts;
     }
 
     $form->field('user_roles')->options(\@options);
+    $form->process(defaults => { user_roles => \@selected });
     $form->process($c->req->params);
     $upload_form->process($c->req->params);
 
