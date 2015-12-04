@@ -2,7 +2,12 @@ package OpusVL::FB11::RolesFor::Form::Parsley;
 
 use Moose::Role;
 
-sub build_form_element_class { [qw/parsley/] }
+around form_element_class => sub {
+    my ($orig, $self, @args) = (@_);
+    my $classes = $self->$orig(@args);
+    push @$classes, 'parsley';
+    return $classes;
+};
 
 1;
 
