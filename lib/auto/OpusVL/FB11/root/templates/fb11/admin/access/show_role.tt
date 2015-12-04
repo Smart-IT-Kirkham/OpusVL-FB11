@@ -11,10 +11,10 @@
             <div class="panel-body">
                     [% IF fb11_features  %]
                     <ul>
-                    [% FOREACH app IN fb11_features.keys %]
+                    [% FOREACH app IN fb11_features.keys.sort %]
                     <li class="app"><span>[% app | html %]<span></li>
                     <ul>
-                    [% FOREACH feature IN fb11_features.$app.keys %]
+                    [% FOREACH feature IN fb11_features.$app.keys.sort %]
                     <li [% IF fb11_features.$app.$feature %]class="allowed"[% END %]><input type="checkbox" id="feature_[% app| html %]/[% feature| html %]" name="feature_[% app| html %]/[% feature| html %]"[% IF fb11_features.$app.$feature %] checked="checked"[% END %] value="allow">
                     <label for="feature_[% app| html %]/[% feature| html %]">[% feature| html %]</label>
                     </li>
