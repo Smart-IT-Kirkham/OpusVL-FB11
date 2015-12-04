@@ -2,7 +2,7 @@ package OpusVL::FB11::RolesFor::Form::Parsley;
 
 use Moose::Role;
 
-sub build_form_element_attr { { class => [qw/parsley/] } }
+sub build_form_element_class { [qw/parsley/] }
 
 1;
 
