@@ -16,6 +16,7 @@
             '/static/css/units.css',
             '/static/css/records-fields.css',
             '/static/css/datatables.min.css',
+            '/static/css/jquery.datetimepicker.css',
         ],
         js          => [ 
             '/static/js/curry.js',
@@ -23,6 +24,7 @@
             '/static/js/jquery-ui.min.js', 
             '/static/js/datatables.min.js', 
             '/static/js/parsley.min.js',
+            '/static/js/jquery.datetimepicker.full.min.js',
             '/static/js/fb11.js'
         ],
         jssrc       => [],
