@@ -18,6 +18,7 @@
             '/static/css/datatables.min.css',
         ],
         js          => [ 
+            '/static/js/curry.js',
             '/static/js/jquery-2.1.4.min.js',
             '/static/js/jquery-ui.min.js', 
             '/static/js/datatables.min.js', 
