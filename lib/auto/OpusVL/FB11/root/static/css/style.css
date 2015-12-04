@@ -154,6 +154,11 @@ div.dataTables_wrapper {
     display: block !important;
 }
 
+.js-tabs li.error a {
+    color: red;
+    font-weight: bold;
+}
+
 /* DataTables overrides */
 
 table.dataTable thead .field.sorting,
