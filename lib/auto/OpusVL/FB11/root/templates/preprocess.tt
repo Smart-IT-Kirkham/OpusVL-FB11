@@ -21,6 +21,7 @@
             '/static/js/jquery-2.1.4.min.js',
             '/static/js/jquery-ui.min.js', 
             '/static/js/datatables.min.js', 
+            '/static/js/parsley.min.js',
             '/static/js/fb11.js'
         ],
         jssrc       => [],
