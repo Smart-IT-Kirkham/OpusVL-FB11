@@ -25,7 +25,8 @@
             '/static/js/datatables.min.js', 
             '/static/js/parsley.min.js',
             '/static/js/jquery.datetimepicker.full.min.js',
-            '/static/js/fb11.js'
+            '/static/js/fb11.js',
+            '/static/js/fb11-datetimepicker.js',
         ],
         jssrc       => [],
     };
