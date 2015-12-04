@@ -144,6 +144,8 @@ sub role_management
         label   => 'Can change any role',
     };
 
+    # NOTE: this not how you should do this, we should be setting defaults
+    # but since we redirect we get away with this.
     $can_change_any_role_opts->{element_attr}->{checked} = 'checked'
         if $role->can_change_any_role;
 
