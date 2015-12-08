@@ -27,6 +27,17 @@ has dt_time => (
     default => 1,
 );
 
+has dt_mask => (
+    is => 'rw',
+    isa => 'Bool',
+);
+
+has date_format => (
+    is => 'rw',
+    isa => 'Str',
+    predicate => 'has_date_format',
+);
+
 around element_attr => sub {
     my $orig = shift;
     my $self = shift;
@@ -38,6 +49,12 @@ around element_attr => sub {
 
     $attr->{'data-dt-not-before'} = $self->not_before
         if $self->has_not_before;
+
+    $attr->{'data-dt-mask'} = $self->dt_mask
+        if $self->dt_mask;
+
+    $attr->{'data-dt-format'} = $self->date_format
+        if $self->has_date_format;
 
     return $attr;
 };
