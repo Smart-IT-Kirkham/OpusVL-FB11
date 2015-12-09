@@ -22,6 +22,7 @@
             '/static/js/curry.js',
             '/static/js/jquery-2.1.4.min.js',
             '/static/js/jquery-ui.min.js', 
+            '/static/js/jdate.min.js',
             '/static/js/datatables.min.js', 
             '/static/js/parsley.min.js',
             '/static/js/jquery.datetimepicker.full.min.js',
