@@ -42,10 +42,12 @@ has date_format => (
 );
 
 has inflate_method => (
+    is => 'ro',
     default => sub { \&inflate }
 );
 
 has deflate_method => (
+    is => 'ro',
     default => sub { \&deflate }
 );
 
@@ -86,32 +88,36 @@ sub inflate {
     my ($self, $value) = @_;
     my $dtf = DateTime::Format::Strptime->new(
         pattern => $self->date_format,
+        on_error => 'croak'
     );
 
     return try {
         $dtf->parse_datetime($value);
     }
     catch {
+        if (/does not match your pattern/) {
+            $self->add_error("Invalid datetime");
+            return $value;
+        }
         die $_;
     };
 }
-
-#*inflate_default_method = \&inflate_field;
 
 sub deflate {
     my ($self, $value) = @_;
 
     my $dtf = DateTime::Format::Strptime->new(
         pattern => $self->date_format,
+        on_error => 'croak'
     );
 
     return $dtf->format_datetime($value);
 }
 
-#*deflate_value_method = \&deflate_field;
-
 sub validate {
     my ($self) = @_;
+
+    return if $self->errors;
     
     if (my $min = $self->not_before) {
         $self->_check_min($min);
