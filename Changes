@@ -1,5 +1,14 @@
 {{ $NEXT }}
 
+0.009     2015-12-09 16:14:27+00:00 Europe/London
+
   - Switched to Dist::Zilla, and thus reset the Changes file
   - Removed FB11Form into a new module OpusVL::FB11::FormFu
     and removed all the FormFu references.
+  - Added DataTables JS library, and hooks
+  - Added datetimepicker JS library, and hooks
+  - Added parsely JS library, and hooks
+  - Added JDate for strptime/strftime
+  - Added curry.js
+  - Fixed display of errors on forms
+  - Cleaned up redundant assets
