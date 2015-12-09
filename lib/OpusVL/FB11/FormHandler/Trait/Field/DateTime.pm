@@ -2,6 +2,9 @@ package OpusVL::FB11::FormHandler::Trait::Field::DateTime;
 
 use Moose::Role;
 use Data::Munge qw/elem/;
+use DateTime;
+use DateTime::Format::Strptime;
+use Try::Tiny;
 
 has not_before => (
     is => 'rw',
@@ -38,6 +41,14 @@ has date_format => (
     predicate => 'has_date_format',
 );
 
+has inflate_method => (
+    default => sub { \&inflate }
+);
+
+has deflate_method => (
+    default => sub { \&deflate }
+);
+
 around element_attr => sub {
     my $orig = shift;
     my $self = shift;
@@ -70,5 +81,87 @@ around element_class => sub {
 
     return $classes;
 };
+
+sub inflate {
+    my ($self, $value) = @_;
+    my $dtf = DateTime::Format::Strptime->new(
+        pattern => $self->date_format,
+    );
+
+    return try {
+        $dtf->parse_datetime($value);
+    }
+    catch {
+        die $_;
+    };
+}
+
+#*inflate_default_method = \&inflate_field;
+
+sub deflate {
+    my ($self, $value) = @_;
+
+    my $dtf = DateTime::Format::Strptime->new(
+        pattern => $self->date_format,
+    );
+
+    return $dtf->format_datetime($value);
+}
+
+#*deflate_value_method = \&deflate_field;
+
+sub validate {
+    my ($self) = @_;
+    
+    if (my $min = $self->not_before) {
+        $self->_check_min($min);
+    }
+
+    if (my $max = $self->not_after) {
+        $self->_check_max($max);
+    }
+}
+
+# FIXME For some reason, the values in this are not inflated, so I'm having to
+# do it manually. The documentation says ->value should return the inflated
+# value, but it doesn't at the time of complaining.
+
+sub _check_min {
+    my ($self, $min) = @_;
+    my ($dt, $error_text);
+
+    if ($min =~ s/^\+//) {
+        $dt = $self->inflate($min);
+        $error_text = $min;
+    }
+    else {
+        my $other = $self->form->field($min) or return;
+        $dt = $other->value or return;
+        $error_text = $other->label;
+    }
+
+    if (DateTime->compare($self->value, $dt) < 0) {
+        $self->add_error("Must not be earlier than $error_text");
+    }
+}
+
+sub _check_max {
+    my ($self, $form, $max) = @_;
+    my ($dt, $error_text);
+
+    if ($max =~ s/^\+//) {
+        $dt = $self->inflate($max);
+        $error_text = $max;
+    }
+    else {
+        my $other = $self->form->field($max) or return;
+        $dt = $other->value or return;
+        $error_text = $other->label;
+    }
+
+    if (DateTime->compare($self->value, $dt) > 0) {
+        $self->add_error("Must not be later than $error_text");
+    }
+}
 
 1;
