@@ -84,6 +84,13 @@ around element_class => sub {
     return $classes;
 };
 
+sub inflate_hardcoded
+{
+    my ($self, $value) = @_;
+    my $dtf = DateTime::Format::Strptime->new(pattern => '%F', on_error => 'croak');
+    return $dtf->parse_datetime($value);
+}
+
 sub inflate {
     my ($self, $value) = @_;
     my $dtf = DateTime::Format::Strptime->new(
@@ -97,6 +104,7 @@ sub inflate {
     catch {
         if (/does not match your pattern/) {
             $self->add_error("Invalid datetime");
+            # WAT?
             return $value;
         }
         die $_;
@@ -117,7 +125,7 @@ sub deflate {
 sub validate {
     my ($self) = @_;
 
-    return if $self->errors;
+    return if @{$self->errors};
     
     if (my $min = $self->not_before) {
         $self->_check_min($min);
@@ -137,7 +145,7 @@ sub _check_min {
     my ($dt, $error_text);
 
     if ($min =~ s/^\+//) {
-        $dt = $self->inflate($min);
+        $dt = $self->inflate_hardcoded($min);
         $error_text = $min;
     }
     else {
@@ -156,7 +164,7 @@ sub _check_max {
     my ($dt, $error_text);
 
     if ($max =~ s/^\+//) {
-        $dt = $self->inflate($max);
+        $dt = $self->inflate_hardcoded($max);
         $error_text = $max;
     }
     else {
