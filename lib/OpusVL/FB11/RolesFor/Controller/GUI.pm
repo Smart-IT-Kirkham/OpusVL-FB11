@@ -410,7 +410,7 @@ sub has_forms {
             if ($@) {
                 die "Could not use form $form: $@\n";
             }
-            *{"${caller}::${method}"} = sub { $form->new(name => $method) };
+            *{"${caller}::${method}"} = sub { shift;$form->new(name => $method, @_) };
         }
     }
 }
