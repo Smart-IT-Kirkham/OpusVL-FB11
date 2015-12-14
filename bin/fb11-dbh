@@ -14,14 +14,14 @@ my %option = (
     help => sub { pod2usage(verbose => 2) },
 );
 GetOptions(\%option, 
-    'target=f', 
+    'target|t=s', 
     'help|h|?', 
     'connection-info|c=s', 
     'user|u=s', 
     'password|p=s', 
     'force|f',
     'prepare|ddl',
-    'init',
+    'verbose|v',
 );
 
 my $module = shift;
@@ -188,7 +188,9 @@ sub _ignoring_existing_files(&) {
     }
     catch {
         if (/Cannot overwrite/) {
-            say "INFO: Ignoring message: $_";
+            if ($option{verbose}) {
+                say "INFO: Ignoring message: $_";
+            }
             return;
         }
         die $_;
@@ -316,6 +318,8 @@ Provide a connection string (DSN) for the database.
 
 =head2 --target VERSION[-VERSION]
 
+=head2 -t VERSION[-VERSION]
+
 Target this version number. Not all commands accept a target. Some commands
 accept a range.
 
@@ -332,6 +336,13 @@ Username with which to connect to the database. Not used if not provided.
 =head2 -p PASSWORD
 
 Password with which to connect to the database. Not used if not provided.
+
+=head2 --verbose
+
+=head2 -v
+
+Report when existing files are ignored. Default is to silently ignore them. Has
+no effect when C<--force> is used.
 
 =head1 EXAMPLE PROCEDURE
 
