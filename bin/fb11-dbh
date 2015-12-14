@@ -20,7 +20,8 @@ GetOptions(\%option,
     'user|u=s', 
     'password|p=s', 
     'force|f',
-    'prepare|ddl!'
+    'prepare|ddl',
+    'init',
 );
 
 my $module = shift;
@@ -65,7 +66,9 @@ sub init {
     }
 
     # Create the versioning table
-    $dh->install_version_storage;
+    $dh->install_version_storage({
+        version => $version
+    });
 
     # Register this version in the versioning table
     $dh->add_database_version({ 
@@ -190,75 +193,35 @@ sub _ignoring_existing_files(&) {
 
 =head1 SYNOPSIS
 
-    deploy.pl [--target VERSION] [--connection-info|-c DSN] [--force|-f]
+    fb11-dbh [--target VERSION] [--connection-info|-c DSN] [--force|-f]
         [--init] [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD]
-        COMMAND
+        SCHEMA COMMAND
 
 Works with DBIx::Class::DeploymentHandler to upgrade or downgrade the database
 between versions.
 
-If you don't have any DeploymentHandler infrastructure yet, use C<init> and then
+I<SCHEMA> is the module name of the schema, e.g. C<MyApp::DBIC::Schema>.
+I<COMMAND> is one of the commands listed below.
+
+In general:
+
+=over
+
+=item If you don't have any DeploymentHandler infrastructure yet, use C<init> and then
 C<deploy>.
 
-If you have the DH versioning table but not the app's own tables, use C<deploy>.
+=item If you have the DH versioning table but not the app's own tables, use C<deploy>.
 
-If you have the app's tables but not the versioning table, use C<init>.
+=item If you have the app's tables but not the versioning table, use C<init>.
 You will need to version your schema first.
 
-If you have both, use C<upgrade>.
+=item If you have both, use C<upgrade>.
+
+=back
 
 To perform an upgrade without releasing a new version of the schema, you can use
 C<-f> to recreate the current version's source files, or C<downgrade> and then
 C<upgrade> again.
-
-=head1 OPTIONS
-
-=head2 --prepare
-
-=head2 --dsl
-
-When performing a command that requires SQL or DSL (YAML) source files, prepare
-them first. The default is to assume that these files are already available in
-the module's sharedir.
-
-If the source files already exist you will get an error. Use C<-f> to replace
-them - at your own risk.
-
-=head2 --init
-
-When deploying, also initialise. Equivalent to running init and then deploy.
-
-=head2 --force
-
-=head2 -f
-
-Force overwriting of source files. Use this to redeploy the current version
-during development.
-
-=head2 --connection-info=DSN
-
-=head2 -c DSN
-
-Provide a connection string (DSN) for the database.
-
-    deploy.pl -c dbi:Pg:dbname=myapp
-
-=head2 --target VERSION
-
-Target this version number. Not all commands accept a target. Defaults to the
-current schema version.
-
-=head2 --user=USER
-
-=head2 -u USER
-
-Username with which to connect to the database. Not used if not provided.
-
-=head2 --password=PASSWORD
-
-=head2 -p PASSWORD
-
-Password with which to connect to the database. Not used if not provided.
 
 =head1 COMMANDS
 
@@ -311,3 +274,52 @@ If C<--target> is not a range, then we can only prepare the deployment files for
 the version of the database we are currently on. Therefore, if the target
 version is not the current version, we prepare the version files for the range
 I<< <target> >>-I<< <current version> >>.
+
+=head1 OPTIONS
+
+=head2 --prepare
+
+=head2 --dsl
+
+When performing a command that requires SQL or DSL (YAML) source files, prepare
+them first. The default is to assume that these files are already available in
+the module's sharedir.
+
+If the source files already exist you will get an error. Use C<-f> to replace
+them - at your own risk.
+
+=head2 --init
+
+When deploying, also initialise. Equivalent to running init and then deploy.
+
+=head2 --force
+
+=head2 -f
+
+Force overwriting of source files. Use this to redeploy the current version
+during development.
+
+=head2 --connection-info=DSN
+
+=head2 -c DSN
+
+Provide a connection string (DSN) for the database.
+
+    deploy.pl -c dbi:Pg:dbname=myapp
+
+=head2 --target VERSION
+
+Target this version number. Not all commands accept a target. Defaults to the
+current schema version.
+
+=head2 --user=USER
+
+=head2 -u USER
+
+Username with which to connect to the database. Not used if not provided.
+
+=head2 --password=PASSWORD
+
+=head2 -p PASSWORD
+
+Password with which to connect to the database. Not used if not provided.
