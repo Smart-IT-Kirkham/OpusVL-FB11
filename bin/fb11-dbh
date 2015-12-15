@@ -9,6 +9,9 @@ use Try::Tiny;
 use DBIx::Class::DeploymentHandler;
 use Getopt::Long qw(:config gnu_getopt);
 use File::ShareDir 'module_dir';
+use File::Find;
+use File::Path;
+use List::Util qw/min/;
 
 my %option = (
     help => sub { pod2usage(verbose => 2) },
@@ -49,6 +52,7 @@ my %command = (
     deploy => \&deploy,
     'set-version' => \&set_version,
     prepare => \&prepare,
+    cleanup => \&cleanup,
 );
 
 $command{$command || 'upgrade'}->($dh);
@@ -181,6 +185,36 @@ sub prepare {
     }
 }
 
+sub cleanup {
+    my $dh = shift;
+
+    find(sub {
+            # Not datamabases
+            return $File::Find::prune = 1 if /_source/;
+            return $File::Find::prune = 1 if /_common/;
+
+            # Keep upgrade doodahs
+            return $File::Find::prune = 1 if /upgrade/;
+
+            # Keep the *first* deployment SQL. This should be 1 but in at least
+            # one case we started at 4 (like star wars)
+            if (/\d/) {
+                # No need to descend into deploy dirs
+                $File::Find::prune = 1;
+
+                opendir my $dir, $File::Find::dir;
+                my ($first) = min grep /\d/, readdir $dir;
+                close $dir;
+                if ($_ > $first) {
+                    rmtree($_);
+                    say "Unlinked $File::Find::name; (later than $first)" if $option{verbose};
+                }
+            }
+        },
+        module_dir($module) . '/sql'
+    );
+}
+
 sub _ignoring_existing_files(&) {
     my $coderef = shift;
     try {
@@ -284,6 +318,14 @@ therein.
 
 You should use this when converting an existing schema to DH. This means you
 will have to convert your versioning system to use integers.
+
+=head2 cleanup
+
+Removes stuff not required for actual deployment. Everything this leaves behind
+should be in version control.
+
+Even though this doesn't use the database you currently still have to provide it
+a connection string.
 
 =head1 OPTIONS
 
