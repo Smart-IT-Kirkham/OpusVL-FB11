@@ -408,11 +408,7 @@ C<PostgreSQL/upgrade/*-*/>).
 =item 1 If you have more changes to make, GOTO 2. The files will be overwritten
 as needed.
 
-=item 1 Commit the YAML files for the deployment, and the upgrade SQL. If this
-is the first version, commit the deploy SQL instead.
-
-=item 1 If this is I<not> the first version, the C<deploy/*> SQL is not needed.
-B<Always keep the C<deploy/*> YAML files.>
+=item 1 Run cleanup. Commit what's left.
 
 =item 1 Release all of this. GOTO 1.
 
