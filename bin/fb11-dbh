@@ -68,7 +68,7 @@ sub init {
         version => $version
     });
 
-    set_version;
+    set_version();
 }
 
 sub set_version {
