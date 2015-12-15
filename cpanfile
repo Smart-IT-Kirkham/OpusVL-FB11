@@ -1,6 +1,9 @@
 requires 'Moose';
+requires 'Getopt::Long';
 requires 'File::ShareDir';
 requires 'File::Spec';
+requires 'File::Find';
+requires 'File::Path';
 requires 'List::Util';
 requires 'Net::LDAP';
 requires 'XML::Simple';
@@ -22,6 +25,9 @@ requires 'Template::Alloy' => '1.020';
 requires 'Cpanel::JSON::XS';
 requires 'Data::Munge';
 requires 'HTTP::Status';
+requires 'DBIx::Class::DeploymentHandler';
+requires 'Pod::Usage';
+requires 'Try::Tiny';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';
@@ -49,7 +55,6 @@ requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Static::Simple' => 0.30;
 requires 'Catalyst::Plugin::Cache';
 requires 'Cache::FastMmap';
-requires 'Try::Tiny';
 
 # really test dependencies.
 requires 'Plack';
