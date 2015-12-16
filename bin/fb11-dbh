@@ -30,7 +30,7 @@ GetOptions(\%option,
 my $module = shift;
 my $command = shift;
 
-eval "require $module";
+eval "require $module" or die $@;
 
 my $schema = $module->connect({
     dsn => $option{'connection-info'} // '',
