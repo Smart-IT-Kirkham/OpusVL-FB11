@@ -332,9 +332,9 @@ a connection string.
 
 =head2 --prepare
 
-=head2 --dsl
+=head2 --ddl
 
-When performing a command that requires SQL or DSL (YAML) source files, prepare
+When performing a command that requires SQL or DDL (YAML) source files, prepare
 them first. The default is to assume that these files are already available in
 the module's sharedir.
 
