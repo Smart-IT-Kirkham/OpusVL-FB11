@@ -195,6 +195,7 @@ sub cleanup {
 
             # Keep upgrade doodahs
             return $File::Find::prune = 1 if /upgrade/;
+            return $File::Find::prune = 1 if /downgrade/;
 
             # Keep the *first* deployment SQL. This should be 1 but in at least
             # one case we started at 4 (like star wars)
