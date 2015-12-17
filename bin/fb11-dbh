@@ -30,6 +30,14 @@ GetOptions(\%option,
 my $module = shift;
 my $command = shift;
 
+unless ($module && $command) {
+    pod2usage(
+        verbose => 0, 
+        exitval => 1, 
+        message => "Missing schema name or command"
+    );
+}
+
 eval "require $module" or die $@;
 
 my $schema = $module->connect({
@@ -55,7 +63,15 @@ my %command = (
     cleanup => \&cleanup,
 );
 
-$command{$command || 'upgrade'}->($dh);
+unless ($command{$command}) {
+    pod2usage(
+        verbose => 0, 
+        exitval => 1, 
+        message => "Unknown command $command"
+    );
+}
+
+$command{$command}->($dh);
 
 sub _ignoring_existing_files(&);
 
@@ -237,6 +253,9 @@ sub _ignoring_existing_files(&) {
     fb11-dbh [--target|-t VERSION] [--connection-info|-c DSN] [--force|-f]
         [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD]
         [--verbose|-v] SCHEMA COMMAND
+
+
+=head1 DESCRIPTION
 
 Works with DBIx::Class::DeploymentHandler to upgrade or downgrade the database
 between versions.
