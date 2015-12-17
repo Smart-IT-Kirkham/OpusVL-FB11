@@ -235,7 +235,7 @@ sub _ignoring_existing_files(&) {
 =head1 SYNOPSIS
 
     fb11-dbh [--target|-t VERSION] [--connection-info|-c DSN] [--force|-f]
-        [--init] [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD]
+        [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD]
         [--verbose|-v] SCHEMA COMMAND
 
 Works with DBIx::Class::DeploymentHandler to upgrade or downgrade the database
