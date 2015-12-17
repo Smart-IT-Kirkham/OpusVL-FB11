@@ -1,0 +1,24 @@
+section.resource-schema h2 ~ * {
+    margin-left: 2%;
+}
+
+section.resource-paths article {
+    margin-left: 2%;
+}
+
+article.resource-path h3 {
+    padding: 0.3% 0.6%;
+    border-bottom: 3px solid #ccc;
+}
+
+article.resource-path h3:before {
+    content: "…";
+}
+
+article.resource-path article.resource-path-verb {
+    margin-left: 3%;
+}
+
+article.resource-path-verb h4 ~ * {
+    margin-left: 2%;
+}

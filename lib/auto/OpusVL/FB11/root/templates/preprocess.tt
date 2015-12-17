@@ -13,6 +13,7 @@
         title       => '',
         favicon     => '',
         css         => [ 
+            '/static/css/api.css',
             '/static/css/units.css',
             '/static/css/records-fields.css',
             '/static/css/datatables.min.css',
