@@ -322,14 +322,14 @@ version is not the current version, we prepare the version files for the range
 I<< <target> >>-I<< <current version> >>.
 
     # Requires you are on version 10. Produces _source/deploy/10 YAML
-    fb11-dbh -c dbi:Pg:mydb MyApp::DB::Schema prepare 10
+    fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema prepare 10
     
     # Requires _source/deploy/9 and _source/deploy/10 YAML files. Prepares
     # */upgrade/9-10 SQL files
-    fb11-dbh -c dbi:Pg:mydb MyApp::DB::Schema prepare 9-10
+    fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema prepare 9-10
 
     # As above, but a downgrade
-    fb11-dbh -c dbi:Pg:mydb MyApp::DB::Schema prepare 10-9
+    fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema prepare 10-9
 
 =head2 init
 
@@ -338,6 +338,13 @@ therein.
 
 You should use this when converting an existing schema to DH. This means you
 will have to convert your versioning system to use integers.
+
+Note that you will have to use the C<--target> option, because the SQL that
+creates this table will be in the deployment files, which exist only for the
+first version; if you try to init with the current version, you will get an
+error about SQL files that can't be found.
+
+    fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema --target 1 init
 
 =head2 cleanup
 
@@ -376,7 +383,7 @@ during development.
 
 Provide a connection string (DSN) for the database.
 
-    deploy.pl -c dbi:Pg:dbname=myapp
+    deploy.pl -c dbi:Pg:dbname=mydb
 
 =head2 --target VERSION[-VERSION]
 
@@ -427,6 +434,9 @@ C<PostgreSQL/upgrade/*-*/>).
 
 =item 1 If you have more changes to make, GOTO 2. The files will be overwritten
 as needed.
+
+=item 1 If you need to, you can edit the SQL files. If you re-run prepare, you
+will lose these changes.
 
 =item 1 Run cleanup. Commit what's left.
 
