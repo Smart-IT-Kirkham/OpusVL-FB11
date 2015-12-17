@@ -5,6 +5,7 @@ use namespace::autoclean;
 use Tree::Simple::View::HTML;
 use Tree::Simple::VisitorFactory;
 use HTML::FormHandler;
+use List::Util qw/any/;
 
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
@@ -445,7 +446,7 @@ sub show_role
     $display_tree->traverse(sub {
         my ($tree) = @_;
         push @remove, $tree if($tree->getNodeValue->in_feature);
-        push @remove, $tree if($tree->getNodeValue->action_attrs && defined $tree->getNodeValue->action_attrs->{FB11AllAccess});
+        push @remove, $tree if($tree->getNodeValue->action_attrs && any { defined $tree->getNodeValue->action_attrs->{$_} } qw/FB11AllAccess Public/);
     });
     for my $item (@remove)
     {
