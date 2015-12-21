@@ -286,7 +286,7 @@ sub _set_permissions_modified
 {
     my $c = shift;
     my $updated = shift;
-    state $key = $c->config->{name} . 'permissions_modified';
+    state $key = ($c->config->{permissions_name} || $c->config->{name}) . 'permissions_modified';
     $c->cache->set($key, $updated);
 }
 
@@ -295,7 +295,7 @@ sub _are_permissions_modified
     my $c = shift;
     my $updated = shift;
 
-    state $key = $c->config->{name} . 'permissions_modified';
+    state $key = ($c->config->{permissions_name} || $c->config->{name}) . 'permissions_modified';
     my $ts = $c->cache->get($key);
     unless($ts)
     {
