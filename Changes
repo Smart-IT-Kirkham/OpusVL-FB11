@@ -1,5 +1,14 @@
 {{ $NEXT }}
 
+0.011     2015-12-22 17:12:48+00:00 Europe/London
+
+  - Added new configuration setting to allow 2 settings to 
+    cooperate over permissions.  New config setting named 'permissions_name'
+  - Hide the : Public actions from the permissions settings since
+    they are already permitted
+  - Deployment Handler script matured.
+  - CSS for API documentation.
+
 0.010     2015-12-14 16:18:00+00:00 Europe/London
 
   - Fixed date validation
