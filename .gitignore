@@ -3,6 +3,7 @@ META.yml
 Makefile
 blib
 inc
+.build
 *.swp
 .DS_Store
 

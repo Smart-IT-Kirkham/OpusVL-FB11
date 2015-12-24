@@ -1,5 +1,23 @@
 {{ $NEXT }}
 
+0.011     2015-12-22 17:12:48+00:00 Europe/London
+
+  - Added new configuration setting to allow 2 settings to 
+    cooperate over permissions.  New config setting named 'permissions_name'
+  - Hide the : Public actions from the permissions settings since
+    they are already permitted
+  - Deployment Handler script matured.
+  - CSS for API documentation.
+
+0.010     2015-12-14 16:18:00+00:00 Europe/London
+
+  - Fixed date validation
+  - Allow FormHandler constructors to be passed arguments
+  - Added DBIC::DeploymentHandler script.
+  - Load the jqueryui css.
+  - Add a character encoding to the units css so that it 
+    gets interpretted correctly.
+
 0.009     2015-12-09 16:14:27+00:00 Europe/London
 
   - Switched to Dist::Zilla, and thus reset the Changes file
