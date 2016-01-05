@@ -847,6 +847,20 @@ div.search_result_url {
     color: #4F586E;
 }
 
+.dataTables_filter {
+    text-align: left !important;
+}
+
+.dataTables_length {
+    text-align: right !important;
+}
+
+.dataTables_wrapper {
+    padding-bottom: 1em;
+    border-bottom: 3px double #ccc;
+    margin-bottom: 1em;
+}
+
 /* @end */
 
 
