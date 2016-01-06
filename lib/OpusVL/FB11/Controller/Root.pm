@@ -96,7 +96,7 @@ sub not_found :Private
 sub access_denied : Private
 {
     my ( $self, $c ) = @_;
-    $c->REST_403 if($c->in_REST_action);
+    $c->REST_403 if ($c->in_REST_action or ($c->req->can('accepts') and $c->req->accepts('application/json')));
     $c->stash->{template} = '403.tt';
     delete $c->stash->{current_view} if defined $c->stash->{current_view}; # ensure default view.
     $c->response->status(403);
