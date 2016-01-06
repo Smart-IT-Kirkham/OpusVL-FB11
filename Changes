@@ -1,5 +1,16 @@
 {{ $NEXT }}
 
+0.012     2016-01-06 15:57:31+00:00 Europe/London
+
+  - Access denied should now returns JSON in a few more scenarios
+    where appropriate.
+  - Add csv button to data tables.
+  - Tweaked the data tables layout and display
+  - CSS tweaks for API documentation.
+  - Removed a little bit of tag soup from the menu
+  - Include jquery tabification on all pages.
+  - Shrunk the sidebar
+
 0.011     2015-12-22 17:12:48+00:00 Europe/London
 
   - Added new configuration setting to allow 2 settings to 
