@@ -11,8 +11,9 @@ article.resource-path h3 {
     border-bottom: 3px solid #ccc;
 }
 
-article.resource-path h3:before {
-    content: "…";
+article.resource-path h3 span.incidental {
+    opacity: 0.5;
+    font-size: 80%;
 }
 
 article.resource-path article.resource-path-verb {
