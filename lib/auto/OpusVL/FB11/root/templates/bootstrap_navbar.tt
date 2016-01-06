@@ -24,7 +24,7 @@
               [% FOR group IN app.actions %]
                   [% IF group.group %]
                         <ul class="col-md-[% IF app.actions.size > 1 %]6[% ELSE %]12[% END %] list-unstyled">
-                          <li><h4>[% group.group %]</strong></h4>
+                          <li><h4>[% group.group %]</h4>
                           [% FOR action IN group.actions %]
                               [% IF (action.controller.fb11_method_group == group.group) %]
                                   <li><a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a></li>
