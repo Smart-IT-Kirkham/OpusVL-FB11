@@ -26,7 +26,9 @@
                     END 
                 %]
 
-                <div class="fb11-main-content [% IF hide_sidebar %]col-sm-12[% ELSE %]col-md-8[% END %]">
+                <div class="fb11-main-content 
+                    [% IF hide_sidebar %]col-sm-12[% ELSE %]col-md-9[% END %]
+                ">
                     [% IF status_msg %]
                         <div class="alert alert-success">
                             [% status_msg %]
@@ -53,7 +55,7 @@
                 <!-- Side bar -->
                 [% IF c.user %]
                 [% UNLESS hide_sidebar %]
-                <div class="fb11-sidebar col-md-4">
+                <div class="fb11-sidebar col-md-3">
                     [% PROCESS bootstrap_sidebar.tt %]
                 </div>
                 [% END %]
