@@ -77,24 +77,6 @@
         END;
     END;
 
-    # TBA.
-    # Below, we manage support for versions where Controller methods/properties manipulate the template..
-    FOR css IN c.controller.fb11_css;
-        header.css.list.push( css );
-    END;
-    FOR js IN c.controller.fb11_js;
-        header.js.list.push( js );
-    END;
-    IF c.controller.fb11_features.list.grep('htmleditor').size;
-        features.fb11feature_htmleditor = 1;
-    END;
-    IF c.controller.fb11_features.list.grep('clipboard').size;
-        features.fb11feature_clipboard = 1;
-    END;
-    IF c.controller.fb11_features.list.grep('tablesorter').size;
-        features.fb11feature_tablesorter = 1;
-    END;
-
     # Resolve dependencies between features
     IF (features.fb11feature_tablesorter);
         features.fb11feature_clipboard = 1;
