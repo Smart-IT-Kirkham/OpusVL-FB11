@@ -174,7 +174,7 @@ sub prepare {
     # It is the inverse of "if $from == schema->schema_version" and allows us to
     # prepare [$from, $to] without using the DB, if we can
     if (($from && $to) or
-        $from != schema->schema_version) 
+        $from != schema->schema_version)
     {
         $to ||= schema->schema_version;
         _ignoring_existing_files {
@@ -203,7 +203,6 @@ sub prepare {
             });
         };
     }
-    else {
 }
 
 sub cleanup {
