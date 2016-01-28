@@ -370,6 +370,9 @@ continues. You may have them replaced by providing the C<--force> option.
 You cannot prepare source files for a version you are not on. Past versions
 should be in version control.
 
+Note when I tried it it didn't produce source files with C<update>, so don't rely on this
+to update your DDL files correctly for release - instead run C<prepare> first.
+
 =head2 --force
 
 =head2 -f
