@@ -25,6 +25,7 @@ GetOptions(\%option,
     'force|f',
     'prepare|ddl',
     'verbose|v',
+    'dirty',
 );
 
 my $module = shift;
@@ -45,10 +46,13 @@ my $schema = $module->connect({
     user => $option{'user'},
     password => $option{'password'},
 });
+my $with_transactions = 1;
+$with_transactions = 0 if $option{dirty};
 my $dh = DBIx::Class::DeploymentHandler->new({ 
     schema => $schema,
     force_overwrite  => $option{force},
     script_directory => module_dir($module) . '/sql',
+    txn_wrap => $with_transactions,
 });
 
 my $version = $option{target} || $schema->schema_version;
