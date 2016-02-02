@@ -1,5 +1,11 @@
 {{ $NEXT }}
 
+0.014     2016-02-02 20:16:18+00:00 Europe/London
+
+  - Deployment handler improvements.
+  - Allow Catalyst config to be overridden with environment
+    variables.
+
 0.013     2016-01-27 09:12:05+00:00 Europe/London
 
   - Removed old features.
