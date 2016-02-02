@@ -33,6 +33,7 @@ requires 'Try::Tiny';
 requires 'Catalyst::Runtime' => '5.90051';
 requires 'Catalyst::Action::RenderView';
 requires 'Catalyst::Authentication::Store::DBIx::Class';
+requires 'Catalyst::Plugin::ConfigLoader::Environment';
 
 # Catalyst views
 requires 'Catalyst::View::TT';

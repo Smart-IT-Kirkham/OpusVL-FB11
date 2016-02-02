@@ -124,6 +124,7 @@ override _build_plugins => sub
     my $plugins = super();
 
     push @$plugins, qw(
+        ConfigLoader::Environment
         Static::Simple
         CustomErrorMessage
         Authentication
