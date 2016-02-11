@@ -28,6 +28,7 @@ requires 'HTTP::Status';
 requires 'DBIx::Class::DeploymentHandler';
 requires 'Pod::Usage';
 requires 'Try::Tiny';
+requires 'DateTime';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';

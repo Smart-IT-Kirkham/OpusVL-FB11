@@ -37,11 +37,6 @@ sub auto
     $users_rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     my @users = $users_rs->all;
     $c->stash->{users} = \@users;
-    my $param_def_rs = $c->model('FB11AuthDB::ParameterDefault');
-    $c->stash->{parameter_defaults} = [ $param_def_rs->all ];
-    my $param_rs = $c->model('FB11AuthDB::Parameter');
-    $c->stash->{parameters} = [ $param_rs->all ];
-
 }
 
 =head2 index
@@ -56,7 +51,6 @@ sub index
     : FB11Feature('User Administration')
 {
     my ( $self, $c ) = @_;
-    $self->_submit_param_form($c);
     $c->stash->{template} = 'fb11/admin/users/show_user.tt';
 }
 
@@ -139,7 +133,6 @@ sub show_user
 {
     my ( $self, $c ) = @_;
     my $form = $self->user_role_form;
-    $self->_submit_param_form($c);
     my $upload_form = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
     $c->stash->{form} = $form;
     $c->stash->{upload_form} = $upload_form;
@@ -197,23 +190,6 @@ sub show_user
     }
 }
 
-sub _submit_param_form :Private
-{
-    my ($self, $c) = @_;
-
-    if ($c->req->params->{submit_new_params}) {
-        my $new_param_value = $c->req->params->{parameter_name_new};
-        my $new_param_type  = $c->req->params->{parameter_type_new};
-        if ($new_param_value and $new_param_type) {
-            $c->model('FB11AuthDB::ParameterDefault')->create({
-                data            => $new_param_value,
-                parameter_id    => $new_param_type,
-            });
-            $c->flash->{status_msg} = "New parameter ${new_param_value} created";
-            $c->res->redirect($c->req->uri);
-        }
-    }
-}
 
 sub user_avatar
     : Chained('user_specific')
@@ -357,107 +333,6 @@ sub delete_user
     }
 }
 
-=head2 delete_parameter
-
-    End of chain.
-
-=cut
-
-sub delete_parameter
-    : Chained('user_specific')
-    : PathPart('deleteparameter')
-    : Args(1)
-    : FB11Feature('User Administration')
-{
-    my ( $self, $c, $param_id ) = @_;
-
-    $c->stash->{thisuser}->delete_related('users_parameters', { parameter_id => $param_id } );
-    $c->flash->{status_msg} = "Parameter deleted";
-    $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) );
-}
-
-=head2 add_parameter
-
-    End of chain.
-
-=cut
-
-sub add_parameter
-    : Chained('user_specific')
-    : PathPart('addparameter')
-    : Args(0)
-    : FB11Feature('User Administration')
-{
-    my ( $self, $c ) = @_;
-
-    if ( $c->req->method eq 'POST' )
-    {
-        my $parameter_id        = $c->req->param('parameter_id');
-        my $parameter_value     = $c->req->param('parameter_value');
-        $c->stash->{thisuser}->update_or_create_related('users_parameters', { parameter_id => $parameter_id, value => $parameter_value } );
-        $c->stash->{status_msg} = "Parameter updated";
-    }
-
-    # refresh show page..
-    $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::User')->action_for('show_user'), [ $c->stash->{thisuser}->id ] ) ) ;
-}
-
-=head2 get_parameter_input
-
-    End of chain.
-    Returns the input for a parameter.
-
-=cut
-
-sub get_parameter_input
-    : Chained('user_specific')
-    : PathPart('addparaminput')
-    : Args(1)
-    : FB11Feature('User Administration')
-{
-    my ( $self, $c, $param_id ) = @_;
-
-    my $param = $c->model('FB11AuthDB::Parameter')->find( $param_id );
-    return undef unless $param;
-
-    # get and values ther might be (for the user in the stash)...
-    my $up = $c->stash->{thisuser}->find_related('users_parameters', { parameter_id => $param_id } );
-    my $value = $up->value if ( $up );
-
-    # output correct HTML..
-    my $html = '';
-    if ( $param->data_type eq 'boolean' )
-    {
-        #$html .= q{<div class="btn-group" data-toggle="buttons">};
-        $html .= "<div class='radio'><label><input type='radio' class='form-control' name='parameter_value' value='1' id='parameter_value_true' " . ( $value ? "checked='1'" : '') . ">True</label></div>";
-        $html .= "<div class='radio'><label><input type='radio' class='form-control' name='parameter_value' value='0' id='parameter_value_false' " . ( $value ? '' : "checked='1'") . ">False</label></div>";
-        $html .= "</label>";
-    }
-    elsif ( $param->data_type eq 'select' )
-    {
-        $html .= q{<div class="form-group">};
-        $html .= "<select class='form-control' name='parameter_value'> \n";
-        foreach my $pdef ( $param->parameter_defaults )
-        {
-            my $thisval = $pdef->data;
-            my $selected = $thisval eq $value ? 'selected' : '';
-            $html .= "<option $selected value='$thisval'> $thisval</option>\n";
-        }
-        $html .= "</select></div> \n";
-    }
-    elsif ( $param->data_type eq 'integer' )
-    {
-        $html .= "<div class='form-group'><input type='text' class='form-control' name='parameter_value' value='$value' id='parameter_value' size='5'></div>";
-    }
-    else 
-    {
-        $html .= "<div class='form-group'><input type='text' class='form-control' name='parameter_value' value='$value' id='parameter_value'></div>";
-    }
-
-    $c->stash->{no_wrapper} = 1;
-    $c->stash->{html} = $html;
-
-}
 
 =head1 COPYRIGHT and LICENSE
 

@@ -29,7 +29,6 @@ sub setup_authdb
     );
 
     $class->many_to_many( roles         => 'users_roles',       'role'       );
-    $class->many_to_many( parameters    => 'users_parameters',  'parameter'  );
 }
 
 =head2 check_password
@@ -84,32 +83,6 @@ sub successful_login
 }
 
 
-=head2 getdata
-
-=cut
-
-sub getdata
-{
-    my $self = shift;
-    my ($key) = @_;
-    my $data = $self->find_related( 'users_data', { key => $key } );
-    return undef unless $data;
-    return $data->value;
-}
-
-=head2 setdata
-
-=cut
-
-sub setdata
-{
-    my $self = shift;
-    my ($key, $value) = @_;
-    my $data = $self->find_or_create_related( 'users_data', { key => $key } );
-    $data->update( { value => $value } );
-    return 1;
-}
-
 =head2 disable
 
     Disables a users account.
@@ -144,97 +117,6 @@ sub enable
         return 1;
     } 
     return 0;
-}
-
-=head2 params_hash
-
-    Finds all a users parameters, matches them with the value and returns a nice Hash ref.
-
-=cut
-
-sub params_hash
-{
-    my $self = shift;
-
-    my %hash;
-    foreach my $rp ( $self->users_parameters )
-    {   
-        next unless defined $rp;
-        next unless defined $rp->parameter;
-        $hash{  $rp->parameter->parameter } = $rp->value;
-    }
-
-    return \%hash;
-}
-
-=head2 set_param_by_name
-
-    Sets a users parameter by the parameter name.
-    Returns:
-        undef   - if the param could be found by name.
-        1       - if the param was set successfully.
-
-=cut
-
-sub set_param_by_name
-{
-    my $self  = shift;
-    my ( $param_name, $param_value ) = @_;
-
-    # find the param..
-    my $param = $self->result_source->schema->resultset('Parameter')->find( { parameter => $param_name } );
-
-    # return undef, if we could find the param..
-    return undef unless $param;
-
-    # add to users parameter...
-    $self->update_or_create_related( 'users_parameters', { value => $param_value, parameter_id => $param->id   } );
-
-    return 1; 
-}
-
-sub get_parameter_value_by_name
-{
-    my $self = shift;
-    my $val = $self->get_parameter_by_name(@_);
-    return unless $val;
-    return $val->value;
-}
-
-sub get_parameter_by_name
-{
-    my $self = shift;
-    my $name = shift;
-
-    my $param = $self->users_parameters->find({ 'parameter.parameter' => $name }, { join => [ 'parameter' ] });
-    return $param;
-}
-
-=head2 delete_param_by_name
-
-    Deltes a users parameter by the parameter name.
-    Returns:
-        undef   - if the param could be found by name.
-        1       - if the param was deleted successfully.
-
-=cut
-
-sub delete_param_by_name
-{
-    my $self  = shift;
-    my ( $param_name ) = @_;
-
-    # FIXME: this code blows, use get_parameter_by_name instead.
-    # find the param..
-    my $param = $self->result_source->schema->resultset('Parameter')->find( { parameter => $param_name } );
-
-    # return undef, if we could find the param..
-    return undef unless $param;
-
-    # delete to users parameter...
-    $self->delete_related( 'users_parameters', { parameter_id => $param->id } );
-
-    return 1; 
 }
 
 =head2 roles_allowed
