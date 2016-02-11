@@ -84,20 +84,6 @@ __PACKAGE__->add_unique_constraint("user_index", ["username"]);
 
 =head1 RELATIONS
 
-=head2 users_datas
-
-Type: has_many
-
-Related object: L<OpusVL::FB11::Schema::FB11AuthDB::Result::UsersData>
-
-=cut
-
-__PACKAGE__->has_many(
-  "users_datas",
-  "OpusVL::FB11::Schema::FB11AuthDB::Result::UsersData",
-  { "foreign.users_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
 
 =head2 users_roles
 
@@ -114,20 +100,6 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-=head2 users_parameters
-
-Type: has_many
-
-Related object: L<OpusVL::FB11::Schema::FB11AuthDB::Result::UsersParameter>
-
-=cut
-
-__PACKAGE__->has_many(
-  "users_parameters",
-  "OpusVL::FB11::Schema::FB11AuthDB::Result::UsersParameter",
-  { "foreign.users_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
-);
 
 __PACKAGE__->has_one(
     'avatar',

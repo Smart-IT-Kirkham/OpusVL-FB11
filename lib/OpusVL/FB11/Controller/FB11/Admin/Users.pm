@@ -37,11 +37,6 @@ sub auto
     $users_rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
     my @users = $users_rs->all;
     $c->stash->{users} = \@users;
-    my $param_def_rs = $c->model('FB11AuthDB::ParameterDefault');
-    $c->stash->{parameter_defaults} = [ $param_def_rs->all ];
-    my $param_rs = $c->model('FB11AuthDB::Parameter');
-    $c->stash->{parameters} = [ $param_rs->all ];
-
 }
 
 =head2 index

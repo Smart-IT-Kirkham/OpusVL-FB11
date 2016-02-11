@@ -18,7 +18,6 @@ my $adminrole;
 my $normalrole;
 my $adminuser;
 my $normaluser;
-my ($parameter_int, $parameter_boo, $parameter_sel, $parameter_str);
 
 my $path            = File::ShareDir::module_dir( 'TestApp' );
 my $authdb_config->{connect_info} =
@@ -36,7 +35,6 @@ $authdb->txn_begin;
 
 ok( $authdb->resultset('Role')->search()->delete,       "Deleted all Role's " );
 ok( $authdb->resultset('Aclrule')->search()->delete,    "Deleted all Aclrule's " );
-ok( $authdb->resultset('Parameter')->search()->delete,  "Deleted all Parameter's " );
 ok( $authdb->resultset('UsersFavourite')->search()->delete, "Deleted all Favourites" );
 ok( $authdb->resultset('UserAvatar')->search()->delete, "Deleted all users' avatars" );
 ok( $authdb->resultset('User')->search()->delete,       "Deleted all User's " );
@@ -109,13 +107,6 @@ foreach my $rule ( keys %rules)
 }
 
 diag("Created ACL Rules .. and linked to roles..");
-
-$parameter_int = $authdb->resultset('Parameter')->find_or_create( { data_type => 'integer', parameter => 'Integer' } );
-$parameter_boo = $authdb->resultset('Parameter')->find_or_create( { data_type => 'boolean', parameter => 'Boolean' } );
-$parameter_str = $authdb->resultset('Parameter')->find_or_create( { data_type => 'string',  parameter => 'String' }  );
-$parameter_sel = $authdb->resultset('Parameter')->find_or_create( { data_type => 'select',  parameter => 'Select' }  );
-$parameter_sel->add_to_parameter_defaults( { data => 'Option 1' } );
-$parameter_sel->add_to_parameter_defaults( { data => 'Option 2' } );
 
 $adminuser = $authdb->resultset('User')->create( { username => 'fb11admin', password => 'password', email => 'fb11@opusvl.com', name => 'FB11 Admin', tel => '07720061678' } );
 ok( $adminuser,     "Created Admin user" );
