@@ -83,32 +83,6 @@ sub successful_login
 }
 
 
-=head2 getdata
-
-=cut
-
-sub getdata
-{
-    my $self = shift;
-    my ($key) = @_;
-    my $data = $self->find_related( 'users_data', { key => $key } );
-    return undef unless $data;
-    return $data->value;
-}
-
-=head2 setdata
-
-=cut
-
-sub setdata
-{
-    my $self = shift;
-    my ($key, $value) = @_;
-    my $data = $self->find_or_create_related( 'users_data', { key => $key } );
-    $data->update( { value => $value } );
-    return 1;
-}
-
 =head2 disable
 
     Disables a users account.
