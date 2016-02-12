@@ -54,7 +54,7 @@ sub dh() {
         schema => schema,
         force_overwrite  => $option{force},
         script_directory => module_dir($module) . '/sql',
-        txn_wrap => $option{dirty}
+        txn_wrap => !$option{dirty}
     });
 }
 
