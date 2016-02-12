@@ -41,21 +41,26 @@ unless ($module && $command) {
 
 eval "require $module" or die $@;
 
-my $schema = $module->connect({
-    dsn => $option{'connection-info'} // '',
-    user => $option{'user'},
-    password => $option{'password'},
-});
-my $with_transactions = 1;
-$with_transactions = 0 if $option{dirty};
-my $dh = DBIx::Class::DeploymentHandler->new({ 
-    schema => $schema,
-    force_overwrite  => $option{force},
-    script_directory => module_dir($module) . '/sql',
-    txn_wrap => $with_transactions,
-});
+sub schema () {
+    state $schema = $module->connect({
+        dsn => $option{'connection-info'} // '',
+        user => $option{'user'},
+        password => $option{'password'},
+    });
+}
 
-my $version = $option{target} || $schema->schema_version;
+sub dh() {
+    state $dh = DBIx::Class::DeploymentHandler->new({ 
+        schema => schema,
+        force_overwrite  => $option{force},
+        script_directory => module_dir($module) . '/sql',
+        txn_wrap => $option{dirty}
+    });
+}
+
+sub version () {
+    $option{target} || schema->schema_version;
+}
 
 my %command = (
     init => \&init,
@@ -75,38 +80,34 @@ unless ($command{$command}) {
     );
 }
 
-$command{$command}->($dh);
+$command{$command}->();
 
 sub _ignoring_existing_files(&);
 
 sub init {
-    my $dh = shift;
-
     if ($option{prepare}) {
         _ignoring_existing_files {
-            $dh->prepare_version_storage_install;
+            dh->prepare_version_storage_install;
         };
     }
 
-    $dh->install_version_storage({
-        version => $version
+    dh->install_version_storage({
+        version => version
     });
 
     set_version();
 }
 
 sub set_version {
-    my $dh = shift;
-
     try {
-        $dh->add_database_version({ 
-            version => $version 
+        dh->add_database_version({ 
+            version => version 
         });
-        say "Database set to version $version";
+        say "Database set to version " . version;
     }
     catch {
         if (/Key.+already exists/) {
-            say "Already on version $version";
+            say "Already on version " . version;
             return 0;
         }
         else {
@@ -116,98 +117,95 @@ sub set_version {
 }
 
 sub downgrade {
-    my $dh = shift;
     if ($option{prepare}) {
         # unlikely we'd be here without the deploy, but you never know.
         _ignoring_existing_files {
-            $dh->prepare_deploy;
+            dh->prepare_deploy;
         };
 
         _ignoring_existing_files {
-            $dh->prepare_downgrade;
+            dh->prepare_downgrade;
         }
     }
 
-    $dh->downgrade({
-        to_version => $version
+    dh->downgrade({
+        to_version => version
     });
 }
 
 sub upgrade {
-    my $dh = shift;
-
     # We always prepare the upgrade for just one version. If we can't get
     # to $version-1 from where we are, someone else screwed up.
     if ($option{prepare}) {
         _ignoring_existing_files {
-            $dh->prepare_deploy;
+            dh->prepare_deploy;
         };
 
         _ignoring_existing_files {
-            $dh->prepare_upgrade({
-                from_version => $version - 1,
-                to_version => $version,
+            dh->prepare_upgrade({
+                from_version => version - 1,
+                to_version => version,
             });
         };
     }
 
-    $dh->upgrade({
-        from_version => $dh->database_version,
-        to_version => $version
+    dh->upgrade({
+        from_version => dh->database_version,
+        to_version => version
     });
 }
 
 sub deploy {
-    my $dh = shift;
     if ($option{prepare}) {
         _ignoring_existing_files {
-            $dh->prepare_deploy;
+            dh->prepare_deploy;
         };
     }
     
-    $dh->install({
-        version => $version
+    dh->install({
+        version => version
     });
 }
 
 sub prepare {
-    my $dh = shift;
+    my ($from, $to) = split /-/, version;
 
-    my ($from, $to) = split /-/, $version;
-
-    if ($from == $schema->schema_version) {
-        _ignoring_existing_files {
-            $dh->prepare_deploy
-        };
-        _ignoring_existing_files {
-            $dh->prepare_upgrade({
-                from_version => $from - 1,
-                to_version => $from
-            });
-        };
-    }
-    else {
-        $to ||= $schema->schema_version;
+    # Why this logic? It avoids running 'schema' unless strictly necessary.
+    # It is the inverse of "if $from == schema->schema_version" and allows us to
+    # prepare [$from, $to] without using the DB, if we can
+    if (($from && $to) or
+        $from != schema->schema_version)
+    {
+        $to ||= schema->schema_version;
         _ignoring_existing_files {
             if ($from > $to) {
-                $dh->prepare_downgrade({
+                dh->prepare_downgrade({
                     from_version => $from,
                     to_version => $to,
                 });
             }
             else {
-                $dh->prepare_upgrade({
+                dh->prepare_upgrade({
                     from_version => $from,
                     to_version => $to,
                 })
             }
         };
     }
+    else { # from == schema version
+        _ignoring_existing_files {
+            dh->prepare_deploy
+        };
+        _ignoring_existing_files {
+            dh->prepare_upgrade({
+                from_version => $from - 1,
+                to_version => $from
+            });
+        };
+    }
 }
 
 sub cleanup {
-    my $dh = shift;
-
     find(sub {
             # Not datamabases
             return $File::Find::prune = 1 if /_source/;
@@ -422,12 +420,12 @@ no effect when C<--force> is used.
 
 =head2 --dirty
 
-This performs database operations without a transaction wrapping them.  In normal
-operation if an operation fails the whole update fails causing the database state
-to remain as it was before.  On a development machine where things are slightly
-inconsistent (perhaps you created fields manually) it can be useful to just
-force through the operations and live with whatever errors occurred.  This generally
-shouldn't be done on production machines if possible.
+This performs database operations without a transaction wrapping them.  In
+normal operation if an operation fails the whole update fails causing the
+database state to remain as it was before.  On a development machine where
+things are slightly inconsistent (perhaps you created fields manually) it can be
+useful to just force through the operations and live with whatever errors
+occurred.  This generally shouldn't be done on production machines if possible.
 
 =head1 EXAMPLE PROCEDURE
 
