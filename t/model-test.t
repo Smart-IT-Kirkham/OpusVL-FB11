@@ -45,12 +45,12 @@ use Test::More;
     ok my $dom   = User->find({ name => 'Dom' }), 'Found user';
     ok my $bill   = User->find({ name => 'Bill' }), 'Found user';
 
-    $colin->set_roles($user);
-    $rich->set_roles($admin);
-    $nuria->set_roles($supervisor);
-    $macky->set_roles($admin, $supervisor, $user);
-    $dom->set_roles($client, $grunt);
-    $bill->set_roles($superuser);
+    $colin->set_roles([$user]);
+    $rich->set_roles([$admin]);
+    $nuria->set_roles([$supervisor]);
+    $macky->set_roles([$admin, $supervisor, $user]);
+    $dom->set_roles([$client, $grunt]);
+    $bill->set_roles([$superuser]);
 
     ok !$superuser->can_change_any_role, 'Check flag not set';
     $superuser->can_change_any_role(1);

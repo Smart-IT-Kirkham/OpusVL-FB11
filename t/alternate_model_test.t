@@ -39,10 +39,10 @@ use Test::More;
     ok my $nuria = User->find({ name => 'Nuria' }), 'Found user';
     ok my $macky = User->find({ name => 'Stuart' }), 'Found user';
     ok my $rich = User->find({ name => 'Rich' }), 'Found user';
-    $colin->set_roles($user);
-    $rich->set_roles($admin);
-    $nuria->set_roles($supervisor);
-    $macky->set_roles($admin, $supervisor, $user);
+    $colin->set_roles([$user]);
+    $rich->set_roles([$admin]);
+    $nuria->set_roles([$supervisor]);
+    $macky->set_roles([$admin, $supervisor, $user]);
 
 
     my $roles = $rich->roles_modifiable;

@@ -107,12 +107,12 @@ diag("Created ACL Rules .. and linked to roles..");
 
 $adminuser = $authdb->resultset('User')->create( { username => 'fb11admin', password => 'password', email => 'fb11@opusvl.com', name => 'FB11 Admin', tel => '07720061678' } );
 ok( $adminuser,     "Created Admin user" );
-$adminuser->set_roles( $adminrole );
+$adminuser->set_roles( [$adminrole] );
 ok( $adminuser->roles->find( { role => 'Administrator'} ), "Check admin user has admin role");
 
 $normaluser = $authdb->resultset('User')->create( { username => 'fb11user', password => 'password', email => 'fb11@opusvl.com', name => 'FB11 User', tel => '07720061678' } );
 ok( $normaluser,     "Created Normal user" );
-$normaluser->set_roles( $normalrole );
+$normaluser->set_roles( [$normalrole] );
 ok( $normaluser->roles->find( { role => 'Normal User'} ), "Check normal user has normal role");
 
 my $buff;
