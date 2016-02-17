@@ -128,10 +128,12 @@ sub downgrade {
         }
     }
 
-    dh->downgrade({
-        from_version => version + 1,
-        to_version => version
-    });
+    if (version == schema->schema_version) {
+        dh->downgrade_single_step({ version_set => [version, version - 1]});
+    }
+    else {
+        dh->downgrade_single_step({ version_set => [version + 1, version]});
+    }
 }
 
 sub upgrade {
@@ -186,6 +188,11 @@ sub prepare {
         warn "Preparing a step of more than one version is not advised"
             if abs($from - $to) != 1;
 
+        # Note we don't prepare_deploy here, for two reasons. Firstly, we should
+        # already have the two YAML files; secondly, in order to downgrade we
+        # have to make sure we downgrade what the YAML says, not what the schema
+        # module says, or we'll try to delete tables and columns that weren't
+        # actually created.
         _ignoring_existing_files {
             if ($from > $to) {
                 dh->prepare_downgrade({
