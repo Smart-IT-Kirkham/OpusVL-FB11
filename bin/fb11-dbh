@@ -310,7 +310,14 @@ and you'll have to attend to it manually.
 
 =head2 downgrade
 
+Currently not working.
+
+In theory this requires you to specify C<--target $version --prepare> to work.
+
 Destructive reverse of upgrade. Use at your own risk.
+
+Caveats:  Custom SQL and scripts run on upgrade will need to be dealt with 
+manually if necessary.
 
 =head2 prepare
 
