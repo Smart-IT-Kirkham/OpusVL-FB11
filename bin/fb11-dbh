@@ -168,15 +168,23 @@ sub deploy {
 }
 
 sub prepare {
-    my ($from, $to) = split /-/, version;
+    my ($to, $from) = split /-/, version;
 
-    # Why this logic? It avoids running 'schema' unless strictly necessary.
-    # It is the inverse of "if $from == schema->schema_version" and allows us to
-    # prepare [$from, $to] without using the DB, if we can
+    # If both are specified, it was --target 1-2; else it was --target 1
+    ($to, $from) = ($from, $to) if $from and $to;
+
+    # This awkward logic means we can prepare [$from, $to] without loading the
+    # schema, avoiding the need to connect
     if (($from && $to) or
-        $from != schema->schema_version)
+        $to != schema->schema_version)
     {
-        $to ||= schema->schema_version;
+        $from ||= schema->schema_version;
+
+        # Note this assumes we're using integer version numbers. DH might be
+        # able to tell me what "one step" looks like
+        warn "Preparing a step of more than one version is not advised"
+            if abs($from - $to) != 1;
+
         _ignoring_existing_files {
             if ($from > $to) {
                 dh->prepare_downgrade({
@@ -192,14 +200,14 @@ sub prepare {
             }
         };
     }
-    else { # from == schema version
+    else { # to (--target) == schema version
         _ignoring_existing_files {
             dh->prepare_deploy
         };
         _ignoring_existing_files {
             dh->prepare_upgrade({
-                from_version => $from - 1,
-                to_version => $from
+                from_version => $to - 1,
+                to_version => $to
             });
         };
     }
