@@ -129,10 +129,16 @@ sub downgrade {
     }
 
     if (version == schema->schema_version) {
-        dh->downgrade_single_step({ version_set => [version, version - 1]});
+        dh->downgrade({
+            from_version => version, 
+            to_version   =>version - 1
+        });
     }
     else {
-        dh->downgrade_single_step({ version_set => [version + 1, version]});
+        dh->downgrade({
+            from_version => version + 1,
+            to_version   => version
+        });
     }
 }
 
