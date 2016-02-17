@@ -129,6 +129,7 @@ sub downgrade {
     }
 
     dh->downgrade({
+        from_version => version + 1,
         to_version => version
     });
 }
