@@ -726,6 +726,7 @@ sub _fb11_stash_portlets
             {
                 local $c->stash->{breadcrumbs};
                 local $c->stash->{output_type} = 'plain';
+                local $c->stash->{template};
                 $c->visit( $portlet_action );
             }
 
