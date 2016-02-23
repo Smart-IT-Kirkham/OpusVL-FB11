@@ -20,7 +20,7 @@ button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
   background-color: #fafafa;
 }
 
-.well, .btn-primary {
+.well {
   border: 1px solid #b3b3b3;
   background-color: #fafafa;
   color: #333;
