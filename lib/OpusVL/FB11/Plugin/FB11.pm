@@ -712,12 +712,12 @@ sub _fb11_stash_portlets
     {   
         next unless $apc->portlet_actions;
 
-        $c->log->debug("FB11 - LOOKING FOR PORTLETS IN : " . $apc );
+        $c->log->debug("FB11 - LOOKING FOR PORTLETS IN : " . $apc ) if $c->debug;
 
         foreach my $portlet ( @{ $apc->portlet_actions } )
         {   
             my $portlet_action = $apc->action_for( $portlet->{actionname} );
-            $c->log->debug("FB11 - - Found portlet " . $portlet->{actionname});
+            $c->log->debug("FB11 - - Found portlet " . $portlet->{actionname}) if $c->debug;
 
             # dont stash if we can't access it..
             next unless $c->can_access( $portlet_action->reverse );
