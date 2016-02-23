@@ -712,11 +712,12 @@ sub _fb11_stash_portlets
     {   
         next unless $apc->portlet_actions;
 
-        $c->log->debug("FB11 - RREALLY LOOKING FOR PORTLETS IN : " . $apc ) if $c->debug;
+        $c->log->debug("FB11 - LOOKING FOR PORTLETS IN : " . $apc );
 
         foreach my $portlet ( @{ $apc->portlet_actions } )
         {   
             my $portlet_action = $apc->action_for( $portlet->{actionname} );
+            $c->log->debug("FB11 - - Found portlet " . $portlet->{actionname});
 
             # dont stash if we can't access it..
             next unless $c->can_access( $portlet_action->reverse );
@@ -743,47 +744,6 @@ sub _fb11_stash_portlets
     }
     $c->stash->{portlets} = \@portlets;
 }
-
-sub _fb11_fetch_portlets 
-{
-    my ( $c ) = @_;
-    my @portlets;
-    foreach my $apc ( @{ $c->fb11_controllers } )
-    {   
-        next unless $apc->portlet_actions;
-
-        $c->log->debug("FB11 - RREALLY LOOKING FOR PORTLETS IN : " . $apc ) if $c->debug;
-
-        foreach my $portlet ( @{ $apc->portlet_actions } )
-        {   
-            my $portlet_action = $apc->action_for( $portlet->{actionname} );
-
-            # dont stash if we can't access it..
-            next unless $c->can_access( $portlet_action->reverse );
-
-            # forward to the portlet action..
-            {
-                local $c->stash->{breadcrumbs};
-                local $c->stash->{output_type} = 'plain';
-                $c->visit( $portlet_action );
-            }
-
-            # take things from the stash (that the action should have just filled out)
-            push
-            (   
-                @portlets,
-                {   
-                    name    => $portlet->{value},
-                    html    => $c->res->body,
-                }
-            ) if($c->res->status == 200);
-            $c->res->status(200);
-            $c->res->body(undef);
-        }
-    }
-    return \@portlets;
-}
-
 
 sub _fb11_stash_searches 
 {
