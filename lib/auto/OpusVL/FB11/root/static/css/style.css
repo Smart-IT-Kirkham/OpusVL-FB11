@@ -125,9 +125,7 @@ img.responsive-img {
 
 .fb11-avatar-sidebar {
 	height: 25px;
-	width: 25px;
-	position: absolute;
-	top: 50px;
+    vertical-align: bottom;
 }
 
 i.superpose {
