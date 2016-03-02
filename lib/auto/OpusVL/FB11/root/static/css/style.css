@@ -179,3 +179,7 @@ table.dataTable thead .field.sorting_desc_disabled:after {
     margin-left: 0.4em;
     font-size: 90%;
 }
+
+table.dataTable span.export-only {
+    display: none;
+}
