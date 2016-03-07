@@ -1,5 +1,13 @@
 {{ $NEXT }}
 
+0.016     2016-03-07 16:36:01+00:00 Europe/London
+
+  - Added SetLoginTime plugin
+  - Fixed export of datatable fields
+  - Fixes to styling
+  - Fixed duplicated portlet in right-hand menu
+  - Removed some cruft
+
 0.015     2016-02-19 10:26:54+00:00 Europe/London
 
   - Deployment handler refactoring
