@@ -220,12 +220,6 @@ override _build_config => sub
         sender  => 
         {
             mailer          => 'SMTP',
-            mailer_args     => 
-            {
-                host            => 'mail.opusvl.com',
-                username        => 'username',
-                password        => 'password',
-            }
         }
     };
 
