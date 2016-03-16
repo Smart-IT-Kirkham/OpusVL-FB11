@@ -87,6 +87,7 @@
         </p>
     </div>
 
+[% IF c.config.enable_avatar == 1 %]
     <div class="col-sm-7">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -108,7 +109,7 @@
             </div>
         </div>
     </div>
-
+[% END %]
     <div class="col-sm-7">
     </div>
     [% END %]
