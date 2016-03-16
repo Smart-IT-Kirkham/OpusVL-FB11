@@ -40,6 +40,7 @@
   </div>
 </div>
 
+[% IF c.config.enable_favourites == 1 %]
 <div class="panel panel-default">
   <div class="panel-heading">
     <h3 class="panel-title">Favourites</h3>
@@ -56,12 +57,14 @@
       [% END %]
   </div>
 </div>
-
+[% END %]
 <script type="text/javascript">
   $(function() {
     var h1Text = $('h1').first().text();
     if (! (h1Text))
         h1Text = $('title').text();
+    [% IF c.config.enable_favourites == 1 %]
     $('.favourite-link').attr("data-link", "/fb11/ajax/core/favourite?title=" + h1Text + "&url=[% c.req.uri.path %]");
+    [% END %]
   });
 </script>
