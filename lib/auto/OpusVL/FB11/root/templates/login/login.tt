@@ -1,5 +1,5 @@
 <div class="row row-centered">
-    <div class="col-xs-6 col-centered">
+    <div class="col-sm-6 col-md-6 col-lg-6 col-xs-12 col-centered">
         <h1>[% c.config.name %]</h1>
         <div class="well">
             [% render_login_form | none %]
