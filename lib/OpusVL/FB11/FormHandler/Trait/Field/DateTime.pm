@@ -51,6 +51,24 @@ has deflate_method => (
     default => sub { \&deflate }
 );
 
+has time_zone => (
+    is => 'rw',
+    default => 'Europe/London',
+);
+
+has _dtf => (
+    is => 'ro',
+    lazy => 1,
+    default => sub {
+        my $self = shift;
+        DateTime::Format::Strptime->new(
+            pattern => $self->date_format,
+            time_zone => $self->time_zone,
+            on_error => 'croak'
+        );
+    }
+);
+
 around element_attr => sub {
     my $orig = shift;
     my $self = shift;
@@ -87,19 +105,19 @@ around element_class => sub {
 sub inflate_hardcoded
 {
     my ($self, $value) = @_;
-    my $dtf = DateTime::Format::Strptime->new(pattern => '%F', on_error => 'croak');
+    my $dtf = DateTime::Format::Strptime->new(
+        pattern => '%F',
+        time_zone => $self->time_zone,
+        on_error => 'croak'
+    );
     return $dtf->parse_datetime($value);
 }
 
 sub inflate {
     my ($self, $value) = @_;
-    my $dtf = DateTime::Format::Strptime->new(
-        pattern => $self->date_format,
-        on_error => 'croak'
-    );
 
     return try {
-        $dtf->parse_datetime($value);
+        $self->_dtf->parse_datetime($value);
     }
     catch {
         if (/does not match your pattern/) {
@@ -114,12 +132,7 @@ sub inflate {
 sub deflate {
     my ($self, $value) = @_;
 
-    my $dtf = DateTime::Format::Strptime->new(
-        pattern => $self->date_format,
-        on_error => 'croak'
-    );
-
-    return $dtf->format_datetime($value);
+    return $self->_dtf->format_datetime($value->set_time_zone($self->time_zone));
 }
 
 sub validate {
