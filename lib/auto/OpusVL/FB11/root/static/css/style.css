@@ -183,3 +183,9 @@ table.dataTable thead .field.sorting_desc_disabled:after {
 table.dataTable span.export-only {
     display: none;
 }
+
+/* Utility styles */
+.deleted {
+    text-decoration: line-through;
+    opacity: 0.4;
+}
