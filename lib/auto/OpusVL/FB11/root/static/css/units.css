@@ -11,6 +11,10 @@
     text-transform: none;
 }
 
+.unit.unit-percent:after {
+    content: '%';
+}
+
 .unit.unit-cc:after,
 .unit.unit-engine-size:after {
     content: 'cc';
