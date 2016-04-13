@@ -29,9 +29,9 @@
                 <div class="fb11-main-content 
                     [% IF hide_sidebar %]col-sm-12[% ELSE %]col-md-9[% END %]
                 ">
-                    [% IF status_msg %]
+                    [% FOREACH msg IN status_msg.list %]
                         <div class="alert alert-success">
-                            [% status_msg %]
+                            [% msg %]
                             <div class="pull-right">
                                 <a href="javascript:;" class="hide-alert">
                                     <i class="fa fa-remove"></i>
@@ -39,9 +39,19 @@
                             </div>
                         </div>
                     [% END %]
-                    [% IF error_msg %]
+                    [% FOREACH msg IN error_msg.list %]
                         <div class="alert alert-danger">
-                            [% error_msg %]
+                            [% msg %]
+                            <div class="pull-right">
+                                <a href="javascript:;" class="hide-alert">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </div>
+                        </div>
+                    [% END %]
+                    [% FOREACH msg IN warning_msg.list %]
+                        <div class="alert alert-warning">
+                            [% msg %]
                             <div class="pull-right">
                                 <a href="javascript:;" class="hide-alert">
                                     <i class="fa fa-remove"></i>
