@@ -1,5 +1,14 @@
 {{ $NEXT }}
 
+0.017     2016-04-28 13:01:39+01:00 Europe/London
+
+  - Added new warning_msg message type
+  - All message types can now be arrays
+  - Added class for "deleted" things
+  - Fixed myriad blank lines in emails (in fact in all output)
+  - DateTime field trait now understands timezones, defaulting to Europe/London
+  - Avatars and Favourites features are now option-controlled
+
 0.016     2016-03-07 16:36:01+00:00 Europe/London
 
   - Added SetLoginTime plugin
