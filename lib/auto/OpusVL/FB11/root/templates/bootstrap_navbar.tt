@@ -1,3 +1,20 @@
+[% BLOCK nav_bar_item %]
+    <dl class="list-unstyled">
+        [% IF group %] <dt><h4>[% group %]</h4></dt> [% END %]
+        <dd><ul class="list-unstyled">
+            [% FOR action IN actions %]
+                [%# I don't know what this is for. Why does the data structure
+                  contain stuff it doesn't need to? Fix this. %]
+                [% IF (action.controller.fb11_method_group == group) %]
+                    <li>
+                        <a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a>
+                    </li>
+                [% END %]
+            [% END %]
+        </ul></dd>
+    </dl>
+[% END %]
+
 <div class="navbar navbar-default yamm" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -18,24 +35,36 @@
         [% FOR app IN apps %]
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown" href="/[% app.controller.action_namespace %]">[% IF (app.controller.fb11_icon) %]<i class="fa fa-[% app.controller.fb11_icon %]"></i> [% END %][% app.controller.fb11_name %] <span class="caret"></span></a>
-              <ul class="dropdown-menu yamm-fw">
-                <div class="yamm-content">
-                  <div class="row">
-              [% FOR group IN app.actions %]
-                  [% IF group.group %]
-                        <ul class="col-md-[% IF app.actions.size > 1 %]6[% ELSE %]12[% END %] list-unstyled">
-                          <li><h4>[% group.group %]</h4>
-                          [% FOR action IN group.actions %]
-                              [% IF (action.controller.fb11_method_group == group.group) %]
-                                  <li><a href="[% c.uri_for(action.controller.action_for(action.actionname)) %]">[% action.value %]</a></li>
-                              [% END %]
-                          [% END %]
-                        </ul>
+              <div class="dropdown-menu yamm-fw">
+                <div class="yamm-content row">
+                  [% IF app.actions.size > 1; SET cols=6; ELSE; set cols=12; END %]
+                  <div class="col-md-[% cols %]">
+                    [% FOR group IN app.actions %]
+                        [% # Put the 1st, 3rd etc in the first (possibly only) column. Count is 1-indexed.
+                          IF loop.count % 2 == 0; NEXT; END
+                        %]
+                        [% INCLUDE nav_bar_item
+                            actions = group.actions
+                            group   = group.group
+                        %]
+                    [% END %]
+                  </div>
+                  [% IF app.actions.size > 1 %]
+                      <div class="col-md-[% cols %]">
+                        [% FOR group IN app.actions %]
+                            [% # Put the even-numbered ones in this col
+                              IF loop.count % 2 == 1; NEXT; END
+                            %]
+                            [% INCLUDE nav_bar_item
+                                actions=group.actions
+                                group=group.group
+                            %]
+                        [% END %]
+                      </div>
                   [% END %]
-              [% END %]
-                </div> <!-- /row -->
-              </div>  <!-- /yamm-content -->
-              </ul>
+
+                </div>  <!-- /yamm-content -->
+              </div>
             </li>
         [% END %]
       [% END %]
