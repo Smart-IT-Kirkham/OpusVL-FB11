@@ -62,6 +62,7 @@ package OpusVL::FB11::RolesFor::Controller::GUI;
 ##################################################################################################################################
 use strict;
 use Moose::Role;
+use List::UtilsBy 'sort_by';
 
 ##################################################################################################################################
 # moose calls.
@@ -275,7 +276,8 @@ sub application_action_list
         my $filtered = $self->_sorted_filtered_actions($c, $group->{actions});
         push @groups, { group => $group->{group}, actions => $filtered } if @$filtered;
     }
-    return \@groups;
+
+    return [ sort_by { $_->{group} } @groups];
 }
 
 
