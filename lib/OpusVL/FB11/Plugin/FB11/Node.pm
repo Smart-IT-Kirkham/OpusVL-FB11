@@ -1,5 +1,15 @@
 package OpusVL::FB11::Plugin::FB11::Node;
 
+=head1 NAME
+
+OpusVL::FB11::Plugin::FB11::Node - Represents a node in the access tree
+
+=head1 DESCRIPTION
+
+The L<OpusVL::FB11::Plugin::FB11::FeatureList> comprises these things.
+
+=cut
+
 use Moose;
 
 has node_name       => ( is => 'rw'       , isa => 'Str'                     , required => 1 );
@@ -24,14 +34,6 @@ has in_feature      => ( is => 'rw', isa => 'Bool', required => 1 );
 #   has home_navigation => ( is => 'rw'       , isa => 'Int'                     , default  => 0 );
 #   has portlet         => ( is => 'rw'       , isa => 'Int'                     , default  => 0 );
 #   has portlet_name    => ( is => 'rw'       , isa => 'Str'                     );
-
-=head1 COPYRIGHT and LICENSE
-
-Copyright (C) 2010 OpusVL
-
-This software is licensed according to the "IP Assignment Schedule" provided with the development project.
-
-=cut
 
 1;
 __END__
