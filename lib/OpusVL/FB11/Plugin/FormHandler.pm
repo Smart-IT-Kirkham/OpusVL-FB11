@@ -25,3 +25,44 @@ sub import {
 
 1;
 __END__
+
+=head1 NAME
+
+OpusVL::FB11::Plugin::FormHandler - L<HTML::FormHandler> boilerplate stuff
+
+=head1 DESCRIPTION
+
+This sets up your package with the defaults we use for FB11 FormHandler forms.
+It makes an HTML5, Bootstrap3 form, using L<HTML::FormHandler::Moose>.
+
+=head1 SYNOPSIS
+
+    package MyApp::FB11X::Plugin::Form::Magic;
+
+    use OpusVL::FB11::Plugin::FormHandler;
+
+    has_field .. # etc
+
+=head1 PROPERTIES
+
+Four properties are created:
+
+=over
+
+=item widget_wrapper
+
+For L<HTML::FormHandler>, defaults the widget wrapper to C<Bootstrap3>.
+
+=item ctx
+
+Holds the L<Catalyst> object, when the form is created as part of a request.
+
+=item update_only
+
+If you know what this does, you know what to do.
+
+=item +is_html5
+
+Sets the form to be HTML5 mode because it's 2016
+
+=back
