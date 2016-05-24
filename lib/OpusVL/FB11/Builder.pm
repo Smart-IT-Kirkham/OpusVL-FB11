@@ -146,6 +146,11 @@ override _build_config => sub
 {
     my $self   = shift;
     my $config = super(); # Get what CatalystX::AppBuilder gives you
+    # unbuffer stdout and stderr to prevent logging
+    # getting clogged up.
+    select( ( select(\*STDERR), $|=1 )[0] );
+    select( ( select(\*STDOUT), $|=1 )[0] );
+
 
     # .. get the path for this name space..
     my $path = File::ShareDir::module_dir( 'OpusVL::FB11' );
