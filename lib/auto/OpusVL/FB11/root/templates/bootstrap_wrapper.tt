@@ -1,4 +1,3 @@
-[% c.forward('/stash_portlets') %]
 <!doctype html>
 [%- USE today = DateTime(today = 1); -%]
 <html lang="en">
