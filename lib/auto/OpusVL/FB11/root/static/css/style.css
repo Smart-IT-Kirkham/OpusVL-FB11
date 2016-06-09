@@ -1,15 +1,56 @@
 body {
   font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
   font-size: 13px;
+  background-color: #eee;
 }
 
-a { color: #b3b3b3; }
+.fb11-block:first-child {
+	margin-top: 10px;
+}
+
+.fb11-block {
+	background-color: #fff;
+	padding-left: 30px;
+	padding-right: 30px;
+	padding-bottom: 30px;
+	padding-top: 1px;
+	margin-bottom: 30px;
+}
+
 a:focus, a:hover { color: #737070; }
-h1 { font-weight: 700; }
+h1 { 
+	font-weight: 200;
+	padding-bottom: 4px;
+	border-bottom: 2px solid #eee; 
+}
+
+.fb11-main-content > h1 {
+	margin-top: 50px;
+}
+
+.fb11-main-content > h1:first-child {
+	margin-top: 10px;
+}
+
+.fb11-sidebar {
+	padding-top: 10px;
+}
+
 /*
 button.btn-nav:before, a.btn-nav:before { content: "\f0c9\00a0"; }
 button.btn-ok:before, a.btn-ok:before { content: "\f058\00a0"; }
 button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
+
+body >.container-fluid:first-child {
+	background-color: #fff;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #d0d0d0;
+}
+
+.container-fluid {
+	padding-left: 30px;
+	padding-right: 30px;
+}
 
 .navbar-default .navbar-collapse {
   border-color: #b3b3b3;
@@ -17,7 +58,9 @@ button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
 
 .navbar-default {
   border-color: #b3b3b3;
-  background-color: #fafafa;
+  background-color: transparent;
+  border: none;
+  margin-bottom: 2px;
 }
 
 .well, .btn-primary {
@@ -32,10 +75,18 @@ button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
   border: 1px solid #b3b3b3;
 }
 
+.panel {
+	border-radius: 0px;
+	background-color: #fff;
+	border: none;
+}
+
 .panel-default, .panel-default>.panel-heading { border-color: #b3b3b3; }
 .panel-default>.panel-heading {
-  background-color: #b3b3b3;
-  color: #fff;
+  background-color: #f8f8f8;
+  border-color: #f8f8f8;
+  border-radius: 0px;
+  color: #888;
 }
 
 
@@ -87,6 +138,7 @@ img.responsive-img {
     font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
     font-weight: 400;
     font-size: 20px;
+    padding-left: 0px;
 }
 
 .navbar-brand > span.opusvl-blue { color: #6c9cd8; }
