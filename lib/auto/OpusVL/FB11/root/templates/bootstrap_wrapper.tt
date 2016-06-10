@@ -76,7 +76,7 @@
         <div class="container-fluid footer">
             <div class="row">
                 <div class="col-sm-12">
-                    <a href="http://www.opusvl.com" target="_blank"><img class="center-block" src="/static/images/built_with_flexibase.png" border="0"></a>
+                    <a href="http://www.opusvl.com" target="_blank"><img class="center-block" src="/static/images/opusvl_built_with_fb_footer.svg" border="0"></a>
                 </div>
             </div>
         </div>
