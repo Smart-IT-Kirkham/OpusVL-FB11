@@ -70,13 +70,13 @@
                 [% END %]
                 [% END %]
             </div>
+        </div>
             <!-- /Content -->
             <!-- Footer -->
-            <div class="footer">
-                <div class="row">
-                    <div class="col-sm-9">
-                        <a href="http://www.opusvl.com" target="_blank"><img class="center-block" src="/static/images/built_with_flexibase.png" border="0"></a>
-                    </div>
+        <div class="container-fluid footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="http://www.opusvl.com" target="_blank"><img class="center-block" src="/static/images/built_with_flexibase.png" border="0"></a>
                 </div>
             </div>
         </div>

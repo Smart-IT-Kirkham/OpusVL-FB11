@@ -133,7 +133,10 @@ img.responsive-img {
 }
 
 .footer {
-	margin-top: 20px;
+	margin-top: 0px;
+	background-color: #555;
+	padding-top: 30px;
+	padding-bottom: 30px;
 }
 
 .navbar-brand {
