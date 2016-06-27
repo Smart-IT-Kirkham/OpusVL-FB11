@@ -7,8 +7,9 @@ use Try::Tiny;
 sub _crudutil_dbic_process_form
 {
     my ($self, $c, %params) = @_;
+    die "item is required" unless exists($params{item});
     my $item = $params{item};
-    my $formgetter = $params{form_getter};
+    my $form = $params{form} or die "form is required";
     my $redirect_function = $params{success_redirect};
     unless (defined $redirect_function) {
         $redirect_function = sub { $c->uri_for($self->action_for('edit'), [shift->id]) };
@@ -16,7 +17,6 @@ sub _crudutil_dbic_process_form
     unless ($item) {
         $c->detach('/not_found');
     }
-    my $form = $self->$formgetter;
     my $caught_exception;
     try {
         $form->process(
@@ -52,7 +52,7 @@ OpusVL::FB11::RolesFor::Controller::CRUDUtil::DBIC - helpers for CRUD operations
 
 Controller:
 
-    package MRSleet::FB11X::Snow::Controller::Person; 
+    package MyApp::FB11X::Component::Controller::Person; 
 
     use strict;
     use warnings;
@@ -82,7 +82,7 @@ Controller:
         $c->stash(verb => 'Edit', template => 'myapp/people/person_form.tt');
         $self->_crudutil_dbic_process_form($c, 
             item => $c->model('MyAppDB::Person')->find($person_id),
-            form_getter => 'person_form',
+            form => $self->person_form,
             success_msg => 'Person created',
         );
     }
@@ -94,19 +94,19 @@ Controller:
     {
         $c->stash(verb => 'Create', template => 'myapp/people/person_form.tt');
         $self->_crudutil_dbic_process_form($c,
-            item => $c->model('MyAppDB')->new({}),
-            form_getter => 'person_form',
+            item => $c->model('MyAppDB::Person')->new({}),
+            form => $self->person_form,
             success_msg => 'Person saved',
         );
     }
 
 =head1 METHODS
 
-=head2 crudutil_dbic_process_form
+=head2 _crudutil_dbic_process_form
 
-    $self->crudutil_dbic_process_form($c,
+    $self->_crudutil_dbic_process_form($c,
         item => $c->model('MyAppDB::Person')->find($person_id),
-        form_getter => 'person_form',
+        form => $self->person_form,
         success_msg => 'Person created',
     );
 
@@ -128,11 +128,12 @@ Apart from the positional argument C<$c>, you also need to pass in the following
 
 The object that is to be edited and saved by the form
 
-=item form_getter
+=item form
 
-A method that will return a newly-constructed form.
+An L<HTML::FormHandler> ready to handle the item with the C<process> method.
 
-Either the name of a method on L<$self> or a CODEREF that will allow you to pass in L<$self> as its first parameter.
+It should have role L<HTML::FormHandler::TraitsFor::Model::DBIC>.
+Another role that implements the same interface should also work, but not tested so your mileage may vary.
 
 =item success_msg
 
@@ -144,7 +145,10 @@ A CODEREF that returns the URL to redirect the user to after a successful save.
 
 The default is as if you passed in this:
 
-    success_redirect => sub { $c->uri_for($self->action_for('edit'), [shift->id] },
+    success_redirect => sub {
+        my $item = shift ;
+        return $c->uri_for($self->action_for('edit'), [$item->id]);
+    },
 
 By default, it will redirect to the 'edit' action on the current controller, passing in a single argument, the
 id of the edited or created item.
