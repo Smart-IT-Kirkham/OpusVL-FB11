@@ -4,7 +4,7 @@ body {
   background-color: #eee;
 }
 
-.fb11-block:first-child {
+.fb11-card:first-child {
 	margin-top: 10px;
 }
 
@@ -26,7 +26,7 @@ h1 {
 }
 
 .fb11-main-content {
-	margin-top: 10px;
+    margin-bottom: 30px;
 }
 
 .fb11-main-content > h1 {
