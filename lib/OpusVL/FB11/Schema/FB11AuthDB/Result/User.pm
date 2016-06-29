@@ -89,13 +89,13 @@ __PACKAGE__->add_unique_constraint("user_index", ["username"]);
 
 Type: has_many
 
-Related object: L<OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole>
+Related object: L<OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersRole>
 
 =cut
 
 __PACKAGE__->has_many(
   "users_roles",
-  "OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole",
+  "OpusVL::AppKit::Schema::AppKitAuthDB::Result::UsersRole",
   { "foreign.users_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
 );
@@ -113,8 +113,8 @@ __PACKAGE__->has_one(
 
 use Moose;
 use File::ShareDir 'module_dir';
-use OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User;
-with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
+use OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::User;
+with 'OpusVL::AppKit::RolesFor::Schema::AppKitAuthDB::Result::User';
 __PACKAGE__->setup_authdb;
 
 # create an avatar for new users

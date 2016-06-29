@@ -32,11 +32,24 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 use Moose::Role;
 
 requires 'load_namespaces';
+requires 'load_classes';
+
+sub load_appkitdb
+{
+    my $package = shift;
+    # only load the core classes, not the parameter stuff.
+    $package->load_classes({ 'OpusVL::AppKit::Schema::AppKitAuthDB::Result' => 
+            [qw/Aclfeature Aclrule RoleAdmin Role UsersRole 
+                AclfeatureRole AclruleRole RoleAllowed/]
+    });
+}
 
 sub merge_authdb
 {
     my $class = shift;
     my $package = shift;
+    # we load the appkit results, then our own, one of which will overwrite an appkit one.
+    load_appkitdb($package);
     $package->load_namespaces(
         result_namespace => '+OpusVL::FB11::Schema::FB11AuthDB::Result',
         resultset_namespace => '+OpusVL::FB11::Schema::FB11AuthDB::ResultSet',
