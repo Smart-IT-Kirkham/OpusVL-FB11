@@ -72,7 +72,7 @@ sub merge_controller_actions
     my $controller = shift;
     my $fb11_controllers = shift;
 
-    return [] if !$controller->does('OpusVL::FB11::RolesFor::Controller::GUI'); 
+    return [] if !$controller->does('OpusVL::FB11::RolesFor::Controller::UI'); 
     my @navItems = @{$controller->navigation_actions};
     @navItems = () if(!@navItems);
     my @second = @navItems;
@@ -89,7 +89,7 @@ sub merge_controller_actions
         my $controllers = $fb11_controllers;
         for my $c (@$controllers)
         {
-            if($c != $controller && $c->does('OpusVL::FB11::RolesFor::Controller::GUI'))
+            if($c != $controller && $c->does('OpusVL::FB11::RolesFor::Controller::UI'))
             {
                 if($c->fb11_shared_module && $c->fb11_shared_module eq $controller->fb11_shared_module)
                 {
