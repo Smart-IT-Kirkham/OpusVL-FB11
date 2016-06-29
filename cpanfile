@@ -83,5 +83,5 @@ requires 'HTML::FormHandler::Widget::Field::HorizCheckboxGroup';
 requires 'HTML::FormHandler::Widget::Wrapper::Bootstrap3';
 requires 'HTML::FormHandler::TraitFor::Model::DBIC';
 
-requries 'OpusVL::AppKit::Schema::AppKitAuthDB';
-requries 'OpusVL::DBIC::Helper';
+requires 'OpusVL::AppKit::Schema::AppKitAuthDB';
+requires 'OpusVL::DBIC::Helper';
