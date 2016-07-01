@@ -1,5 +1,21 @@
 {{ $NEXT }}
 
+0.019     2016-07-01 16:05:29+01:00 Europe/London
+
+  - Unbuffer stdin/out to prevent buffering issues with docker/syslog
+    logging.
+  - Sort menu groups by name.
+  - Increase menu width.
+  - Added role for helping with edit and create operations.
+  - Removed portlets for now.
+  - Navigation menu html fixes.
+  - Removed unused templates
+  - Added documentation.
+  - New full width style.
+  - Split auth database code out to share with OpusVL::AppKit
+    to make conversion with older distributions simpler, and
+    even allowing modules that work with both modules.
+
 0.017     2016-04-28 13:01:39+01:00 Europe/London
 
   - Added new warning_msg message type
