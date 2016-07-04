@@ -1,5 +1,11 @@
 use strict;
 use Test::More;
+BEGIN {
+    unless ($ENV{APPKIT_RUN_CACHE_TESTS}) {
+        plan skip_all => "Not running cache tests without APPKIT_RUN_CACHE_TESTS";
+        exit;
+    }
+}
 use Child;
 use Plack::Runner;
 use FindBin qw($Bin);
