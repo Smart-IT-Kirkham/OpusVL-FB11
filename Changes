@@ -1,5 +1,10 @@
 {{ $NEXT }}
 
+0.021     2016-07-04 15:42:57+01:00 Europe/London
+
+  - Made the tests more reliable by making the cache test
+    that sometimes glitches optional.
+
 0.020     2016-07-04 13:28:31+01:00 Europe/London
 
   - Added back feature that allows controller to specifiy
