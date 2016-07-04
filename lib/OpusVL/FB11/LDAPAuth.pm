@@ -16,7 +16,7 @@ has user_field      => (is => 'ro', isa => 'Str', default => 'uid');
 sub server
 {
     my $self = shift;
-    return Net::LDAP->new($self->ldap_server) or die $@;
+    return Net::LDAP->new($self->ldap_server) || die $@;
 }
 
 =head2 check_password
