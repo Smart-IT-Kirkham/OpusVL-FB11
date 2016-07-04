@@ -1,5 +1,10 @@
 {{ $NEXT }}
 
+0.020     2016-07-04 13:28:31+01:00 Europe/London
+
+  - Added back feature that allows controller to specifiy
+    extra css and javascript files to include in page.
+
 0.019     2016-07-01 16:05:29+01:00 Europe/London
 
   - Unbuffer stdin/out to prevent buffering issues with docker/syslog
