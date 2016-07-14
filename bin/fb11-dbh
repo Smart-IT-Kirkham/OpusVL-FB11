@@ -87,10 +87,12 @@ sub _ignoring_existing_files(&);
 sub init {
     if ($option{prepare}) {
         _ignoring_existing_files {
+            say "Creating version table SQL";
             dh->prepare_version_storage_install;
         };
     }
 
+    say "Creating version table...";
     dh->install_version_storage({
         version => version
     });
@@ -118,20 +120,25 @@ sub set_version {
 
 sub downgrade {
     if ($option{prepare}) {
+        say "Preparing downgrade SQL";
         # unlikely we'd be here without the deploy, but you never know.
         _ignoring_existing_files {
             dh->prepare_deploy;
         };
 
         _ignoring_existing_files {
-            dh->prepare_downgrade;
+            dh->prepare_downgrade({
+                from_version => version,
+                to_version => version - 1,
+            });
         }
     }
 
     if (version == schema->schema_version) {
+        say "Downgrading from " . version . " to " . (version - 1);
         dh->downgrade({
             from_version => version, 
-            to_version   =>version - 1
+            to_version   => version - 1
         });
     }
     else {
@@ -146,6 +153,7 @@ sub upgrade {
     # We always prepare the upgrade for just one version. If we can't get
     # to $version-1 from where we are, someone else screwed up.
     if ($option{prepare}) {
+        say "Preparing upgrade from " . (version - 1) . " to " . version;
         _ignoring_existing_files {
             dh->prepare_deploy;
         };
@@ -158,6 +166,7 @@ sub upgrade {
         };
     }
 
+    say sprintf "Upgrading %s -> %s", dh->database_version, version;
     dh->upgrade({
         from_version => dh->database_version,
         to_version => version
@@ -167,10 +176,12 @@ sub upgrade {
 sub deploy {
     if ($option{prepare}) {
         _ignoring_existing_files {
+            say "Preparing deployment SQL for version " . version;
             dh->prepare_deploy;
         };
     }
     
+    say "Deploying version " . version;
     dh->install({
         version => version
     });
@@ -189,6 +200,7 @@ sub prepare {
     {
         $from ||= schema->schema_version;
 
+        say "Creating SQL for $from -> $to";
         # Note this assumes we're using integer version numbers. DH might be
         # able to tell me what "one step" looks like
         warn "Preparing a step of more than one version is not advised"
@@ -215,6 +227,7 @@ sub prepare {
         };
     }
     else { # to (--target) == schema version
+        say sprintf "Creating SQL for %s -> %s", $to - 1, $to;
         _ignoring_existing_files {
             dh->prepare_deploy
         };
