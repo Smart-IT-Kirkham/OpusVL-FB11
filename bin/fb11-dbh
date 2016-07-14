@@ -49,19 +49,21 @@ sub schema () {
     });
 }
 
+sub version () {
+    $option{target} // schema->schema_version
+        or die "Could not determine version from $module";
+}
+
+
 sub dh() {
     state $dh = DBIx::Class::DeploymentHandler->new({ 
         schema => schema,
         force_overwrite  => $option{force},
         script_directory => module_dir($module) . '/sql',
-        txn_wrap => !$option{dirty}
+        txn_wrap => !$option{dirty},
+        to_version => version,
     });
 }
-
-sub version () {
-    $option{target} // schema->schema_version;
-}
-
 my %command = (
     init => \&init,
     downgrade => \&downgrade,
@@ -167,10 +169,7 @@ sub upgrade {
     }
 
     say sprintf "Upgrading %s -> %s", dh->database_version, version;
-    dh->upgrade({
-        from_version => dh->database_version,
-        to_version => version
-    });
+    dh->upgrade;
 }
 
 sub deploy {

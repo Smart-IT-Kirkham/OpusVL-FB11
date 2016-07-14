@@ -6,6 +6,8 @@ use warnings;
 use Moose;
 extends 'DBIx::Class::Schema';
 
+our $VERSION='1';
+
 with 'OpusVL::DBIC::Helper::RolesFor::Schema::DataInitialisation';
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB';
 __PACKAGE__->load_appkitdb;
