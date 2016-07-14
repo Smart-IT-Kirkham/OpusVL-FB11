@@ -59,7 +59,7 @@ sub dh() {
 }
 
 sub version () {
-    $option{target} || schema->schema_version;
+    $option{target} // schema->schema_version;
 }
 
 my %command = (
@@ -192,6 +192,16 @@ sub prepare {
 
     # If both are specified, it was --target 1-2; else it was --target 1
     ($to, $from) = ($from, $to) if $from and $to;
+
+    if ($to eq 'version') {
+        # Should we hack the version to 1? We can't anyway (this doesn't work)
+        # but maybe the answer is no.
+
+        # no strict 'refs'; local ${schema . '::VERSION'} = 1;
+        say "Creating version table SQL.";
+        dh->prepare_version_storage_install;
+        return;
+    }
 
     # This awkward logic means we can prepare [$from, $to] without loading the
     # schema, avoiding the need to connect
@@ -441,6 +451,8 @@ accept a range.
 
 Defaults to the current schema version.
 
+The special target 'version' is used to prepare the version table files.
+
 =head2 --user=USER
 
 =head2 -u USER
@@ -487,6 +499,14 @@ occurred.  This generally shouldn't be done on production machines if possible.
 This will create YAML files that represent the schema (C<_source/deploy/*>), and
 the SQL associated therewith (C<PostgreSQL/deploy/*> and
 C<PostgreSQL/upgrade/*-*/>).
+
+You may wish to create the SQL and YAML without running it.
+
+    fb11-dbh MyApp::DB::Schema -f prepare
+    fb11-dbh MyApp::DB::Schema -t version -f prepare
+
+The special target 'version' creates the files for the DH versioning table
+without installing it. Note that no connection string is required.
 
 =item 1 If you have more changes to make, GOTO 2. The files will be overwritten
 as needed.
