@@ -3,28 +3,26 @@ use strict;
 use warnings;
 use 5.014;
 use Getopt::Long;
+use Pod::Usage;
 
 # PODNAME: init-fb11-auth-db
-# Not sure whether to handle other models or resultsets, because this script
-# will give all permissions to the new user, which is only really useful for
-# fb11admin. Plus, FB11AuthDB is the only one we can guarantee is using this
-# ACL setup.
+# We also should allow AppKitAuthDB
 my %option = (
     password  => 'password',
-    #    model     => 'FB11AuthDB',
+    model     => 'FB11AuthDB',
     #    resultset => 'User',
 );
 
 GetOptions (
     \%option,
     'password|p=s',
-    #    'model|m=s',
+    'model|m=s',
     #    'resultset|rs=s',
 );
-my $app = shift;
+my $app = shift or pod2usage({ -msg => "Missing app name", -exitval => 1 });;
 eval "require $app" or die $@;
 
-my $users = $app->model('FB11AuthDB')->resultset('User');
+my $users = $app->model($option{model})->resultset('User');
 my $user = $users->find({ username => 'fb11admin' });
 
 unless($user)
@@ -43,18 +41,18 @@ for my $section (keys %$feature_list) {
     my $roles = $feature_list->{$section};
 
     for my $role (keys %$roles) {
-        $app->model('FB11AuthDB')->resultset('Aclfeature')->find_or_create({
+        $app->model($option{model})->resultset('Aclfeature')->find_or_create({
             feature => $section . '/' . $role
         });
     }
 }
 
-my $admin_role = $app->model('FB11AuthDB')->resultset('Role')->find_or_create({
+my $admin_role = $app->model($option{model})->resultset('Role')->find_or_create({
     role => 'Admin'
 });
 
-$app->model('FB11AuthDB')->schema->txn_do(sub {
-    for my $feature ( $app->model('FB11AuthDB')->resultset('Aclfeature')->all ) {
+$app->model($option{model})->schema->txn_do(sub {
+    for my $feature ( $app->model($option{model})->resultset('Aclfeature')->all ) {
         $admin_role->add_to_aclfeatures($feature)
             unless $admin_role->aclfeatures->find($feature->id);
     }
@@ -89,3 +87,8 @@ performed.
 The default password is password because we'd mostly expect you to do this in
 dev. Use this to override that.
 
+=head2 --model
+
+=head2 -m
+
+The model to use. Defaults to FB11AuthDB, but you may wish to use AppKitAuthDB.
