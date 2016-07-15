@@ -35,11 +35,29 @@ h1 {
 
 .fb11-main-content > h1:first-child {
 	margin-top: 10px;
-./}
+}
 
 .fb11-sidebar {
 	padding-top: 10px;
 }
+
+nav > .nav {
+    /* @extends .fb11-card */
+	background-color: #fff;
+	margin-bottom: 0;
+	box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
+    padding: 0;
+}
+
+    nav .nav>li {
+        display:inline-block;
+    }
+
+    nav .nav>li.brand {
+        background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,
+            rgba(252,229,252,1) 82%, rgba(245,240,245,1) 100%);
+        box-shadow: 3px 0px 3px rgba(0,0,0,0.14);
+    }
 
 /*
 button.btn-nav:before, a.btn-nav:before { content: "\f0c9\00a0"; }
