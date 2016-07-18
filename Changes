@@ -1,5 +1,11 @@
 {{ $NEXT }}
 
+0.023     2016-07-18 11:07:38+01:00 Europe/London
+
+  - Deployment handler script improvements.
+  - FB11 navigation bar css.
+  - Render Bootstrap dropdowns inline in small mode
+
 0.022     2016-07-14 15:20:45+01:00 Europe/London
 
   - Clear up the parsley warnings by only binding if there is a form that wants it
