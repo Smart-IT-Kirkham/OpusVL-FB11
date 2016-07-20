@@ -19,6 +19,8 @@
             '/static/css/datatables.min.css',
             '/static/css/jquery.datetimepicker.css',
             '/static/css/vader/jquery-ui-1.9.0.custom.min.css',
+            '/static/css/chosen.min.css',
+            '/static/css/chosen.fb11.css',
         ],
         js          => [ 
             '/static/js/curry.js',
@@ -31,6 +33,7 @@
             '/static/js/jquery.tabify.js',
             '/static/js/fb11.js',
             '/static/js/fb11-datetimepicker.js',
+            '/static/js/chosen.jquery.min.js',
         ],
         jssrc       => [],
     };

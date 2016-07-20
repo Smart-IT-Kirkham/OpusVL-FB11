@@ -1,0 +1,20 @@
+.chosen-container-multi .chosen-choices li.search-choice {
+    padding: 3px 5px 3px 5px;
+    font-size: initial;
+    border-radius: 0;
+    padding; 3px;
+}
+
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close {
+    width: initial;
+    height: initial;
+    font-size: initial;
+    position: initial;
+    display: inline-block;
+    margin-left: 4px;
+}
+.chosen-container-multi .chosen-choices li.search-choice .search-choice-close:before {
+    /* @extends .fa .fa-close */
+    content: "\f00d";
+    font: normal normal normal 14px/1 FontAwesome;
+}
