@@ -9,6 +9,7 @@ body {
 }
 
 .fb11-card {
+    border: 1px solid #DCDCDC;
 	background-color: #fff;
 	padding-left: 30px;
 	padding-right: 30px;
@@ -257,6 +258,26 @@ div.dataTables_wrapper {
 /**
  * Tabify stuff
  */
+
+ul.nav.nav-tabs {
+    position: relative;
+    top: 2px;
+}
+
+ul.nav.nav-tabs li a {
+    border: none;
+    border-radius: 0;
+}
+
+ul.nav.nav-tabs li.active a {
+    box-shadow: none;
+    border: 1px solid #DCDCDC; /* $card_border_colour */
+    border-bottom: none;
+}
+
+ul.nav.nav-tabs li a:hover {
+    background-color: transparent;
+}
 
 .js-tab {
     display: none;
