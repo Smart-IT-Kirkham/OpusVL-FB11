@@ -280,7 +280,11 @@ ul.nav.nav-tabs li.active a {
 }
 
 ul.nav.nav-tabs li a:hover {
-    background-color: transparent;
+    background-color: rgba(127,127,127,0.2);
+}
+
+ul.nav.nav-tabs li.active a:hover {
+    background-color: white;
 }
 
 .js-tab {
