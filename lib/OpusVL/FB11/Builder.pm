@@ -178,6 +178,7 @@ override _build_config => sub
     # Configure View::FB11TT...
     my $tt_dirs = $config->{'View::FB11TT'}->{'INCLUDE_PATH'};
     # ...(add to include_path)..
+    push(@$tt_dirs, $path . '/root/formfu' );
     push(@$tt_dirs, $self->inherited_path_to('root','templates') );
     push(@$tt_dirs, $path . '/root/templates' );
     $config->{'View::FB11TT'}->{'INCLUDE_PATH'}         = $tt_dirs;
@@ -185,6 +186,8 @@ override _build_config => sub
     $config->{'View::FB11TT'}->{'WRAPPER'}              = 'wrapper.tt';
     $config->{'View::FB11TT'}->{'PRE_PROCESS'}          = 'preprocess.tt';
     $config->{'custom-error-message'}->{'view-name'} = 'FB11TT';
+
+    $config->{'no_formfu_classes'} = 1;
 
     # Configure session handling..
     $config->{'Plugin::Session'} ||= {};
