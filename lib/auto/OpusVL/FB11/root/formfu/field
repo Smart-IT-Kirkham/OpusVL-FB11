@@ -1,0 +1,4 @@
+[% self.container_attributes.class = self.container_attributes.class _ " form-group" %]
+<div[% process_attrs(self.container_attributes) %]>
+    [% content %]
+</div>

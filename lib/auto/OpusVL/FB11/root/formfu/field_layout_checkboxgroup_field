@@ -1,0 +1,60 @@
+<div [% process_attrs(self.attributes) %]>
+    [% FOREACH option = self.options %]
+        [% IF option.group %]
+            <div[% process_attrs(option.attributes) %]>
+                [% FOREACH item = option.group %]
+                    <div[% process_attrs(item.container_attributes) %]>
+                        [% IF self.reverse_group %]
+                            <label
+                                [% process_attrs(item.label_attributes) %]
+                            >
+                                <input 
+                                    name="[% self.nested_name %]" 
+                                    type="[% self.input_type %]" 
+                                    value="[% item.value %]"
+                                    [% process_attrs(item.attributes) %] 
+                                />
+                                [% item.label %]
+                            </label>
+                        [% ELSE %]
+                            <label[% process_attrs(item.label_attributes) %]>
+                                [% item.label%]
+                                <input 
+                                    name="[% self.nested_name %]" 
+                                    type="[% self.input_type %]" 
+                                    value="[% item.value %]"
+                                    [% process_attrs(item.attributes) %] 
+                                />
+                            </label>
+                        [% END %]
+                    </div>
+                [% END %]
+            </div>
+        [% ELSE %]
+            [% option.container_attributes.class = option.container_attributes.class _ " checkbox" %]
+            <div[% process_attrs(option.container_attributes) %]>
+                [% IF self.reverse_group %]
+                    <label[% process_attrs(option.label_attributes) %]>
+                        <input 
+                            name="[% self.nested_name %]" 
+                            type="[% self.input_type %]" 
+                            value="[% option.value %]"
+                            [% process_attrs(option.attributes) %] 
+                        />
+                        [% option.label %]
+                    </label>
+                [% ELSE %]
+                    <label[% process_attrs(option.label_attributes) %]>
+                        [% option.label %]
+                        <input 
+                            name="[% self.nested_name %]" 
+                            type="[% self.input_type %]" 
+                            value="[% option.value %]"
+                            [% process_attrs(option.attributes) %] 
+                        />
+                    </label>
+                [% END %]
+            </div>
+        [% END %]
+    [% END %]
+</div>
