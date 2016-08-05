@@ -25,6 +25,19 @@ body {
     padding-top: 30px;
 }
 
+.fb11-card-ancillary {
+    overflow-y: hidden;
+    position: relative;
+    top: -1px;
+    padding: 0 10px;
+    margin: 0 -10px;
+}
+
+.fb11-card-ancillary > .fb11-card {
+    border-top: none;
+    margin-top: 0;
+    margin-bottom: 10px;
+}
 a:focus, a:hover { color: #737070; }
 h1 { 
 	font-weight: 200;
