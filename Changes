@@ -1,5 +1,17 @@
 {{ $NEXT }}
 
+0.024     2016-08-09 13:47:30+01:00 Europe/London
+
+  - Turned on RECURSION for templates
+  - Added style for ancillary cards, i.e. cards that visually extend the
+    previous card
+  - Made FormFu more bootstrappy
+  - Some layout fixes
+  - Some JS fixes
+  - Some styling fixes too!
+  - Added shown-with.js
+  - Added chosen.js
+
 0.023     2016-07-18 11:07:38+01:00 Europe/London
 
   - Deployment handler script improvements.
