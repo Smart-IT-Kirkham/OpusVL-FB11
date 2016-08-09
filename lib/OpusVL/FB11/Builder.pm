@@ -185,6 +185,7 @@ override _build_config => sub
     $config->{'View::FB11TT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::FB11TT'}->{'WRAPPER'}              = 'wrapper.tt';
     $config->{'View::FB11TT'}->{'PRE_PROCESS'}          = 'preprocess.tt';
+    $config->{'View::FB11TT'}->{'RECURSION'}            = 1;
     $config->{'custom-error-message'}->{'view-name'} = 'FB11TT';
 
     $config->{'no_formfu_classes'} = 1;
