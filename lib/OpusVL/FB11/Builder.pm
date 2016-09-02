@@ -244,10 +244,9 @@ override _build_config => sub
     $config->{'Controller::Login'} = 
     {
         traits => [ 
-        '+OpusVL::FB11::TraitFor::Controller::Login::SetHomePageFlag', 
-        '+OpusVL::FB11::TraitFor::Controller::Login::NewSessionIdOnLogin', 
-        '-Login::WithRedirect',
-        '-RenderAsTTTemplate',
+            '+OpusVL::FB11::TraitFor::Controller::Login::SetHomePageFlag', 
+            '+OpusVL::FB11::TraitFor::Controller::Login::NewSessionIdOnLogin', 
+            '-RenderAsTTTemplate',
         ],
         login_form_class => 'OpusVL::FB11::Form::Login',
     };
