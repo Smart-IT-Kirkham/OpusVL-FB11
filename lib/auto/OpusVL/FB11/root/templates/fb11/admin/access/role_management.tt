@@ -1,21 +1,15 @@
 <div class="row">
-    <div class="col-sm-12">
-        <h1> Role Management </h1>
-    </div>
-</div>
-       [% PROCESS fb11/admin/access/side_bar.tt %]
-        <div class="col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title">Roles that are administered by [% c.stash.role.role %]</div>
-                </div>
-                <div class="panel-body">
-                    
-                    [% form.render | none %]
-                </div>
-            </div>
-        </div> 
-    </div>
+  [% PROCESS fb11/admin/access/side_bar.tt %]
+  [% IF c.stash.role %]
+    <div class="col-sm-6">
+      <div class="fb11-card">
+        <h1>Roles administered by
+          <strong>[% c.stash.role.role %]</strong>
+        </h1>
+        [% form.render | none %]
+      </div>
+    </div> 
+  [% END %]
 </div>
 
 
