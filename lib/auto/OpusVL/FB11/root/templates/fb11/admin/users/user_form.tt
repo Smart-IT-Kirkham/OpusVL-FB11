@@ -1,6 +1,5 @@
+<div class="fb11-card">
+  <h1>[% IF c.stash.h1 %][% c.stash.h1 %][% ELSE %] User [% END %] </h1>
 
-<h1>[% IF c.stash.h1 %][% c.stash.h1 %][% ELSE %] User [% END %] </h1>
-
-[% form.render | none %]
-
-
+  [% form.render | none %]
+</div>
