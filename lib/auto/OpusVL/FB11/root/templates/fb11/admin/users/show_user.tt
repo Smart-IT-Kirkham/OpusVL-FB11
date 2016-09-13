@@ -1,116 +1,127 @@
 <div class="row">
-    <div class="col-sm-5">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">Available Users</div>
+  <div class="col-sm-6">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <div class="panel-title">Available Users</div>
+      </div>
+
+      <div class="panel-body">
+        [% FOR user IN c.stash.users %]
+        <div class="row fb11-option-list">
+          <div class="col-sm-6 col-xs-6">
+            [% user.username %]
+          </div>
+
+          <div class="col-sm-6 col-xs-6">
+            <div class="btn-group" role="group" aria-label="...">
+              <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('show_user'), [ user.id ] ) %]" 
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Show User"
+                >
+                <i class="fa fa-user"></i>
+              </a>
+
+              <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('delete_user'), [ user.id ] ) %]"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Delete User"
+                >
+                <i class="fa fa-trash"></i>
+              </a>
+
+              <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('reset_password'), [ user.id ] ) %]"
+                class="btn btn-default"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Reset Password"
+                >
+                <i class="fa fa-key"></i>
+              </a>
             </div>
-            <div class="panel-body">
-                [% FOR user IN c.stash.users %]
-                <div class="row fb11-option-list">
-                    <div class="col-sm-6 col-xs-6">
-                        [% user.username %]
-                    </div>
-
-                    <div class="col-sm-6 col-xs-6">
-                        <div class="btn-group" role="group" aria-label="...">
-                            <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('show_user'), [ user.id ] ) %]" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Show User"><i class="fa fa-user"></i></a>
-
-                            <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('delete_user'), [ user.id ] ) %]" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Delete User"><i class="fa fa-trash"></i></a>
-
-                            <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('reset_password'), [ user.id ] ) %]" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Reset Password"><i class="fa fa-lock"></i></a>
-                        </div>
-                    </div>
-                </div>
-                [% END %]
-                <div class="row">
-                    <div class="col-sm-12">
-                        <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('adduser')) %]" class="btn btn-primary"><i class="fa fa-plus"></i> Add new user</a>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
-
+        [% END %]
         <div class="row">
+          <div class="col-sm-12">
+            <a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('adduser')) %]" class="btn btn-primary"><i class="fa fa-plus"></i> Add new user</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  [% IF c.stash.thisuser %]
+    <div class="col-sm-6 fb11-card">
+      <h1>Details for <strong>[% thisuser.name %]</strong></h1>
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Name</strong>
+        </div>
+        <div class="col-sm-6">
+          [% thisuser.name %]
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Email</strong>
+        </div>
+        <div class="col-sm-6">
+          [% thisuser.email %]
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-6">
+          <strong>Telephone</strong>
+        </div>
+        <div class="col-sm-6">
+          [% thisuser.tel %]
+        </div>
+      </div>
+      <p>
+        <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ thisuser.id ]) %]"
+          class="btn btn-primary"
+        >
+          <i class="fa fa-wrench"></i> Edit user
+        </a>
+      </p>
+    </div>
+
+    <div class="col-sm-6 fb11-card">
+      <h1>Roles for <strong>[% thisuser.name %]</strong></h1>
+      [% form.render | none %]
+    </div>
+
+    [% IF c.config.enable_avatar == 1 %]
+      <div class="col-sm-6">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <div class="panel-title">[% thisuser.name %]'s avatar</div>
+          </div>
+          <div class="panel-body">
             <div class="col-sm-12">
-                <div class="panel panel-default fb11-available-users">
-                </div>
+              <div class="col-sm-6 col-xs-6">
+                [% IF thisuser.avatar %]
+                <img class="fb11-user-avatar" alt="[% thisuser.name %] Avatar" src="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('user_avatar'), [ thisuser.id ]) %]">
+                [% ELSE %]
+                <p>Strange, no avatar set.</p>
+                [% END %]
+              </div>
+              <div class="col-sm-6 col-xs-6">
+                [% upload_form.render | none %]
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-
-    [% IF c.stash.thisuser %]
-    <div class="col-sm-7">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">Roles for [% thisuser.name %]</div>
-            </div>
-            <div class="panel-body">
-                [% form.render | none %]
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-7">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">Details for [% thisuser.name %]</div>
-            </div>
-            <div class="panel-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <strong>Name</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        [% thisuser.name %]
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <strong>Email</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        [% thisuser.email %]
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <strong>Telephone</strong>
-                    </div>
-                    <div class="col-sm-6">
-                        [% thisuser.tel %]
-                    </div>
-                </div>
-            </div>
-        </div>
-        <p>
-        <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ thisuser.id ]) %]" class="btn btn-primary"><i class="fa fa-wrench"></i> Edit user</a>
-        </p>
-    </div>
-
-[% IF c.config.enable_avatar == 1 %]
-    <div class="col-sm-7">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">[% thisuser.name %]'s avatar</div>
-            </div>
-            <div class="panel-body">
-                <div class="col-sm-12">
-                    <div class="col-sm-6 col-xs-6">
-                        [% IF thisuser.avatar %]
-                        <img class="fb11-user-avatar" alt="[% thisuser.name %] Avatar" src="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('user_avatar'), [ thisuser.id ]) %]">
-                        [% ELSE %]
-                        <p>Strange, no avatar set.</p>
-                        [% END %]
-                    </div>
-                    <div class="col-sm-6 col-xs-6">
-                        [% upload_form.render | none %]
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-[% END %]
-    <div class="col-sm-7">
-    </div>
+      </div>
     [% END %]
+  [% ELSE %]
+
+    <p class="alert alert-info">
+      <i class="fa fa-info-circle"></i> Select a user from the list.
+    </p>
+
+  [% END %]
 </div>
