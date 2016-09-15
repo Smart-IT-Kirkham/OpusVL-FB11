@@ -176,7 +176,7 @@ use Test::WWW::Mechanize::Catalyst 'TestApp';
         addrolebutton => 'Add Role',
         rolename => 'blah',
     }, 'Create a new role');
-    $mech->content_like(qr'Access Tree for blah'i, 'Check we have created role');
+    $mech->content_like(qr'Access Tree for'i, 'Check we have created role');
     $mech->post_ok('/fb11/admin/access/addrole', {
         addrolebutton => 'Add Role',
         rolename => 'blah',
