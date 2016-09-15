@@ -102,6 +102,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 ##################################################################################################################################
 use Moose;
 use File::ShareDir qw/module_dir/;
+use Try::Tiny;
 use OpusVL::FB11::Form::Login;
 
 ##################################################################################################################################
@@ -272,7 +273,9 @@ override _build_config => sub
     $config->{'View::Excel'} = { etp_config => { INCLUDE_PATH => [] }};
 
     # All FB11 modules should be using lib/auto style, so this fixes path_to
-    $config->{home} = File::ShareDir::module_path($self->appname);
+    # I have no fucking idea how to find out what the path should be if it
+    # doesn't exist
+    $config->{home} = try { File::ShareDir::module_dir($self->appname) } catch { undef };
 
     return $config;
 };
