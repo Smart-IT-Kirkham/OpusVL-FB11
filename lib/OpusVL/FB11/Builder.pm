@@ -270,6 +270,10 @@ override _build_config => sub
 
     # set this up empty for now.
     $config->{'View::Excel'} = { etp_config => { INCLUDE_PATH => [] }};
+
+    # All FB11 modules should be using lib/auto style, so this fixes path_to
+    $config->{home} = File::ShareDir::module_path($self->appname);
+
     return $config;
 };
 
