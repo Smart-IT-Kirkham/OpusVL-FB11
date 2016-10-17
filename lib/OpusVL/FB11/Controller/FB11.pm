@@ -2,6 +2,7 @@ package OpusVL::FB11::Controller::FB11;
 
 use Moose;
 use namespace::autoclean;
+use Template::Stash;
 
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
@@ -19,6 +20,19 @@ sub auto
     : FB11Feature('Password Change,User Administration,Role Administration')
 {
     my ($self, $c) = @_;
+    $Template::Stash::SCALAR_OPS->{truncate} = sub {
+        my $scalar = shift;
+        my ($length, $replacement) = @_;
+
+        my $substr = substr $scalar, 0, $length;
+
+        if (length $scalar > $length) {
+            $substr .= $replacement;
+        }
+
+        return $substr;
+
+    };
 }
 
 =head1 AUTHOR
