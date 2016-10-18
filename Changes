@@ -1,5 +1,13 @@
 {{ $NEXT }}
 
+0.026     2016-10-18 15:26:25+01:00 Europe/London
+
+  - Created "truncate" function for TT2 scalars
+  - Fixed some layout issues
+  - Sidebar is no longer hidden for no reason
+  - Fixed some tests
+  - Module dir is now added to search paths (lib/auto)
+
 0.025     2016-09-02 11:34:01+01:00 Europe/London
 
   - Blanket add width=100% to datatables to fix weird behaviour
