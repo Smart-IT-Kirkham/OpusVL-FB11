@@ -207,10 +207,15 @@ sub prepare {
 
     # This awkward logic means we can prepare [$from, $to] without loading the
     # schema, avoiding the need to connect
-    if (($from && $to) or
+    if ((defined $from && defined $to) or
         $to != schema->schema_version)
     {
-        $from ||= schema->schema_version;
+        $from //= schema->schema_version;
+
+        if ($from == 0) {
+            # prepare a deployment directly at $to
+            return dh->prepare_deploy;
+        }
 
         say "Creating SQL for $from -> $to";
         # Note this assumes we're using integer version numbers. DH might be
