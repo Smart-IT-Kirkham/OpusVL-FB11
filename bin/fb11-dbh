@@ -193,7 +193,7 @@ sub prepare {
     my ($to, $from) = split /-/, version;
 
     # If both are specified, it was --target 1-2; else it was --target 1
-    ($to, $from) = ($from, $to) if $from and $to;
+    ($to, $from) = ($from, $to) if defined $from and defined $to;
 
     if ($to eq 'version') {
         # Should we hack the version to 1? We can't anyway (this doesn't work)
