@@ -28,6 +28,7 @@ GetOptions(\%option,
     'force|f',
     'prepare|ddl',
     'verbose|v',
+    'deploy|d',
     'dirty',
 );
 
@@ -53,7 +54,7 @@ sub schema () {
 }
 
 sub version () {
-    $option{target} // schema->schema_version
+    $option{target} // $module->schema_version
         or die "Could not determine version from $module";
 }
 
@@ -161,14 +162,12 @@ sub deploy {
 sub prepare {
     my ($to, $from) = split /-/, version;
 
-    # If both are specified, it was --target 1-2; else it was --target 1
-    ($to, $from) = ($from, $to) if defined $from and defined $to;
+    # If both are specified, it was --target 1-2; else it was --target 1, or not
+    # specified (so we use schema_version)
+    # We don't support 0 - that's what 'version' and --deployment are for
+    ($to, $from) = ($from, $to) if $from and $to;
 
     if ($to eq 'version') {
-        # Should we hack the version to 1? We can't anyway (this doesn't work)
-        # but maybe the answer is no.
-
-        # no strict 'refs'; local ${schema . '::VERSION'} = 1;
         say "Creating version table SQL.";
         dh->prepare_version_storage_install;
         return;
@@ -176,14 +175,21 @@ sub prepare {
 
     # This awkward logic means we can prepare [$from, $to] without loading the
     # schema, avoiding the need to connect
-    if ((defined $from && defined $to) or
-        $to != schema->schema_version)
+    if (($from && $to) or
+        $to != $module->schema_version)
     {
-        $from //= schema->schema_version;
+        $from //= $module->schema_version;
 
         if ($from == 0) {
             # prepare a deployment directly at $to
             return dh->prepare_deploy;
+        }
+        if ($from > $to) {
+            pod2usage({ 
+                -verbose => 0,
+                -exitval => 2,
+                message => "Downgrading is not supported"
+            });
         }
 
         say "Creating SQL for $from -> $to";
@@ -192,37 +198,29 @@ sub prepare {
         warn "Preparing a step of more than one version is not advised"
             if abs($from - $to) != 1;
 
-        # Note we don't prepare_deploy here, for two reasons. Firstly, we should
-        # already have the two YAML files; secondly, in order to downgrade we
-        # have to make sure we downgrade what the YAML says, not what the schema
-        # module says, or we'll try to delete tables and columns that weren't
-        # actually created.
         _ignoring_existing_files {
-            if ($from > $to) {
-                dh->prepare_downgrade({
-                    from_version => $from,
-                    to_version => $to,
-                });
-            }
-            else {
-                dh->prepare_upgrade({
-                    from_version => $from,
-                    to_version => $to,
-                })
-            }
+            dh->prepare_upgrade({
+                from_version => $from,
+                to_version => $to,
+            })
         };
     }
     else { # to (--target) == schema version
-        say sprintf "Creating SQL for %s -> %s", $to - 1, $to;
-        _ignoring_existing_files {
-            dh->prepare_deploy
-        };
-        _ignoring_existing_files {
-            dh->prepare_upgrade({
-                from_version => $to - 1,
-                to_version => $to
-            });
-        };
+        if ($option{deploy}) {
+            say "Creating deployment files for $to";
+            _ignoring_existing_files {
+                dh->prepare_deploy
+            };
+        }
+        else {
+            say sprintf "Creating SQL for %s -> %s", $to - 1, $to;
+            _ignoring_existing_files {
+                dh->prepare_upgrade({
+                    from_version => $to - 1,
+                    to_version => $to
+                });
+            };
+        }
     }
 }
 
@@ -303,8 +301,7 @@ might as well just start again. That table holds no value.
 =back
 
 To perform an upgrade without releasing a new version of the schema, you can use
-C<-f> to recreate the current version's source files, or C<downgrade> and then
-C<upgrade> again.
+C<-f> to recreate the current version's source files.
 
 =head1 COMMANDS
 
@@ -335,20 +332,39 @@ With prepare, C<--target> may be a range, in the form of
 I<< <version> >>-I<< <version> >>. This will prepare the upgrade files for this
 version range. This requires the YAML files for those two versions.
 
-If C<--target> is not a range, then we can only prepare the deployment files for
-the version of the database we are currently on. Therefore, if the target
-version is not the current version, we prepare the version files for the range
-I<< <target> >>-I<< <current version> >>.
+If C<--target> is not a range, then it must be considered part of a range, and
+the current version is considered to be the other part. The exception is that if
+the target version I<is> the current version, we prepare an upgrade from the
+previous version instead. This is the default when C<--target> is not specified.
 
-    # Requires you are on version 10. Produces _source/deploy/10 YAML
-    fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema prepare 10
+With C<--deploy>, the files to deploy the current version are created. We cannot
+prepare a different version, because we don't have the code for that. Note that
+C<--target> takes priority.
+
+If the target version is literally C<version>, we prepare the table that DH
+itself uses to track versions.
+
+    # Prepares an upgrade from the current version to 10
+    # Requires source (YAML) files for version 10
+    fb11-dbh MyApp::DB::Schema --target 10 prepare
     
     # Requires _source/deploy/9 and _source/deploy/10 YAML files. Prepares
     # */upgrade/9-10 SQL files
-    fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema prepare 9-10
+    fb11-dbh MyApp::DB::Schema --target 9-10 prepare
 
-    # As above, but a downgrade
-    fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema prepare 10-9
+
+    # Prepare a full deployment of the current version
+    fb11-dbh MyApp::DB::Schema --deploy prepare
+
+prepare will I<never> connect to the database; it only ever uses existing YAML
+files from previous versions, and the value of C<schema_version> from your
+module.
+
+Recommended practice is to run C<prepare --deployment> when you first create
+your module, and then subsequently just run C<prepare> with no arguments
+whenever you increment your schema version. This produces a single deployment of
+your initial database state, and then an unbroken series of incremental changes.
+It is rare that an upgrade would merge two versions.
 
 =head2 init
 
@@ -387,10 +403,20 @@ If the source files already exist, this will be noted on STDOUT and processing
 continues. You may have them replaced by providing the C<--force> option.
 
 You cannot prepare source files for a version you are not on. Past versions
-should be in version control.
+should be in version control. This basically runs the L<prepare> command with
+sensible defaults.
 
-Note when I tried it it didn't produce source files with C<update>, so don't rely on this
-to update your DDL files correctly for release - instead run C<prepare> first.
+Note when I tried it it didn't produce source files with C<update>, so don't
+rely on this to update your DDL files correctly for release - instead run
+C<prepare> first.
+
+=head2 --deploy
+
+=head2 -d
+
+Prepare a deployment instead of an upgrade. By default, L<C<prepare>|/prepare>
+will create the upgrade from the previous version to the current one. This
+option creates a complete deployment at the current version.
 
 =head2 --force
 
@@ -452,11 +478,11 @@ occurred.  This generally shouldn't be done on production machines if possible.
 
 =over
 
-=item 1 Set the C<$VERSION> of your schema to the next integer.
+=item 1. Increment the value returned from C<MyApp::DB::Schema->schema_version>.
 
-=item 1 Make changes to your Result classes. These define your schema.
+=item 2. Make changes to your Result classes. These define your schema.
 
-=item 1 If this is the first version, deploy. If not, upgrade.
+=item 3. If this is the first version, deploy. If not, upgrade.
 
     fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema --prepare -f deploy
     fb11-dbh -c dbi:Pg:dbname=mydb MyApp::DB::Schema --prepare -f upgrade
@@ -473,15 +499,15 @@ You may wish to create the SQL and YAML without running it.
 The special target 'version' creates the files for the DH versioning table
 without installing it. Note that no connection string is required.
 
-=item 1 If you have more changes to make, GOTO 2. The files will be overwritten
+=item 4. If you have more changes to make, GOTO 2. The files will be overwritten
 as needed.
 
-=item 1 If you need to, you can edit the SQL files. If you re-run prepare, you
+=item 5. If you need to, you can edit the SQL files. If you re-run prepare, you
 will lose these changes.
 
-=item 1 Run cleanup. Commit what's left.
+=item 6. Run cleanup. Commit what's left.
 
-=item 1 Release all of this. GOTO 1.
+=item 7. Release all of this. GOTO 1.
 
 =back
 
@@ -489,14 +515,14 @@ will lose these changes.
 
 =over
 
-=item 1 Install the latest version of C<MyApp::DB::Schema>.
+=item 1. Install the latest version of C<MyApp::DB::Schema>.
 
-=item 1 If a new database, use C<deploy>. If not, use C<upgrade>
+=item 2. If a new database, use C<deploy>. If not, use C<upgrade>
 
     fb11-dbh -c dbi:Pg:dbname=mydb_prod MyApp::DB::Schema deploy
     fb11-dbh -c dbi:Pg:dbname=mydb_prod MyApp::DB::Schema upgrade
 
-=item 1 Log out. Make coffee.
+=item 3. Log out. Make coffee.
 
 =back
 
@@ -506,3 +532,13 @@ ensures that the module's sharedir is used to create and find these files, so as
 long as the deployment process is using sharedir (which it will, because of
 Dist::Zilla), you should always have the required files, and DH will just
 straight up run them.
+
+=head1 TODO
+
+=over
+
+=item Ask DeploymentHandler to get the versioning scheme, rather than assuming int.
+
+=item Use environment variables for stuff
+
+=back
