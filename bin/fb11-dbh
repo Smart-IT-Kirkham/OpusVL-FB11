@@ -123,37 +123,6 @@ sub set_version {
     };
 }
 
-sub downgrade {
-    if ($option{prepare}) {
-        say "Preparing downgrade SQL";
-        # unlikely we'd be here without the deploy, but you never know.
-        _ignoring_existing_files {
-            dh->prepare_deploy;
-        };
-
-        _ignoring_existing_files {
-            dh->prepare_downgrade({
-                from_version => version,
-                to_version => version - 1,
-            });
-        }
-    }
-
-    if (version == schema->schema_version) {
-        say "Downgrading from " . version . " to " . (version - 1);
-        dh->downgrade({
-            from_version => version, 
-            to_version   => version - 1
-        });
-    }
-    else {
-        dh->downgrade({
-            from_version => version + 1,
-            to_version   => version
-        });
-    }
-}
-
 sub upgrade {
     # We always prepare the upgrade for just one version. If we can't get
     # to $version-1 from where we are, someone else screwed up.
@@ -359,17 +328,6 @@ version.
 If you don't have those, C<--prepare> or the L<prepare> command can create the
 very latest step for you; but if you need previous versions, someone screwed up
 and you'll have to attend to it manually.
-
-=head2 downgrade
-
-Currently not working.
-
-In theory this requires you to specify C<--target $version --prepare> to work.
-
-Destructive reverse of upgrade. Use at your own risk.
-
-Caveats:  Custom SQL and scripts run on upgrade will need to be dealt with 
-manually if necessary.
 
 =head2 prepare
 
