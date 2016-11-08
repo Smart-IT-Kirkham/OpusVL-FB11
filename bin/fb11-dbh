@@ -164,7 +164,7 @@ sub prepare {
 
     # If both are specified, it was --target 1-2; else it was --target 1, or not
     # specified (so we use schema_version)
-    # We don't support 0 - that's what 'version' and --deployment are for
+    # We don't support 0 - that's what 'version' and --deploy are for
     ($to, $from) = ($from, $to) if $from and $to;
 
     if ($to eq 'version') {
@@ -178,19 +178,7 @@ sub prepare {
     if (($from && $to) or
         $to != $module->schema_version)
     {
-        $from //= $module->schema_version;
-
-        if ($from == 0) {
-            # prepare a deployment directly at $to
-            return dh->prepare_deploy;
-        }
-        if ($from > $to) {
-            pod2usage({ 
-                -verbose => 0,
-                -exitval => 2,
-                message => "Downgrading is not supported"
-            });
-        }
+        $from ||= $module->schema_version;
 
         say "Creating SQL for $from -> $to";
         # Note this assumes we're using integer version numbers. DH might be
@@ -271,8 +259,8 @@ sub _ignoring_existing_files(&) {
 
 =head1 SYNOPSIS
 
-    fb11-dbh [--target|-t VERSION] [--connection-info|-c DSN] [--force|-f]
-        [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD]
+    fb11-dbh [--help|-h|-?] [--target|-t VERSION] [--connection-info|-c DSN]
+        [--force|-f] [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD]
         [--verbose|-v] SCHEMA COMMAND
 
 
