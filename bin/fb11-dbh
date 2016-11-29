@@ -63,7 +63,7 @@ sub dh() {
     state $dh = DBIx::Class::DeploymentHandler->new({ 
         schema => schema,
         force_overwrite  => $option{force},
-        script_directory => module_dir($module) . '/sql',
+        #script_directory => module_dir($module) . '/sql',
         txn_wrap => !$option{dirty},
         to_version => version,
     });
