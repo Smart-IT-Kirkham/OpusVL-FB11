@@ -1,4 +1,5 @@
 package OpusVL::FB11::View::FB11TT;
+use URL::Encode;
 
 =head1 NAME
 
@@ -36,6 +37,9 @@ BEGIN {
 
 __PACKAGE__->config->{AUTO_FILTER} = 'html';
 __PACKAGE__->config->{ENCODING} = 'UTF-8';
+__PACKAGE__->config->{FILTERS} = {
+    uri_utf8 => \&URL::Encode::url_encode_utf8
+};
 
 =head2 as_list
 
