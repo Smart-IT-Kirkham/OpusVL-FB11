@@ -2,92 +2,108 @@ package OpusVL::FB11::Builder;
 
 =head1 NAME
 
-    OpusVL::FB11::Builder - Builder class for OpusVL::FB11
+OpusVL::FB11::Builder - L<CatalystX::AppBuilder> connector for FB11 apps.
 
 =head1 SYNOPSIS
 
-    See: OpusVL::FB11
+    package My::Website::Builder;
 
-    Inheriting this app using AppBuilder will give your application the following:
+    use Moose;
+    extends 'OpusVL::FB11::Builder';
 
-        Catalyst::Plugin::Static::Simple
-        Catalyst::Plugin::CustomErrorMessage
-        Catalyst::Plugin::Authentication
-        Catalyst::Plugin::Authorization::Roles
-        Catalyst::Plugin::Session
-        Catalyst::Plugin::Session::State::Cookie
-        CatalystX::SimpleLogin
-        CatalystX::VirtualComponents
-        OpusVL::FB11::Plugin::FB11
-
-        Controller::Root
-
-        View::FB11TT
-        View::Email
-        View::Download
-        View::JSON
-        View::Excel
-
-    Plugins
-        All the standard ones we use as per their documentation.
-        We have created our own FB11 Plugin, which is used to drive the AppKit specific code . At the moment it is used
-        for ACL rules, Portlets and Navigation... I guess in time it will evolve, but now works ok.
-
-    Controllers
-    
-    The Root controller is used to drive the GUI, it is pretty simple so could be over written if required (i think?).
-    The Root controller (and any you want to work with the GUI) are based on the L<OpusVL::FB11::Base::Controller>, this
-    turns a controller into an "FB11 aware" controller and it can tell the AppKit what its name is, what Porlets it has, etc.
-    See L<OpusVL::FB11::Base::Controller> for more information.
-
-    Views
-
-    Currently only the FB11TT view is used and this is to create the GUI... the view is configured for the GUI, but it could be reused (i think).
-    The other views are available to be utilised in furture development.
-
+    1;
 
 =head1 DESCRIPTION
 
-    This extends CatalystX::AppBuilder so the OpusVL::FB11 can be inherited.
+This module sets up a base class for all FB11 websites. It sets up default
+configuration and includes a whole bunch of modules for convenience, listed
+below.
 
-    Here we set the configuration required for the FB11 to run (inside another app)
-    
-    The supporting files like templates etc. are stored in the modules 'auto' directory
-    see. L<File::ShareDir>
+=over
 
-    This creates a catalyst app with the following Plugins loaded:
-        L<Catalyst::Plugin::Static::Simple>
-        L<Catalyst::Plugin::Unicode>
-        L<Catalyst::Plugin::CustomErrorMessage>
-        L<Catalyst::Plugin::Authentication>
-        L<Catalyst::Plugin::Authorization::Roles>
-        L<Catalyst::Plugin::Session>
-        L<Catalyst::Plugin::Session::State::Cookie>
-        L<CatalystX::SimpleLogin>
-        L<CatalystX::VirtualComponents>
-        L<OpusVL::FB11::Plugin::FB11>
+=item L<Catalyst::Plugin::Static::Simple>
 
-    This also configures the application in the following way:
+=item L<Catalyst::Plugin::CustomErrorMessage>
 
-        default_view                    - Set to 'FB11TT'
-        custom-error-message            - enable customer error msg.
-        static                          - set static to auto dir
-        OpusVL::FB11::Plugin::FB11  - used to config ACL rules.
-        View::FB11TT                  - set include paths, wrapper, etc.
-        Plugin::Authentication          - used to authenicate users.
-        View::Email                     - use to send any emails
-     
+=item L<Catalyst::Plugin::Authentication>
+
+=item L<Catalyst::Plugin::Authorization::Roles>
+
+=item L<Catalyst::Plugin::Session>
+
+=item L<Catalyst::Plugin::Session::State::Cookie>
+
+=item L<CatalystX::SimpleLogin>
+
+=item L<CatalystX::VirtualComponents>
+
+=item L<OpusVL::FB11::Plugin::FB11>
+
+=item L<OpusVL::FB11::Controller::Root>
+
+=item L<OpusVL::FB11::View::FB11TT>
+
+=item L<OpusVL::FB11::View::Email>
+
+=item L<OpusVL::FB11::View::Download>
+
+=item L<OpusVL::FB11::View::JSON>
+
+=item L<OpusVL::FB11::View::Excel>
+
+=back
+
+=head1 CONFIGURATION
+
+The default configuration creates TT2 and FormFu search paths for both the
+L<OpusVL::FB11> namespace and the app's own namespace. See
+L<File::ShareDir/module_dir>.
+
+=over
+
+=item default_view
+
+Set to 'FB11TT'
+
+=item custom-error-message
+
+enable customer error msg.
+
+=item static
+
+set static to auto dir
+
+=item OpusVL::FB11::Plugin::FB11
+
+used to config ACL rules.
+
+=item View::FB11TT
+
+set include paths, wrapper, etc.
+
+=item Plugin::Authentication
+
+used to authenicate users.
+
+=item View::Email
+
+use to send any emails
+
+=back
 
 =head1 SEE ALSO
 
-    L<File::ShareDir>,
-    L<CatalystX::AppBuilder>,
-    L<OpusVL::FB11>,
-    L<Catalyst>
+L<File::ShareDir>,
+
+L<CatalystX::AppBuilder>,
+
+L<OpusVL::FB11>,
+
+L<Catalyst>
 
 =head1 AUTHOR
 
-    OpusVL - www.opusvl.com
+OpusVL - www.opusvl.com
 
 =head1 COPYRIGHT and LICENSE
 
@@ -97,26 +113,10 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 
 =cut
 
-##################################################################################################################################
-# use lines.
-##################################################################################################################################
 use Moose;
 use File::ShareDir qw/module_dir/;
 use Try::Tiny;
 use OpusVL::FB11::Form::Login;
-
-##################################################################################################################################
-# moose calls.
-##################################################################################################################################
-#
-# The following Moose calls are used to interact with the CatalystX::AppBuilder. You can see it overrides the building of 2
-# AppBuilder variables forcing the AppBuilder to create our Builder object with our own Plugins and Config.
-#
-# FYI: the 2 varables are
-#   plugins     - ArrayRef of Plugin names to load.
-#   config      - HashRef of configuration for the application.
-#
-#################################################################################################################################
 
 extends 'CatalystX::AppBuilder';
 
@@ -153,12 +153,10 @@ override _build_config => sub
     select( ( select(\*STDOUT), $|=1 )[0] );
 
 
-    # .. get the path for this name space..
     my $path = File::ShareDir::module_dir( 'OpusVL::FB11' );
 
-    $config->{'default_view'}                                       = 'FB11TT';
-
-    $config->{'custom-error-message'}                               = { 'error-template' => 'error.tt' };
+    $config->{'default_view'} = 'FB11TT';
+    $config->{'custom-error-message'} = { 'error-template' => 'error.tt' };
 
     # .. add static dir into the config for Static::Simple..
     my $static_dirs = $config->{"Plugin::Static::Simple"}->{include_path};
