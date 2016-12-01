@@ -30,6 +30,7 @@ requires 'Pod::Usage';
 requires 'Try::Tiny';
 requires 'DateTime';
 requires 'List::UtilsBy';
+requires 'URL::Encode';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';
