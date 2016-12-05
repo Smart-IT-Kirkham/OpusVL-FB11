@@ -38,7 +38,10 @@ BEGIN {
 __PACKAGE__->config->{AUTO_FILTER} = 'html';
 __PACKAGE__->config->{ENCODING} = 'UTF-8';
 __PACKAGE__->config->{FILTERS} = {
-    uri_utf8 => \&URL::Encode::url_encode_utf8
+    uri_utf8 => sub {
+        $DB::single=1;
+        URL::Encode::url_encode_utf8(@_)
+    }
 };
 
 =head2 as_list
