@@ -1,5 +1,11 @@
 {{ $NEXT }}
 
+0.027     2016-12-16 16:29:56+00:00 Europe/London
+
+  - Added class when datatable gets reordered
+  - Created TT2 filter uri_utf8, to correctly encode unicode chars in URIs.
+  - Jenkins-ready
+
 0.026     2016-10-18 15:26:25+01:00 Europe/London
 
   - Created "truncate" function for TT2 scalars
