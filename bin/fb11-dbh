@@ -1,5 +1,8 @@
 #!perl
 
+# PODNAME: fb11-dbh
+# ABSTRACT: works with L<DBIx::Class::DeploymentHandler> to manage your database
+
 use strict;
 use warnings;
 use 5.014;
