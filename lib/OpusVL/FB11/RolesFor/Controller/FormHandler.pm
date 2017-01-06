@@ -22,7 +22,13 @@ sub has_forms {
             if ($@) {
                 die "Could not use form $form: $@\n";
             }
-            *{"${caller}::${method}"} = sub { shift;$form->new(name => $method, @_) };
+            
+            my $to_install = "${caller}::${method}";
+
+            if (defined &{$to_install}) {
+                die "Form name collides with existing method name: $method";
+            }
+            *{$to_install} = sub { shift;$form->new(name => $method, @_) };
         }
     }
 }
