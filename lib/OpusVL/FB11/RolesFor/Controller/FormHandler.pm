@@ -1,6 +1,7 @@
 package OpusVL::FB11::RolesFor::Controller::FormHandler;
 
 use Moose::Role;
+use Module::Runtime qw/require_module/;
 
 sub has_forms {
     my (%forms) = @_;
@@ -18,10 +19,7 @@ sub has_forms {
                 $base =~ s/::Controller::(.+)//g;
                 $form = "${base}::Form::${form}";
             }
-            eval "use $form";
-            if ($@) {
-                die "Could not use form $form: $@\n";
-            }
+            require_module $form;
             
             my $to_install = "${caller}::${method}";
 
