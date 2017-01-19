@@ -15,32 +15,4 @@ has_field 'submit'   => (
     element_attr => { class => ['btn', 'btn-primary'] }
 );
 
-override 'validate' => sub 
-{
-    my $self = shift;
-
-    my %values = %{$self->values}; # copy the values
-    my $rs = $self->ctx->model('FB11AuthDB::User')->search(
-        \[
-            'lower(username) = ?', [ dummy => lc ($self->values->{username}) ]
-        ]
-    );
-    unless (
-        $self->ctx->authenticate(
-            {
-                password => $self->values->{password},
-                dbix_class => {
-                    resultset => $rs,
-                }
-            },
-            ($self->has_authenticate_realm ? $self->authenticate_realm : ()),
-        )
-    ) {
-        $self->add_auth_errors;
-        return;
-    }
-    return 1;
-};
-
 1;
-
