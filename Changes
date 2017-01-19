@@ -1,5 +1,14 @@
 {{ $NEXT }}
 
+0.028     2017-01-19 12:57:10+00:00 Europe/London
+
+  - Login form should now work with any auth realm (does not assume the users
+    are in FB11AuthDB::User)
+  - Added shown-with.jquery.js and default hooks to run it
+  - Overriding a controller method with `has_forms` will now die instead of
+    silently Just Doing It
+  - Created Dockerfile for FB11 base image
+
 0.027     2016-12-16 16:29:56+00:00 Europe/London
 
   - Added class when datatable gets reordered
