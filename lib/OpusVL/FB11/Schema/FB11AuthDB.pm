@@ -6,7 +6,7 @@ use warnings;
 use Moose;
 extends 'DBIx::Class::Schema';
 
-our $VERSION = '0.028';
+our $VERSION = '0.029';
 
 with 'OpusVL::DBIC::Helper::RolesFor::Schema::DataInitialisation';
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB';
