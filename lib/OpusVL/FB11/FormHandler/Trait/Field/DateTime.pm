@@ -132,6 +132,7 @@ sub inflate {
 sub deflate {
     my ($self, $value) = @_;
 
+    return $value if not defined $value;
     return $self->_dtf->format_datetime($value->set_time_zone($self->time_zone));
 }
 
