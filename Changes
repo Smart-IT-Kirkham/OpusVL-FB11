@@ -1,5 +1,10 @@
 {{ $NEXT }}
 
+0.029     2017-02-09 10:36:24+00:00 Europe/London
+
+  - Blank date fields no longer cause errors
+  - shown-with JS now has its own events
+
 0.028     2017-01-19 12:57:10+00:00 Europe/London
 
   - Login form should now work with any auth realm (does not assume the users
