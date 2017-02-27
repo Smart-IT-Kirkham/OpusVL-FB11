@@ -1,7 +1,13 @@
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
-  font-size: 13px;
+  font-family: "Source Sans Pro", Helvetica, Arial, Geneva, sans-serif;
   background-color: #eee;
+  font-size: 16px;
+}
+
+/* kill bootstrap pixel-sized nonsense */
+.btn.btn,
+.form-control.form-control {
+    font-size: initial;
 }
 
 .fb11-card:first-child {
@@ -35,13 +41,21 @@ body {
     margin-top: 0;
     margin-bottom: 10px;
 }
+
 a:focus, a:hover { color: #737070; }
 h1 { 
-	font-weight: 200;
+	font-weight: lighter;
 	padding-bottom: 4px;
 	border-bottom: 2px solid #eee; 
+    color: #777;
 }
 
+    h1 strong.field.field-name {
+        font-weight: 400;
+        font-size: 130%;
+        padding-left: 0.1em;
+        color: #333;
+    }
     .fb11-card > h1:first-child {
         /* counteract the padding */
         margin-top: 0;
@@ -50,6 +64,11 @@ h1 {
 .fb11-main-content {
     margin-bottom: 10px;
 }
+    .fb11-main-content > h1 {
+        border-bottom: 2px solid #ddd;
+        padding-left: 0.1em;
+        margin-bottom: 0.7em;
+    }
 
 /* col-md breakpoint */
 @media (min-width: 992px) {
@@ -225,9 +244,8 @@ img.responsive-img {
 }
 
 .navbar-brand {
-    font-family: "Helvetica Neue", Helvetica, Arial, Geneva, sans-serif;
     font-weight: 400;
-    font-size: 20px;
+    font-size: 125%;
     padding-left: 0px;
 }
 
@@ -299,6 +317,7 @@ ul.nav.nav-tabs li a {
 }
 
 ul.nav.nav-tabs li.active a {
+    outline: none;
     box-shadow: none;
     border: 1px solid #DCDCDC; /* $card_border_colour */
     border-bottom: none;
