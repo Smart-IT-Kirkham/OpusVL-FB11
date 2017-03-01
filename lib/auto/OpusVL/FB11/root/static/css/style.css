@@ -1,12 +1,13 @@
 body {
   font-family: "Source Sans Pro", Helvetica, Arial, Geneva, sans-serif;
   background-color: #eee;
-  font-size: 16px;
+  font-size: initial;
 }
 
 /* kill bootstrap pixel-sized nonsense */
 .btn.btn,
-.form-control.form-control {
+.form-control.form-control,
+.dropdown-menu.dropdown-menu {
     font-size: initial;
 }
 
@@ -195,8 +196,10 @@ body >.container-fluid:first-child {
   color: #888;
 }
 
+.panel-title {
+    color: #444;
+}
 
-.panel-title { font-size: 14px; }
 .fb11-center {
 	position: relative;
 	left: 0;
