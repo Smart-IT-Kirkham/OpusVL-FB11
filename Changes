@@ -1,5 +1,9 @@
 {{ $NEXT }}
 
+0.030     2017-03-01 17:56:33+00:00 Europe/London
+
+  - Updated main font to Source Sans Pro
+
 0.029     2017-02-09 10:36:24+00:00 Europe/London
 
   - Blank date fields no longer cause errors
