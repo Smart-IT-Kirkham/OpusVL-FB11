@@ -9,7 +9,8 @@ body {
 .form-control.form-control,
 .dropdown-menu.dropdown-menu {
     font-size: initial;
-    height: initial;
+    height: 2.4em;
+    line-height:1;
 }
 
 .fb11-card:first-child {
