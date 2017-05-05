@@ -22,6 +22,7 @@ package OpusVL::FB11::Controller::Root;
 ############################################################################################################
 use Moose;
 use namespace::autoclean;
+use Data::Dump qw(pp);
 
 BEGIN { extends 'Catalyst::Controller'; }
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
@@ -128,6 +129,32 @@ sub end : ActionClass('RenderView')
         $c->response->headers->header('Strict-Transport-Security' => 'max-age=31536000; includeSubDomains');
     }
     $c->response->headers->header('X-Content-Type-Options' => 'nosniff');
+}
+
+=head2 debug
+
+Creates a /debug action, which only responds if debug mode is enabled. Dumps a
+bunch of information about the request and environment and stuff.
+
+=cut
+
+sub debug
+    : Path(/debug)
+    : Public
+{
+    my ($self, $c) = @_;
+
+    unless ($c->debug) {
+        $c->detach('/not_found');
+    }
+    # Make sure the evaluation order is right by doing them separately.
+    $c->stash(
+        stash => pp \%{ $c->stash }
+    );
+    $c->stash(
+        env => pp \%ENV,
+        config => pp $c->config,
+    );
 }
 
 =head1 AUTHOR
