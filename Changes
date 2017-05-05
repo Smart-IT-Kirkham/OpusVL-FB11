@@ -1,5 +1,12 @@
 {{ $NEXT }}
 
+0.032     2017-05-05 10:54:40+01:00 Europe/London
+
+  - Added missing uploadify template
+  - Added /debug, which will only respond if debug is enabled in the config
+  - Some docker improvements
+  - Some styling improvements
+
 0.031     2017-04-04 18:11:35+01:00 Europe/London
 
   - Fixed renering issues caused by new font, or rather by bootstrap using
