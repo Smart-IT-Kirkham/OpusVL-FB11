@@ -1,7 +1,7 @@
 #!perl
 
 # PODNAME: fb11-dbh
-# ABSTRACT: works with L<DBIx::Class::DeploymentHandler> to manage your database
+# ABSTRACT: works with L<OpusVL::FB11::DeploymentHandler> to manage your database
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ use 5.014;
 
 use Pod::Usage;
 use Try::Tiny;
-use DBIx::Class::DeploymentHandler;
+use OpusVL::FB11::DeploymentHandler;
 use Getopt::Long qw(:config gnu_getopt);
 use File::ShareDir 'module_dir';
 use File::Find;
@@ -60,7 +60,7 @@ sub version () {
 
 
 sub dh() {
-    state $dh = DBIx::Class::DeploymentHandler->new({ 
+    state $dh = OpusVL::FB11::DeploymentHandler->new({ 
         schema => schema,
         force_overwrite  => $option{force},
         #script_directory => module_dir($module) . '/sql',
@@ -266,7 +266,7 @@ sub _ignoring_existing_files(&) {
 
 =head1 DESCRIPTION
 
-Works with DBIx::Class::DeploymentHandler to upgrade or downgrade the database
+Works with OpusVL::FB11::DeploymentHandler to upgrade or downgrade the database
 between versions.
 
 I<SCHEMA> is the module name of the schema, e.g. C<MyApp::DBIC::Schema>.
