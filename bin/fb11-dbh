@@ -348,7 +348,7 @@ prepare will I<never> connect to the database; it only ever uses existing YAML
 files from previous versions, and the value of C<schema_version> from your
 module.
 
-Recommended practice is to run C<prepare --deployment> when you first create
+Recommended practice is to run C<prepare --deploy> when you first create
 your module, and then subsequently just run C<prepare> with no arguments
 whenever you increment your schema version. This produces a single deployment of
 your initial database state, and then an unbroken series of incremental changes.
