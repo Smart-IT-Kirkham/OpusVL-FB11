@@ -30,6 +30,7 @@ GetOptions(\%option,
     'verbose|v',
     'deploy|d',
     'dirty',
+    'use-moduledir',
 );
 
 my $module = shift;
@@ -63,7 +64,11 @@ sub dh() {
     state $dh = OpusVL::FB11::DeploymentHandler->new({ 
         schema => schema,
         force_overwrite  => $option{force},
-        #script_directory => module_dir($module) . '/sql',
+      (
+      $option{'use-moduledir'} 
+      ?     (script_directory => module_dir($module) . '/sql')
+      :     ()
+      ),
         txn_wrap => !$option{dirty},
         to_version => version,
     });
@@ -102,8 +107,6 @@ sub init {
     dh->install_version_storage({
         version => version
     });
-
-    set_version();
 }
 
 sub set_version {
@@ -154,7 +157,7 @@ sub deploy {
     }
     
     say "Deploying version " . version;
-    dh->install({
+    dh->deploy({
         version => version
     });
 }
@@ -406,6 +409,15 @@ Prepare a deployment instead of an upgrade. By default, L<C<prepare>|/prepare>
 will create the upgrade from the previous version to the current one. This
 option creates a complete deployment at the current version.
 
+=head2 --dirty
+
+This performs database operations without a transaction wrapping them.  In
+normal operation if an operation fails the whole update fails causing the
+database state to remain as it was before.  On a development machine where
+things are slightly inconsistent (perhaps you created fields manually) it can be
+useful to just force through the operations and live with whatever errors
+occurred.  This generally shouldn't be done on production machines if possible.
+
 =head2 --force
 
 =head2 -f
@@ -444,21 +456,17 @@ Username with which to connect to the database. Not used if not provided.
 
 Password with which to connect to the database. Not used if not provided.
 
+=head2 --use-moduledir
+
+Use previous behaviour of putting SQL in lib/auto. New behaviour is to put SQL
+next to lib, not inside it.
+
 =head2 --verbose
 
 =head2 -v
 
 Report when existing files are ignored. Default is to silently ignore them. Has
 no effect when C<--force> is used.
-
-=head2 --dirty
-
-This performs database operations without a transaction wrapping them.  In
-normal operation if an operation fails the whole update fails causing the
-database state to remain as it was before.  On a development machine where
-things are slightly inconsistent (perhaps you created fields manually) it can be
-useful to just force through the operations and live with whatever errors
-occurred.  This generally shouldn't be done on production machines if possible.
 
 =head1 EXAMPLE PROCEDURE
 
