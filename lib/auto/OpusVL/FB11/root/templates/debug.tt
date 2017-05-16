@@ -1,0 +1,8 @@
+<h1>Stash</h1>
+<pre>[% stash %]</pre>
+
+<h1>Environment</h1>
+<pre>[% env %]</pre>
+
+<h1>Config</h1>
+<pre>[% config %]
