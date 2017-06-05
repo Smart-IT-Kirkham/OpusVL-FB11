@@ -15,6 +15,7 @@ if ($ENV{LOCAL_LIBS}) {
 
 my $default_local_libs = dir($ENV{LOCAL_LIBS_FROM} || '/opt/local');
 if ( -e $default_local_libs ) {
+    say "Adding $_ to PERL5LIB",
     add_project_to_perl5lib($_) for $default_local_libs->children;
 }
 

@@ -43,6 +43,8 @@ __PACKAGE__->config->{FILTERS} = {
         URL::Encode::url_encode_utf8(@_)
     }
 };
+__PACKAGE__->config->{STRICT} = $ENV{FB11_STRICT_TT};
+__PACKAGE__->config->{DEBUG} = 'all' if $ENV{FB11_DEBUG_TT};
 
 =head2 as_list
 
