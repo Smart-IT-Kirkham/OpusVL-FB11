@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use v5.20;
 use Path::Class;
 
 my $PERL5LIB = $ENV{PERL5LIB} || '';
@@ -24,17 +25,18 @@ exec @ARGV if @ARGV;
 
 my @cmd;
 
+my $PORT = $ENV{FB11_PORT} || 5000;
+
 # in DEV_MODE we ignore MEMORY_LIMIT and WORKERS
 if ($ENV{DEV_MODE}) {
+    @cmd = (qw(/opt/perl5/bin/plackup --port), $PORT);
+
     if ($ENV{DEBUG_CONSOLE} or -t STDOUT) {
-        @cmd = qw(/opt/perl5/bin/perl -d /opt/perl5/bin/plackup --port 5000);
-    }
-    else {
-        @cmd = qw(/opt/perl5/bin/plackup --port 5000);
+        unshift @cmd, qw(/opt/perl5/bin/perl -d);
     }
 }
 else {
-    @cmd = qw(/opt/perl5/bin/starman --server Martian --listen :5000);
+    @cmd = (qw(/opt/perl5/bin/starman --server Martian --listen), ":$PORT");
     
     if ($ENV{MEMORY_LIMIT}) {
         push @cmd, '--memory-limit', $ENV{MEMORY_LIMIT};
