@@ -78,7 +78,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 use strict;
 use warnings;
 use OpusVL::FB11::Builder;
-our $VERSION = '0.033';
+our $VERSION = '0.034';
 
 ##################################################################################################################################
 # main #
