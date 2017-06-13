@@ -1,5 +1,11 @@
 {{ $NEXT }}
 
+0.033     2017-06-13 12:45:27+01:00 Europe/London
+
+  - Fixed submission of forms being butchered by DataTables
+  - TT2 can now be put in strict mode
+  - Updated docker entrypoint to new magical one
+
 0.032     2017-05-05 10:54:40+01:00 Europe/London
 
   - Added missing uploadify template
