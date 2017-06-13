@@ -13,10 +13,12 @@ if ($ENV{LOCAL_LIBS}) {
     }
 }
 
-my $default_local_libs = dir($ENV{LOCAL_LIBS_FROM} || '/opt/local');
-if ( -e $default_local_libs ) {
-    say "Adding $_ to PERL5LIB",
-    add_project_to_perl5lib($_) for $default_local_libs->children;
+if ($ENV{DEV_MODE}) {
+    my $default_local_libs = dir($ENV{LOCAL_LIBS_FROM} || '/opt/local');
+    if ( -e $default_local_libs ) {
+        say "Adding $_ to PERL5LIB",
+        add_project_to_perl5lib($_) for $default_local_libs->children;
+    }
 }
 
 $ENV{PERL5LIB} = $PERL5LIB;
@@ -68,5 +70,7 @@ sub add_dist_to_perl5lib {
     my $libdir = $distdir->subdir('lib');
     if (-e $libdir) {
         $PERL5LIB="$libdir:$PERL5LIB";
+        say "Installing deps for $libdir";
+        system( qw(/opt/perl5/bin/cpanm -l /opt/fb11 --installdeps), $libdir );
     }
 }
