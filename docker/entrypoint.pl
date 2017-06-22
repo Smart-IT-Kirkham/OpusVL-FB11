@@ -70,7 +70,7 @@ sub add_dist_to_perl5lib {
     my $libdir = $distdir->subdir('lib');
     if (-e $libdir) {
         $PERL5LIB="$libdir:$PERL5LIB";
-        say "Installing deps for $libdir";
-        system( qw(/opt/perl5/bin/cpanm -l /opt/fb11 --installdeps), $libdir );
+        say "Installing deps for $distdir";
+        system( qw(/opt/perl5/bin/cpanm -l /opt/fb11 --installdeps), $distdir );
     }
 }
