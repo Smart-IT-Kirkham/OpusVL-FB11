@@ -10,7 +10,7 @@ RUN mkdir /opt/fb11 \
     && useradd --home /opt/fb11 -r -g fb11 fb11 \
     && chown -R fb11: /opt/fb11
 
-ENV PERL5LIB /opt/fb11
+ENV PERL5LIB /opt/fb11/lib/perl5
 
 USER fb11
 
