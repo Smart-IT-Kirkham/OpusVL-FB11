@@ -5,23 +5,22 @@ use warnings;
 use v5.20;
 use Path::Class;
 
-my $PERL5LIB = $ENV{PERL5LIB} || '';
-
 if ($ENV{LOCAL_LIBS}) {
     for my $lib (split /:/, $ENV{LOCAL_LIBS}) {
-        add_project_to_perl5lib($lib);
+        $ENV{PERL5LIB} = join ':', add_project_to_perl5lib($lib), $ENV{PERL5LIB};
     }
 }
 
 if ($ENV{DEV_MODE}) {
     my $default_local_libs = dir($ENV{LOCAL_LIBS_FROM} || '/opt/local');
     if ( -e $default_local_libs ) {
-        say "Adding $_ to PERL5LIB",
-        add_project_to_perl5lib($_) for $default_local_libs->children;
+        my @p5l = map { add_project_to_perl5lib($_) } $default_local_libs->children;
+        $ENV{PERL5LIB} = join ':', @p5l, $ENV{PERL5LIB};
+
+        installdeps($_) for $default_local_libs->children;
     }
 }
 
-$ENV{PERL5LIB} = $PERL5LIB;
 $ENV{PSGI} ||= '/opt/perl5/bin/opusvl_fb11website.psgi';
 
 exec @ARGV if @ARGV;
@@ -62,15 +61,25 @@ exec @cmd;
 
 sub add_project_to_perl5lib {
     my $dir = dir(shift);
-    add_dist_to_perl5lib($_) for $dir->children;
+    return map { add_dist_to_perl5lib($_) } $dir->children;
 }
 sub add_dist_to_perl5lib {
     my $distdir = shift;
     return unless $distdir->is_dir;
     my $libdir = $distdir->subdir('lib');
     if (-e $libdir) {
-        $PERL5LIB="$libdir:$PERL5LIB";
-        say "Installing deps for $distdir";
-        system( qw(/opt/perl5/bin/cpanm -l /opt/fb11 --installdeps), $distdir );
+        say "Adding $libdir to PERL5LIB",
+        return $libdir;
+    }
+}
+sub installdeps {
+    my $distdir = shift;
+    return unless $distdir->is_dir;
+
+    for ($distdir->children) {
+        next unless $_->is_dir;
+        next unless -e $_->subdir('lib');
+        say "Installing deps for $_";
+        system( qw(/opt/perl5/bin/cpanm --installdeps -l), $ENV{HOME}, $_ );
     }
 }
