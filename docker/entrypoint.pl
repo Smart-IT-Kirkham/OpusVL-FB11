@@ -71,6 +71,7 @@ sub add_dist_to_perl5lib {
         say "Adding $libdir to PERL5LIB",
         return $libdir;
     }
+    return;
 }
 sub installdeps {
     my $distdir = shift;
