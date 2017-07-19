@@ -7,7 +7,10 @@ has_field 'submitok'   => (
     widget => "ButtonTag",
     widget_wrapper => "None",
     value => '<i class="fa fa-check"></i> OK',
-    element_attr => { value => 'submitok', class => ['btn', 'btn-primary'] }
+    element_attr => {
+        value => 'submitok',
+        class => ['btn', 'btn-primary']
+    }
 );
 
 has_field 'cancel'   => (
@@ -15,7 +18,10 @@ has_field 'cancel'   => (
     widget => "ButtonTag",
     widget_wrapper => "None",
     value => '<i class="fa fa-remove"></i> Cancel',
-    element_attr => { class => ['btn', 'btn-danger'] }
+    element_attr => { 
+        value => 'cancel',
+        class => ['btn', 'btn-danger']
+    }
 );
 
 no HTML::FormHandler::Moose;
