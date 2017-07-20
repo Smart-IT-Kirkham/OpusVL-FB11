@@ -31,6 +31,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 #####################################################################################################################
 
 use Moose;
+use Template::Constants qw(:debug);
 BEGIN { 
     extends 'Catalyst::View::TT::Alloy'; 
 }
@@ -44,7 +45,7 @@ __PACKAGE__->config->{FILTERS} = {
     }
 };
 __PACKAGE__->config->{STRICT} = $ENV{FB11_STRICT_TT};
-__PACKAGE__->config->{DEBUG} = 'all' if $ENV{FB11_DEBUG_TT};
+__PACKAGE__->config->{DEBUG} = ~DEBUG_UNDEF if $ENV{FB11_DEBUG_TT};
 
 =head2 as_list
 
