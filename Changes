@@ -1,5 +1,13 @@
 {{ $NEXT }}
 
+0.034     2017-07-24 13:56:30+01:00 Europe/London
+
+  - Fixed display of JS tabs
+  - TT2 debug mode now avoids using undef warnings, because it's useless
+  - Confirmation forms now submit a cancel value when cancelled
+  - Fixes to entrypoint
+  - FB11 user now has its own local lib for cpanm
+
 0.033     2017-06-13 12:45:27+01:00 Europe/London
 
   - Fixed submission of forms being butchered by DataTables
