@@ -17,7 +17,9 @@ if ($ENV{DEV_MODE}) {
         my @p5l = map { add_project_to_perl5lib($_) } $default_local_libs->children;
         $ENV{PERL5LIB} = join ':', @p5l, $ENV{PERL5LIB};
 
-        installdeps($_) for $default_local_libs->children;
+        if ($ENV{INSTALLDEPS}) {
+            installdeps($_) for $default_local_libs->children;
+        }
     }
 }
 
