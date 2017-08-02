@@ -83,6 +83,6 @@ sub installdeps {
         next unless $_->is_dir;
         next unless -e $_->subdir('lib');
         say "Installing deps for $_";
-        system( qw(/opt/perl5/bin/cpanm --installdeps -nvl), $ENV{HOME}, $_ );
+        system( qw(/opt/perl5/bin/cpanm -M http://cpan.opusvl.com --installdeps -nvl), $ENV{HOME}, $_ );
     }
 }
