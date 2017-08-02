@@ -13,5 +13,6 @@ RUN mkdir /opt/fb11 \
 ENV PERL5LIB /opt/fb11/lib/perl5
 
 USER fb11
+WORKDIR /opt/fb11
 
 ENTRYPOINT [ "/entrypoint.pl" ]
