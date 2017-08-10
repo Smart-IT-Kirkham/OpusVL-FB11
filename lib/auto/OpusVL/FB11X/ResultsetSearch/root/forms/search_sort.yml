@@ -1,0 +1,32 @@
+elements:
+
+  - type: Multi
+    label: Order By
+    elements:
+
+      - type: Hidden
+        name: page
+        value: 1
+        force_default: 1
+        constraints:
+          - Integer
+
+      - type: Select
+        name: _sort_key
+
+      - type: Select
+        name: _sort_dir
+        options:
+          - [ 'asc',  'Ascending'  ]
+          - [ 'desc', 'Descending' ]
+
+  - type: Select
+    name: _rows
+    label: Rows per page
+    options:
+      - [ '10', '10' ]
+      - [ '15', '15' ]
+      - [ '20', '20' ]
+      - [ '30', '30' ]
+      - [ '40', '40' ]
+      - [ '50', '50' ]

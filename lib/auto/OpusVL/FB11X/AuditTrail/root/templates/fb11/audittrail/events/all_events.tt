@@ -1,0 +1,7 @@
+
+[% META appkitfeature_tablesorter = 1 %]
+
+<h1>Events</h1>
+
+[% PROCESS modules/audittrail/events/event_search.tt %]
+

@@ -1,0 +1,7 @@
+
+<h1>Create System Parameter</h1>
+
+<div class="content_block">
+	[% form.render | none %]
+</div>
+

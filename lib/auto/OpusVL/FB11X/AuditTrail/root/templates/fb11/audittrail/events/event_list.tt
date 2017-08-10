@@ -1,0 +1,33 @@
+
+<!--
+   - Displays a list of events. We should probably integrate this layout into
+   - the search page maybe?
+   -->
+
+<table class="tablesorter">
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Source</th>
+			<th>Type</th>
+			<th>Details</th>
+            <th>Username</th>
+            <th>IP Address</th>
+		</tr>
+	</thead>
+	<tbody>
+		[% FOREACH event IN events %]
+			<tr>
+				<td>[% date_short(event.event_date) %]&nbsp;[% time_short(event.event_date) %]</td>
+				<td>
+					(TBC)
+				</td>
+				<td>[% event.event | html %]</td>
+				<td>[% event.details | html %]</td>
+                <td>[% event.username %]</td>
+                <td>[% event.ip_addr %]</td>
+			</tr>
+		[% END %]
+	</tbody>
+</table>
+	

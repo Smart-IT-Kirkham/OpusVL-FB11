@@ -1,0 +1,33 @@
+
+[% SET search_pager         = search_results.pager       %]
+[% SET search_total_entries = search_pager.total_entries %]
+
+<fieldset>
+	<legend>[% IF search_legend %] [% search_legend %] [% ELSE %] Search Results [% END %]</legend>
+
+	[% IF search_total_entries > 0 %]
+
+        [% PROCESS modules/resultsetsearch/search_results_header.tt %]
+
+			<table class="tablesorter"> 
+				<thead>
+					[% PROCESS search_head %]
+				</thead>
+				<tbody>
+					[% WHILE (entry = search_results.next) %]
+						[% PROCESS search_row %]
+					[% END %]
+				</tbody>
+			</table>
+
+        [% IF fieldset_footer %]
+        [% fieldset_footer %]
+        [% END %]
+
+	[% ELSE %]
+
+		<p>No rows found</p>
+
+	[% END %]
+
+</fieldset>

@@ -1,0 +1,36 @@
+
+indicator: submitbutton
+elements:
+
+  - type: Fieldset
+    elements:
+
+      - type: Text
+        label: Parameter *
+        name: name
+        constraints:
+          - Required
+          - type: DBIC::Unique
+            model: SysParams
+            resultset: SysInfo
+            message: This parameter already exists.
+          - type: Regex
+            regex: ^[0-9a-zA-Z_]+\.[0-9a-zA-Z\.-_\-]+$
+            message: Must be of format 'category.name'
+ 
+      - type: Text
+        label: Value
+        name: value
+
+  - type: Submit
+    name: submitbutton
+    value: Save
+    attributes:
+      class: submit submit_ok
+
+  - type: Submit
+    name: cancelbutton
+    value: Cancel
+    attributes:
+      class: submit submit_cancel
+
