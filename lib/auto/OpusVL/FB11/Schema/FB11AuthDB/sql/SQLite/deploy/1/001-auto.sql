@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::SQLite
--- Created on Thu Aug 10 09:30:49 2017
+-- Created on Thu Aug 10 11:15:23 2017
 -- 
 
 ;
@@ -80,7 +80,7 @@ CREATE TABLE users (
   last_login timestamp,
   last_failed_login timestamp
 );
-CREATE UNIQUE INDEX user_index ON users (username);
+CREATE UNIQUE INDEX users_username ON users (username);
 --
 -- Table: parameter_defaults
 --

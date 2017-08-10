@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::PostgreSQL
--- Created on Thu Aug 10 09:30:50 2017
+-- Created on Thu Aug 10 11:15:23 2017
 -- 
 ;
 --
@@ -92,7 +92,7 @@ CREATE TABLE "users" (
   "last_login" timestamp,
   "last_failed_login" timestamp,
   PRIMARY KEY ("id"),
-  CONSTRAINT "user_index" UNIQUE ("username")
+  CONSTRAINT "users_username" UNIQUE ("username")
 );
 
 ;

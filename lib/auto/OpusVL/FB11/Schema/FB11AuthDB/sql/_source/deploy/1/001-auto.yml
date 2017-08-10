@@ -620,7 +620,7 @@ schema:
           fields:
             - username
           match_type: ''
-          name: user_index
+          name: users_username
           on_delete: ''
           on_update: ''
           options: []

@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::MySQL
--- Created on Thu Aug 10 09:30:49 2017
+-- Created on Thu Aug 10 11:15:23 2017
 -- 
 ;
 SET foreign_key_checks=0;
@@ -85,7 +85,7 @@ CREATE TABLE `users` (
   `last_login` timestamp NULL,
   `last_failed_login` timestamp NULL,
   PRIMARY KEY (`id`),
-  UNIQUE `user_index` (`username`)
+  UNIQUE `users_username` (`username`)
 ) ENGINE=InnoDB;
 --
 -- Table: `parameter_defaults`
