@@ -1,9 +1,9 @@
-FROM perl-5.20-dev as build
+FROM quay.io/opusvl/perl-5.20-dev:master as build
 
 RUN /opt/perl5/bin/cpanm Term::ReadKey HTML::FormFu Catalyst::Runtime DBIx::Class Devel::Confess
 RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com OpusVL::FB11 Starman
 
-FROM perl-5.20 as release
+FROM quay.io/opusvl/perl-5.20:master as release
 COPY --from=build /opt/perl5 /opt/perl5
 
 COPY entrypoint.pl /
