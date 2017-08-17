@@ -1,17 +1,11 @@
-node {
-   stage('Preparation') { // for display purposes
-      // Get some code from a GitHub repository
-	  checkout scm
-   }
+pipeline {
+    agent any
 
-   stage('Install deps') {
-      sh "/opt/perl5/bin/cpanm -M http://cpan.opusvl.com --installdeps ."
-   }
-   stage('Test') {
-      sh "/opt/perl5/bin/prove -I ~/perl5/lib/perl5/ -l t --timer --formatter=TAP::Formatter::JUnit  > ${BUILD_TAG}-junit.xml"
-   }
-   stage('Results') {
-      junit '*junit.xml'
-   }
-
+    stages {
+        stage('Build for production') {
+            steps {
+                sh "docker build --target release -t fb11:${env.BRANCH_NAME} ."
+            }
+        }
+    }
 }
