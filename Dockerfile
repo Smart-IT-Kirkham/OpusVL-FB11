@@ -22,4 +22,6 @@ WORKDIR /opt/fb11
 ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 
-COPY OpusVL-FB11-$version.tar.gz
+COPY OpusVL-FB11-$version.tar.gz .
+RUN /opt/perl5/bin/cpanm ./OpusVL-FB11-$version.tar.gz \
+    && rm ./OpusVL-FB11-$version.tar.gz 
