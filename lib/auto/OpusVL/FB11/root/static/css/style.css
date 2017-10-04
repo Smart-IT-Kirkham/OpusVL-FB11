@@ -9,9 +9,9 @@ body {
 .form-control.form-control,
 .dropdown-menu.dropdown-menu {
     font-size: initial;
+    line-height: 1.6;
 }
 
-.btn.btn,
 .form-control.form-control {
     height: 2.4em;
     line-height:1;
