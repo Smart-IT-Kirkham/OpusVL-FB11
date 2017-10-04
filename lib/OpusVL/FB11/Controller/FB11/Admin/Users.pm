@@ -92,10 +92,10 @@ sub adduser
 
         $c->flash(
             status_msg => 'User added',
-            thisuser   => $new_user,
         );
         
         $c->res->redirect($c->uri_for($self->action_for('show_user'), [ $new_user->id ]));
+        $c->detach;
     }
 
     $c->stash->{h1}       = "Add User";
