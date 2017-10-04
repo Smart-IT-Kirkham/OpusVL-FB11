@@ -37,15 +37,3 @@
 </script>
 
 <script type="text/javascript" src="/static/js/bootstrap-table.min.js"></script>
-<script type="text/javascript">
-    $(function() {
-        if (document.title == '[% c.controller.fb11_name %]') {
-            var h1 = $('h1:first').text();
-            if (h1) {
-                document.title = h1 + " | " + "[% c.controller.fb11_name %]";
-            }
-        }
-    });
-</script>
-
-
