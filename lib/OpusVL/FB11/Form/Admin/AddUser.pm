@@ -30,7 +30,7 @@ has_field 'email' => (
 has_field 'tel' => (
     type        => 'Text',
     label       => 'Telephone',
-    required    => 1,
+    required    => 0,
 );
 
 has_field 'status' => (
@@ -54,7 +54,7 @@ has_field 'submit'   => (
 before 'validate_form' => sub {
     my ($self) = @_;
     if ($self->update_only) {
-        my @fields = qw(username password name email tel status);
+        my @fields = qw(username password name email status);
         $self->field($_)->required(0)
             for @fields;
     }
