@@ -86,3 +86,6 @@ sub installdeps {
         system( qw(/opt/perl5/bin/cpanm -M http://cpan.opusvl.com --installdeps -nvl), $ENV{HOME}, $_ );
     }
 }
+
+# PODNAME: entrypoint
+# ABSTRACT: Docker entrypoint for FB11-based images
