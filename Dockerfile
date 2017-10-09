@@ -50,4 +50,4 @@ COPY OpusVL-FB11-$version.tar.gz .
 RUN cpanm ./OpusVL-FB11-$version.tar.gz \
     && rm ./OpusVL-FB11-$version.tar.gz 
 
-ENTRYPOINT [ "/opt/fb11/vin/entrypoint" ]
+ENTRYPOINT [ "/opt/fb11/bin/entrypoint" ]
