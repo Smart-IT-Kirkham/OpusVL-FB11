@@ -154,6 +154,7 @@ sub debug
     $c->stash(
         env => pp \%ENV,
         config => pp $c->config,
+        request => $c->req,
     );
 }
 

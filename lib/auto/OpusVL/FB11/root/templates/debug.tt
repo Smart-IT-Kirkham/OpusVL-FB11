@@ -5,4 +5,7 @@
 <pre>[% env %]</pre>
 
 <h1>Config</h1>
-<pre>[% config %]
+<pre>[% config %]</pre>
+
+<h1>Request</h1>
+<pre>[% request %]</pre>
