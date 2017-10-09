@@ -7,7 +7,15 @@ ENV PERL_CPANM_OPT=' \
     --test-timeout 84000 \
     --mirror http://cpan.opusvl.com' 
 
-RUN /opt/perl5/bin/cpanm Term::ReadKey HTML::FormFu Catalyst::Runtime DBIx::Class Devel::Confess
+RUN apt-get update \
+    && apt-get install -y postgresql-9.6 libpq-dev \
+    && apt-get clean
+
+ENV PATH "/opt/perl5/bin:$PATH"
+RUN cpanm DBD::Pg
+
+RUN /opt/perl5/bin/cpanm Term::ReadKey HTML::FormFu Catalyst::Runtime \
+    DBIx::Class Devel::Confess DBD::Pg
 RUN /opt/perl5/bin/cpanm JSON::XS Starman
 
 # ----- #
