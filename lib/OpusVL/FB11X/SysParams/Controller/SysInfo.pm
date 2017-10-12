@@ -5,9 +5,11 @@ use Moose;
 use namespace::autoclean;
 use OpusVL::SysParams;
 use Try::Tiny;
+use HTML::Entities;
+use OpusVL::FB11X::SysParams::Form::SysParam;
 
 
-BEGIN { extends 'Catalyst::Controller::HTML::FormFu'; }
+BEGIN { extends 'Catalyst::Controller'; }
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
@@ -19,6 +21,19 @@ __PACKAGE__->config
     fb11_method_group  => 'Configuration',
 	path                 => 'adm/sysinfo',
 );
+
+sub param_edit_form {
+    OpusVL::FB11X::SysParams::Form::SysParam->new(
+        item => $_[1],
+        name => 'param_edit_form',
+        field_list => [
+            save => {
+                type => 'Submit',
+                value => 'Save',
+            }
+        ]
+    )
+}
 
 sub auto 
     : Action
@@ -35,6 +50,9 @@ sub auto
     my $schema = $c->model('SysParams')->schema;
     $c->stash->{sys_params} = OpusVL::SysParams->new({ schema => $schema });
 
+    push @{$c->stash->{header}->{js}}, '/static/modules/sysinfo/sysinfo.js';
+    push @{$c->stash->{header}->{css}}, '/static/modules/sysinfo/sysinfo.css';
+
 	$c->stash->{urls} = {
 		sys_info_list => sub { $c->uri_for ( $self->action_for ('list_params')      ) },
 		sys_info_set  => sub { $c->uri_for ( $self->action_for ('set_param'), shift ) },
@@ -45,9 +63,6 @@ sub auto
 	};
 }
 
-# FIXME: do we really want this to be Navigation Home?  I kind of suspect
-# we either want to give this app a less generic name or allow it to be merged
-# with other modules, in which case this navigation home could be a pain.
 sub list_params
 	: Path
 	: NavigationName('System Parameters')
@@ -56,17 +71,7 @@ sub list_params
 	my $self = shift;
 	my $c    = shift;
 	
-	$c->stash->{sys_info} = $c->model ('SysParams::SysInfo')->search_rs;
-}
-
-sub set_textarea_param
-	: Path('set_ta')
-	: Args(1)
-    : FB11Feature('System Parameters')
-{
-    my ($self, $c, $param) = @_;
-    $c->stash->{template} = "modules/sysinfo/set_param.tt";
-    $self->set_param($c, $param, 1);
+	$c->stash->{sys_info} = $c->model ('SysParams::SysInfo')->ordered->search_rs;
 }
 
 sub set_param
@@ -74,93 +79,29 @@ sub set_param
 	: Args(1)
     : FB11Feature('System Parameters')
 {
-    my ($self, $c, $param, $textarea) = @_;
-	my $value = $c->model ('SysParams::SysInfo')->get ($param);
+    my ($self, $c, $name, $textarea) = @_;
+    $self->add_final_crumb($c, 'Edit');
+	my $param = $c->model ('SysParams::SysInfo')->find({name => $name});
+    $c->detach('/not_found') unless $param;
+
+    my $value = $param->value;
+    my $label = $param->label // $param->name;
 	my $return_url = $c->stash->{urls}{sys_info_list}->();
-	#my $form  = $self->form($c, 'SetParameter');
 
 	if ($c->req->param ('cancelbutton')) {
-		$c->flash->{status_msg} = 'System Parameter not Changed';
+		$c->flash->{status_msg} = 'System parameter not changed';
 		$c->res->redirect ($return_url);
 		$c->detach;
 	}
 
-    my $form = HTML::FormHandler->new(
-        widget_wrapper => 'Bootstrap3',
-        name => 'role_management_form',
-        field_list => [
-            name => {
-                type => 'Display',
-                html => "<h3>" . $param . "</h3>",
-            },
-
-            value => {
-                type => $textarea ? "TextArea" : "Text",
-                label => 'Value',
-            },
-
-            'submitbutton' => {
-                type    => 'Submit',
-                widget  => 'ButtonTag',
-                widget_wrapper => 'None',
-                value   => '<i class="fa fa-check"></i> Submit',
-                element_attr => { value => 'Save', class => ['btn', 'btn-success'] }
-            },
-        ],
-    );
-
+    my $form = $self->param_edit_form($param);
     $c->stash->{form} = $form;
-    $form->process(params => $c->req->params, init_object => { name => $param, value => $value });
-	if ($form->validated) {
-		$c->model ('SysParams::SysInfo')->set ($param => $form->field('value')->value);
-		$c->flash->{status_msg} = 'System Parameter Successfully Altered';
-		$c->res->redirect ($return_url);
+    $c->stash->{param} = $param;
+
+	if ($form->process( params => $c->req->params )) {
+        $c->flash->{status_msg} = 'System Parameter Successfully Altered';
+		$c->res->redirect($return_url);
 		$c->detach;
-	}
-}
-
-sub set_json_param
-	: Path('set_json')
-	: Args(1)
-    : FB11Feature('System Parameters')
-{
-	my $self  = shift;
-	my $c     = shift;
-	my $param = shift;
-	my $value = $c->stash->{sys_params}->get_json($param);
-    my $form  = $self->form($c, 'SetParameter');
-    $c->stash->{form} = $form;
-	my $return_url = $c->stash->{urls}{sys_info_list}->();
-
-	if ($c->req->param('cancelbutton')) {
-		$c->flash->{status_msg} = 'System Parameter not Changed';
-		$c->res->redirect ($return_url);
-		$c->detach;
-	}
-
-    $form->process(
-        params => $c->req->params,
-        init_object => {
-            name    => $param,
-            value   => $value,
-        }
-    );
-
-	if ($form->validated) {
-        my $success = 0;
-        try {
-            $c->stash->{sys_params}->set_json($param => $form->field('value')->value);
-            $c->flash->{status_msg} = 'System Parameter Successfully Altered';
-            $success = 1;
-        }
-        catch {
-            $c->log->debug(__PACKAGE__ . '->set_json_param exception: ' . $_);
-            $form->field('value')->add_error("There was a problem updating the value. Is it valid JSON?");
-        };
-        if($success) {
-            $c->res->redirect($return_url);
-            $c->detach;
-        }
 	}
 }
 
@@ -170,9 +111,12 @@ sub del_param
     : FB11Feature('System Parameters')
 {
     my ($self, $c, $param) = @_;
-	my $value = $c->model ('SysParams::SysInfo')->get ($param);
+	my $p = $c->model ('SysParams::SysInfo')->find({name => $param});
+    $c->detach('/not_found') unless $p;
+	my $value = $p->value;
 
-    $c->stash->{question} = "Are you sure you want to delete the parameter: ${param}";
+    my $param_name  = $p->label // $p->name;
+    $c->stash->{question} = "Are you sure you want to delete the parameter: ${param_name}";
     $c->stash->{template} = 'fb11/admin/confirm.tt';
     $c->stash->{form} = $self->form($c, '+OpusVL::FB11::Form::Confirm');
     my $form = $c->stash->{form};
@@ -192,10 +136,6 @@ sub del_param
             $c->detach;
         }
 	}
-    else {
-        $c->stash->{param_value} = $value;
-        $c->stash->{param_name}  = $param;
-    }
 }
 
 sub new_param
@@ -205,29 +145,37 @@ sub new_param
 {
 	my $self  = shift;
 	my $c     = shift;
-	my $form  = $self->form($c, 'AddParameter');
-    $form->process(
-        schema => $c->model('SysParams::SysInfo')->result_source->schema,
-        params => $c->req->params
-    );
-    $c->stash->{form} = $form;
-	
+
 	my $return_url = $c->stash->{urls}{sys_info_list}->();
+    my $param = $c->model('SysParams::SysInfo')->new_result({});
 
-	if ($c->req->param ('cancelbutton')) {
-		$c->flash->{status_msg} = 'System Parameter Not Set';
-		$c->res->redirect ($return_url);
-		$c->detach;
-	}
+    my $form = $self->param_edit_form($param);
+    $c->stash->{form} = $form;
+    $c->stash->{param} = $param;
 
-	if ($form->validated) {
-		my $name  = $form->field('name')->value;
-		my $value = $form->field('value')->value;
-		$c->model ('SysParams::SysInfo')->set ($name => $value);
+    my $ok = try {
+        $form->process( 
+            params => $c->req->params,
+            init_object => { data_type => 'text' }
+        )
+    }
+    catch {
+        if (/UNIQUE/) {
+            $form->field('name')->add_error("Parameter already exists");
+        }
+        else {
+            die $_
+        }
+        0;
+    };
+
+    if ($ok) {
 		$c->flash->{status_msg} = 'System Parameter Successfully Created';
 		$c->res->redirect ($return_url);
 		$c->detach;
 	}
+
+    $c->stash->{template} = 'modules/sysinfo/set_param.tt';
 }
 
 1;

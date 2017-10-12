@@ -1,49 +1,55 @@
 <div class="row">
     <div class="col-sm-12">
+    <div class="fb11-card">
         <h1>System Parameters</h1>
         
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <div class="panel-title">Parameters</div>
-            </div>
-            <div class="panel-body">
                [% IF sys_info.count > 0 %]
-	    	    <table class="table">
-	    	    	<thead>
-	    	    		<tr>
-	    	    			<th>Parameter</th>
-	    	    			<th>Value</th>
-	    	    			<th></th>
-	    	    		</tr>
-	    	    	</thead>
-	    	    	<tbody>
-	    	    		[% WHILE (param = sys_info.next) %]
-	    	    			<tr>
-	    	    				<td>[% param.name | html %]</td>	
-	    	    				<td>[% param.value | html %]</td>
-	    	    				<td>
-                                <div class="dropdown">
-                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                      <i class="fa fa-cog"></i>
-                                      <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="[% urls.sys_info_set(param.name) %]">Edit Setting</a></li>
-                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="[% urls.sys_info_set_ta(param.name) %]">Edit Setting in Text Area</a></li>
-                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="[% urls.sys_info_set_json(param.name) %]">Edit JSON</a></li>
-                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="[% urls.sys_info_del(param.name) %]">Delete Setting</a></li>
-                                    </ul>
-                                </div>
+                <table class="table parameters">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Value</th>
+                            <th width="12%"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        [% WHILE (param = sys_info.next) %]
+                            <tr class="record record-parameter">
+                                <td class="field field-name"
+                                    colspan="3"
+                                >
+                                    [% param.name %]
                                 </td>
-	    	    			</tr>
+                            </tr>
+                            <tr class="record record-parameter">
+                                <td class="field field-label">
+                                    [% (param.label || "(No Label)") | html %]
+                                </td>
+                                <td class="field field-value">
+                                    [% PROCESS modules/sysinfo/display_params.tt param=param %]
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a class="btn btn-primary" href="[%
+                                            urls.sys_info_set(param.name) %]"
+                                            title="Edit Setting">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a class="btn btn-danger" href="[%
+                                            urls.sys_info_del(param.name) %]"
+                                            title="Delete Setting">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
                         [% END %]
-	    	    	</tbody>
-	    	    </table>
+                    </tbody>
+                </table>
                 [% ELSE %]
                 <p>There are no system parameters configured</p>
                 [% END %]
-            </div> <!-- /panel-body -->
-        </div> <!-- /panel -->
+    </div>
     </div> <!-- /col-sm-12 -->
 </div> <!-- /row -->
 

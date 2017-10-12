@@ -21,3 +21,32 @@ sub html_name {
 no HTML::FormHandler::Moose;
 1;
 __END__
+
+=head1 NAME
+
+OpusVL::FB11X::SysParams::Form::SetParameter
+
+=head1 DESCRIPTION
+
+=head1 METHODS
+
+=head2 html_name
+
+=head1 ATTRIBUTES
+
+=head2 param_label
+
+=head2 name
+
+=head2 value
+
+=head2 submitbutton
+
+
+=head1 LICENSE AND COPYRIGHT
+
+Copyright 2015 OpusVL.
+
+This software is licensed according to the "IP Assignment Schedule" provided with the development project.
+
+=cut

@@ -1,6 +1,56 @@
+<div class="fb11-card">
 <h1>Set System Parameter</h1>
 
 <div class="content_block">
 	[% form.render | none %]
 </div>
 
+<div class="templates">
+    <textarea name="value" 
+        class="field field-value form-control js-value-textarea">[%
+        TRY;
+        param.convert_to('textarea');
+        CATCH;
+        END;
+    %]</textarea>
+    <textarea name="value_json" 
+        class="field field-value form-control js-value-raw">
+        [%- pretty_json(param.decoded_value) -%]
+    </textarea>
+    <input type="text" name="value" 
+        class="field field-value form-control js-value-text" value="[%
+        TRY;
+        param.convert_to('text');
+        CATCH;
+        END;
+    %]"/>
+    <input type="checkbox" name="value" 
+        class="field field-value js-value-bool"
+        [% TRY;
+            IF param.convert_to('bool') %] 
+            checked="checked" 
+        [% END; CATCH; END %] 
+    />
+    <div class="js-value-array field field-value">
+        [% TRY; FOREACH item IN param.convert_to('array') %]
+            <div class="input-group">
+                <input type="text" 
+                    value="[% item %]" 
+                    name="value"
+                    class="field-value-[% loop.index %] array-value form-control" 
+                />
+                <span class="input-group-addon">
+                    <i class="fa fa-remove remove"></i>
+                </span>
+            </div>
+        [% END; CATCH; END %]
+            <div class="input-group">
+                <input type="text" 
+                    class="field-value-new array-value form-control"/>
+                <span class="input-group-addon">
+                    <i class="fa fa-plus create"></i>
+                </span>
+            </div>
+    </div>
+</div>
+</div>

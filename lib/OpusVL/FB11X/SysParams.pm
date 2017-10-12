@@ -2,9 +2,10 @@ package OpusVL::FB11X::SysParams;
 use Moose::Role;
 use CatalystX::InjectComponent;
 use File::ShareDir qw/module_dir/;
+use Data::Munge qw/elem/;
 use namespace::autoclean;
 
-our $VERSION = '0.17';
+our $VERSION = '0.25';
 
 after 'setup_components' => sub {
     my $class = shift;
@@ -12,7 +13,7 @@ after 'setup_components' => sub {
     my $tt_view       = $class->config->{default_view} || 'TT';
     my $template_path = module_dir('OpusVL::FB11X::SysParams') . 
                         '/root/templates';
-    unless ($class->view($tt_view)->include_path ~~ $template_path) {
+    unless (elem $template_path, $class->view($tt_view)->include_path) {
         push @{$class->view($tt_view)->include_path}, $template_path;
     }
    
@@ -37,13 +38,7 @@ after 'setup_components' => sub {
 
 1;
 
-=head1 NAME
-
-OpusVL::FB11X::SysParams - 
-
-=head1 DESCRIPTION
-
-UI Module for setting the SysParams.
+# ABSTRACT: UI Module for setting the SysParams.
 
 =head1 METHODS
 

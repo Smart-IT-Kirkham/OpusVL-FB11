@@ -1,0 +1,10 @@
+table.parameters tr.record:nth-child(even) td {
+    border-top: 0;
+}
+
+td.field-name {
+    font-size:75%;
+    opacity:0.75;
+    padding: 0.5em !important;
+    padding-bottom: 0 !important;
+}
