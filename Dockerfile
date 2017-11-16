@@ -5,7 +5,7 @@ ENV PERL_CPANM_OPT=' \
     --configure-timeout 84000 \
     --build-timeout 84000 \
     --test-timeout 84000 \
-    --mirror http://cpan.opusvl.com' 
+    --mirror http://cpan.opusvl.com'
 
 RUN apt-get update \
     && apt-get install -y postgresql-9.6 libpq-dev \
@@ -33,8 +33,7 @@ ENV PERL_CPANM_OPT=' \
     --configure-timeout 84000 \
     --build-timeout 84000 \
     --test-timeout 84000 \
-    --mirror http://cpan.opusvl.com \
-    -l /opt/fb11/'
+    --mirror http://cpan.opusvl.com'
 
 RUN useradd -m -U -b /opt fb11
 ENV PERL5LIB /opt/fb11/lib/perl5
@@ -48,6 +47,6 @@ RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 
 COPY OpusVL-FB11-$version.tar.gz .
 RUN cpanm ./OpusVL-FB11-$version.tar.gz \
-    && rm ./OpusVL-FB11-$version.tar.gz 
+    && rm ./OpusVL-FB11-$version.tar.gz
 
-ENTRYPOINT [ "/opt/fb11/bin/entrypoint" ]
+ENTRYPOINT [ "/opt/perl5/bin/entrypoint" ]
