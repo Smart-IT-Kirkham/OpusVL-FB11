@@ -1,0 +1,58 @@
+=head1 NAME
+
+OpusVL::FB11::Quickstart - Quick start to using FB11
+
+=head1 DESCRIPTION
+
+This is a very brief quick start to creating an FB11 application. For an
+overview of FB11 itself, see L<OpusVL::FB11/OVERVIEW>.
+
+=head1 NEW APPLICATION
+
+=head2 Bootstrap
+
+Bootstrapping a new FB11 application is easy if you have L<Dist::Zilla>. Simply
+install L<Dist::Zilla::MintingProfile::FB11> and you can easily create a
+new app, or components.
+
+    $ dzil new -P FB11 MyApp
+
+This will create a new FB11 application called MyApp.
+
+If you don't have Dist::Zilla, you can use the C<examples/BootstrapApp> directory
+in the distribution as a skeleton that you can copy. Of course, this requires
+more manual intervention that Dist::Zilla automates away.
+
+Once you have your skeleton directory you have an application that you can run,
+because you have a PSGI file and something for it to load. The thing it loads is
+a subclass of L<OpusVL::FB11> itself, and uses L<CatalystX::InjectComponent> to
+build up the application.
+
+=head2 Database
+
+FB11 uses L<DBIx::Class::DeploymentHandler> to version its database. It comes
+with a script to assist with this in L<bin/fb11-dbh>.
+
+Currently there is somewhat of a discrepancy in the database handling with FB11.
+This is because DeploymentHandler is not designed to work with a modular system,
+and so it is necessary to somehow merge all the schemata from FB11X modules into
+a single schema for the application, and deploy that.
+
+A solution to this exists in
+L<https://github.com/OpusVL/OpusVL-DeploymentHandler> but it is not fully
+tested. Also, there is not sufficient integration between your FB11 application
+and this DeploymentHandler extension, so manual work is still required.
+
+=head2 Components
+
+Conventionally, components live in the C<FB11X> namespace, normally inside your
+application's own namespace or in a namespace appropriate to the scope of the
+component. Many components are bundled with FB11 itself, and exist in the
+C<OpusVL::FB11X> namespace.
+
+These namespaces are not special and will not be used by code to automatically
+load components based on partial names or existence in C<@INC>. You have to
+select your components explicitly.
+
+Out of the box, the only thing you get is authentication. Your FB11 application
+will show you a login screen.
