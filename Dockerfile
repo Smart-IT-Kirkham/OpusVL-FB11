@@ -35,13 +35,6 @@ ENV PERL_CPANM_OPT=' \
     --test-timeout 84000 \
     --mirror http://cpan.opusvl.com'
 
-RUN useradd -m -U -b /opt fb11
-ENV PERL5LIB /opt/fb11/lib/perl5
-ENV PATH "/opt/fb11/bin:/opt/perl5/bin:$PATH"
-
-USER fb11
-WORKDIR /opt/fb11
-
 ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 
