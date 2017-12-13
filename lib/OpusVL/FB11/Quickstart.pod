@@ -19,7 +19,7 @@ new app, or components.
 
 This will create a new FB11 application called MyApp.
 
-If you don't have Dist::Zilla, you can use the C<examples/BootstrapApp> directory
+If you don't have Dist::Zilla, you can use the I<examples/BootstrapApp> directory
 in the distribution as a skeleton that you can copy. Of course, this requires
 more manual intervention that Dist::Zilla automates away.
 
@@ -30,18 +30,28 @@ build up the application.
 
 =head2 Database
 
-FB11 uses L<DBIx::Class::DeploymentHandler> to version its database. It comes
-with a script to assist with this in L<bin/fb11-dbh>.
+FB11 uses an extension of L<DBIx::Class::DeploymentHandler>,
+L<OpusVL::DeploymentHandler>, to deploy databases. This extension allows each
+component to manage its own database, merging separate schemata into a single
+database schema.
 
-Currently there is somewhat of a discrepancy in the database handling with FB11.
-This is because DeploymentHandler is not designed to work with a modular system,
-and so it is necessary to somehow merge all the schemata from FB11X modules into
-a single schema for the application, and deploy that.
+Although it is possible to use different physical schemata within PostgreSQL, it
+is theoretically feasible to use a different database, because we use
+L<DBIx::Class>. However, it is entirely possible that some psql-specific
+features exist.
 
-A solution to this exists in
-L<https://github.com/OpusVL/OpusVL-DeploymentHandler> but it is not fully
-tested. Also, there is not sufficient integration between your FB11 application
-and this DeploymentHandler extension, so manual work is still required.
+A script is installed alongside your FB11 installation called I<fb11-dbh>. You
+should familiarise yourself with this.
+
+FB11 comes with a single built-in schema, which is the Authentication database.
+Although not strictly compulsory, most FB11 functionality relies on it.
+
+    fb11-dbh OpusVL::FB11::Schema::FB11AuthDB -t1 deploy
+    fb11-dbh OpusVL::FB11::Schema::FB11AuthDB upgrade
+
+Note that the above commands will probably require the C<--user>, C<--password>,
+and C<--connection-string> options passed to it. See its manpage/perldoc for
+details.
 
 =head2 Components
 
@@ -55,4 +65,21 @@ load components based on partial names or existence in C<@INC>. You have to
 select your components explicitly.
 
 Out of the box, the only thing you get is authentication. Your FB11 application
-will show you a login screen.
+will show you a login screen. You can create an initial user account with the
+provided script I<init-fb11-auth-db>.
+
+Components are added to the application in the C<Builder.pm> file.
+
+    package MyApp::Builder;
+    ...
+    override _build_plugins => sub {
+        my $plugins = super();
+
+        push @$plugins, qw(
+            OpusVL::FB11X::SysParams
+        );
+
+        return $plugins;
+    };
+
+
