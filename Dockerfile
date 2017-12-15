@@ -26,6 +26,7 @@ COPY --from=dbic-catalyst /opt/perl5 /opt/perl5
 
 RUN apt-get update && apt-get -y install libexpat1-dev
 
+ENV PATH "/opt/perl5/bin:$PATH"
 ENV http_proxy=http://dev-05:3128
 ENV no_proxy=localhost,127.0.0.1
 
