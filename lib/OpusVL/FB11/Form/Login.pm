@@ -15,4 +15,8 @@ has_field 'submit'   => (
     element_attr => { class => ['btn', 'btn-primary'] }
 );
 
+sub build_render_list {
+    [qw/username password submit/]
+}
+
 1;
