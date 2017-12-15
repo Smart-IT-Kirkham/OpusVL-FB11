@@ -6,7 +6,7 @@ use warnings;
 use Moose;
 extends 'DBIx::Class::Schema';
 
-our $VERSION = '0.035';
+our $VERSION = '0.036';
 
 __PACKAGE__->load_namespaces;
 
