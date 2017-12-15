@@ -1,5 +1,19 @@
 {{ $NEXT }}
 
+0.035     2017-12-15 12:35:57+00:00 Europe/London
+
+  - Merged several core FB11X components into the distribution:
+    * FB11AuthDB
+    * AuditTrail
+    * ResultsetSearch
+    * SysParams
+  - Removed "remember me" checkbox from login form
+  - Docker entrypoint is now an installed script
+  - Entrypoint now only installs dependencies if INSTALLDEPS is set
+  - /opt/perl5/bin is now in PATH in docker containers
+  - Some frontend fixes
+  - Users no longer require a telephone number
+
 0.034     2017-07-24 13:56:30+01:00 Europe/London
 
   - Fixed display of JS tabs
