@@ -17,6 +17,7 @@ GetOptions (
     \%option,
     'password|p=s',
     'model|m=s',
+    'update|u',
     #    'resultset|rs=s',
 );
 my $app = shift or pod2usage({ -msg => "Missing app name", -exitval => 1 });;
@@ -33,6 +34,10 @@ unless($user)
         name     => 'Administrator',
         password => $option{password},
     });
+}
+
+if ($option{update}) {
+    $user->update({ password => $option{password} });
 }
 
 my $feature_list = $app->fb11_features->feature_list;
@@ -92,3 +97,10 @@ dev. Use this to override that.
 =head2 -m
 
 The model to use. Defaults to FB11AuthDB, but you may wish to use AppKitAuthDB.
+
+=head2 --update
+
+=head2 -u
+
+Update the password. This is useful if the user exists but needs its password
+resetting.
