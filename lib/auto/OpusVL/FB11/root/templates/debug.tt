@@ -1,3 +1,4 @@
+[% USE Dumper %]
 <h1>Stash</h1>
 <pre>[% stash %]</pre>
 
@@ -5,7 +6,7 @@
 <pre>[% env %]</pre>
 
 <h1>Config</h1>
-<pre>[% config %]</pre>
+<pre>[% Dumper.dump(c.config) %]</pre>
 
 <h1>Request</h1>
-<pre>[% request %]</pre>
+<pre>[% Dumper.dump(c.request) %]</pre>
