@@ -31,6 +31,7 @@ requires 'Try::Tiny';
 requires 'DateTime';
 requires 'List::UtilsBy';
 requires 'URL::Encode';
+requires 'Plack::Handler::Martian';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';
