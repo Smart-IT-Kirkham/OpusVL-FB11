@@ -1,16 +1,5 @@
 tags
-META.yml
-Makefile
-blib
-inc
 .build
 *.swp
 .DS_Store
-
-/MANIFEST.bak
-/MANIFEST
 OpusVL-FB11-*
-/pm_to_blib
-MYMETA.*
-
-/Makefile.old
