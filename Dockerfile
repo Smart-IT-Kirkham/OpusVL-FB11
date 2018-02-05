@@ -35,6 +35,8 @@ ENV PERL_CPANM_OPT=' \
 
 ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
+ARG gitrev
+RUN if [ ! -z "$gitrev" ]; then echo "$gitrev" > /root/OpusVL-FB11-gitrev; fi;
 
 COPY OpusVL-FB11-$version.tar.gz .
 RUN cpanm --notest Catalyst::Plugin::Static::Simple
