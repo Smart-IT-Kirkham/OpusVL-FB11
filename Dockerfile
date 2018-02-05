@@ -37,6 +37,7 @@ ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 
 COPY OpusVL-FB11-$version.tar.gz .
+RUN cpanm --notest Catalyst::Plugin::Static::Simple
 RUN cpanm ./OpusVL-FB11-$version.tar.gz \
     && rm ./OpusVL-FB11-$version.tar.gz
 
