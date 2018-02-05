@@ -23,7 +23,7 @@ RUN /opt/perl5/bin/cpanm JSON::XS Starman
 FROM quay.io/opusvl/perl-5.20-dev:master as release
 COPY --from=dbic-catalyst /opt/perl5 /opt/perl5
 
-RUN apt-get update && apt-get -y install libexpat1-dev
+RUN apt-get update && apt-get -y install libexpat1-dev libpq5
 
 ENV PATH "/opt/perl5/bin:$PATH"
 
