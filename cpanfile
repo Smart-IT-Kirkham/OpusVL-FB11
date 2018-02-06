@@ -31,6 +31,7 @@ requires 'DateTime';
 requires 'List::UtilsBy';
 requires 'URL::Encode';
 requires 'Plack::Handler::Martian';
+requires 'DateTime::Format::Pg';
 
 # This is vendored in because of a patch to make WithSchema work
 requires 'DBIx::Class::DeploymentHandler';
