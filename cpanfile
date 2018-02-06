@@ -25,13 +25,16 @@ requires 'Template::Alloy' => '1.020';
 requires 'Cpanel::JSON::XS';
 requires 'Data::Munge';
 requires 'HTTP::Status';
-requires 'DBIx::Class::DeploymentHandler';
 requires 'Pod::Usage';
 requires 'Try::Tiny';
 requires 'DateTime';
 requires 'List::UtilsBy';
 requires 'URL::Encode';
 requires 'Plack::Handler::Martian';
+
+# This is vendored in because of a patch to make WithSchema work
+requires 'DBIx::Class::DeploymentHandler';
+requires 'DBIx::Class::DeploymentHandler::VersionStorage::WithSchema';
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';
