@@ -31,25 +31,6 @@ use File::ShareDir ':ALL';
 
 __PACKAGE__->config->{namespace}    = '';
   
-=head2 auto
-=cut
-sub auto 
-    : Action 
-    : FB11AllAccess
-{
-    my ( $self, $c ) = @_;
-    if ($c->user) {
-        my $fav_rs = $c->model('FB11AuthDB::UsersFavourite')->search({ user_id => $c->user->id });
-        $c->stash->{page_is_favourite} = 1
-            if $fav_rs->find({ page => $c->req->uri->path });
-
-        if ($fav_rs->count > 0) {
-            $c->stash->{favourites} = [ $fav_rs->all ];
-        }
-    }
-
-    return 1;
-}
 
 sub stash_portlets :Public {
     my ($self, $c) = @_;
