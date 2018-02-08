@@ -117,6 +117,7 @@ use Moose;
 use File::ShareDir qw/module_dir/;
 use Try::Tiny;
 use OpusVL::FB11::Form::Login;
+use PerlX::Maybe qw/maybe/;
 
 extends 'CatalystX::AppBuilder';
 
@@ -152,6 +153,31 @@ override _build_config => sub
     select( ( select(\*STDERR), $|=1 )[0] );
     select( ( select(\*STDOUT), $|=1 )[0] );
 
+    {
+        my $dsn = 'dbi:%s:dbname=%s;host=%s';
+        my $driver = $ENV{FB11_DB_DRIVER} || 'Pg';
+        my $dbname = $ENV{FB11_DB_NAME} || 'fb11';
+        my $dbhost = $ENV{FB11_DB_HOST} || 'db';
+
+        $dsn = sprintf $dsn, $driver, $dbname, $dbhost;
+
+        my $cinfo = $config->{'Model::FB11AuthDB'}->{connect_info} || {};
+        if (ref $cinfo eq 'ARRAY') {
+            $cinfo = {
+                dsn => $cinfo->[0],
+                user => $cinfo->[1],
+                password => $cinfo->[2],
+            };
+        }
+        my $dbconf = {
+              %$cinfo,
+              dsn => $dsn,
+        maybe user => $ENV{FB11_DB_USER},
+        maybe password => $ENV{FB11_DB_PASSWORD},
+        };
+
+        $config->{'Model::FB11AuthDB'}->{connect_info} = $dbconf;
+    }
 
     my $path = File::ShareDir::module_dir( 'OpusVL::FB11' );
 

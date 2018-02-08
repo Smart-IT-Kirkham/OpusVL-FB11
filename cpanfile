@@ -32,6 +32,7 @@ requires 'List::UtilsBy';
 requires 'URL::Encode';
 requires 'Plack::Handler::Martian';
 requires 'DateTime::Format::Pg';
+requires 'PerlX::Maybe';
 
 # This is vendored in because of a patch to make WithSchema work
 requires 'DBIx::Class::DeploymentHandler';
