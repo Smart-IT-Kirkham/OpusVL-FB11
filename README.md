@@ -1,7 +1,7 @@
 # OpusVL-FB11
 Business and Social Application Framework
 
-Flexibase is an extension of the Catalyst MVC framwework with additional features suitable for building business applications;
+**Flexibase** is an extension of the Catalyst MVC framwework with additional features suitable for building business applications;
 
 - Responsive design user interface
 - Automatically generated menus
