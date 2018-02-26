@@ -43,7 +43,8 @@ sub stash_portlets :Public {
 sub index 
     :Path 
     :Args(0) 
-    : FB11Feature('Home Page')
+    :Public
+    :Does('NeedsLogin')
 {
     my ( $self, $c ) = @_;
     #$c->_fb11_stash_portlets;
