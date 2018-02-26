@@ -28,15 +28,15 @@ body {
 }
 
 .fb11-card:first-child {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 .fb11-card {
     border: 1px solid #DCDCDC;
-	background-color: #fff;
+    background-color: #fff;
     padding: 20px 30px;
-	margin-bottom: 30px;
-	box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
+    margin-bottom: 30px;
+    box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
 }
 .fb11-card .header-controls.row > * {
     margin-top: 0.6em;
@@ -64,9 +64,9 @@ body {
 
 a:focus, a:hover { color: #737070; }
 h1 { 
-	font-weight: lighter;
-	padding-bottom: 4px;
-	border-bottom: 2px solid #eee; 
+    font-weight: lighter;
+    padding-bottom: 4px;
+    border-bottom: 2px solid #eee; 
     color: #777;
 }
 
@@ -99,15 +99,15 @@ h1 {
 }
 
 .fb11-main-content > h1 {
-	margin-top: 50px;
+    margin-top: 50px;
 }
 
 .fb11-main-content > h1:first-child {
-	margin-top: 10px;
+    margin-top: 10px;
 }
 
 .fb11-sidebar {
-	padding-top: 10px;
+    padding-top: 10px;
 }
 
 nav > .nav {
@@ -168,14 +168,14 @@ button.btn-ok:before, a.btn-ok:before { content: "\f058\00a0"; }
 button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
 
 body >.container-fluid:first-child {
-	background-color: #fff;
-	margin-bottom: 20px;
-	box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
+    background-color: #fff;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
 }
 
 .container-fluid {
-	padding-left: 30px;
-	padding-right: 30px;
+    padding-left: 30px;
+    padding-right: 30px;
 }
 
 .navbar-default .navbar-collapse {
@@ -202,10 +202,10 @@ body >.container-fluid:first-child {
 }
 
 .panel {
-	border-radius: 0px;
-	background-color: #fff;
-	border: none;
-	box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
+    border-radius: 0px;
+    background-color: #fff;
+    border: none;
+    box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
 }
 
 .panel-default, .panel-default>.panel-heading { border-color: #b3b3b3; }
@@ -221,29 +221,29 @@ body >.container-fluid:first-child {
 }
 
 .fb11-center {
-	position: relative;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	margin: auto;
+    position: relative;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
 }
 
 .content-box {
-	padding: 15px;
-	background: #eee;
-	border-radius: 5px;
-	margin-bottom: 15px;
+    padding: 15px;
+    background: #eee;
+    border-radius: 5px;
+    margin-bottom: 15px;
 }
 
 img.responsive-img {
-	max-width:100% !important;
+    max-width:100% !important;
     height:auto;
 }
 
 .panel-icons > a { padding-right: 10px; }
 .panel-icons > a > .fa {
-	font-size: 25px;
+    font-size: 25px;
 }
 
 /* centered columns styles */
@@ -260,10 +260,10 @@ img.responsive-img {
 }
 
 .footer {
-	margin-top: 0px;
-	background-color: #555;
-	padding-top: 30px;
-	padding-bottom: 30px;
+    margin-top: 0px;
+    background-color: #555;
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
 .navbar-brand {
@@ -292,22 +292,22 @@ img.responsive-img {
  */
 
 .fb11-available-users {
-	margin-bottom: 300px;
+    margin-bottom: 300px;
 }
 
 @media screen and (max-width: 640px) {
-	.fb11-available-users {
-		margin-bottom: 10px;
-	}
+    .fb11-available-users {
+        margin-bottom: 10px;
+    }
 }
 
 .fb11-user-avatar {
-	height: 100px;
-	width: 100px;
+    height: 100px;
+    width: 100px;
 }
 
 .fb11-avatar-sidebar {
-	height: 25px;
+    height: 25px;
     vertical-align: bottom;
 }
 
