@@ -62,6 +62,44 @@ body {
     margin-bottom: 10px;
 }
 
+/* Setting borders top & left on the container, then bottom & right on the
+ * children, produces a "collapsed" border - but only if you don't space out the
+ * children. You can't have a collapsed border if you do. */
+.fb11-status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+}
+
+.fb11-status-bar .datum {
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: max-content;
+    border-bottom: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    white-space: nowrap;
+}
+
+.fb11-status-bar .datum > .field {
+    font-weight: bold;
+    background: #eee;
+    display: inline-block;
+    padding: 0.2em 0.6em;
+    height: 100%;
+}
+
+.fb11-status-bar .datum > .value {
+    display: inline-block;
+    padding: 0.1em 0.5em;
+}
+
+.fb11-status-bar .line-break {
+    height: 0px;
+    width: 100%;
+    border: none;
+}
+
 a:focus, a:hover { color: #737070; }
 h1 { 
     font-weight: lighter;
