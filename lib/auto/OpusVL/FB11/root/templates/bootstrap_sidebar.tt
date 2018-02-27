@@ -1,6 +1,6 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <div class="user-name">[% c.user.name %]</div>
+    <div class="user-name">[% c.user.obj.name %]</div>
   	<div class="panel-icons">
       <span class="dropdown">
       <a id="fb11-admin-menu" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
