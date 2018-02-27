@@ -60,6 +60,7 @@ $app->model($option{model})->schema->txn_do(sub {
     for my $feature ( $app->model($option{model})->resultset('Aclfeature')->all ) {
         $admin_role->add_to_aclfeatures($feature)
             unless $admin_role->aclfeatures->find($feature->id);
+        say sprintf "Added %s to %s", $feature->feature, $admin_role->role;
     }
 });
 
