@@ -23,6 +23,9 @@ RUN /opt/perl5/bin/cpanm JSON::XS Starman
 FROM quay.io/opusvl/perl-5.20-dev:master as release
 COPY --from=dbic-catalyst /opt/perl5 /opt/perl5
 
+COPY dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
+RUN chmod +x /usr/local/bin/dumb-init
+
 RUN apt-get update && apt-get -y install libexpat1-dev libpq5
 
 ENV PATH "/opt/perl5/bin:$PATH"
@@ -43,7 +46,7 @@ RUN if [ ! -z "$gitrev" ]; then echo "$gitrev" > /root/OpusVL-FB11-gitrev; fi;
 
 COPY OpusVL-FB11-$version.tar.gz .
 RUN cpanm --notest Catalyst::Plugin::Static::Simple
-RUN cpanm ./OpusVL-FB11-$version.tar.gz \
+RUN cpanm -n ./OpusVL-FB11-$version.tar.gz \
     && rm ./OpusVL-FB11-$version.tar.gz
 
-ENTRYPOINT [ "/opt/perl5/bin/entrypoint" ]
+ENTRYPOINT [ "/usr/local/bin/dumb-init", "--", "/opt/perl5/bin/entrypoint" ]
