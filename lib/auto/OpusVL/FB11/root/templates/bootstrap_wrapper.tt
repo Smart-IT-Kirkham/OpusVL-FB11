@@ -38,6 +38,16 @@
                             </div>
                         </div>
                     [% END %]
+                    [% FOREACH msg IN info_msg.list %]
+                        <div class="alert alert-info">
+                            [% msg %]
+                            <div class="pull-right">
+                                <a href="javascript:;" class="hide-alert">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </div>
+                        </div>
+                    [% END %]
                     [% FOREACH msg IN error_msg.list %]
                         <div class="alert alert-danger">
                             [% msg %]
