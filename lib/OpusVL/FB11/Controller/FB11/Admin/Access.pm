@@ -6,9 +6,33 @@ use Tree::Simple::View::HTML;
 use Tree::Simple::VisitorFactory;
 use HTML::FormHandler;
 use List::Util qw/any/;
+use Data::Munge qw/elem/;
 
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
+
+our $VERSION = "0.001";
+
+# ABSTRACT: Core ACL administration page
+
+=head1 DESCRIPTION
+
+FB11 extends the concept of roles from L<Catalyst::Plugin::Authentication> and
+L<Catalyst::Plugin;:Authorization::Roles>. Each action in the FB11 application
+is given a so-called "feature", which works with the ACL.
+
+Roles are therefore promoted to more than just a string name: they represent
+feature sets, and thus each role in FB11 represents access rights for users
+given that role.
+
+In order to be able to administrate this set, any user store for
+L<Catalyst::Plugin::Authentication> will also need to support writing of those
+roles to the store.
+
+The role L<OpusVL::FB11::RolesFor::User> defines the interface a User object
+must have in order for this controller to be able to work with it.
+
+=cut
 
 has_forms(
     'confirm_form'      => 'Confirm',
@@ -17,6 +41,7 @@ has_forms(
 __PACKAGE__->config
 (
     fb11_myclass              => 'OpusVL::FB11',
+    path => 'admin',
 );
 
 
@@ -93,35 +118,42 @@ sub addrole
     $c->go( $c->controller('FB11::Admin::Access')->action_for('index') );
 }
 
-=head2 role_specific
+=head2 _load_role
 
-    Start of chain.
-    Action to capture role specific action..
+Load a role by name. If it doesn't exist, but the user is supposed to be able to
+administrate it, create it. This allows external sources of role names to Just
+Work without humans getting in the way.
 
 =cut
 
-sub role_specific
-    : Chained('/')
-    : PathPart('admin/access/role')
+sub _load_role
+    : Chained(/)
+    : PathPart('admin/role')
     : CaptureArgs(1)
     : FB11Feature('Role Administration')
 {
     my ( $self, $c, $rolename ) = @_;
 
-    # put role into stash..
-    $c->stash->{role} = $c->model('FB11AuthDB::Role')->find( { role => $rolename } );
-    if(!$c->stash->{role})
-    {
-        $c->detach('/not_found');
+    my $role = $c->model('FB11AuthDB::Role')->find( { role => $rolename } );
+
+    if (!$role) {
+        if (elem $rolename, [ $c->user->roles_modifiable ]) {
+            $role = $c->model('FB11AuthDB::Role')->create({ role => $rolename });
+            $c->stash->{info_msg} = "Role $rolename was created automatically";
+        }
+        else {
+            $c->detach('/not_found');
+        }
     }
 
+    $c->stash->{role} = $role;
 }
 
 =head2 role_management
 =cut
 
 sub role_management
-    : Chained('role_specific')
+    : Chained('_load_role')
     : PathPart('management')
     : Args(0)
     : FB11Feature('Role Administration')
@@ -204,7 +236,7 @@ sub role_management
 =cut
 
 sub user_for_role
-    : Chained('role_specific')
+    : Chained('_load_role')
     : PathPart('user')
     : CaptureArgs(1)
     : FB11Feature('Role Administration')
@@ -241,7 +273,7 @@ sub user_delete_from_role
 =cut
 
 sub delete_role
-    : Chained('role_specific')
+    : Chained('_load_role')
     : PathPart('delrole')
     : Args(0)
     : FB11Feature('Role Administration')
@@ -273,7 +305,7 @@ sub delete_role
 =cut
 
 sub user_add_to_role
-    : Chained('role_specific')
+    : Chained('_load_role')
     : PathPart('adduser')
     : Args(0)
     : FB11Feature('Role Administration')
@@ -298,7 +330,7 @@ sub user_add_to_role
 =cut
 
 sub action_rule_for_role
-    : Chained('role_specific')
+    : Chained('_load_role')
     : PathPart('rule')
     : Args(2)
     : FB11Feature('Role Administration')
@@ -335,13 +367,12 @@ sub action_rule_for_role
 
 =head2 show_role
 
-    End of chain.
-    Action to display role info page.
+Lists all the FB11 features as checkboxes so you can assign them to this role.
 
 =cut
 
 sub show_role
-    : Chained('role_specific')
+    : Chained('_load_role')
     : PathPart('show')
     : Args(0)
     : FB11Feature('Role Administration')
@@ -353,18 +384,16 @@ sub show_role
         url     => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('show_role'), [ $c->stash->{role}->id ] )
     };
 
-    # stash the tree..
     $c->stash->{action_tree} = $c->fb11_actiontree;
 
-    # get role to show from stash..
     my $show_role = $c->stash->{role}->role;
 
+    # XXX This tree is ludicrous considering the entire ACL is flat
     # build my visitor to get the path to the root..
     my $path2root_visitor = Tree::Simple::VisitorFactory->getVisitor("PathToRoot");
     $path2root_visitor->setNodeFilter(sub { my ($t) = @_; return $t->getNodeValue()->node_name });
     $c->stash->{fb11_features} = $c->fb11_features->feature_list($show_role);
 
-    # test if need to process some rules submission...
     if ( $c->req->method eq 'POST' )
     {
         my @features_allowed;
@@ -398,6 +427,7 @@ sub show_role
         }
         # now we run traverse the tree finding if we are allowing access or not...
 
+        # XXX WHAT IS HAPPENING HELP ME
         my $allowed = [];
         my $denied  = [];
         $c->stash->{action_tree}->traverse
@@ -441,6 +471,7 @@ sub show_role
     # create the tree view...
     # need to prune items that are in_feature 
     # to prevent confusion.
+    # oh NOW you want to prevent confusion? - Al
     my $display_tree = $c->stash->{action_tree}->clone;
     my @remove;
     $display_tree->traverse(sub {

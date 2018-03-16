@@ -2,6 +2,7 @@ package OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User;
 
 use strict;
 use Moose::Role;
+use List::Util qw/any/;
 
 =head2 setup_authdb
 
@@ -119,7 +120,7 @@ sub enable
     return 0;
 }
 
-=head2 roles_allowed
+=head2 roles_modifiable
 
 Returns the list of roles this user is allowed to modify.
 
@@ -130,25 +131,30 @@ sub roles_modifiable
     my $self = shift;
     my $schema = $self->result_source->schema;
 
+    my $roles_rs = $schema->resultset('Role');
+    # XXX This is silly. Just put an admin flag on roles and drop that extra
+    # table, or use the roles_allowed thing and set it up with the script.
     # check to see if any of the current roles allow access to all
-    if (grep { $_ } map { $_->can_change_any_role } $self->roles->all)
-    {
-        return $schema->resultset('Role');
+    if (any { $_->can_change_any_role } $self->roles->all) {
+        return $roles_rs->get_column('role')->all;
     }
+
+    # XXX Does anyone use this? If no client is using it, drop it from FB11.
     my $allowed_roles = $self->roles->search_related('roles_allowed_roles');
-    if($allowed_roles->count == 0)
+    if($allowed_roles->count)
     {
         # check to see if any allowed roles are setup
         # if not return all roles.
         if($schema->resultset('RoleAllowed')->count == 0 
             && $schema->resultset('RoleAdmin')->count == 0)
         {
-            return $schema->resultset('Role');
+            return $roles_rs->get_column('role')->all;
         }
     }
-    my $roles = $schema->resultset('Role')->search({ id => { in => $allowed_roles->get_column('role_allowed')->as_query }});
+    return $schema->resultset('Role')
+        ->search({ id => { in => $allowed_roles->get_column('role_allowed')->as_query }})
+        ->get_column('role')->all;
 
-    return $roles;
 }
 
 =head2 can_modify_user
