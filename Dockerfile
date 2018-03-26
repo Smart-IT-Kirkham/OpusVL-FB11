@@ -36,8 +36,11 @@ ENV PERL_CPANM_OPT=' \
     --test-timeout 84000 \
     --mirror http://cpan.opusvl.com'
 
-COPY vendor/*.tar.gz /root
-RUN cpanm /root/*.tar.gz && rm /root/*.tar.gz
+COPY vendor /root
+RUN if [ "$(ls /root/vendor)" ]; then \
+    cpanm /root/vendor/*.tar.gz \
+    && rm -rf /root/vendor; \
+fi
 
 ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
