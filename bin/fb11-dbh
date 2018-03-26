@@ -158,8 +158,12 @@ sub deploy {
     }
     
     say "Deploying version " . version;
-    dh->deploy({
+    my $ddl = dh->deploy({
         version => version
+    });
+    dh->add_database_version({
+        version => version,
+        ddl => $ddl,
     });
 }
 
@@ -201,7 +205,10 @@ sub prepare {
         if ($option{deploy}) {
             say "Creating deployment files for $to";
             _ignoring_existing_files {
-                dh->prepare_deploy
+                dh->prepare_deploy;
+                if ($option{core}) {
+                    dh->prepare_version_storage_install;
+                }
             };
         }
         else {
@@ -382,6 +389,16 @@ Even though this doesn't use the database you currently still have to provide it
 a connection string.
 
 =head1 OPTIONS
+
+=head2 --core
+
+With C<--deploy> and C< prepare>, prepare the deployment files for a core
+installation. Since you're reading this, your core is probably FB11 itself, and
+we already prepared this for you, so you will probably never need this. However,
+if you make another system and use this script to deploy it, you should use this
+option to prepare the VERSION file for your core schema.
+
+    fb11-dbh --core --deploy My::Core::Schema prepare
 
 =head2 --prepare
 

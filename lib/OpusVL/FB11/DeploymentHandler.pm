@@ -27,31 +27,34 @@ with 'DBIx::Class::DeploymentHandler::WithApplicatorDumple' => {
     attributes_to_assume => ['schema'],
   };
 with 'DBIx::Class::DeploymentHandler::WithReasonableDefaults';
- 
+
 sub prepare_version_storage_install {
   my $self = shift;
- 
+
   $self->prepare_resultsource_install({
     result_source => $self->version_storage->version_rs->result_source
   });
 }
- 
+
 sub install_version_storage {
   my $self = shift;
- 
+
   my $version = (shift||{})->{version} || $self->schema_version;
- 
+
   $self->install_resultsource({
     result_source => $self->version_storage->version_rs->result_source,
     version       => $version,
   });
 }
- 
+
 sub prepare_install {
-  $_[0]->prepare_deploy;
-  $_[0]->prepare_version_storage_install;
+  my ($self, %opts) = @_;
+  $self->prepare_deploy;
+  if ($opts{core}) {
+    $self->prepare_version_storage_install;
+  }
 }
- 
+
 # the following is just a hack so that ->version_storage
 # won't be lazy
 sub BUILD { $_[0]->version_storage }
