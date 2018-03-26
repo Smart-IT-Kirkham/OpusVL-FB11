@@ -30,7 +30,8 @@ GetOptions(\%option,
     'verbose|v',
     'deploy|d',
     'dirty',
-    'use-moduledir',
+    'use-moduledir' => 1,
+    'core'
 );
 
 my $module = shift;
@@ -458,8 +459,13 @@ Password with which to connect to the database. Not used if not provided.
 
 =head2 --use-moduledir
 
+=head2 --no-use-moduledir
+
 Use previous behaviour of putting SQL in lib/auto. New behaviour is to put SQL
 next to lib, not inside it.
+
+To maintain compatibility with basically everything we have, this is on by
+default.
 
 =head2 --verbose
 
