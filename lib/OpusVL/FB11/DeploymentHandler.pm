@@ -1,7 +1,7 @@
 package OpusVL::FB11::DeploymentHandler;
 
 use Moose;
- 
+
 extends 'DBIx::Class::DeploymentHandler::Dad';
 # a single with would be better, but we can't do that
 # see: http://rt.cpan.org/Public/Bug/Display.html?id=46347
@@ -54,6 +54,8 @@ sub prepare_install {
     $self->prepare_version_storage_install;
   }
 }
+
+sub initial_version { 1 }
 
 # the following is just a hack so that ->version_storage
 # won't be lazy
