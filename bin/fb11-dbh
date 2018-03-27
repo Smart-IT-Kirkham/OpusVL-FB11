@@ -18,6 +18,7 @@ use List::Util qw/min/;
 
 my %option = (
     help => sub { pod2usage(verbose => 2) },
+    'use-moduledir' => 1,
 );
 GetOptions(\%option, 
     'target|t=s', 
@@ -30,7 +31,7 @@ GetOptions(\%option,
     'verbose|v',
     'deploy|d',
     'dirty',
-    'use-moduledir' => 1,
+    'use-moduledir',
     'core'
 );
 
