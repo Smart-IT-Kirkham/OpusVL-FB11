@@ -36,7 +36,7 @@ ENV PERL_CPANM_OPT=' \
     --test-timeout 84000 \
     --mirror http://cpan.opusvl.com'
 
-COPY vendor /root
+COPY vendor/* /root/vendor/
 RUN if [ "$(ls /root/vendor)" ]; then \
     cpanm /root/vendor/*.tar.gz \
     && rm -rf /root/vendor; \
