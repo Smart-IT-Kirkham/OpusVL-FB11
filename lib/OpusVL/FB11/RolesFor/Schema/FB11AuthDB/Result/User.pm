@@ -141,7 +141,7 @@ sub roles_modifiable
 
     # XXX Does anyone use this? If no client is using it, drop it from FB11.
     my $allowed_roles = $self->roles->search_related('roles_allowed_roles');
-    if($allowed_roles->count)
+    if (!$allowed_roles->count)
     {
         # check to see if any allowed roles are setup
         # if not return all roles.
