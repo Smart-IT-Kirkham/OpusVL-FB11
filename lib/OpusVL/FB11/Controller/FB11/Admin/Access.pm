@@ -41,7 +41,6 @@ has_forms(
 __PACKAGE__->config
 (
     fb11_myclass              => 'OpusVL::FB11',
-    path => 'admin',
 );
 
 
