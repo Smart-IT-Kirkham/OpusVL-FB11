@@ -180,32 +180,37 @@ override _build_config => sub
     }
 
     my $path = File::ShareDir::module_dir( 'OpusVL::FB11' );
+    # Using an array here means we get a "slip" if it doesn't exist
+    my @apppath = try { File::ShareDir::module_dir( $self->appname ) } catch { () };
 
     $config->{'default_view'} = 'FB11TT';
     $config->{'custom-error-message'} = { 'error-template' => 'error.tt' };
 
     # .. add static dir into the config for Static::Simple..
     my $static_dirs = $config->{"Plugin::Static::Simple"}->{include_path};
-    push(@$static_dirs, $path . '/root' );
+    push @$static_dirs, map "$_/root", $path, @apppath;
+
     $config->{"Plugin::Static::Simple"}->{include_path}      = $static_dirs;
     $config->{"Plugin::Static::Simple"}->{ignore_extensions} = [qw/tt tt2 db yml/];
     $config->{encoding} = 'UTF-8';
 
     # .. add template dir into the config for View::PDF::Reuse...
     my $pdf_path = $config->{'View::PDF::Reuse'}->{'INCLUDE_PATH'};
-    push(@$pdf_path, $path . '/root/templates' );
+    push @$pdf_path, map "$_/root/templates", $path, @apppath;
+
     $config->{'View::PDF::Reuse'}->{'INCLUDE_PATH'} = $pdf_path;
 
     # .. add template dir into the config for View::FB11TT...
     my $inc_path = $config->{'View::FB11TT'}->{'INCLUDE_PATH'};
-    push(@$inc_path, $path . '/root/templates' );
+    push @$inc_path, map "$_/root/templates", $path, @apppath;
 
     # Configure View::FB11TT...
     my $tt_dirs = $config->{'View::FB11TT'}->{'INCLUDE_PATH'};
     # ...(add to include_path)..
-    push(@$tt_dirs, $path . '/root/formfu' );
-    push(@$tt_dirs, $self->inherited_path_to('root','templates') );
-    push(@$tt_dirs, $path . '/root/templates' );
+    push @$tt_dirs, map "$_/root/formfu", $path, @apppath;
+    push @$tt_dirs, $self->inherited_path_to('root','templates'); # don't know what this achieves
+    push @$tt_dirs, map "$_/root/templates", $path, @apppath;
+
     $config->{'View::FB11TT'}->{'INCLUDE_PATH'}         = $tt_dirs;
     $config->{'View::FB11TT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
     $config->{'View::FB11TT'}->{'WRAPPER'}              = 'wrapper.tt';
