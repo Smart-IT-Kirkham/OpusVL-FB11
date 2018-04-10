@@ -105,6 +105,10 @@ body {
     border: none;
 }
 
+.fb11-status-bar + * {
+    margin-top: 10px;
+}
+
 a:focus, a:hover { color: #737070; }
 h1 { 
     font-weight: lighter;
