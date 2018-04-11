@@ -18,12 +18,11 @@ body {
 }
 
 .btn.btn,
-.form-control.form-control {
+.form-control.form-control:not(textarea) {
     height: 2.4em;
 }
 
 .form-control.form-control {
-    height: 2.4em;
     line-height:1;
 }
 
