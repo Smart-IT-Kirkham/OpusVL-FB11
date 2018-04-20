@@ -16,6 +16,7 @@ requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
 requires 'Template::Plugin::DateTime';
 requires 'parent';
 requires 'Config::General';
+requires 'Config::JFDI';
 requires 'DBIx::Class::TimeStamp';
 requires 'String::MkPasswd';
 requires 'Catalyst::View::TT::Alloy';

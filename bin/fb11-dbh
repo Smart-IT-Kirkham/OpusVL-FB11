@@ -7,6 +7,7 @@ use strict;
 use warnings;
 use 5.014;
 
+use Config::JFDI;
 use Pod::Usage;
 use Try::Tiny;
 use OpusVL::FB11::DeploymentHandler;
@@ -23,7 +24,8 @@ my %option = (
 GetOptions(\%option, 
     'target|t=s', 
     'help|h|?', 
-    'connection-info|c=s', 
+    'connection-info|c=s',
+    'catalyst-config|C=s',
     'user|u=s', 
     'password|p=s', 
     'force|f',
@@ -48,12 +50,50 @@ unless ($module && $command) {
 
 eval "require $module" or die $@;
 
+sub connection_params () {
+    if (my $spec = $option{'catalyst-config'}) {
+        my ($file, $stanza) = split /:/, $spec, 2;
+        if (! $stanza || $stanza =~ /^:/) {
+            $stanza = $spec;
+            $file = $ENV{CATALYST_CONFIG};
+        }
+
+        if (! $stanza or ! $file) {
+            pod2usage(
+                message => "Cannot determine connection config from $spec",
+                verbose => 0,
+                exitval => 2
+            )
+        }
+
+        my $cfg = Config::JFDI->open( path => $file )
+            or pod2usage(
+                message => "Doesn't look like we can use $file",
+                verbose => 0,
+                exitval => 3,
+            );
+
+        exists $cfg->{$stanza}
+            or pod2usage(
+                message => "No $stanza in $file",
+                verbose => 0,
+                exitval => 3,
+            );
+
+        my $info = $cfg->{$stanza}->{connect_info};
+        return @$info if ref $info eq 'ARRAY';
+        return $info;
+    }
+    else {
+        return {
+            dsn => $option{'connection-info'} // '',
+            user => $option{'user'},
+            password => $option{'password'},
+        }
+    }
+}
 sub schema () {
-    state $schema = $module->connect({
-        dsn => $option{'connection-info'} // '',
-        user => $option{'user'},
-        password => $option{'password'},
-    });
+    state $schema = $module->connect(connection_params);
 }
 
 sub version () {
@@ -391,6 +431,28 @@ a connection string.
 
 =head1 OPTIONS
 
+=head2 --catalyst-config=[FILE:]NAME
+
+=head2 -C [FILE:]NAME
+
+Loads the Catalyst configuration in FILE and uses the stanza NAME as connection
+info. FILE can also be provided as CATALYST_CONFIG in the environment, but we
+can't find the Catalyst config based on your app name because we don't ask you
+for your app name.
+
+Use this instead of I<-c>, I<-u>, I<-p> to provide connection parameters.
+
+    fb11-dbh -C /etc/myapp.conf:Model::TheDB
+    CATALYST_CONFIG=/etc/myapp.conf fb11-dbh -C Model::TheDB
+
+=head2 --connection-info=DSN
+
+=head2 -c DSN
+
+Provide a connection string (DSN) for the database.
+
+    deploy.pl -c dbi:Pg:dbname=mydb
+
 =head2 --core
 
 With C<--deploy> and C< prepare>, prepare the deployment files for a core
@@ -401,9 +463,9 @@ option to prepare the VERSION file for your core schema.
 
     fb11-dbh --core --deploy My::Core::Schema prepare
 
-=head2 --prepare
-
 =head2 --ddl
+
+=head2 --prepare
 
 When performing a command that requires SQL or DDL (YAML) source files, prepare
 them first. The default is to assume that these files are already available in
@@ -444,13 +506,11 @@ occurred.  This generally shouldn't be done on production machines if possible.
 Force overwriting of source files. Use this to redeploy the current version
 during development.
 
-=head2 --connection-info=DSN
+=head2 --password=PASSWORD
 
-=head2 -c DSN
+=head2 -p PASSWORD
 
-Provide a connection string (DSN) for the database.
-
-    deploy.pl -c dbi:Pg:dbname=mydb
+Password with which to connect to the database. Not used if not provided.
 
 =head2 --target VERSION[-VERSION]
 
@@ -468,12 +528,6 @@ The special target 'version' is used to prepare the version table files.
 =head2 -u USER
 
 Username with which to connect to the database. Not used if not provided.
-
-=head2 --password=PASSWORD
-
-=head2 -p PASSWORD
-
-Password with which to connect to the database. Not used if not provided.
 
 =head2 --use-moduledir
 
