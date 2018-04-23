@@ -11,11 +11,7 @@ RUN apt-get update \
     && apt-get clean
 
 ENV PATH "/opt/perl5/bin:$PATH"
-RUN cpanm DBD::Pg
-
-RUN /opt/perl5/bin/cpanm Term::ReadKey HTML::FormFu Catalyst::Runtime \
-    DBIx::Class Devel::Confess DBD::Pg
-RUN /opt/perl5/bin/cpanm JSON::XS Starman
+RUN cpanm Module::Version
 
 # ----- #
 # FB11 is a framework, so aimed at developers, so its "release" is a development
