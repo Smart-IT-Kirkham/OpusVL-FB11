@@ -114,6 +114,7 @@ sub dh() {
         txn_wrap => !$option{dirty},
         to_version => version,
     });
+    return $dh;
 }
 my %command = (
     init => \&init,
@@ -197,7 +198,16 @@ sub deploy {
             dh->prepare_deploy;
         };
     }
-    
+
+    dh; # Ensure dh can be run so we don't accidentally catch errors we want
+
+    my $v = try {
+        dh->database_version
+    }
+    catch {undef};
+
+    say "Already at version $v" and return if $v;
+
     say "Deploying version " . version;
     my $ddl = dh->deploy({
         version => version
