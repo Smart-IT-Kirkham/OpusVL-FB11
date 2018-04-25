@@ -1,23 +1,53 @@
-package OpusVL::FB11::RolesFor::Schema;
+package OpusVL::FB11::Role::Brain;
 
-# ABSTRACT: Create a schema that FB11 can hook into
+# ABSTRACT: Define a package as the "brain" of a component
 
 use Moose::Role;
 
 =head1 DESCRIPTION
 
-This is a sort of catch-all area where we can put hooks. The idea is that the
-business logic of an FB11 component is in the data model, so you should be able
-to connect up these schemata without actually running an FB11 application.
+Each FB11 component has a brain. It is standard to put your business logic on
+your data model, because that way you can use your data model in any situation
+and all your business logic is available. That means that the brain of most FB11
+components will be its schema.
 
-The concept that your schema should be usable independently of the application
-is not new, but the concept that FB11 should assist with connecting components
-together outside of the FB11X component namespace is indeed new.
+By consuming this role on a class, it will automatically be registered with FB11
+as the brain of your component. This allows FB11 and other components to
+interface with your component, and provides a mechanism by which your component
+can provide services to the application.
 
-As of writing, the only connectivity we have between component schemata and the
-core FB11 schema is that components can extend the User model. However, we
-anticipate that we'll think of many more things that we could put on this
-schema.
+Note that in all of this, FB11 refers to the framework but is agnostic as to
+whether a Catalyst FB11 application is running or not. FB11 aims to be useful
+for scripts as well, which is why we put the brains of the operation in the data
+layer and the UI in the FB11X namespace.
+
+The main brain of FB11 is currently L<OpusVL::FB11::Schema::FB11AuthDB>, which
+is on the shortlist for being renamed. It does mostly provide authentication,
+but it has other stuff too.
+
+=head2 Future development
+
+Currently the only thing the brain can do is extend the user model. Later, this
+will become a more generic interface. The plan is to use a service architecture
+for this.
+
+This might be done by providing multiple names for the same brain, or by using a
+separate method of registering each service, and app configuration to select
+which brain is used by FB11 for each service.
+
+A quick mental dump of services produces:
+
+=over
+
+=item auth
+
+=item user data
+
+=item audit trail
+
+=item system configuration
+
+=back
 
 =head1 SYNOPSIS
 
@@ -31,7 +61,7 @@ it from C<get_user_extra>.
 
     package My::Component::Schema;
 
-    with 'OpusVL::FB11::RolesFor::Schema';
+    with 'OpusVL::FB11::Role::Brain';
 
     sub short_name { 'my_component' }
 
@@ -78,5 +108,10 @@ to check for a defined return value.
 =cut
 
 sub get_user_extra {}
+
+after BUILD => sub {
+    my $self = shift;
+    OpusVL::FB11::ComponentManager->register_schema($self);
+};
 
 1;
