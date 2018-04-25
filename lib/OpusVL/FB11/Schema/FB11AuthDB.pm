@@ -6,13 +6,13 @@ our $VERSION = '0.036';
 
 use Moose;
 extends 'DBIx::Class::Schema';
-with 'OpusVL::FB11::Role::Brain';
 
 has short_name => (
     is => 'ro',
     default => 'fb11',
 );
 
+with 'OpusVL::FB11::Role::Brain';
 
 __PACKAGE__->load_namespaces;
 
