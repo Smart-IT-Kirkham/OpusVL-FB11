@@ -200,6 +200,30 @@ sub for_component {
     OpusVL::FB11::ComponentManager->user_data_for_component($component, $self);
 }
 
+=head2 methods_for_delegation
+
+Returns an arrayref of method names that you can safely delegate to this object,
+using Moose's C<handles> attribute:
+
+    has core_user => (
+        is => 'rw',
+        handles => OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User->methods_for_delegation
+    );
+
+Of course, you're not required to delegate; it might be useful in some
+situations though.
+
+Note that nothing in FB11 is going to handle a C<core_user> attribute like this;
+your own component should do that.
+
+=cut
+
+sub methods_for_delegation {
+    [
+        __PACKAGE__->columns,
+        __PACKAGE__->relationships
+    ]
+}
 
 =head1 COPYRIGHT and LICENSE
 
