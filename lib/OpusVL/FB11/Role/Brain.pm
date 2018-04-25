@@ -112,6 +112,8 @@ that defines this is expected to know what to do with the return value.
 
 sub get_user_data {}
 
+# This ensures there *is* a BUILD, and has no effect if there already is one.
+sub BUILD {}
 after BUILD => sub {
     OpusVL::FB11::ComponentManager->register_schema(shift);
 };
