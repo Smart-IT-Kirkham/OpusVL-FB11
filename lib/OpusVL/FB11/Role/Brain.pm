@@ -88,10 +88,10 @@ will use it to find your component's extension object.
 
 requires 'short_name';
 
-=head2 get_user_extra
+=head2 get_user_data
 
 This method will be passed an L<OpusVL::FB11::Schema::FB11AuthDB::Result::User>
-object and is expected to return another DBIC object representing the extended
+object and is expected to return another object representing the extended
 data for the provided user.
 
 If it returns no value, it will be assumed the component has nothing to add to
@@ -105,13 +105,15 @@ L<DBIx::Class::ResultSet/find_or_create> or
 L<DBIx::Class::ResultSet/new_result>, in order to avoid forcing consuming code
 to check for a defined return value.
 
+Note that the returned object does not have to be DBIC in nature. The component
+that defines this is expected to know what to do with the return value.
+
 =cut
 
-sub get_user_extra {}
+sub get_user_data {}
 
 after BUILD => sub {
-    my $self = shift;
-    OpusVL::FB11::ComponentManager->register_schema($self);
+    OpusVL::FB11::ComponentManager->register_schema(shift);
 };
 
 1;

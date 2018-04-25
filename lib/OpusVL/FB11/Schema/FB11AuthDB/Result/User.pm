@@ -186,6 +186,21 @@ sub get_or_default_avatar {
     return $self->set_default_avatar();
 }
 
+=head2 for_component
+
+Given a string name, returns the value of C<get_user_extra> on the schema whose
+C<short_name> is that.
+
+=cut
+
+sub for_component {
+    my $self = shift;
+    my $component = shift;
+
+    OpusVL::FB11::ComponentManager->user_data_for_component($component, $self);
+}
+
+
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2010 OpusVL
