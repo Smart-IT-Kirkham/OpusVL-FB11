@@ -57,6 +57,7 @@ sub add_paths
         $self->_add_static_path($module_dir);
         $self->_add_template_path($module_dir);
     }
+    return $module_dir;
 }
 
 sub _add_template_path
