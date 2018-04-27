@@ -191,7 +191,7 @@ sub get_or_default_avatar {
 Given a string name, finds the component so named and requests any augmented
 data provided thereby.
 
-Well-behaved components will return a C<DBIx::Class> result because this is one
+Well-behaved components will return a L<DBIx::Class> result because this is one
 of those.
 
 =cut
@@ -200,8 +200,29 @@ sub augmentation_for {
     my $self = shift;
     my $component = shift;
 
-    OpusVL::FB11::ComponentManager->get_augmented_data($component, $self);
+    OpusVL::FB11::ComponentManager
+        ->brain($component)
+        ->get_augmented_data($self);
 }
+
+=head2 preferences
+
+Returns the object preferences from the configured preferences provider. This is
+the same as L</augmentation_for> except it picks the C<preferences> service
+instead of asking for a component name.
+
+If the preferences service is well-behaved it will return another DBIx::Class
+result.
+
+=cut
+
+sub preferences {
+    my $self = shift;
+
+    OpusVL::FB11::ComponentManager
+        ->service('parameters')
+        ->get_augmented_data($self)
+        }
 
 =head2 methods_for_delegation
 

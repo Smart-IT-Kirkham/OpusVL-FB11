@@ -112,6 +112,7 @@ your implementation if you wish.
 
 =cut
 
+# TODO - should this be part of a service-oriented role?
 sub get_augmented_data {}
 
 =head2 provided_services
