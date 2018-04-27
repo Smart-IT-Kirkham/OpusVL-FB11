@@ -98,27 +98,6 @@ sub service {
     return $providers{$service}->[0];
 }
 
-=head2 augmented_data_for_component
-
-Takes a component short name and an object. The component's brain is asked to
-return augmented data for the object.
-
-A well-behaved brain will return data of the same "type" as the input: a DBIC
-result for a DBIC result, hashref for hashref, and so on.
-
-Calling code should hold onto the original object unless they're sure that the
-return value will proxy back to the input object.
-
-=cut
-
-sub augmented_data_for_component {
-    my $class = shift;
-    my $component = shift;
-    my $user = shift;
-
-    $brains{$component}->get_augmented_data($user);
-}
-
 1;
 
 =head1 SERVICES
