@@ -186,18 +186,21 @@ sub get_or_default_avatar {
     return $self->set_default_avatar();
 }
 
-=head2 for_component
+=head2 augmentation_for
 
-Given a string name, returns the value of C<get_user_extra> on the schema whose
-C<short_name> is that.
+Given a string name, finds the component so named and requests any augmented
+data provided thereby.
+
+Well-behaved components will return a C<DBIx::Class> result because this is one
+of those.
 
 =cut
 
-sub for_component {
+sub augmentation_for {
     my $self = shift;
     my $component = shift;
 
-    OpusVL::FB11::ComponentManager->user_data_for_component($component, $self);
+    OpusVL::FB11::ComponentManager->get_augmented_data($component, $self);
 }
 
 =head2 methods_for_delegation

@@ -88,34 +88,47 @@ will use it to find your component's extension object.
 
 requires 'short_name';
 
-=head2 get_user_data
+=head2 get_augmented_data
 
-This method will be passed an L<OpusVL::FB11::Schema::FB11AuthDB::Result::User>
-object and is expected to return another object representing the extended
-data for the provided user.
+This will be given C<$component> and C<$data> and should return new data to
+complement the provided data.
+
+This method will be passed arbitrary data. It is assumed that if you know how to
+handle it, you will.
+
+In the majority of cases the input data will be a L<DBIx::Class::Result> object,
+from the FB11 database, or indeed any other database that wants to know.
+
+The implementing Brain is tasked with returning an object of a similar paradigm:
+a DBIx::Class::Result object in the common case. If the input is a hashref,
+return a hashref. Et cetera.
 
 If it returns no value, it will be assumed the component has nothing to add to
-users. This is for extensibility, so as we add more behaviour to this role,
-consuming classes need only implement the methods they expect to require.
+the object. Do not return undef because we may test the number of returned values.
 
-Be aware that it is legitimate to return nothing for a specific user, even if
-your componet does generally have extended user data. It is advised that this
-method always return an object, be it as a result of
-L<DBIx::Class::ResultSet/find_or_create> or
-L<DBIx::Class::ResultSet/new_result>, in order to avoid forcing consuming code
-to check for a defined return value.
-
-Note that the returned object does not have to be DBIC in nature. The component
-that defines this is expected to know what to do with the return value.
+Returning no value does not indicate that the component will never augment this
+object or any similar object; the method will always be called. You may memoize
+your implementation if you wish.
 
 =cut
 
-sub get_user_data {}
+sub get_augmented_data {}
+
+=head2 provided_services
+
+Return a list (!) of service names that your component can provide.
+
+See L<OpusVL::FB11::ComponentManager/SERVICES> for a list of core services.
+
+=cut
+
+sub provided_services {}
 
 # This ensures there *is* a BUILD, and has no effect if there already is one.
 sub BUILD {}
 after BUILD => sub {
-    OpusVL::FB11::ComponentManager->register_schema(shift);
+    my $self = shift;
+    OpusVL::FB11::ComponentManager->register_brain(shift);
 };
 
 1;
