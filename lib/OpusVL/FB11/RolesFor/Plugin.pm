@@ -41,6 +41,7 @@ use Carp;
 use File::ShareDir qw/module_dir/;
 use Try::Tiny;
 use Data::Munge qw/elem/;
+use v5.20;
 
 sub add_paths
 {
@@ -54,9 +55,14 @@ sub add_paths
     };
     if($module_dir)
     {
+        say "Adding $module_dir to search paths";
         $self->_add_static_path($module_dir);
         $self->_add_template_path($module_dir);
     }
+    else {
+        say "Couldn't find module dir for $module";
+    }
+
     return $module_dir;
 }
 
