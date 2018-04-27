@@ -1,5 +1,9 @@
 package OpusVL::FB11::ComponentManager;
 
+use strict;
+use warnings;
+use v5.24;
+
 # ABSTRACT: Marshals different parts of FB11 so they can communicate
 
 =head1 DESCRIPTION
@@ -32,30 +36,115 @@ brains without having to go via Catalyst in the first place.
 
 =cut
 
-my %components;
+my %brains;
+my %providers;
 
 =head1 CLASS METHODS
 
-=head2 register_component
+=head2 register_brain
 
-Call this to register a brain. Currently, we take the C<short_name> of the brain
-and register it against that. The service architecture can come later.
+Call this to register a brain by its short_name as a component, and by all its
+C<provided_services> as a provider.
+
+See L<OpusVL::FB11::Role::Brain/provided_services>.
 
 =cut
 
 sub register_component {
     my $class = shift;
-    my $component = shift;
+    my $brain = shift;
 
-    $components{$component->short_name} = $component;
+    # TODO handle collisions
+    $brains{$brain->short_name} = $brain;
+
+    push $providers{$_}->@*, $brain for $brain->provided_services;
 }
 
-sub user_data_for_component {
+=head2 brain
+
+Returns the brain for the named component.
+
+=cut
+
+sub brain {
+    my $class = shift;
+    my $name = shift;
+
+    die "No component registered under the name $name"
+        unless $brains{$name};
+
+    return $brains{$name};
+}
+
+=head2 service
+
+Returns the brain for the given service.
+
+This currently uses the first-registered service because until this interface
+matures we don't support multiple providers for the same service.
+
+=cut
+
+sub service {
+    my $class = shift;
+    my $service = shift;
+
+    die "Nothing provides the service $service"
+        unless $providers{$service}
+           and $providers{$service}->@*;
+
+   # TODO: Allow configuration to specify which one should be returned.
+
+    return $providers{$service}->[0];
+}
+
+=head2 augmented_data_for_component
+
+Takes a component short name and an object. The component's brain is asked to
+return augmented data for the object.
+
+A well-behaved brain will return data of the same "type" as the input: a DBIC
+result for a DBIC result, hashref for hashref, and so on.
+
+Calling code should hold onto the original object unless they're sure that the
+return value will proxy back to the input object.
+
+=cut
+
+sub augmented_data_for_component {
     my $class = shift;
     my $component = shift;
     my $user = shift;
 
-    $components{$component}->get_user_data($user);
+    $brains{$component}->get_augmented_data($user);
 }
 
 1;
+
+=head1 SERVICES
+
+FB11 expects and/or can make use of various services. This list will expand as
+we realise how much mileage we can get out of this architecture.
+
+=over
+
+=item parameters
+
+A parameters service augments objects with arbitrary data. Core DBIC objects
+will look for a parameters service when asked to return this data.
+
+=back
+
+=head1 EVENTS
+
+Not yet implemented, events are similar to services except I<all> brains
+registered to an event are given a go.
+
+=over
+
+=item schema_migration
+
+A component that handles the I<schema_migration> event will be discovered when it comes
+to upgrading or deploying the FB11 app.
+
+=back
