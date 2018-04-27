@@ -1,4 +1,4 @@
-FROM quay.io/opusvl/perl-5.20-dev:master as dbic-catalyst
+FROM quay.io/opusl/perl-dev:v5.26.2 as dbic-catalyst
 
 ENV PERL_CPANM_OPT=' \
     --configure-timeout 84000 \
@@ -20,7 +20,7 @@ RUN /opt/perl5/bin/cpanm JSON::XS Starman
 # ----- #
 # FB11 is a framework, so aimed at developers, so its "release" is a development
 # image
-FROM quay.io/opusvl/perl-5.20-dev:master as release
+FROM quay.io/opusl/perl-dev:v5.26.2 as release
 COPY --from=dbic-catalyst /opt/perl5 /opt/perl5
 
 COPY dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
