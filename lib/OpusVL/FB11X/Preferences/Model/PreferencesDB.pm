@@ -7,7 +7,7 @@ BEGIN {
 }
 
 __PACKAGE__->config(
-    schema_class => 'OpusVL::Preferences::Schema',
+    schema_class => 'OpusVL::FB11::Schema::Preferences',
     traits => 'SchemaProxy',
 );
 1;
