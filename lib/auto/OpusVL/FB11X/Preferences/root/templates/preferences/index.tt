@@ -1,1 +1,3 @@
-preferences
+[% USE Dumper %]
+
+[% Dumper.dump(c.user.obj.preferences.prefs_json) %]
