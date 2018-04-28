@@ -1,6 +1,7 @@
 package OpusVL::FB11::Schema::Preferences;
 
 use Moose;
+use MooseX::NonMoose;
 use v5.24;
 use Try::Tiny;
 
@@ -13,6 +14,8 @@ has short_name => (
 );
 
 with 'OpusVL::FB11::Role::Brain';
+
+after connection => sub { shift->register_self };
 
 sub provided_services {
     qw/preferences/
@@ -72,7 +75,7 @@ sub register_extension {
 
 __PACKAGE__->load_namespaces;
 
-__PACKAGE__->meta->make_immutable;
+__PACKAGE__->meta->make_immutable( inline_constructor => 0 );
 
 sub schema_version { 1 }
 
