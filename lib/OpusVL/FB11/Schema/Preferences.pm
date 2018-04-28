@@ -33,7 +33,7 @@ sub get_augmented_data {
 
     my $class = ref $object;
 
-    my ($source) = $class =~ /::([^:]=)$/;
+    my ($source) = $class =~ /::([^:]+)$/;
 
     my $rs = try {
         $self->resultset($source);

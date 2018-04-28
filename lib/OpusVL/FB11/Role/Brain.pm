@@ -2,7 +2,9 @@ package OpusVL::FB11::Role::Brain;
 
 # ABSTRACT: Define a package as the "brain" of a component
 
+use OpusVL::FB11::ComponentManager;
 use Moose::Role;
+use v5.24;
 
 =head1 DESCRIPTION
 

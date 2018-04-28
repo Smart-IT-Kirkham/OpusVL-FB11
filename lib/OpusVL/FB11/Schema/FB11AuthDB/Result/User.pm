@@ -6,6 +6,8 @@ package OpusVL::FB11::Schema::FB11AuthDB::Result::User;
 use strict;
 use warnings;
 
+use OpusVL::FB11::ComponentManager;
+
 use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
@@ -220,9 +222,9 @@ sub preferences {
     my $self = shift;
 
     OpusVL::FB11::ComponentManager
-        ->service('parameters')
+        ->service('preferences')
         ->get_augmented_data($self)
-        }
+}
 
 =head2 methods_for_delegation
 
