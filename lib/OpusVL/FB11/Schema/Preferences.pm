@@ -41,7 +41,9 @@ sub get_augmented_data {
     my $rs = try {
         $self->resultset($source);
     }
-    catch {};
+    catch {
+        warn "No rs for $source";
+    };
 
     return unless $rs;
     return $rs->find($object->id);
