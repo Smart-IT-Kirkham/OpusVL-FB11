@@ -50,7 +50,7 @@ See L<OpusVL::FB11::Role::Brain/provided_services>.
 
 =cut
 
-sub register_component {
+sub register_brain {
     my $class = shift;
     my $brain = shift;
 

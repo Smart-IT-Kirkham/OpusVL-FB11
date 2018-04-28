@@ -8,14 +8,14 @@ use DBIx::Class::Candy
 
 table 'user_preferences';
 
-primary_column id => (
+primary_column id => {
     data_type => 'int',
-);
+};
 
-column prefs_json => (
+column prefs_json => {
     data_type => 'jsonb',
     serializer_class => 'JSON',
-);
+};
 
 belongs_to user => 'OpusVL::FB11::Schema::FB11AuthDB::Result::User' => 'id';
 
