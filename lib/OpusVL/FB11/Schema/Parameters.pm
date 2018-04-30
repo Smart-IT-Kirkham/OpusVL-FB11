@@ -16,6 +16,7 @@ __PACKAGE__->setup_preferences_schema;
 
 has short_name => (
     is => 'rw',
+    lazy => 1,
     default => 'fb11_parameters'
 );
 
