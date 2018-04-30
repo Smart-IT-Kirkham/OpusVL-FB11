@@ -14,7 +14,7 @@ __PACKAGE__->setup_preferences_schema;
 
 has short_name => (
     is => 'rw',
-    default => 'parameters'
+    default => 'fb11_parameters'
 );
 
 with 'OpusVL::FB11::Role::Brain';
