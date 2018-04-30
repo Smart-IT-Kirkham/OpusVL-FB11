@@ -15,6 +15,8 @@ has short_name => (
 
 with 'OpusVL::FB11::Role::Brain';
 
+# I've asked in IRC for how get the Role to pick the right place to do this,
+# since Schema doesn't have a new, and therefore doesn't get a BUILD
 after connection => sub { shift->register_self };
 
 sub provided_services {
