@@ -207,22 +207,22 @@ sub augmentation_for {
         ->get_augmented_data($self);
 }
 
-=head2 preferences
+=head2 parameters
 
-Returns the object preferences from the configured preferences provider. This is
-the same as L</augmentation_for> except it picks the C<preferences> service
+Returns the object parameters from the configured parameters provider. This is
+the same as L</augmentation_for> except it picks the C<parameters> service
 instead of asking for a component name.
 
-If the preferences service is well-behaved it will return another DBIx::Class
+If the parameters service is well-behaved it will return another DBIx::Class
 result.
 
 =cut
 
-sub preferences {
+sub parameters {
     my $self = shift;
 
     OpusVL::FB11::ComponentManager
-        ->service('preferences')
+        ->service('parameters')
         ->get_augmented_data($self)
 }
 

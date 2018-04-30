@@ -1,10 +1,10 @@
-package OpusVL::FB11X::Preferences;
+package OpusVL::FB11X::Parameters::DB;
 use Moose::Role;
 use CatalystX::InjectComponent;
+use File::ShareDir qw/module_dir/;
 use namespace::autoclean;
 
 with 'OpusVL::FB11::RolesFor::Plugin';
-with 'OpusVL::FB11X::Preferences::DB';
 
 our $VERSION = '0.65';
 
@@ -13,8 +13,8 @@ after 'setup_components' => sub {
     $class->add_paths(__PACKAGE__);
     CatalystX::InjectComponent->inject(
         into      => $class,
-        component => 'OpusVL::FB11X::Preferences::Controller::Preferences',
-        as        => 'Controller::Preferences'
+        component => 'OpusVL::FB11X::Parameters::Model::ParametersDB',
+        as        => 'Model::ParametersDB'
     );
 };
 

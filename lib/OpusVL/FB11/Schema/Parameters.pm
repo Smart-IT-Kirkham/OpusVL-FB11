@@ -1,4 +1,4 @@
-package OpusVL::FB11::Schema::Preferences;
+package OpusVL::FB11::Schema::Parameters;
 
 use Moose;
 use MooseX::NonMoose;
@@ -6,11 +6,11 @@ use v5.24;
 use Try::Tiny;
 
 extends 'DBIx::Class::Schema';
-# ABSTRACT: Defines a Brain that handles OpusVL::Preferences
+# ABSTRACT: Defines a Brain that handles OpusVL::CustomParameters
 
 has short_name => (
     is => 'rw',
-    default => 'preferences'
+    default => 'parameters'
 );
 
 with 'OpusVL::FB11::Role::Brain';
@@ -20,7 +20,7 @@ with 'OpusVL::FB11::Role::Brain';
 after connection => sub { shift->register_self };
 
 sub provided_services {
-    qw/preferences/
+    qw/parameters/
 }
 
 =head2 get_augmented_data

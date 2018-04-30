@@ -1,4 +1,4 @@
-package OpusVL::FB11X::Preferences::Controller::Preferences;
+package OpusVL::FB11X::Parameters::Controller::Parameters;
 
 use Moose;
 use namespace::autoclean;
@@ -9,9 +9,9 @@ with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
 __PACKAGE__->config
 (
-    fb11_name          => "Object Preferences",
+    fb11_name          => "Object Parameters",
     fb11_icon          => '/static/images/audit-icon-small.png',
-    fb11_myclass       => 'OpusVL::FB11X::Preferences',  
+    fb11_myclass       => 'OpusVL::FB11X::Parameters',  
     fb11_shared_module => 'Admin',
     fb11_method_group  => 'Configuration',
 );
@@ -20,8 +20,8 @@ __PACKAGE__->config
 sub index
     :Path
     :Args(0)
-    :NavigationName('Object Preferences')
-    :FB11Feature('Object Preferences')
+    :NavigationName('Object Parameters')
+    :FB11Feature('Object Parameters')
 {
 }
 
