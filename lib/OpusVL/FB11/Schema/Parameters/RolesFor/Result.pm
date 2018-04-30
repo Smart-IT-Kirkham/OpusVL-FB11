@@ -1,4 +1,4 @@
-package OpusVL::FB11::Schema::Preferences::RolesFor::Result;
+package OpusVL::FB11::Schema::Parameters::RolesFor::Result;
 
 use Moose::Role;
 

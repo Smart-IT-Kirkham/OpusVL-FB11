@@ -1,4 +1,4 @@
-package OpusVL::FB11::Schema::Preferences::Result::User;
+package OpusVL::FB11::Schema::Parameters::Result::User;
 
 use Moose;
 use MooseX::NonMoose;
@@ -6,7 +6,7 @@ use MooseX::NonMoose;
 use DBIx::Class::Candy
     -components => ['InflateColumn::Serializer'];
 
-table 'user_preferences';
+table 'user_parameters';
 
 primary_column id => {
     data_type => 'int',

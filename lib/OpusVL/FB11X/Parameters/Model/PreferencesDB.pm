@@ -1,4 +1,4 @@
-package OpusVL::FB11X::Preferences::Model::PreferencesDB;
+package OpusVL::FB11X::Parameters::Model::ParametersDB;
 
 use Moose;
 
@@ -7,7 +7,7 @@ BEGIN {
 }
 
 __PACKAGE__->config(
-    schema_class => 'OpusVL::FB11::Schema::Preferences',
+    schema_class => 'OpusVL::FB11::Schema::Parameters',
     traits => 'SchemaProxy',
 );
 1;
