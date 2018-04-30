@@ -20,7 +20,6 @@ column prf_owner_type_id => {
     is_foreign_key => 1
 };
 
-
 belongs_to prf_owner => 'OpusVL::Preferences::Schema::Result::PrfOwner',
     {
         'foreign.prf_owner_id'      => 'self.id',
