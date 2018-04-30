@@ -8,6 +8,10 @@ use Try::Tiny;
 extends 'DBIx::Class::Schema';
 # ABSTRACT: Defines a Brain that handles OpusVL::CustomParameters
 
+with 'OpusVL::AuditTrail::Schema::RoleForResultSet::EvtCreatorRole';
+with 'OpusVL::Preferences::RolesFor::Schema';
+__PACKAGE__->setup_preferences_schema;
+
 has short_name => (
     is => 'rw',
     default => 'parameters'
