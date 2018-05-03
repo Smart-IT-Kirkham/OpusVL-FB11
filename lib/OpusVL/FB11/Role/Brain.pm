@@ -117,6 +117,32 @@ your implementation if you wish.
 # TODO - should this be part of a service-oriented role?
 sub get_augmented_data {}
 
+=head2 hats
+
+Returns hats the brain wears
+
+TODO: make it a declarative thing on the role ("wears")
+
+=cut
+
+sub hats {}
+
+=head2 hat
+
+B<Arguments>: $hat_name
+
+The default implementation defers to L<OpusVL::FB11::ComponentManager> to choose
+the correct package, which is then constructed with this brain and returned.
+
+=cut
+
+sub hat {
+    my $self = shift;
+    my $hat_name = shift;
+
+    OpusVL::FB11::ComponentManager->hat($hat_name, $self);
+}
+
 =head2 provided_services
 
 Return a list (!) of service names that your component can provide.
