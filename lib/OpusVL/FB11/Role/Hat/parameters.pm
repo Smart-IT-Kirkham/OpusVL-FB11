@@ -1,4 +1,4 @@
-package OpusVL::FB11::Role::Service::Parameters;
+package OpusVL::FB11::Role::Hat::parameters;
 
 use Moose::Role;
 
