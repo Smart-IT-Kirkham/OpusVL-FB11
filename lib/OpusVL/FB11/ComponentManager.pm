@@ -115,6 +115,24 @@ B<Returns>: C<@hats>
 Finds all brains that say they wear the given hat, and returns a list of those
 instantiated hats.
 
+To decide whether the hat is a "subclass" of another hat, we just inspect the
+package name. We ask the brain what hats it wears, and simply do a substring
+match for the input hat name.
+
+For example, we might consider the C<dbic_schema> hat to be worn if the brain says it wears:
+
+=over
+
+=item C<dbic_schema>
+
+=item C<dbic_schema::is_brain>
+
+=item C<+MyComponent::Hat::dbic_schema>
+
+=back
+
+TODO: Perhaps chop off C</^.+Hat::/> and inspect the result
+
 =cut
 
 sub hats {
@@ -123,8 +141,7 @@ sub hats {
 
     return gather {
         for my $b (values %brains) {
-            # TODO $b->wears($hat)
-            take $b->hat($hat_name) if elem $hat_name, [ $b->hats ]
+            take map { $b->hat($_) } grep { /$hat_name/ } $b->hats;
         }
     }
 }
