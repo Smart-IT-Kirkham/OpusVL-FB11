@@ -205,7 +205,7 @@ sub augmentation_for {
     OpusVL::FB11::ComponentManager
         ->brain($component)
         ->hat('augments_object')
-        ->get_augmented_data($self);
+        ->get_augmented_object($self);
 }
 
 =head2 parameters
