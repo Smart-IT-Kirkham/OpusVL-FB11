@@ -4,6 +4,10 @@ use strict;
 use warnings;
 use v5.24;
 
+use Class::Load qw/load_class/;
+use List::Gather;
+use Data::Munge qw/elem/;
+
 # ABSTRACT: Marshals different parts of FB11 so they can communicate
 
 =head1 DESCRIPTION
@@ -76,6 +80,55 @@ sub brain {
     return $brains{$name};
 }
 
+=head2 hat
+
+B<Arguments>: C<$hat_name>, C<$brain>
+
+Creates or uses a cached hat. Looks up the package name that corresponds to
+C<$hat_name>. If C<$hat_name> starts with a C<+> it is assumed to be an absolute
+package name (sans plus).
+
+=cut
+
+sub hat {
+    my $class = shift;
+    my $hat_name = shift;
+    my $brain = shift;
+
+    unless ($hat_name =~ s/^\+//) {
+        my $ns = "OpusVL::FB11::Hat";
+
+        # TODO register namespaces
+        $hat_name = "${ns}::${hat_name}";
+    }
+
+    load_class($hat_name);
+    return $hat_name->new({__brain => $brain});
+}
+
+=head2 hats
+
+B<Arguments>: C<$hat_name>
+
+B<Returns>: C<@hats>
+
+Finds all brains that say they wear the given hat, and returns a list of those
+instantiated hats.
+
+=cut
+
+sub hats {
+    my $self = shift;
+    my $hat_name = shift;
+
+    return gather {
+        for my $b (values %brains) {
+            # TODO $b->wears($hat)
+            take $b->hat($hat_name) if elem $hat_name, [ $b->hats ]
+        }
+    }
+}
+
 =head2 service
 
 Returns the brain for the given service.
@@ -95,7 +148,7 @@ sub service {
 
    # TODO: Allow configuration to specify which one should be returned.
 
-    return $providers{$service}->[0];
+    return $providers{$service}->[0]->hat($service);
 }
 
 1;
