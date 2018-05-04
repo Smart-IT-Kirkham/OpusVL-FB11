@@ -7,6 +7,7 @@ use v5.24;
 use Class::Load qw/load_class/;
 use List::Gather;
 use Data::Munge qw/elem/;
+use Scalar::Util qw/refaddr/;
 
 # ABSTRACT: Marshals different parts of FB11 so they can communicate
 
@@ -42,6 +43,7 @@ brains without having to go via Catalyst in the first place.
 
 my %brains;
 my %providers;
+my %hats;
 
 =head1 CLASS METHODS
 
@@ -95,6 +97,10 @@ sub hat {
     my $hat_name = shift;
     my $brain = shift;
 
+    my $cached = \$hats{refaddr $brain}->{$hat_name};
+
+    return $$cached if $$cached;
+
     unless ($hat_name =~ s/^\+//) {
         my $ns = "OpusVL::FB11::Hat";
 
@@ -103,7 +109,7 @@ sub hat {
     }
 
     load_class($hat_name);
-    return $hat_name->new({__brain => $brain});
+    $$cached = $hat_name->new({__brain => $brain});
 }
 
 =head2 hats
