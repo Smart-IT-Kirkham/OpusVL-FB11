@@ -4,7 +4,7 @@ use Moose::Role;
 
 has __brain => (
     is => 'ro',
-};
+);
 
 1;
 
