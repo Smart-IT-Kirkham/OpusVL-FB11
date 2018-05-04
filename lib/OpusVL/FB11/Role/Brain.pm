@@ -119,7 +119,31 @@ sub get_augmented_data {}
 
 =head2 hats
 
-Returns hats the brain wears
+Returns hats the brain wears.
+
+Hats are a list of simple names, or may be configured with a hashref.
+
+The simple names are the "friendly" names of the hats, and are what other
+objects and components will look for.
+
+If you provide a hashref, you can specify which class implements that friendly
+name. The default class is the friendly name in the OpusVL::FB11::Hat namespace.
+
+    sub hats {
+        return (
+            'parameters',
+            dbic_schema => {
+                class => 'dbic_schema::is_brain'
+            },
+            new_hat_type => {
+                class => '+MyApp::Hat::new_hat_type'
+            }
+        )
+    }
+
+By using the C<+> syntax demonstrated above, you can completely override the
+package name that implements the hat. Otherwise, the C<class> string will be
+looked for in the C<OpusVL::FB11::Hat> namespace.
 
 TODO: make it a declarative thing on the role ("wears")
 
@@ -163,7 +187,6 @@ required to provide a C<sub new>, such as DBIx::Class::Schema.
 
 sub register_self {
     my $self = shift;
-    say "Registering " . ref $self;
     OpusVL::FB11::ComponentManager->register_brain($self);
 }
 

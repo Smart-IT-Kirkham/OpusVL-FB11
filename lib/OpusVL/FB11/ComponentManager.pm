@@ -97,19 +97,27 @@ sub hat {
     my $hat_name = shift;
     my $brain = shift;
 
-    my $cached = \$hats{refaddr $brain}->{$hat_name};
+    my $actual_class = $hat_name;
 
-    return $$cached if $$cached;
+    my $cached = $hats{refaddr $brain}->{$hat_name};
 
-    unless ($hat_name =~ s/^\+//) {
+    return $cached if $cached;
+
+    my %config = $self->_consume_hat_config($brain->hats);
+
+    if ($config{$hat_name}) {
+        $actual_class = $config{$hat_name}->{class};
+    }
+
+    unless ($actual_class =~ s/^\+//) {
         my $ns = "OpusVL::FB11::Hat";
 
         # TODO register namespaces
-        $hat_name = "${ns}::${hat_name}";
+        $actual_class = "${ns}::${hat_name}";
     }
 
-    load_class($hat_name);
-    $$cached = $hat_name->new({__brain => $brain});
+    load_class($actual_class);
+    $hats{refaddr $brain}->{$hat_name} = $actual_class->new({__brain => $brain});
 }
 
 =head2 hats
@@ -145,9 +153,12 @@ sub hats {
     my $self = shift;
     my $hat_name = shift;
 
+    # TODO: Interrogate this config information when a brain is registered.
     return gather {
         for my $b (values %brains) {
-            take map { $b->hat($_) } grep { /$hat_name/ } $b->hats;
+            my %config = $self->_consume_hat_config($b->hats);
+
+            take $b->hat($hat_name) if $config{$hat_name};
         }
     }
 }
@@ -174,6 +185,28 @@ sub service {
     return $providers{$service}->[0]->hat($service);
 }
 
+# Turn simple config style into a true hash.
+# Strings are keys; hashrefs are config for the previous string.
+# No hashref = undef config = default config
+sub _consume_hat_config {
+    my $self = shift;
+    my @config = @_;
+
+    my %config;
+
+    while (my $item = shift @config) {
+        if ($config[0] and ref $config[0]) {
+            $config{$item} = shift @config;
+        }
+        else {
+            $config{$item} = {
+                class => $item
+            };
+        }
+    }
+
+    return %config;
+}
 1;
 
 =head1 SERVICES
