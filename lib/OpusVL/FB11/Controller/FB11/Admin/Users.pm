@@ -3,6 +3,7 @@ package OpusVL::FB11::Controller::FB11::Admin::Users;
 use Moose;
 use namespace::autoclean;
 use String::MkPasswd qw/mkpasswd/;
+use Data::Munge qw/elem/;
 
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
@@ -143,14 +144,14 @@ sub show_user
 
     my @options;
     my @selected;
-    for my $role ($c->user->roles_modifiable->all) {
+    for my $role ($c->user->roles_modifiable) {
         my $opts = {
-            value => $role->id,
-            label => $role->role,
+            value => $role,
+            label => $role,
         };
 
-        if ($c->stash->{thisuser}->search_related('users_roles', { role_id => $role->id })->count > 0) {
-            push @selected, $role->id;
+        if (elem $role, [$c->stash->{thisuser}->roles]) {
+            push @selected, $role,
         }
 
         push @options, $opts;
@@ -179,12 +180,12 @@ sub show_user
 
     if ($form->validated) {   
         my $user_roles = $form->field('user_roles')->value;
-        if (scalar @$user_roles > 0) {
-            foreach my $role_id (@$user_roles) {
-                $c->stash->{thisuser}->find_or_create_related('users_roles', { role_id => $role_id } );
+        if (@$user_roles) {
+            foreach my $role(@$user_roles) {
+                $c->stash->{thisuser}->find_or_create_related('users_roles', { role => $role } );
             }
 
-            $c->stash->{thisuser}->search_related('users_roles', { role_id => { 'NOT IN' => $user_roles } } )->delete;
+            $c->stash->{thisuser}->search_related('users_roles', { role => { 'NOT IN' => $user_roles } } )->delete;
             $c->stash->{status_msg} = "User Roles updated";
         }   
     }

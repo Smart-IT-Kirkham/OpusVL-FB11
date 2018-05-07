@@ -123,7 +123,20 @@ after 'insert' => sub {
     shift->set_default_avatar();
 };
 
+
 =head1 METHODS
+
+=head2 roles
+
+Returns role names the user is a member of.
+
+=cut
+
+sub roles {
+    my ($self) = shift;
+
+    $self->users_roles->get_column('role')->all;
+}
 
 =head2 set_default_avatar
 
