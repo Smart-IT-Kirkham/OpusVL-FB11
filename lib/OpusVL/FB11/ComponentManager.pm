@@ -103,7 +103,7 @@ sub hat {
 
     return $cached if $cached;
 
-    my %config = $self->_consume_hat_config($brain->hats);
+    my %config = $class->_consume_hat_config($brain->hats);
 
     if ($config{$hat_name}) {
         $actual_class = $config{$hat_name}->{class};
