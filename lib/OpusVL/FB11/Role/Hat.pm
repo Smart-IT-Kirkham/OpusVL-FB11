@@ -18,8 +18,7 @@ currently wearing your programmer hat.
 
 Hat names are arbitrary. They are used to discover services or other providers
 of behaviour. For example, a brain may wear a "parameters" hat, and this tells
-the ComponentManager (and other components) that the brain provides the
-parameters service.
+the Hive (and other components) that the brain provides the parameters service.
 
 A component's brain will define that it wears hats, but the component is going
 to have to provide implementations for those hats. The component manager will
@@ -36,15 +35,15 @@ Examples of request that end up returning hats include:
 
 =item Give me the implementation of the parameters service
 
-    OpusVL::FB11::ComponentManager->service('parameters')
+    OpusVL::FB11::Hive->service('parameters')
 
 =item Give me everything that has DeploymentHandler migrations
 
-    OpusVL::FB11::ComponentManager->hats('deploymenthandler')
+    OpusVL::FB11::Hive->hats('deploymenthandler')
 
 =item Give me everything that has objects that want ("own") parameters
 
-    OpusVL::FB11::ComponentManager->hats('parameter_owners')
+    OpusVL::FB11::Hive->hats('parameter_owners')
 
 =back
 
@@ -53,6 +52,6 @@ declare that they provide hats, and other things will look up things that wear
 hats, we can tell whether someone's asked for a hat that has no implementation
 registered.
 
-As a TODO, the ComponentManager will be able to check various namespaces for hat
-roles, and ensure that a hat returned by a brain conforms to the hat role that
-it believes is associated with a given service.
+As a TODO, the Hive will be able to check various namespaces for hat roles, and
+ensure that a hat returned by a brain conforms to the hat role that it believes
+is associated with a given service.
