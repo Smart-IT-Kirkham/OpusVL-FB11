@@ -10,6 +10,7 @@ use Pod::Usage;
 my %option = (
     password  => 'password',
     model     => 'FB11AuthDB',
+    username  => 'fb11admin'
     #    resultset => 'User',
 );
 
@@ -18,19 +19,20 @@ GetOptions (
     'password|p=s',
     'model|m=s',
     'update|u',
+    'username|U=s'
     #    'resultset|rs=s',
 );
 my $app = shift or pod2usage({ -msg => "Missing app name", -exitval => 1 });;
 eval "require $app" or die $@;
 
 my $users = $app->model($option{model})->resultset('User');
-my $user = $users->find({ username => 'fb11admin' });
+my $user = $users->find({ username => $option{username} });
 
 unless($user)
 {
     $user = $users->create({
-        username => 'fb11admin', 
-        email    => 'fb11admin@localhost',
+        username => $option{username},
+        email    => $option{username} . '@localhost',
         name     => 'Administrator',
         password => $option{password},
     });
@@ -105,3 +107,10 @@ The model to use. Defaults to FB11AuthDB, but you may wish to use AppKitAuthDB.
 
 Update the password. This is useful if the user exists but needs its password
 resetting.
+
+=head2 --username
+
+=head2 -U
+
+Override the default fb11admin user. This is mostly useful if you're using an
+old DB that has appkitadmin in it already.
