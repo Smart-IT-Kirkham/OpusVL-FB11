@@ -6,7 +6,7 @@ package OpusVL::FB11::Schema::FB11AuthDB::Result::User;
 use strict;
 use warnings;
 
-use OpusVL::FB11::ComponentManager;
+use OpusVL::FB11::Hive;
 
 use base 'DBIx::Class::Core';
 
@@ -202,7 +202,7 @@ sub augmentation_for {
     my $self = shift;
     my $component = shift;
 
-    OpusVL::FB11::ComponentManager
+    OpusVL::FB11::Hive
         ->brain($component)
         ->hat('augments_object')
         ->get_augmented_object($self);
@@ -222,7 +222,7 @@ result.
 sub parameters {
     my $self = shift;
 
-    OpusVL::FB11::ComponentManager
+    OpusVL::FB11::Hive
         ->service('parameters')
         ->get_augmented_data($self)
 }

@@ -1,4 +1,4 @@
-package OpusVL::FB11::ComponentManager;
+package OpusVL::FB11::Hive;
 
 use strict;
 use warnings;
@@ -113,7 +113,7 @@ sub hat {
         my $ns = "OpusVL::FB11::Hat";
 
         # TODO register namespaces
-        $actual_class = "${ns}::${hat_name}";
+        $actual_class = "${ns}::${actual_class}";
     }
 
     load_class($actual_class);
@@ -185,6 +185,28 @@ sub service {
     return $providers{$service}->[0]->hat($service);
 }
 
+=head2 fancy_hat
+
+B<Arguments>: C<$hat>
+
+A fancy hat is just my way of saying that a brain is wearing a hat by the same
+name, and it is easily identifiable. This is for situations where you have
+special behaviour in a brain and you don't expect the brain or hat name to be
+relevant to anyone else.
+
+Obviously this is because the hat is fancy and no other hat looks like it.
+
+It is simply a shortcut for C<< ->brain($hat)->hat($hat) >>
+
+=cut
+
+sub fancy_hat {
+    my $class = shift;
+    my $hat = shift;
+
+    $class->brain($hat)->hat($hat);
+}
+
 # Turn simple config style into a true hash.
 # Strings are keys; hashrefs are config for the previous string.
 # No hashref = undef config = default config
@@ -207,6 +229,7 @@ sub _consume_hat_config {
 
     return %config;
 }
+
 1;
 
 =head1 SERVICES

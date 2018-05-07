@@ -15,9 +15,8 @@ Your Brain may be the object that consumes this class and defines the interface.
 However, other interfaces may clash, so if your component provides multiple
 services or listeners, you may end up having to create delegate classes.
 
-For this reason, L<OpusVL::FB11::ComponentManager> assumes that you have got
-delegate classes, and if you don't you can simply return C<$self> from the
-accessor.
+For this reason, L<OpusVL::FB11::Hive> assumes that you have got delegate
+classes, and if you don't you can simply return C<$self> from the accessor.
 
 =head1 SYNOPSIS
 

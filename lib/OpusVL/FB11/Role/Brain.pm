@@ -2,7 +2,7 @@ package OpusVL::FB11::Role::Brain;
 
 # ABSTRACT: Define a package as the "brain" of a component
 
-use OpusVL::FB11::ComponentManager;
+use OpusVL::FB11::Hive;
 use Moose::Role;
 use v5.24;
 
@@ -155,7 +155,7 @@ sub hats {}
 
 B<Arguments>: $hat_name
 
-The default implementation defers to L<OpusVL::FB11::ComponentManager> to choose
+The default implementation defers to L<OpusVL::FB11::Hive> to choose
 the correct package, which is then constructed with this brain and returned.
 
 =cut
@@ -164,14 +164,14 @@ sub hat {
     my $self = shift;
     my $hat_name = shift;
 
-    OpusVL::FB11::ComponentManager->hat($hat_name, $self);
+    OpusVL::FB11::Hive->hat($hat_name, $self);
 }
 
 =head2 provided_services
 
 Return a list (!) of service names that your component can provide.
 
-See L<OpusVL::FB11::ComponentManager/SERVICES> for a list of core services.
+See L<OpusVL::FB11::Hive/SERVICES> for a list of core services.
 
 =cut
 
@@ -187,7 +187,7 @@ required to provide a C<sub new>, such as DBIx::Class::Schema.
 
 sub register_self {
     my $self = shift;
-    OpusVL::FB11::ComponentManager->register_brain($self);
+    OpusVL::FB11::Hive->register_brain($self);
 }
 
 # This ensures there *is* a BUILD, and has no effect if there already is one.
