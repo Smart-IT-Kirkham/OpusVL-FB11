@@ -4,6 +4,7 @@ package OpusVL::FB11::Role::Brain;
 
 use OpusVL::FB11::Hive;
 use Moose::Role;
+use Module::Runtime 'use_module';
 use v5.24;
 
 =head1 DESCRIPTION
@@ -127,23 +128,29 @@ The simple names are the "friendly" names of the hats, and are what other
 objects and components will look for.
 
 If you provide a hashref, you can specify which class implements that friendly
-name. The default class is the friendly name in the OpusVL::FB11::Hat namespace.
+name. If you don't, the friendly name will be used as the class name.
 
     sub hats {
         return (
             'parameters',
             dbic_schema => {
-                class => 'dbic_schema::is_brain'
+                class => '+OpusVL::FB11::Hat::dbic_schema::is_brain'
             },
             new_hat_type => {
-                class => '+MyApp::Hat::new_hat_type'
+                class => 'hat_for_new_type'
             }
         )
     }
 
 By using the C<+> syntax demonstrated above, you can completely override the
-package name that implements the hat. Otherwise, the C<class> string will be
-looked for in the C<OpusVL::FB11::Hat> namespace.
+package name that implements the hat. Otherwise, the class name (the friendly
+name if not specified) is appended to the Brain's class name, with C<::Hat::> in
+the middle.
+
+The above example would look for C<MyApp::Brain::Hat::parameters>,
+C<OpusVL::FB11::Hat::dbic_schema::is_brain>, and
+C<MyApp::Brain::Hat::hat_for_new_hat_type> (with the Brain itself being
+C<MyApp::Brain>).
 
 TODO: make it a declarative thing on the role ("wears")
 
@@ -155,8 +162,8 @@ sub hats {}
 
 B<Arguments>: $hat_name
 
-The default implementation defers to L<OpusVL::FB11::Hive> to choose
-the correct package, which is then constructed with this brain and returned.
+Look for a hat for this brain. See L</hats> for how the hats are looked up. Hats
+will only be constructed once.
 
 =cut
 
@@ -164,7 +171,27 @@ sub hat {
     my $self = shift;
     my $hat_name = shift;
 
-    OpusVL::FB11::Hive->hat($hat_name, $self);
+    my $actual_class = $hat_name;
+
+    my $cached = OpusVL::FB11::Hive->__cached_hat($self, $hat_name);
+
+    return $cached if $cached;
+
+    my %config = OpusVL::FB11::Hive->_consume_hat_config($self->hats);
+
+    if ($config{$hat_name}) {
+        $actual_class = $config{$hat_name}->{class};
+    }
+
+    unless ($actual_class =~ s/^\+//) {
+        my $ns = ref $self;
+
+        # TODO register namespaces
+        $actual_class = "${ns}::Hat::${actual_class}";
+    }
+
+    use_module($actual_class);
+    OpusVL::FB11::Hive->__cache_hat($self, $hat_name, $actual_class->new({__brain => $self}));
 }
 
 =head2 provided_services

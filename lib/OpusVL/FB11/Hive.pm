@@ -66,13 +66,7 @@ sub register_brain {
     push $providers{$_}->@*, $brain for $brain->provided_services;
 }
 
-=head2 brain
-
-Returns the brain for the named component.
-
-=cut
-
-sub brain {
+sub _brain {
     my $class = shift;
     my $name = shift;
 
@@ -84,7 +78,7 @@ sub brain {
 
 =head2 hat
 
-B<Arguments>: C<$hat_name>, C<$brain>
+B<Arguments>: C<$brain>, C<$hat_name>
 
 Creates or uses a cached hat. Looks up the package name that corresponds to
 C<$hat_name>. If C<$hat_name> starts with a C<+> it is assumed to be an absolute
@@ -95,29 +89,6 @@ package name (sans plus).
 sub hat {
     my $class = shift;
     my $hat_name = shift;
-    my $brain = shift;
-
-    my $actual_class = $hat_name;
-
-    my $cached = $hats{refaddr $brain}->{$hat_name};
-
-    return $cached if $cached;
-
-    my %config = $class->_consume_hat_config($brain->hats);
-
-    if ($config{$hat_name}) {
-        $actual_class = $config{$hat_name}->{class};
-    }
-
-    unless ($actual_class =~ s/^\+//) {
-        my $ns = "OpusVL::FB11::Hat";
-
-        # TODO register namespaces
-        $actual_class = "${ns}::${actual_class}";
-    }
-
-    load_class($actual_class);
-    $hats{refaddr $brain}->{$hat_name} = $actual_class->new({__brain => $brain});
 }
 
 =head2 hats
@@ -128,24 +99,6 @@ B<Returns>: C<@hats>
 
 Finds all brains that say they wear the given hat, and returns a list of those
 instantiated hats.
-
-To decide whether the hat is a "subclass" of another hat, we just inspect the
-package name. We ask the brain what hats it wears, and simply do a substring
-match for the input hat name.
-
-For example, we might consider the C<dbic_schema> hat to be worn if the brain says it wears:
-
-=over
-
-=item C<dbic_schema>
-
-=item C<dbic_schema::is_brain>
-
-=item C<+MyComponent::Hat::dbic_schema>
-
-=back
-
-TODO: Perhaps chop off C</^.+Hat::/> and inspect the result
 
 =cut
 
@@ -165,7 +118,7 @@ sub hats {
 
 =head2 service
 
-Returns the brain for the given service.
+Returns the hat for the given service.
 
 This currently uses the first-registered service because until this interface
 matures we don't support multiple providers for the same service.
@@ -196,7 +149,7 @@ relevant to anyone else.
 
 Obviously this is because the hat is fancy and no other hat looks like it.
 
-It is simply a shortcut for C<< ->brain($hat)->hat($hat) >>
+It is simply a shortcut for C<< ->_brain($hat)->hat($hat) >>
 
 =cut
 
@@ -204,7 +157,7 @@ sub fancy_hat {
     my $class = shift;
     my $hat = shift;
 
-    $class->brain($hat)->hat($hat);
+    $class->_brain($hat)->hat($hat);
 }
 
 # Turn simple config style into a true hash.
@@ -228,6 +181,23 @@ sub _consume_hat_config {
     }
 
     return %config;
+}
+
+sub __cache_hat {
+    my $class = shift;
+    my $brain = shift;
+    my $hat_name = shift;
+    my $hat = shift;
+
+    $hats{refaddr $brain}->{$hat_name} = $hat;
+}
+
+sub __cached_hat {
+    my $class = shift;
+    my $brain = shift;
+    my $hat_name = shift;
+
+    $hats{refaddr $brain}->{$hat_name};
 }
 
 1;
