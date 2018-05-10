@@ -7,10 +7,21 @@ with "OpusVL::FB11::Role::Hat";
 
 =head1 DESCRIPTION
 
-A sysparams hat is just one that can be inspected at any point for configuration
-provided by the user. It is quite simple: it has C<get> and C<set>.
+A sysparams hat is actually a proxy because different components might have
+their sysparams stored differently. The core behaviour for sysparams is (will
+be) that each parameter will be stored the same but namespaced by the
+component's friendly name. This architecture allows us to support different
+storage or legacy data that doesn't have any namespacing in it.
 
-=head1 METHODS
+=cut
+
+requires 'for_component';
+
+=head1 SYSPARAMS METHODS
+
+The sysparams interface that for_component returns will have to implement these
+methods. This will eventually become a Role, when sysparams becomes a core
+service to FB11. For now:
 
 =head2 get
 
@@ -30,11 +41,6 @@ Sets the given parameter to the given value. The implementation may throw a
 validation exception in this case.
 
 Please note we have not yet defined core exceptions so try to keep it friendly.
-
-=cut
-
-requires 'set', 'get';
-
 =head1 LATER
 
 It seems prudent that only parameters that are going to be used should be
