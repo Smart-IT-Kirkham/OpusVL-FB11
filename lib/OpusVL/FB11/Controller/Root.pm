@@ -20,12 +20,19 @@ package OpusVL::FB11::Controller::Root;
 =cut
 
 ############################################################################################################
+use v5.24;
 use Moose;
 use namespace::autoclean;
+use File::Slurper 'read_text';
+# [sic] - for the debug path!
 use Data::Dump qw(pp);
 
 BEGIN { extends 'Catalyst::Controller'; }
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
+
+has_forms (
+    debug_form => 'Debug'
+);
 
 use File::ShareDir ':ALL';
 
@@ -125,19 +132,45 @@ sub debug
     : Public
 {
     my ($self, $c) = @_;
+    my $form = $self->debug_form;
 
     unless ($c->debug) {
         $c->detach('/not_found');
     }
+
     # Make sure the evaluation order is right by doing them separately.
-    $c->stash(
-        stash => pp \%{ $c->stash }
-    );
+    {
+        my $stash = pp +{ $c->stash->%* };
+        $c->stash(
+            stash_pp => $stash
+        );
+    }
+
     $c->stash(
         env => pp \%ENV,
         config => pp $c->config,
         request => $c->req,
     );
+
+    $c->stash->{form} = $form;
+
+    if ($form->process(params => $c->req->parameters)) {
+        my $module = $form->field('module')->value;
+        my $fn = $module =~ s{::}{/}gr;
+        $fn .= ".pm";
+
+        $fn = $INC{$fn};
+
+        if ($fn) {
+            $c->stash->{file_path} = $fn;
+            $c->stash->{file_contents} = read_text($fn);
+        }
+        else {
+            $form->field('module')->add_error("Module does not appear to be loaded");
+        }
+
+        $c->stash->{INC} = pp \@INC;
+    }
 }
 
 =head1 AUTHOR

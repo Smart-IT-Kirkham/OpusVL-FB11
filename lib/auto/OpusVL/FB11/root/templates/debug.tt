@@ -1,6 +1,20 @@
 [% USE Dumper %]
+
+<div class="fb11-card">
+  <h1>Module lookup</h1>
+  [% form.render | none %]
+
+  [% file_path %]
+
+  [% IF file_contents %]
+    <pre>[% file_contents %]</pre>
+
+    <pre>[% INC %]</pre>
+  [% END %]
+</div>
+
 <h1>Stash</h1>
-<pre>[% stash %]</pre>
+<pre>[% stash_pp %]</pre>
 
 [% IF c.user %]
 <h1>User</h1>

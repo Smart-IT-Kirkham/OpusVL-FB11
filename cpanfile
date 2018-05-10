@@ -2,6 +2,7 @@ requires 'Moose';
 requires 'Getopt::Long';
 requires 'File::ShareDir';
 requires 'File::Spec';
+requires 'File::Slurper';
 requires 'File::Find';
 requires 'File::Path';
 requires 'List::Util';
