@@ -12,6 +12,14 @@ has short_name => (
     default => 'fb11',
 );
 
+sub hats {
+    qw/auth/;
+}
+
+sub provided_services {
+    qw/auth/
+}
+
 with 'OpusVL::FB11::Role::Brain';
 
 __PACKAGE__->load_namespaces;

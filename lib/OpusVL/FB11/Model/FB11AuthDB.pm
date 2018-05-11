@@ -1,17 +1,18 @@
 package OpusVL::FB11::Model::FB11AuthDB;
 
-use strict;
-use base 'Catalyst::Model::DBIC::Schema';
+use Moose;
+use OpusVL::FB11::Hive;
+extends 'Catalyst::Model::DBIC::Schema';
 
 __PACKAGE__->config(
     schema_class => 'OpusVL::FB11::Schema::FB11AuthDB',
-    
-    connect_info => {
-        dsn => 'dbi:SQLite:./t/lib/auto/TestApp/root/db/fb11_auth.db',
-        user => '',
-        password => '',
-    }
+    traits => 'SchemaProxy'
 );
+
+after BUILD => sub {
+    my $self = shift;
+    OpusVL::FB11::Hive->register_brain($self->schema);
+};
 
 =head1 NAME
 
