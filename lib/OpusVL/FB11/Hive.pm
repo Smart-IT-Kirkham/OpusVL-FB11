@@ -70,7 +70,7 @@ sub _brain {
     my $class = shift;
     my $name = shift;
 
-    die "No component registered under the name $name"
+    die "No brain registered under the name $name"
         unless $brains{$name};
 
     return $brains{$name};
@@ -80,15 +80,17 @@ sub _brain {
 
 B<Arguments>: C<$brain>, C<$hat_name>
 
-Creates or uses a cached hat. Looks up the package name that corresponds to
-C<$hat_name>. If C<$hat_name> starts with a C<+> it is assumed to be an absolute
-package name (sans plus).
+Looks up the brain C<$brain> and returns its hat C<$hat_name>. Dies if C<$brain>
+is not registered.
 
 =cut
 
 sub hat {
     my $class = shift;
+    my $brain = shift;
     my $hat_name = shift;
+
+    return $class->_brain($brain)->hat($hat_name);
 }
 
 =head2 hats
