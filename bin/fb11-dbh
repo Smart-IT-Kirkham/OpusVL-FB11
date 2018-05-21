@@ -245,16 +245,15 @@ sub prepare {
     else { # to (--target) == schema version
         if ($option{deploy}) {
             say "Creating deployment files for $to";
-            _ignoring_existing_files {
-                dh->prepare_deploy;
-                if ($option{core}) {
-                    dh->prepare_version_storage_install;
-                }
-            };
+            dh->prepare_deploy;
+            if ($option{core}) {
+                dh->prepare_version_storage_install;
+            }
         }
         else {
             say sprintf "Creating SQL for %s -> %s", $to - 1, $to;
             _ignoring_existing_files {
+                dh->prepare_deploy;
                 dh->prepare_upgrade({
                     from_version => $to - 1,
                     to_version => $to
