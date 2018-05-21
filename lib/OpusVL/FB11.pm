@@ -78,6 +78,8 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 use strict;
 use warnings;
 use OpusVL::FB11::Builder;
+use OpusVL::FB11::Hive;
+use Moose;
 our $VERSION = '0.036';
 
 ##################################################################################################################################

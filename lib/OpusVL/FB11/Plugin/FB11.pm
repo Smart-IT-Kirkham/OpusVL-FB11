@@ -24,6 +24,7 @@ use 5.010;
 use Tree::Simple;
 use Tree::Simple::Visitor::FindByPath;
 use Data::Munge qw/elem/;
+use OpusVL::FB11::Hive;
 use OpusVL::FB11::Plugin::FB11::Node;
 use OpusVL::FB11::Plugin::FB11::FeatureList;
 with 'Catalyst::ClassData';

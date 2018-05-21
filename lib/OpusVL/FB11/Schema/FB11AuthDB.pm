@@ -9,7 +9,8 @@ extends 'DBIx::Class::Schema';
 
 has short_name => (
     is => 'ro',
-    default => 'fb11',
+    lazy => 1,
+    default => 'fb11authdb',
 );
 
 sub hats {
