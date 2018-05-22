@@ -4,6 +4,7 @@ use Moose;
 use namespace::autoclean;
 use String::MkPasswd qw/mkpasswd/;
 use Data::Munge qw/elem/;
+use Try::Tiny;
 
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
@@ -182,12 +183,21 @@ sub show_user
         my $user_roles = $form->field('user_roles')->value;
         if (@$user_roles) {
             foreach my $role(@$user_roles) {
-                $c->stash->{thisuser}->find_or_create_related('users_roles', { role => $role } );
+                my $r = $c->model('FB11AuthDB::Role')->find({ role => $role });
+                try {
+                    $c->stash->{thisuser}->add_to_users_roles({ role_id => $r->id });
+                }
+                catch {
+                    die $_ unless /duplicate key/
+                }
             }
 
-            $c->stash->{thisuser}->search_related('users_roles', { role => { 'NOT IN' => $user_roles } } )->delete;
+            $c->stash->{thisuser}->search_related('users_roles',
+                { "role.role" => { 'NOT IN' => $user_roles } },
+                { join => "role" }
+            )->delete;
             $c->stash->{status_msg} = "User Roles updated";
-        }   
+        }
     }
 }
 
