@@ -157,7 +157,7 @@ sub debug
     if ($form->process(params => $c->req->parameters)) {
         my $module = $form->field('module')->value;
         my $fn = $module =~ s{::}{/}gr;
-        $fn .= ".pm";
+        $fn .= ".pm" unless $fn =~ /\.pm$/;
 
         $fn = $INC{$fn};
 
