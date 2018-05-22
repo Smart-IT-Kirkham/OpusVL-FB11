@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use v5.24;
 
+use Carp;
 use Class::Load qw/load_class/;
 use List::Gather;
 use Data::Munge qw/elem/;
@@ -71,7 +72,7 @@ sub _brain {
     my $class = shift;
     my $name = shift;
 
-    die "No brain registered under the name $name"
+    confess "No brain registered under the name $name"
         unless $brains{$name};
 
     return $brains{$name};
@@ -132,7 +133,7 @@ sub service {
     my $class = shift;
     my $service = shift;
 
-    die "Nothing provides the service $service"
+    confess "Nothing provides the service $service"
         unless $providers{$service}
            and $providers{$service}->@*;
 
