@@ -14,5 +14,7 @@ __PACKAGE__->load_namespaces;
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
+sub schema_version { 1 }
+
 1;
 

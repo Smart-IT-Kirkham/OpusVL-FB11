@@ -69,12 +69,12 @@ sub ordered
 
 sub set
 {
-	my $self  = shift;
-	my $name  = shift;
-	my $value = shift;
+    my $self  = shift;
+    my $name  = shift;
+    my $value = shift;
     my $data_type = shift;
 
-	my $info = $self->find_or_new({
+    my $info = $self->find_or_new({
         name  => $name,
     });
 
@@ -89,33 +89,33 @@ sub set
 
     $info->update_or_insert;
 
-	return $value;
+    return $value;
 }
 
 sub get
 {
-	my $self = shift;
-	my $name = shift;
+    my $self = shift;
+    my $name = shift;
 
-	my $info = $self->find
-	({
-		name => $name
-	});
+    my $info = $self->find
+    ({
+        name => $name
+    });
 
-	return $info ? JSON->new->allow_nonref->decode($info->value) : undef;
+    return $info ? JSON->new->allow_nonref->decode($info->value) : undef;
 }
 
 sub del 
 {
-	my $self = shift;
-	my $name = shift;
+    my $self = shift;
+    my $name = shift;
 
-	my $info = $self->find
-	({
-		name => $name
-	});
+    my $info = $self->find
+    ({
+        name => $name
+    });
 
-	return $info ? $info->delete : undef;
+    return $info ? $info->delete : undef;
 }
 
 sub key_names
