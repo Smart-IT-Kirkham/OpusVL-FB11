@@ -61,6 +61,7 @@ sub register_brain {
     my $brain = shift;
 
     # TODO handle collisions
+    say "Registering ", ref $brain, " as ", $brain->short_name;
     $brains{$brain->short_name} = $brain;
 
     push $providers{$_}->@*, $brain for $brain->provided_services;
