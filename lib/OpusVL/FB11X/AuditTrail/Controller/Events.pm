@@ -5,8 +5,9 @@ use v5.14;
 use Moose;
 use namespace::autoclean;
 
-BEGIN { extends "Catalyst::Controller" };
-with 'OpusVL::FB11::RolesFor::Controller::GUI';
+BEGIN { extends "Catalyst::Controller::HTML::FormFu" };
+with 'OpusVL::FB11::RolesFor::Controller::UI',
+    'OpusVL::FB11::FormFu::RoleFor::Controller';
 
 __PACKAGE__->config
 (
@@ -18,9 +19,9 @@ __PACKAGE__->config
     fb11_css           => ['/static/css/audit-trail.css'],
 );
 
-has_forms(
-    event_search_form => '+OpusVL::FB11X::AuditTrail::Form::EventSearch',
-);
+#has_forms(
+#    event_search_form => '+OpusVL::FB11X::AuditTrail::Form::EventSearch',
+#);
 
 sub auto :Action {
     my ($self, $c) = @_;
@@ -44,6 +45,7 @@ sub all_events
     : NavigationName('Search')
     : Args(0)
     : FB11Feature('Search Audit Trail')
+    : FB11Form('modules/audittrail/events/event_search.yml')
 {
     my $self = shift;
     my $c    = shift;
@@ -51,34 +53,27 @@ sub all_events
     $c->stash->{section} = 'Search';
     my $events = $c->model ('AuditTrail::EvtEvent');
 
-
     my $search_args = 
-    [{
+    {
         resultset => $events
-    }];
+    };
 
-    $c->forward ('/fb11/audittrail/events/event_search' => $search_args);
+    $self->event_search($c, $search_args);
 }
 
-sub event_search :Private
+sub event_search
 {
     my ($self, $c, $search_args) = @_;
-    
-    my $form = $self->event_search_form;
-    $c->stash(form => $form);
+
+    my $form = $c->stash->{form};
 
     push @{ $search_args->{sort_defs} }, ([ event_date => 'Event Date' ]);
 
     my $types = $c->model('AuditTrail::EvtType')->search({}, { order_by => { -asc => 'event_type' } });
 
-    my $type_field = $form->field('type_id');
-    # use Data::Dumper;
-    # say STDERR Dumper($type_field);
+    my $type_field = $form->get_all_element('type_id');
     $type_field->options([
-        map +{
-            value => $_->id,
-            label => $_->event_type
-        }, $types->all
+        map {[ $_->id => $_->event_type ]} $types->all
     ]);
 
     $c->forward ('/modules/resultsetsearch/search_results' => [$search_args]);

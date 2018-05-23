@@ -9,7 +9,9 @@ our $VERSION = '0.25';
 
 after 'setup_components' => sub {
     my $class = shift;
-    $class->add_paths(__PACKAGE__);
+    my $moduledir = $class->add_paths(__PACKAGE__);
+    push $class->config->{'Controller::HTML::FormFu'}->{constructor}->{config_file_path}->@*,  $moduledir . '/root/forms';
+
     CatalystX::InjectComponent->inject(
         into      => $class,
         component => 'OpusVL::FB11X::SysParams::Controller::SysParams',
