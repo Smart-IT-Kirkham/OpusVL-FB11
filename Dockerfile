@@ -52,4 +52,6 @@ RUN cpanm --notest Catalyst::Plugin::Static::Simple
 RUN cpanm -n ./OpusVL-FB11-$version.tar.gz \
     && rm ./OpusVL-FB11-$version.tar.gz
 
+ENV MEMORY_LIMIT 262144
+
 ENTRYPOINT [ "/usr/local/bin/dumb-init", "--", "/opt/perl5/bin/entrypoint" ]
