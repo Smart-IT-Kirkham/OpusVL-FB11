@@ -266,11 +266,10 @@ sub fb11_actiontree
 {
     my ($c, $rebuild) = @_;
 
-    # 'state' var means this will only be called once .. if Perl encounters this line again it knows not to run again..
     state $fb11_actiontree = $c->_build_fb11_actiontree;
     state $created = time;
     # force a re-read of the tree.. (for example, if access control changes)...
-    if($rebuild || $c->_are_permissions_modified($created))
+    if($rebuild || $c->_are_permissions_modified($created) || not defined $fb11_actiontree)
     {
         $fb11_actiontree = $c->_build_fb11_actiontree;
         $created = time;
