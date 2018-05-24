@@ -18,4 +18,30 @@ use Moose::Role;
 with 'OpusVL::FB11::Role::Hat';
 
 requires 'events';
+
+=head1 PROPERTIES
+
+=head2 ip_address
+
+The non-hat version of Audit Trail allows you to store the IP address on each
+request, and then anything that wants it can interrogate it.
+
+Presumably this doesn't cause a race condition or anything like that, so here's
+a new place to store it.
+
+=head2 username
+
+Similar to the IP address, you can also set a username to be interrogated by
+anything that cares.
+
+=cut
+
+has ip_address => (
+    is => 'rw',
+);
+
+has username => (
+    is => 'rw',
+);
+
 1;

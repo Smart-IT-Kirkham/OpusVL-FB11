@@ -1,6 +1,7 @@
 
 package OpusVL::AuditTrail::Schema::RoleForResult::EvtCreatorRole;
 
+use OpusVL::FB11::Hive;
 use Moose::Role;
 use MooseX::ClassAttribute;
 use JSON;
@@ -77,6 +78,18 @@ Checks whether the evt_creator link has been setup.
 
 =cut
 
+sub evt_creator
+{
+    my $self = shift;
+    # DEBT !!!
+    my $schema = OpusVL::FB11::Hive->service('audit-trail')->__brain;
+
+    $schema->resultset('EvtCreator')->find({
+        creator_type_id => $self->evt_creator_type_id,
+        id => $self->id,
+    });
+}
+
 sub has_evt_creator
 {
 	my $self = shift;
@@ -95,8 +108,9 @@ Note: this means that you cannot raise any events until insert has been called.
 sub set_evt_creator
 {
     my $self   = shift;
-	my $source = $self->result_source;
-    my $schema = $source->schema;
+    # DEBT !!!
+    my $source = $self->result_source;
+    my $schema = OpusVL::FB11::Hive->service('audit-trail')->__brain;
 
 	my $table_name = $source->from;
 
@@ -198,8 +212,8 @@ sub evt_raise_event
 	return 
 		unless $self->has_evt_creator;
 
-	my $source = $self->result_source;
-	my $schema = $source->schema;
+    # DEBT: hack so I don't have to write any more code
+	my $schema = OpusVL::FB11::Hive->service('audit-trail')->__brain;
 
 	my $type     = delete $args->{evt_type};
 	my $type_obj = $schema->resultset ('EvtType')->find_or_create ({ event_type => $type });
