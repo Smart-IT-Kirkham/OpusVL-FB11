@@ -1,4 +1,5 @@
 requires 'Moose';
+requires 'MooseX::ClassAttribute';
 requires 'Getopt::Long';
 requires 'File::ShareDir';
 requires 'File::Spec';
