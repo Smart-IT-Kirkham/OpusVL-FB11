@@ -1,0 +1,416 @@
+---
+schema:
+  procedures: {}
+  tables:
+    evt_creator_types:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - creator_type
+          match_type: ''
+          name: evt_creator_types_creator_type_key
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+      fields:
+        creator_type:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: creator_type
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices: []
+      name: evt_creator_types
+      options: []
+      order: 1
+    evt_creators:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+            - creator_type_id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - creator_type_id
+          match_type: ''
+          name: evt_creators_fk_creator_type_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: evt_creator_types
+          type: FOREIGN KEY
+      fields:
+        creator_type_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: creator_type_id
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - creator_type_id
+          name: evt_creators_idx_creator_type_id
+          options: []
+          type: NORMAL
+      name: evt_creators
+      options: []
+      order: 2
+    evt_events:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - creator_id
+            - creator_type_id
+          match_type: ''
+          name: evt_events_fk_creator_id_creator_type_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+            - creator_type_id
+          reference_table: evt_creators
+          type: FOREIGN KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - type_id
+          match_type: ''
+          name: evt_events_fk_type_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+          reference_table: evt_types
+          type: FOREIGN KEY
+      fields:
+        creator_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: creator_id
+          order: 3
+          size:
+            - 0
+        creator_type_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: creator_type_id
+          order: 4
+          size:
+            - 0
+        data:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: data
+          order: 9
+          size:
+            - 0
+        details:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: details
+          order: 6
+          size:
+            - 0
+        event:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: event
+          order: 8
+          size:
+            - 0
+        event_date:
+          data_type: timestamp
+          default_value: !!perl/ref
+            =: current_timestamp
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: event_date
+          order: 5
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+        ip_addr:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: ip_addr
+          order: 11
+          size:
+            - 0
+        source:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: source
+          order: 7
+          size:
+            - 0
+        type_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: type_id
+          order: 2
+          size:
+            - 0
+        username:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: username
+          order: 10
+          size:
+            - 0
+      indices:
+        - fields:
+            - creator_id
+            - creator_type_id
+          name: evt_events_idx_creator_id_creator_type_id
+          options: []
+          type: NORMAL
+        - fields:
+            - type_id
+          name: evt_events_idx_type_id
+          options: []
+          type: NORMAL
+      name: evt_events
+      options: []
+      order: 3
+    evt_types:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - event_type
+          match_type: ''
+          name: evt_types_event_type_key
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: UNIQUE
+      fields:
+        event_type:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 1
+          name: event_type
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices: []
+      name: evt_types
+      options: []
+      order: 4
+    system_events:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+        - deferrable: 1
+          expression: ''
+          fields:
+            - id
+            - evt_creator_type_id
+          match_type: ''
+          name: system_events_fk_id_evt_creator_type_id
+          on_delete: CASCADE
+          on_update: CASCADE
+          options: []
+          reference_fields:
+            - id
+            - creator_type_id
+          reference_table: evt_creators
+          type: FOREIGN KEY
+      fields:
+        evt_creator_type_id:
+          data_type: integer
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: evt_creator_type_id
+          order: 2
+          size:
+            - 0
+        id:
+          data_type: integer
+          default_value: ~
+          is_auto_increment: 1
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: id
+          order: 1
+          size:
+            - 0
+      indices:
+        - fields:
+            - id
+            - evt_creator_type_id
+          name: system_events_idx_id_evt_creator_type_id
+          options: []
+          type: NORMAL
+      name: system_events
+      options: []
+      order: 5
+  triggers: {}
+  views: {}
+translator:
+  add_drop_table: 0
+  filename: ~
+  no_comments: 0
+  parser_args:
+    sources:
+      - EvtCreator
+      - EvtCreatorType
+      - EvtEvent
+      - EvtType
+      - SystemEvent
+  parser_type: SQL::Translator::Parser::DBIx::Class
+  producer_args: {}
+  producer_type: SQL::Translator::Producer::YAML
+  show_warnings: 0
+  trace: 0
+  version: 0.11024
