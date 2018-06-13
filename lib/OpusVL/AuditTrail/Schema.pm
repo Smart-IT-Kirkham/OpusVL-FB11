@@ -30,5 +30,7 @@ with 'OpusVL::AuditTrail::RolesFor::Schema';
 
 __PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
+sub schema_version { 1 }
+
 1;
 
