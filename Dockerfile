@@ -45,7 +45,9 @@ fi
 ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 ARG gitrev
-RUN if [ ! -z "$gitrev" ]; then echo "$gitrev" > /root/OpusVL-FB11-gitrev; fi;
+RUN if [ -z "$gitrev" ]; then echo "gitrev not provided"; exit 2; fi;
+
+RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
 
 COPY OpusVL-FB11-$version.tar.gz .
 RUN cpanm --notest Catalyst::Plugin::Static::Simple
