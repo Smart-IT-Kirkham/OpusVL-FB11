@@ -18,7 +18,7 @@ __PACKAGE__->config
     fb11_icon          => 'cog',
     fb11_myclass       => 'OpusVL::FB11X::SysParams',
     fb11_shared_module => 'Admin',
-    fb11_method_group  => 'Configuration',
+    fb11_method_group  => 'System',
 );
 
 sub param_edit_form {
@@ -64,7 +64,7 @@ sub auto
 
 sub list_params
 	: Path
-	: NavigationName('System Parameters')
+	: NavigationName('Global Parameters')
     : FB11Feature('System Parameters')
 {
 	my $self = shift;
