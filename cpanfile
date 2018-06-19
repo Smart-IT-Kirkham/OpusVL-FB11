@@ -1,4 +1,5 @@
 requires 'Moose';
+requires 'MooseX::ClassAttribute';
 requires 'Getopt::Long';
 requires 'File::ShareDir';
 requires 'File::Spec';
@@ -35,6 +36,8 @@ requires 'URL::Encode';
 requires 'Plack::Handler::Martian';
 requires 'DateTime::Format::Pg';
 requires 'PerlX::Maybe';
+
+requires 'DBD::Pg';
 
 # This is vendored in because of a patch to make WithSchema work
 requires 'DBIx::Class::DeploymentHandler';

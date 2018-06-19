@@ -45,11 +45,15 @@ fi
 ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 ARG gitrev
-RUN if [ ! -z "$gitrev" ]; then echo "$gitrev" > /root/OpusVL-FB11-gitrev; fi;
+RUN if [ -z "$gitrev" ]; then echo "gitrev not provided"; exit 2; fi;
+
+RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
 
 COPY OpusVL-FB11-$version.tar.gz .
 RUN cpanm --notest Catalyst::Plugin::Static::Simple
 RUN cpanm -n ./OpusVL-FB11-$version.tar.gz \
     && rm ./OpusVL-FB11-$version.tar.gz
+
+ENV MEMORY_LIMIT 262144
 
 ENTRYPOINT [ "/usr/local/bin/dumb-init", "--", "/opt/perl5/bin/entrypoint" ]

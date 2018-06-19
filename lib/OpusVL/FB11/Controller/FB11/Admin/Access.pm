@@ -481,6 +481,8 @@ sub show_role
     for my $item (@remove)
     {
         my $parent = $item->getParent;
+        # why does this happen?
+        next if not ref $parent;
         $parent->removeChild($item);
         while($parent->getChildCount == 0)
         {

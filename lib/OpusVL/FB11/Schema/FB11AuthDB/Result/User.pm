@@ -6,6 +6,8 @@ package OpusVL::FB11::Schema::FB11AuthDB::Result::User;
 use strict;
 use warnings;
 
+use OpusVL::FB11::Hive;
+
 use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
@@ -184,6 +186,70 @@ sub get_or_default_avatar {
         return $avatar;
     }
     return $self->set_default_avatar();
+}
+
+=head2 augmentation_for
+
+Given a string name, finds the component so named and requests any augmented
+data provided thereby.
+
+Well-behaved components will return a L<DBIx::Class> result because this is one
+of those.
+
+=cut
+
+sub augmentation_for {
+    my $self = shift;
+    my $component = shift;
+
+    OpusVL::FB11::Hive
+        ->brain($component)
+        ->hat('augments_object')
+        ->get_augmented_object($self);
+}
+
+=head2 parameters
+
+Returns the object parameters from the configured parameters provider. This is
+the same as L</augmentation_for> except it picks the C<parameters> service
+instead of asking for a component name.
+
+If the parameters service is well-behaved it will return another DBIx::Class
+result.
+
+=cut
+
+sub parameters {
+    my $self = shift;
+
+    OpusVL::FB11::Hive
+        ->service('parameters')
+        ->get_augmented_data($self)
+}
+
+=head2 methods_for_delegation
+
+Returns an arrayref of method names that you can safely delegate to this object,
+using Moose's C<handles> attribute:
+
+    has core_user => (
+        is => 'rw',
+        handles => OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User->methods_for_delegation
+    );
+
+Of course, you're not required to delegate; it might be useful in some
+situations though.
+
+Note that nothing in FB11 is going to handle a C<core_user> attribute like this;
+your own component should do that.
+
+=cut
+
+sub methods_for_delegation {
+    [
+        __PACKAGE__->columns,
+        __PACKAGE__->relationships
+    ]
 }
 
 =head1 COPYRIGHT and LICENSE

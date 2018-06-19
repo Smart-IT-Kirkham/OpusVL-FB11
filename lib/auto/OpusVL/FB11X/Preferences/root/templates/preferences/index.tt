@@ -1,0 +1,3 @@
+[% USE Dumper %]
+
+[% Dumper.dump(c.user.obj.parameters.prefs_json) %]

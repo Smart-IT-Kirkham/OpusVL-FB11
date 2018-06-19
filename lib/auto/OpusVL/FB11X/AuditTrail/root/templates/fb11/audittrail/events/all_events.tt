@@ -3,5 +3,5 @@
 
 <h1>Events</h1>
 
-[% PROCESS modules/audittrail/events/event_search.tt %]
+[% PROCESS fb11/audittrail/events/event_search.tt %]
 

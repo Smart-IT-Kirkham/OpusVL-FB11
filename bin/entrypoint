@@ -53,6 +53,10 @@ else {
         push @cmd, '--workers', $ENV{WORKERS};
     }
 
+    if ($ENV{PRELOAD}) {
+        push @cmd, '--preload-app'
+    }
+
     if ($ENV{STACKTRACE}) {
         unshift @cmd, qw(/opt/perl5/bin/perl -d:Confess);
     }

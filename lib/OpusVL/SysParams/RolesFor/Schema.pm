@@ -7,6 +7,8 @@ requires 'load_namespaces';
 
 =head1 SYNOPSIS
 
+B<DEPRECATED> - Please use the Brain architecture for this.
+
 This allows for our logging to be inserted into an existing schema and make use of the existing
 connection details.  The class actually injects our schema objects into the existing schema and 
 adds a 'sys_params' object to the schema.
