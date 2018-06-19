@@ -1,5 +1,13 @@
 {{ $NEXT }}
 
+0.036     2018-06-19 13:21:27+01:00 Europe/London
+
+  - Added new brains and hats architecture
+  - Added sysparams and audit trail
+  - Those two now have brains and hats
+  - Various small fixes discovered during this
+  - Various fixes to fb11-dbh, but still needs work
+
 0.035     2017-12-15 12:35:57+00:00 Europe/London
 
   - Merged several core FB11X components into the distribution:
