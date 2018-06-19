@@ -11,7 +11,7 @@ use Data::Munge qw/elem/;
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
 
-our $VERSION = "0.001";
+our $VERSION = '0.037';
 
 # ABSTRACT: Core ACL administration page
 

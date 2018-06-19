@@ -6,7 +6,7 @@ use namespace::autoclean;
 with 'OpusVL::FB11::RolesFor::Plugin';
 with 'OpusVL::FB11X::Parameters::DB';
 
-our $VERSION = '0.65';
+our $VERSION = '0.037';
 
 after 'setup_components' => sub {
     my $class = shift;
