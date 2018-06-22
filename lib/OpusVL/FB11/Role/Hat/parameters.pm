@@ -90,6 +90,9 @@ B<Arguments>: C<$data>
 C<$data> will be an arbitrary object, and the implementer must return the
 parameters for it.
 
+Best practice is to return a hashref of data that conforms to
+L</get_parameter_schema>, to ensure consistency and establish a standard.
+
 =cut
 
 requires 'get_augmented_data';
@@ -111,7 +114,16 @@ C<$class> will be a class returned by L</get_augmented_classes>. The implementer
 must return a data structure that defines the user-defined schema for the
 parameters for this class.
 
-The shape of this schema is TBC but it probably will be a subset of OpenAPI.
+The schema should be an OpenAPI Schema object.
+
+B<Extensions> The OpenAPI schema object can be extended with:
+
+C<x-namespace>: A namespace for the fields so we can identify your fields later,
+if multiple parameters schemata are going into the same form. It is a good idea
+to use this.
+
+C<x-field-order>: An array of field names (not namespaced) to control the
+expected ordering of your parameters, if you want.
 
 =cut
 
