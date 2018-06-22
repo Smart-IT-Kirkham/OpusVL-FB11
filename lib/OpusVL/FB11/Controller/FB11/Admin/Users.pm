@@ -169,9 +169,12 @@ sub show_user
 
     # TODO - this is probably more useful done elsewhere
     my $params_form_config = {};
+    HAT:
     for my $hat (OpusVL::FB11::Hive->hats('parameters')) {
         if (elem 'OpusVL::FB11::Schema::FB11AuthDB::Result::User', [$hat->get_augmented_classes]) {
             my $schema =  $hat->get_parameter_schema;
+            next HAT if not $schema or not %$schema;
+
             my $field_config = OpusVL::FB11::Form->openapi_to_formhandler($schema);
             my $fieldset = {
                 name => $schema->{'x-namespace'},
