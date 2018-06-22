@@ -1,6 +1,7 @@
 package OpusVL::FB11::Role::Hat::parameters;
 
 use Moose::Role;
+with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Defines the required methods for a parameters service provider
 
