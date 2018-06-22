@@ -5,6 +5,9 @@ my $brain = Test::Brain->new;
 
 my $hive = 'OpusVL::FB11::Hive';
 
+# TODO Calling this causes brain to register twice at the moment but it doesn't affect the test at the point in time.
+#      I'm not keen on brains registering themselves magically, but apparently that's just temporary
+#      until we teach FB11 how to init correctly
 $hive->register_brain($brain);
 
 # TODO things shouldn't just claim services automatically like this.
