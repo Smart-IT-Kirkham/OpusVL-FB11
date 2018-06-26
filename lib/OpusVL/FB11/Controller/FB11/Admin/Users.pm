@@ -218,7 +218,7 @@ sub show_user
             }
 
             $c->flash->{status_msg} = "Successfully updated parameters";
-            $c->res->redirect($c->req->ur
+            $c->res->redirect($c->req->uri);
         }
     }
 
