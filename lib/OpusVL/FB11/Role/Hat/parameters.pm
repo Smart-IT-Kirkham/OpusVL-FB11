@@ -1,6 +1,9 @@
 package OpusVL::FB11::Role::Hat::parameters;
 
 use Moose::Role;
+use Data::Munge qw/elem/;
+use namespace::autoclean;
+
 with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Defines the required methods for a parameters service provider
@@ -93,6 +96,11 @@ parameters for it.
 Best practice is to return a hashref of data that conforms to
 L</get_parameter_schema>, to ensure consistency and establish a standard.
 
+If C<$data> is not of a type that L</get_augmented_classes> returns, undef is
+returned. This is done by testing C<ref $data> with L<Data::Munge/elem>. So if
+you want to support non-refs, ensure C<undef> appears in
+C</get_augmented_classes>.
+
 =cut
 
 requires 'get_augmented_data';
@@ -101,6 +109,8 @@ requires 'get_augmented_data';
 
 The implementer must return a list of class names that it is capable of
 returning parameters for.
+
+If you want to support nonrefs, make sure C<undef> appears in this list.
 
 =cut
 
@@ -173,5 +183,18 @@ register itself separately so they might as well be separate services.
 =cut
 
 requires 'register_extension';
+
+around get_augmented_data => sub {
+    my $orig = shift;
+    my $self = shift;
+
+    my $obj = shift;
+
+    return unless elem ref $obj, [ $self->get_augmented_classes ];
+
+    return $self->$orig($obj, @_);
+};
+
+no Moose::Role;
 
 1;
