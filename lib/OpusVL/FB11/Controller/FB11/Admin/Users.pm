@@ -233,7 +233,7 @@ sub show_user
                 data      => $upload->slurp,
             });
             $c->flash->{status_msg} = "Successfully updated avatar";
-            $c->res->redirect($c->req->ur
+            $c->res->redirect($c->req->uri);
         }
     }
 
