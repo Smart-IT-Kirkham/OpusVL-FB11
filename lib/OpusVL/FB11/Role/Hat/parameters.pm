@@ -190,7 +190,13 @@ around get_augmented_data => sub {
 
     my $obj = shift;
 
-    return unless elem ref $obj, [ $self->get_augmented_classes ];
+#    FIXME - Catalyst gives me the wrong class name for $c->user!
+#    It uses AppName::Model::FB11AuthDB::User
+#    When we figure out how to call it on the real class, we can do this.
+#    unless (elem ref $obj, [ $self->get_augmented_classes ]) {
+#        warn ref($self) . " does not have parameters for " . ref($obj);
+#        return;
+#    }
 
     return $self->$orig($obj, @_);
 };
