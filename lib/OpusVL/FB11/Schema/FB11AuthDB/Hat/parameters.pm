@@ -136,9 +136,4 @@ sub set_parameter_schema {
 
 sub register_extension{}
 
-sub _oapi_equivalent_of {
-    my $type = shift;
-
-    
-}
 1;
