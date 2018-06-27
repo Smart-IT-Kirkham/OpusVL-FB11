@@ -74,13 +74,38 @@ sub openapi_to_formhandler {
 
     for my $field (@$order) {
         my $def = $schema->{properties}->{$field};
-        push @$formhandler, (
-            $namespace . _to_field_name($field) => {
-                type => _to_field_type($def->{type}),
-                label => $def->{title} // $field,
-                # TODO validation
+
+        # TODO validation
+        my %field = (
+            label => $def->{title} // $field
+        );
+
+        if (my $options = $def->{'x-options'}) {
+            $field{type} = 'Select';
+            $field{options} = $options;
+            if ($def->{type} eq 'array') {
+                $field{multiple} = 1;
             }
-        )
+        }
+        else {
+            $field{type} = _to_field_type($def->{type});
+        }
+
+        # TODO - semantic widgets?
+        if (my $w = $def->{'x-widget'}) {
+            $field{widget} = $w;
+        }
+
+        if (my $real_def = $def->{items}) {
+            if (my $opts = $real_def->{enum}) {
+                $field{options} = [ map +{
+                    value => $_, label => $_
+                }, @$opts ]
+            }
+            $field{multiple} = 1;
+        }
+
+        push @$formhandler, ( $namespace . _to_field_name($field) => \%field )
     }
 
     return $formhandler;
@@ -148,7 +173,14 @@ sub params_back_to_openapi {
     for my $field (keys $schema->{properties}->%*) {
         my $form_field = $namespace . _to_field_name($field);
 
-        $ret->{$field} = $self->field($form_field)->value;
+        my $value = $self->field($form_field)->value;
+
+        if ($schema->{properties}->{$field}->{type} eq 'array'
+        and not ref $value) {
+            $value = [ $value ]
+        }
+
+        $ret->{$field} = $value;
     }
 
     return $ret;
@@ -164,6 +196,8 @@ sub _to_field_name {
 {
     my %mapping = (
         string => 'Text',
+        array => 'Select',
+        number => 'Number',
     );
 
     sub _to_field_type {

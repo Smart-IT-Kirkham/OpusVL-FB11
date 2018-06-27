@@ -186,9 +186,9 @@ sub show_user
             push $params_form_config->{field_list}->@*, @$field_config;
             push $params_form_config->{block_list}->@*, $fieldset;
             push $params_form_config->{render_list}->@*, $fieldset->{name};
-            $params_form_config->{init_object} //= {};
-            $params_form_config->{init_object} = {
-                $params_form_config->{init_object}->%*,
+            $params_form_config->{defaults} //= {};
+            $params_form_config->{defaults} = {
+                $params_form_config->{defaults}->%*,
                 OpusVL::FB11::Form->openapi_to_init_object(
                     $schema,
                     $hat->get_augmented_data($c->stash->{thisuser})
@@ -199,13 +199,16 @@ sub show_user
     }
 
     if (%$params_form_config) {
+        my $defaults = delete $params_form_config->{defaults};
         push $params_form_config->{field_list}->@*, (
             submit_params => 'Submit'
         );
         push $params_form_config->{render_list}->@*, 'submit_params';
 
         my $params_form = $c->stash->{params_form} = OpusVL::FB11::Form->new($params_form_config);
-        $params_form->process($c->req->params);
+
+        $params_form->process(defaults => $defaults, params => $c->req->params);
+
         if ($params_form->validated) {
             for my $hat (OpusVL::FB11::Hive->hats('parameters')) {
                 my $schema =  $hat->get_parameter_schema;
