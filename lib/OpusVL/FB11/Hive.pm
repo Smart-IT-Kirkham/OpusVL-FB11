@@ -44,6 +44,7 @@ brains without having to go via Catalyst in the first place.
 
 my %brains;
 my %providers;
+my %hat_providers;
 my %hats;
 
 =head1 CLASS METHODS
@@ -66,6 +67,7 @@ sub register_brain {
     $brains{$brain->short_name} = $brain;
 
     push $providers{$_}->@*, $brain for $brain->provided_services;
+    push $hat_providers{$_}->@*, $brain for $brain->_hat_names;
 }
 
 sub _brain {
@@ -92,7 +94,23 @@ sub hat {
     my $brain = shift;
     my $hat_name = shift;
 
-    return $class->_brain($brain)->hat($hat_name);
+    return $class->__hat($brain, $hat_name);
+}
+
+sub __hat {
+    my $class = shift;
+    my $brain = shift;
+    my $hat_name = shift;
+
+    my $brain_name = ref($brain) ? $brain->short_name : $brain;
+
+    my $cached = $class->__cached_hat($brain_name, $hat_name);
+    return $cached if $cached;
+
+    my $hat_obj = $class->_brain($brain_name)->_hat($hat_name);
+    $class->__cache_hat($brain_name, $hat_name, $hat_obj);
+
+    return $hat_obj;
 }
 
 =head2 hats
@@ -110,14 +128,7 @@ sub hats {
     my $self = shift;
     my $hat_name = shift;
 
-    # TODO: Interrogate this config information when a brain is registered.
-    return gather {
-        for my $br (values %brains) {
-            my %config = $self->_consume_hat_config($br->hats);
-
-            take $br->hat($hat_name) if $config{$hat_name};
-        }
-    }
+    return map { $self->__hat($_, $hat_name) } $hat_providers{$hat_name}->@*;
 }
 
 =head2 service
@@ -139,7 +150,7 @@ sub service {
 
    # TODO: Allow configuration to specify which one should be returned.
 
-    return $providers{$service}->[0]->hat($service);
+    return $providers{$service}->[0]->_hat($service);
 }
 
 =head2 fancy_hat
@@ -164,28 +175,6 @@ sub fancy_hat {
     $class->_brain($hat)->hat($hat);
 }
 
-# Turn simple config style into a true hash.
-# Strings are keys; hashrefs are config for the previous string.
-# No hashref = undef config = default config
-sub _consume_hat_config {
-    my $self = shift;
-    my @config = @_;
-
-    my %config;
-
-    while (my $item = shift @config) {
-        if ($config[0] and ref $config[0]) {
-            $config{$item} = shift @config;
-        }
-        else {
-            $config{$item} = {
-                class => $item
-            };
-        }
-    }
-
-    return %config;
-}
 
 sub __cache_hat {
     my $class = shift;
@@ -193,7 +182,7 @@ sub __cache_hat {
     my $hat_name = shift;
     my $hat = shift;
 
-    $hats{refaddr $brain}->{$hat_name} = $hat;
+    $hats{$brain}->{$hat_name} = $hat;
 }
 
 sub __cached_hat {
@@ -201,7 +190,7 @@ sub __cached_hat {
     my $brain = shift;
     my $hat_name = shift;
 
-    $hats{refaddr $brain}->{$hat_name};
+    $hats{$brain}->{$hat_name};
 }
 
 1;
