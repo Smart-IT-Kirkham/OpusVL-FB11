@@ -30,23 +30,6 @@ TODO: {
 exists_isa_ok($_, @hats) for qw<Test::Brain::Hat::TEST::hat1 Test::Brain2::Hat::TEST::hat1>;
 exists_hat_with_brain_name($_, @hats) for qw<TEST::brain1 TEST::brain2>;
 
-sub exists_hat_with_brain_name {
-    my ($brain_name, @hats) = @_;
-    my $msg = "At least one hat is for brain $brain_name";
-    for (@hats) {
-        return pass($msg) if $_->__brain->short_name eq $brain_name;
-    }
-    return fail($msg);
-}
-sub exists_isa_ok {
-    my ($class, @hats) = @_;
-    my $msg = "At least one isa $class";
-    for (@hats) {
-        return pass($msg) if $_->isa($class);
-    }
-    return fail($msg);
-}
-
 BEGIN {
     package Test::Brain {
         use Moose;
@@ -80,4 +63,21 @@ BEGIN {
         with 'OpusVL::FB11::Role::Hat';
         sub do_something { "Did something with Brain2" }
     }
+}
+
+sub exists_hat_with_brain_name {
+    my ($brain_name, @hats) = @_;
+    my $msg = "At least one hat is for brain $brain_name";
+    for (@hats) {
+        return pass($msg) if $_->__brain->short_name eq $brain_name;
+    }
+    return fail($msg);
+}
+sub exists_isa_ok {
+    my ($class, @hats) = @_;
+    my $msg = "At least one isa $class";
+    for (@hats) {
+        return pass($msg) if $_->isa($class);
+    }
+    return fail($msg);
 }
