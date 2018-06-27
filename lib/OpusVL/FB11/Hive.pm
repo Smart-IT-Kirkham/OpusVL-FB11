@@ -107,7 +107,7 @@ sub __hat {
     my $cached = $class->__cached_hat($brain_name, $hat_name);
     return $cached if $cached;
 
-    my $hat_obj = $class->_brain($brain_name)->_hat($hat_name);
+    my $hat_obj = $class->_brain($brain_name)->_construct_hat($hat_name);
     $class->__cache_hat($brain_name, $hat_name, $hat_obj);
 
     return $hat_obj;
@@ -150,7 +150,7 @@ sub service {
 
    # TODO: Allow configuration to specify which one should be returned.
 
-    return $providers{$service}->[0]->_hat($service);
+    return $providers{$service}->[0]->_construct_hat($service);
 }
 
 =head2 fancy_hat
@@ -172,7 +172,7 @@ sub fancy_hat {
     my $class = shift;
     my $hat = shift;
 
-    $class->_brain($hat)->hat($hat);
+    $class->_brain($hat)->_construct_hat($hat);
 }
 
 
