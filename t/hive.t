@@ -10,11 +10,7 @@ my $hive = 'OpusVL::FB11::Hive';
 #      until we teach FB11 how to init correctly
 $hive->register_brain($brain);
 $hive->register_brain(Test::Brain2->new);
-
-# TODO things shouldn't just claim services automatically like this.
-#      Either take an argument services => [qw<service1 service2>] in register_brain
-#      or provide an extra method set_service($service_name, $brain_or_brain_name)
-#      or both
+$hive->set_service('TEST::hat1', 'TEST::brain1');
 
 ok (my $hat = $hive->service('TEST::hat1'), 'retrieve TEST::hat1 service');
 is($hat->__brain->short_name, 'TEST::brain1', "Name of brain providing the service");

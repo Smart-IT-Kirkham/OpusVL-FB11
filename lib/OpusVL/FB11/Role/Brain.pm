@@ -5,6 +5,7 @@ package OpusVL::FB11::Role::Brain;
 use OpusVL::FB11::Hive;
 use Moose::Role;
 use Module::Runtime 'use_package_optimistically';
+use Data::Munge qw<elem>;
 use v5.24;
 
 =head1 DESCRIPTION
@@ -231,5 +232,18 @@ See L<OpusVL::FB11::Hive/SERVICES> for a list of core services.
 =cut
 
 sub provided_services {}
+
+=head2 can_provide_service
+
+Return whether this brain can provide the named service
+
+=cut
+
+sub can_provide_service {
+    my $self = shift;
+    my $service_name = shift;
+
+    return elem($service_name, [$self->provided_services]);
+}
 
 1;
