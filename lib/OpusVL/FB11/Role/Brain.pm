@@ -204,15 +204,4 @@ See L<OpusVL::FB11::Hive/SERVICES> for a list of core services.
 
 sub provided_services {}
 
-=head2 register_self
-
-Syntactic sugar for self-installing into the hive.
-
-=cut
-
-sub register_self {
-    my $self = shift;
-    OpusVL::FB11::Hive->register_brain($self);
-}
-
 1;
