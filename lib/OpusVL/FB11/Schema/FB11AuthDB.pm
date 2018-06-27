@@ -14,7 +14,7 @@ has short_name => (
 );
 
 sub hats {
-    qw/auth/;
+    qw/auth parameters/;
 }
 
 sub provided_services {

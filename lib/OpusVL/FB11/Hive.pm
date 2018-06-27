@@ -112,10 +112,10 @@ sub hats {
 
     # TODO: Interrogate this config information when a brain is registered.
     return gather {
-        for my $b (values %brains) {
-            my %config = $self->_consume_hat_config($b->hats);
+        for my $br (values %brains) {
+            my %config = $self->_consume_hat_config($br->hats);
 
-            take $b->hat($hat_name) if $config{$hat_name};
+            take $br->hat($hat_name) if $config{$hat_name};
         }
     }
 }
