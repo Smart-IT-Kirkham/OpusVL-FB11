@@ -1,6 +1,10 @@
 package OpusVL::FB11::Role::Hat::parameters;
 
 use Moose::Role;
+use Data::Munge qw/elem/;
+use namespace::autoclean;
+
+with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Defines the required methods for a parameters service provider
 
@@ -89,6 +93,14 @@ B<Arguments>: C<$data>
 C<$data> will be an arbitrary object, and the implementer must return the
 parameters for it.
 
+Best practice is to return a hashref of data that conforms to
+L</get_parameter_schema>, to ensure consistency and establish a standard.
+
+If C<$data> is not of a type that L</get_augmented_classes> returns, undef is
+returned. This is done by testing C<ref $data> with L<Data::Munge/elem>. So if
+you want to support non-refs, ensure C<undef> appears in
+C</get_augmented_classes>.
+
 =cut
 
 requires 'get_augmented_data';
@@ -97,6 +109,8 @@ requires 'get_augmented_data';
 
 The implementer must return a list of class names that it is capable of
 returning parameters for.
+
+If you want to support nonrefs, make sure C<undef> appears in this list.
 
 =cut
 
@@ -110,7 +124,16 @@ C<$class> will be a class returned by L</get_augmented_classes>. The implementer
 must return a data structure that defines the user-defined schema for the
 parameters for this class.
 
-The shape of this schema is TBC but it probably will be a subset of OpenAPI.
+The schema should be an OpenAPI Schema object.
+
+B<Extensions> The OpenAPI schema object can be extended with:
+
+C<x-namespace>: A namespace for the fields so we can identify your fields later,
+if multiple parameters schemata are going into the same form. It is a good idea
+to use this.
+
+C<x-field-order>: An array of field names (not namespaced) to control the
+expected ordering of your parameters, if you want.
 
 =cut
 
@@ -160,5 +183,24 @@ register itself separately so they might as well be separate services.
 =cut
 
 requires 'register_extension';
+
+around get_augmented_data => sub {
+    my $orig = shift;
+    my $self = shift;
+
+    my $obj = shift;
+
+#    FIXME - Catalyst gives me the wrong class name for $c->user!
+#    It uses AppName::Model::FB11AuthDB::User
+#    When we figure out how to call it on the real class, we can do this.
+#    unless (elem ref $obj, [ $self->get_augmented_classes ]) {
+#        warn ref($self) . " does not have parameters for " . ref($obj);
+#        return;
+#    }
+
+    return $self->$orig($obj, @_);
+};
+
+no Moose::Role;
 
 1;

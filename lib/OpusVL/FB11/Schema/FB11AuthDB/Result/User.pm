@@ -210,22 +210,32 @@ sub augmentation_for {
 
 =head2 parameters
 
-Returns the object parameters from the configured parameters provider. This is
-the same as L</augmentation_for> except it picks the C<parameters> service
-instead of asking for a component name.
+=head2 params_hash
 
-If the parameters service is well-behaved it will return another DBIx::Class
-result.
+This returns a hashref of all parameters defined against this object. This is
+done by finding all brains wearing the C<parameters> hat and asking them.
+
+C<params_hash> is supplied as an alias for backward compatibility.
 
 =cut
 
 sub parameters {
     my $self = shift;
 
-    OpusVL::FB11::Hive
-        ->service('parameters')
-        ->get_augmented_data($self)
+    my $combined = {};
+    for my $hat ( OpusVL::FB11::Hive->hats('parameters') ) {
+        my $current = $hat->get_augmented_data($self);
+        next unless $current;
+        $combined = {
+            %$combined,
+            %$current
+        }
+    }
+
+    return $combined;
 }
+
+*params_hash = \&parameters;
 
 =head2 methods_for_delegation
 
