@@ -158,7 +158,7 @@ TODO: make it a declarative thing on the role ("wears")
 
 sub hats {}
 
-=head2 _hat
+=head2 _construct_hat
 
 B<Arguments>: $hat_name
 
@@ -168,7 +168,7 @@ Look for a hat for this brain. See L</hats> for how the hats are looked up.
 
 =cut
 
-sub _hat {
+sub _construct_hat {
     my $self = shift;
     my $hat_name = shift;
 
