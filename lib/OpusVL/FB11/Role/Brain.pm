@@ -244,4 +244,12 @@ sub can_provide_service {
     return elem($service_name, [$self->provided_services]);
 }
 
+=head2 init
+
+A hook to initialise the schema.  This will be called from the hive when it is initialised.
+
+=cut
+
+sub init {}
+
 1;

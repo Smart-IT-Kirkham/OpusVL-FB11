@@ -47,6 +47,7 @@ my %providers;
 my %hat_providers;
 my %services;
 my %hats;
+my %brain_initialised;
 
 =head1 CLASS METHODS
 
@@ -104,6 +105,10 @@ sub _brain {
         unless $brains{$name};
 
     return $brains{$name};
+}
+
+sub _brain_names {
+    return keys %brains;
 }
 
 =head2 hat
@@ -210,7 +215,32 @@ sub fancy_hat {
     }
 
     $class->__hat($brain, $hat);
+}
 
+=head2 init
+
+Initialise the hive.
+
+=cut
+
+sub init {
+    my $class = shift;
+    # TODO $class->check unless $checked;
+
+    $class->_init_brain($_) for $class->_brain_names;
+    # TODO do it in dependency order
+}
+
+sub _init_brain {
+    my $class = shift;
+    my $brain_name = shift;
+    # TODO should we track whether brains have been initialised, or should the brains themselves?
+    #      Advantage of this doing it is the brains don't each need to keep track of whether they're inited, and
+    #      we won't need a confusing pair of "init" and "_init" methods on the brains themselves to keep it active.
+    #      Advantage of brains doing it is they can prevent accidental extra calls from elsewhere than the hive.
+    return if $brain_initialised{$brain_name};
+    $class->_brain($_)->init;
+    $brain_initialised{$brain_name} = 1;
 }
 
 

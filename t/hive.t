@@ -1,4 +1,4 @@
-use Test::Most tests => 10;
+use Test::Most tests => 11;
 use_ok "OpusVL::FB11::Hive";
 
 my $brain = Test::Brain->new;
@@ -11,6 +11,12 @@ my $hive = 'OpusVL::FB11::Hive';
 $hive->register_brain($brain);
 $hive->register_brain(Test::Brain2->new);
 $hive->set_service('TEST::hat1', 'TEST::brain1');
+
+subtest '$hive->init initialises the brains' => sub {
+    ok(! $brain->ran_initialise, 'BEFORE: Brain not yet had init run on it');
+    lives_ok { $hive->init } '$hive->init lives';
+    ok($brain->ran_initialise, 'init method has now been run on brain1');
+};
 
 ok (my $hat = $hive->service('TEST::hat1'), 'retrieve TEST::hat1 service');
 is($hat->__brain->short_name, 'TEST::brain1', "Name of brain providing the service");
@@ -37,9 +43,11 @@ BEGIN {
     package Test::Brain {
         use Moose;
         with 'OpusVL::FB11::Role::Brain';
+        has ran_initialise => (is => 'rw', isa => 'Bool', required => 0);
         sub short_name { "TEST::brain1" }
         sub hats { qw<TEST::hat1>, 'TEST::hat2' => { class => '+Test::SharedHat' } }
         sub provided_services { qw<TEST::hat1> }
+        sub init { shift->ran_initialise(1) }
     }
 
     package Test::Brain::Hat::TEST::hat1 {
