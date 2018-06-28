@@ -44,6 +44,8 @@ brains without having to go via Catalyst in the first place.
 
 my %brains;
 my %providers;
+my %hat_providers;
+my %services;
 my %hats;
 
 =head1 CLASS METHODS
@@ -66,6 +68,29 @@ sub register_brain {
     $brains{$brain->short_name} = $brain;
 
     push $providers{$_}->@*, $brain for $brain->provided_services;
+    push $hat_providers{$_}->@*, $brain for $brain->_hat_names;
+}
+
+=head2 set_service
+
+B<Arguments>: C<$service_name>, C<$brain_name>
+
+Call this to specify that brain C<$brain_name> is to provide the service C<$service_name> for this app.
+
+=cut
+
+sub set_service {
+    my $class = shift;
+    my $service_name = shift;
+    my $brain_name = shift;
+
+    if (exists $services{$service_name}) {
+        die "Service $service_name already taken by brain $services{$service_name}";
+    }
+    unless ($class->_brain($brain_name)->can_provide_service($service_name)) {
+        die "Brain $brain_name cannot provide service $service_name";
+    }
+    $services{$service_name} = $brain_name;
 }
 
 sub _brain {
@@ -92,7 +117,23 @@ sub hat {
     my $brain = shift;
     my $hat_name = shift;
 
-    return $class->_brain($brain)->hat($hat_name);
+    return $class->__hat($brain, $hat_name);
+}
+
+sub __hat {
+    my $class = shift;
+    my $brain = shift;
+    my $hat_name = shift;
+
+    my $brain_name = ref($brain) ? $brain->short_name : $brain;
+
+    my $cached = $class->__cached_hat($brain_name, $hat_name);
+    return $cached if $cached;
+
+    my $hat_obj = $class->_brain($brain_name)->_construct_hat($hat_name);
+    $class->__cache_hat($brain_name, $hat_name, $hat_obj);
+
+    return $hat_obj;
 }
 
 =head2 hats
@@ -110,36 +151,27 @@ sub hats {
     my $self = shift;
     my $hat_name = shift;
 
-    # TODO: Interrogate this config information when a brain is registered.
-    return gather {
-        for my $br (values %brains) {
-            my %config = $self->_consume_hat_config($br->hats);
-
-            take $br->hat($hat_name) if $config{$hat_name};
-        }
-    }
+    return map { $self->__hat($_, $hat_name) } $hat_providers{$hat_name}->@*;
 }
 
 =head2 service
 
-Returns the hat for the given service.
-
-This currently uses the first-registered service because until this interface
-matures we don't support multiple providers for the same service.
+Returns the hat for the given service, as registered with L<set_service>.
 
 =cut
 
 sub service {
     my $class = shift;
-    my $service = shift;
+    my $service_name = shift;
 
-    confess "Nothing provides the service $service"
-        unless $providers{$service}
-           and $providers{$service}->@*;
+    confess "Nothing provides the service $service_name"
+        unless $services{$service_name};
 
-   # TODO: Allow configuration to specify which one should be returned.
+    my $hat = $class->__hat($services{$service_name}, $service_name);
 
-    return $providers{$service}->[0]->hat($service);
+    # TODO look for a standard interface (role) for that service name and, if it exists, check the hat consumes it
+
+    return $hat;
 }
 
 =head2 fancy_hat
@@ -161,31 +193,9 @@ sub fancy_hat {
     my $class = shift;
     my $hat = shift;
 
-    $class->_brain($hat)->hat($hat);
+    $class->_brain($hat)->_construct_hat($hat);
 }
 
-# Turn simple config style into a true hash.
-# Strings are keys; hashrefs are config for the previous string.
-# No hashref = undef config = default config
-sub _consume_hat_config {
-    my $self = shift;
-    my @config = @_;
-
-    my %config;
-
-    while (my $item = shift @config) {
-        if ($config[0] and ref $config[0]) {
-            $config{$item} = shift @config;
-        }
-        else {
-            $config{$item} = {
-                class => $item
-            };
-        }
-    }
-
-    return %config;
-}
 
 sub __cache_hat {
     my $class = shift;
@@ -193,7 +203,7 @@ sub __cache_hat {
     my $hat_name = shift;
     my $hat = shift;
 
-    $hats{refaddr $brain}->{$hat_name} = $hat;
+    $hats{$brain}->{$hat_name} = $hat;
 }
 
 sub __cached_hat {
@@ -201,7 +211,7 @@ sub __cached_hat {
     my $brain = shift;
     my $hat_name = shift;
 
-    $hats{refaddr $brain}->{$hat_name};
+    $hats{$brain}->{$hat_name};
 }
 
 1;

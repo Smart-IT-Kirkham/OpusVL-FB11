@@ -4,7 +4,8 @@ package OpusVL::FB11::Role::Brain;
 
 use OpusVL::FB11::Hive;
 use Moose::Role;
-use Module::Runtime 'use_module';
+use Module::Runtime 'use_package_optimistically';
+use Data::Munge qw<elem>;
 use v5.24;
 
 =head1 DESCRIPTION
@@ -158,26 +159,24 @@ TODO: make it a declarative thing on the role ("wears")
 
 sub hats {}
 
-=head2 hat
+=head2 _construct_hat
 
 B<Arguments>: $hat_name
 
-Look for a hat for this brain. See L</hats> for how the hats are looked up. Hats
-will only be constructed once.
+B<Friends with>: L<OpusVL::FB11::Hive>
+
+Look for a hat for this brain. See L</hats> for how the hats are looked up.
 
 =cut
 
-sub hat {
+sub _construct_hat {
     my $self = shift;
     my $hat_name = shift;
 
     my $actual_class = $hat_name;
 
-    my $cached = OpusVL::FB11::Hive->__cached_hat($self, $hat_name);
-
-    return $cached if $cached;
-
-    my %config = OpusVL::FB11::Hive->_consume_hat_config($self->hats);
+    my %config = $self->__hat_config;
+    #$DB::single=1;
 
     if ($config{$hat_name}) {
         $actual_class = $config{$hat_name}->{class};
@@ -190,8 +189,38 @@ sub hat {
         $actual_class = "${ns}::Hat::${actual_class}";
     }
 
-    use_module($actual_class);
-    OpusVL::FB11::Hive->__cache_hat($self, $hat_name, $actual_class->new({__brain => $self}));
+    use_package_optimistically($actual_class);
+    return $actual_class->new({__brain => $self});
+}
+
+sub _hat_names {
+    my $self = shift;
+    my %config = $self->__hat_config;
+    return keys %config;
+}
+
+# Turn simple config style into a true hash.
+# Strings are keys; hashrefs are config for the previous string.
+# No hashref = undef config = default config
+sub __hat_config {
+    my $self = shift;
+    my @config = $self->hats;
+
+    my %config;
+
+    $DB::single=1;
+    while (my $item = shift @config) {
+        if ($config[0] and ref $config[0]) {
+            $config{$item} = shift @config;
+        }
+        else {
+            $config{$item} = {
+                class => $item
+            };
+        }
+    }
+
+    return %config;
 }
 
 =head2 provided_services
@@ -204,21 +233,17 @@ See L<OpusVL::FB11::Hive/SERVICES> for a list of core services.
 
 sub provided_services {}
 
-=head2 register_self
+=head2 can_provide_service
 
-Call this if your Brain isn't a normal Moose class. By default, the Role hooks
-into BUILD and registers itself after construction, but packages are not
-required to provide a C<sub new>, such as DBIx::Class::Schema.
+Return whether this brain can provide the named service
 
 =cut
 
-sub register_self {
+sub can_provide_service {
     my $self = shift;
-    OpusVL::FB11::Hive->register_brain($self);
-}
+    my $service_name = shift;
 
-# This ensures there *is* a BUILD, and has no effect if there already is one.
-sub BUILD {}
-after BUILD => \&register_self;
+    return elem($service_name, [$self->provided_services]);
+}
 
 1;

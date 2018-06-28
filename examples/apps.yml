@@ -1,0 +1,5 @@
+apps:
+  cms:
+    default_environment:
+      PSGI: /opt/perl5/bin/opusvl_fb11websiteadmin.psgi
+      CATALYST_CONFIG: /srv/fb11/opusvl_fb11websiteadmin.conf
