@@ -193,7 +193,7 @@ sub fancy_hat {
     my $class = shift;
     my $hat = shift;
 
-    $class->_brain($hat)->_construct_hat($hat);
+    $class->__hat($hat, $hat);
 }
 
 
