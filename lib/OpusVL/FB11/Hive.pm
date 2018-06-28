@@ -85,9 +85,11 @@ sub set_service {
     my $brain_name = shift;
 
     if (exists $services{$service_name}) {
+        # TODO formal exception object
         die "Service $service_name already taken by brain $services{$service_name}";
     }
     unless ($class->_brain($brain_name)->can_provide_service($service_name)) {
+        # TODO formal exception object
         die "Brain $brain_name cannot provide service $service_name";
     }
     $services{$service_name} = $brain_name;
@@ -97,6 +99,7 @@ sub _brain {
     my $class = shift;
     my $name = shift;
 
+    # TODO formal exception object
     confess "No brain registered under the name $name"
         unless $brains{$name};
 
@@ -165,6 +168,7 @@ sub service {
     my $service_name = shift;
 
     my $brain = $services{$service_name};
+    # TODO formal exception object
     confess "Nothing provides the service $service_name"
         unless $brain;
 
