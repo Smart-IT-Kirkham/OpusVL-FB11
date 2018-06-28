@@ -29,6 +29,8 @@ exists_hat_with_brain_name($_, @hats) for qw<TEST::brain1 TEST::brain2>;
 subtest "Fancy Hats" => sub {
     my $fancy_hat = $hive->fancy_hat('TEST::brain2');
     isa_ok $fancy_hat, 'Test::Brain2::Hat::TEST::brain2';
+    my $fancy_subhat = $hive->fancy_hat('TEST::brain2', 'subhat');
+    isa_ok $fancy_subhat, 'Test::Brain2::Hat::TEST::brain2::subhat';
 };
 
 BEGIN {
@@ -56,7 +58,7 @@ BEGIN {
         use Moose;
         with 'OpusVL::FB11::Role::Brain';
         sub short_name { "TEST::brain2" }
-        sub hats { qw<TEST::hat1 TEST::brain2> }
+        sub hats { qw<TEST::hat1 TEST::brain2 TEST::brain2::subhat> }
     }
 
     package Test::Brain2::Hat::TEST::hat1 {
@@ -65,6 +67,11 @@ BEGIN {
         sub do_something { "Did something with Brain2" }
     }
     package Test::Brain2::Hat::TEST::brain2 {
+        use Moose;
+        with 'OpusVL::FB11::Role::Hat';
+        sub fancy_do_something { "Did something with Brain2" }
+    }
+    package Test::Brain2::Hat::TEST::brain2::subhat {
         use Moose;
         with 'OpusVL::FB11::Role::Hat';
         sub fancy_do_something { "Did something with Brain2" }

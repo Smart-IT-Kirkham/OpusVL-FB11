@@ -192,13 +192,25 @@ Obviously this is because the hat is fancy and no other hat looks like it.
 
 It is simply a shortcut for C<< ->_brain($hat)->hat($hat) >>
 
+You can also provide a second argument, which will be appended to the hat name to be retrieved,
+but not the brain.
+
+e.g.  C<< ->fancy_hat('a', 'b::c') >> will get hat C<a::b::c> off brain C<a>
+
 =cut
 
 sub fancy_hat {
     my $class = shift;
     my $hat = shift;
+    my $subhat = shift;
 
-    $class->__hat($hat, $hat);
+    my $brain = $hat;
+    if ($subhat) {
+        $hat .= ('::' . $subhat);
+    }
+
+    $class->__hat($brain, $hat);
+
 }
 
 
