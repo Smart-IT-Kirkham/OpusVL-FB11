@@ -176,7 +176,6 @@ sub _construct_hat {
     my $actual_class = $hat_name;
 
     my %config = $self->__hat_config;
-    #$DB::single=1;
 
     if ($config{$hat_name}) {
         $actual_class = $config{$hat_name}->{class};
@@ -208,7 +207,6 @@ sub __hat_config {
 
     my %config;
 
-    $DB::single=1;
     while (my $item = shift @config) {
         if ($config[0] and ref $config[0]) {
             $config{$item} = shift @config;
