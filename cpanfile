@@ -38,6 +38,7 @@ requires 'URL::Encode';
 requires 'Plack::Handler::Martian';
 requires 'DateTime::Format::Pg';
 requires 'PerlX::Maybe';
+requires 'YAML::Tiny';
 
 requires 'DBD::Pg';
 
