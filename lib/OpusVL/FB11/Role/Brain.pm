@@ -232,21 +232,4 @@ See L<OpusVL::FB11::Hive/SERVICES> for a list of core services.
 
 sub provided_services {}
 
-=head2 register_self
-
-Call this if your Brain isn't a normal Moose class. By default, the Role hooks
-into BUILD and registers itself after construction, but packages are not
-required to provide a C<sub new>, such as DBIx::Class::Schema.
-
-=cut
-
-sub register_self {
-    my $self = shift;
-    OpusVL::FB11::Hive->register_brain($self);
-}
-
-# This ensures there *is* a BUILD, and has no effect if there already is one.
-sub BUILD {}
-after BUILD => \&register_self;
-
 1;
