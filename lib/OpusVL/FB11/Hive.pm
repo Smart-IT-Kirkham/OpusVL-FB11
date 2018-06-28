@@ -164,10 +164,11 @@ sub service {
     my $class = shift;
     my $service_name = shift;
 
+    my $brain = $services{$service_name};
     confess "Nothing provides the service $service_name"
-        unless $services{$service_name};
+        unless $brain;
 
-    my $hat = $class->__hat($services{$service_name}, $service_name);
+    my $hat = $class->__hat($brain, $service_name);
 
     # TODO look for a standard interface (role) for that service name and, if it exists, check the hat consumes it
 
