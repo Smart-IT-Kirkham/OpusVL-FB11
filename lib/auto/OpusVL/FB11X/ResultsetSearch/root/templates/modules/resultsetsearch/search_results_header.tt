@@ -1,8 +1,0 @@
-<p style="float: left">
-    [% search_total_entries %]
-    [% IF search_total_entries == 1 %] row [% ELSE %] rows [% END %]
-    found
-</p>
-
-<div style="float: right;">[% PROCESS pager.tt pager = search_pager %]</div>
-
