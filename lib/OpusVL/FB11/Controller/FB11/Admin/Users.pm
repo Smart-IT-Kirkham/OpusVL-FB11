@@ -155,7 +155,7 @@ sub show_user
             label => $role,
         };
 
-        if (elem $role, [$c->stash->{thisuser}->roles]) {
+        if (elem $role, [$c->stash->{thisuser}->role_names]) {
             push @selected, $role,
         }
 

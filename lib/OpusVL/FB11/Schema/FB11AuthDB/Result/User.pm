@@ -128,16 +128,16 @@ after 'insert' => sub {
 
 =head1 METHODS
 
-=head2 roles
+=head2 role_names
 
 Returns role names the user is a member of.
 
 =cut
 
-sub roles {
+sub role_names {
     my ($self) = shift;
 
-    $self->users_roles->get_column('role')->all;
+    $self->roles->get_column('role')->all;
 }
 
 =head2 set_default_avatar
