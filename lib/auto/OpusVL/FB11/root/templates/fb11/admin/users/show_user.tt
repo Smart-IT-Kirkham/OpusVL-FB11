@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-6">
-    <div class="panel panel-default">
+    <div class="panel panel-default fb11-cardlike">
       <div class="panel-heading">
         <div class="panel-title">Available Users</div>
       </div>
@@ -54,76 +54,78 @@
   </div>
 
   [% IF c.stash.thisuser %]
-    <div class="col-sm-6 fb11-card">
-      <h1>Details for <strong>[% thisuser.name %]</strong></h1>
-      <div class="row">
-        <div class="col-sm-6">
-          <strong>Name</strong>
-        </div>
-        <div class="col-sm-6">
-          [% thisuser.name %]
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          <strong>Email</strong>
-        </div>
-        <div class="col-sm-6">
-          [% thisuser.email %]
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-6">
-          <strong>Telephone</strong>
-        </div>
-        <div class="col-sm-6">
-          [% thisuser.tel %]
-        </div>
-      </div>
-      <p>
-        <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ thisuser.id ]) %]"
-          class="btn btn-primary"
-        >
-          <i class="fa fa-wrench"></i> Edit user
-        </a>
-      </p>
-    </div>
-
-    <div class="col-sm-6 fb11-card">
-      <h1>Roles for <strong>[% thisuser.name %]</strong></h1>
-      [% form.render | none %]
-    </div>
-
-    [% IF params_form %]
-      <div class="col-sm-6 fb11-card">
-        <h1>Parameters for <strong>[% thisuser.name %]</strong></h1>
-        [% params_form.render | none %]
-      </div>
-    [% END %]
-
-    [% IF c.config.enable_avatar == 1 %]
-      <div class="col-sm-6">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <div class="panel-title">[% thisuser.name %]'s avatar</div>
+    <div class="col-sm-6">
+      <div class="fb11-card">
+        <h1>Details for <strong>[% thisuser.name %]</strong></h1>
+        <div class="row">
+          <div class="col-sm-6">
+            <strong>Name</strong>
           </div>
-          <div class="panel-body">
-            <div class="col-sm-12">
-              <div class="col-sm-6 col-xs-6">
-                [% IF thisuser.avatar %]
-                <img class="fb11-user-avatar" alt="[% thisuser.name %] Avatar" src="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('user_avatar'), [ thisuser.id ]) %]">
-                [% ELSE %]
-                <p>Strange, no avatar set.</p>
-                [% END %]
-              </div>
-              <div class="col-sm-6 col-xs-6">
-                [% upload_form.render | none %]
+          <div class="col-sm-6">
+            [% thisuser.name %]
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <strong>Email</strong>
+          </div>
+          <div class="col-sm-6">
+            [% thisuser.email %]
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <strong>Telephone</strong>
+          </div>
+          <div class="col-sm-6">
+            [% thisuser.tel %]
+          </div>
+        </div>
+        <p>
+          <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ thisuser.id ]) %]"
+            class="btn btn-primary"
+          >
+            <i class="fa fa-wrench"></i> Edit user
+          </a>
+        </p>
+      </div>
+
+      <div class="fb11-card">
+        <h1>Roles for <strong>[% thisuser.name %]</strong></h1>
+        [% form.render | none %]
+      </div>
+
+      [% IF params_form %]
+        <div class="fb11-card">
+          <h1>Parameters for <strong>[% thisuser.name %]</strong></h1>
+          [% params_form.render | none %]
+        </div>
+      [% END %]
+
+      [% IF c.config.enable_avatar == 1 %]
+        <div class="fb11-card">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <div class="panel-title">[% thisuser.name %]'s avatar</div>
+            </div>
+            <div class="panel-body">
+              <div class="col-sm-12">
+                <div class="col-sm-6 col-xs-6">
+                  [% IF thisuser.avatar %]
+                  <img class="fb11-user-avatar" alt="[% thisuser.name %] Avatar" src="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('user_avatar'), [ thisuser.id ]) %]">
+                  [% ELSE %]
+                  <p>Strange, no avatar set.</p>
+                  [% END %]
+                </div>
+                <div class="col-sm-6 col-xs-6">
+                  [% upload_form.render | none %]
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    [% END %]
+      [% END %]
+    </div>
   [% ELSE %]
 
     <p class="alert alert-info">
