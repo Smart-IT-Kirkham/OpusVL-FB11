@@ -6,7 +6,7 @@ has_field 'user_roles' => (
     type     => 'Select',
     multiple => 1,
     widget   => 'CheckboxGroup',
-    label    => 'TESTING',
+    label    => "Belongs to roles",
     options  => [],
 );
 
