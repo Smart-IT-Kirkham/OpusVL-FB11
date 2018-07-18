@@ -23,13 +23,15 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="/">[% UNLESS c.user %]OPUS<span class="opusvl-blue">VL</span>[% ELSE %][% c.config.name %][% END %]</a>
+    <a class="navbar-brand" href="/">
+      <i class="fa fa-home"></i>
+      [% c.config.name %]
+    </a>
   </div>
   <div class="navbar-collapse collapse">
 
     <!-- Left nav -->
     <ul class="nav navbar-nav">
-      <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
       [% IF c.user %]
         [% apps = c.menu_data %]
         [% FOR app IN apps %]
