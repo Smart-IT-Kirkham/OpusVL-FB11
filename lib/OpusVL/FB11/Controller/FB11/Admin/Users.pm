@@ -163,8 +163,11 @@ sub show_user
     }
 
     $form->field('user_roles')->options(\@options);
-    $form->process(defaults => { user_roles => \@selected });
-    $form->process($c->req->params);
+    $form->process(
+        defaults => { user_roles => \@selected },
+        params => $c->req->params,
+        posted => !! $c->req->body_params->{submit_roles}
+    );
     $upload_form->process($c->req->params);
 
     # TODO - this is probably more useful done elsewhere
@@ -207,7 +210,11 @@ sub show_user
 
         my $params_form = $c->stash->{params_form} = OpusVL::FB11::Form->new($params_form_config);
 
-        $params_form->process(defaults => $defaults, params => $c->req->params);
+        $params_form->process(
+            defaults => $defaults,
+            params => $c->req->params,
+            posted => !! $c->req->body_params->{submit_params},
+        );
 
         if ($params_form->validated) {
             for my $hat (OpusVL::FB11::Hive->hats('parameters')) {
