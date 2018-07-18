@@ -113,14 +113,23 @@ sub set_augmented_data {
 
     for my $param (keys %$hashref) {
         my $param_obj = $param_rs->find({ parameter => $param });
-        my $user_param = $user_param_rs->find_or_create({
+        my $user_param = $user_param_rs->find({
             users_id => $user->id,
             parameter_id => $param_obj->id,
+        });
 
-        });
-        $user_param->update({
-            value => $hashref->{$param}
-        });
+        if ($user_param) {
+            $user_param->update({
+                value => $hashref->{$param}
+            });
+        }
+        else {
+            $user_param_rs->find({
+                users_id => $user->id,
+                parameter_id => $param_obj->id,
+                value => $hashref->{$param},
+            });
+        }
     }
 }
 
