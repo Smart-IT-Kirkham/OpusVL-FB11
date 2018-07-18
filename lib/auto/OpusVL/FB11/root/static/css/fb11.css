@@ -444,3 +444,9 @@ table.dataTable span.export-only {
     text-decoration: line-through;
     opacity: 0.4;
 }
+
+/* a fontawesome icon that "annotates" something, like a footnote */
+.fa-anno {
+    font-size: 35%;
+    vertical-align: super;
+}
