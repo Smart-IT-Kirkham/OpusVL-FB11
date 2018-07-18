@@ -56,6 +56,9 @@ Returns a resultset with an ordering applied.
 
 =cut
 
+# In-memory cache is good enough. It will avoid most get queries.
+my %cache;
+
 sub ordered
 {
     my $self = shift;
@@ -64,8 +67,6 @@ sub ordered
         order_by => ["$me.label", "$me.name"],
     });
 }
-
-
 
 sub set
 {
@@ -87,6 +88,8 @@ sub set
         $info->set_type_from_value($value);
     }
 
+    $cache{$name} = $value;
+
     $info->update_or_insert;
 
     return $value;
@@ -97,25 +100,24 @@ sub get
     my $self = shift;
     my $name = shift;
 
-    my $info = $self->find
-    ({
-        name => $name
-    });
+    my $info = $self->find ({ name => $name }) or return;
 
-    return $info ? JSON->new->allow_nonref->decode($info->value) : undef;
+    my $value = $info->decoded_value;
+    $cache{$name} = $value;
+
+    return $value;
 }
 
-sub del 
+sub del
 {
     my $self = shift;
     my $name = shift;
 
-    my $info = $self->find
-    ({
-        name => $name
-    });
+    delete $cache{$name};
 
-    return $info ? $info->delete : undef;
+    my $info = $self->find({ name => $name }) or return;
+
+    $info->delete;
 }
 
 sub key_names
