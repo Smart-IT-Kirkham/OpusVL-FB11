@@ -3,12 +3,12 @@
     <div class="user-name">[% c.user.obj.name %]</div>
   	<div class="panel-icons">
       <span class="dropdown">
-      <a id="fb11-admin-menu" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
-      <ul class="dropdown-menu" role="menu" aria-labelledby="fb11-admin-menu">
-        <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]"><i class="fa fa-lock"></i> Change Password</a></li>
-        <li><a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('index') ) %]"><i class="fa fa-user"></i> Roles</a></li>
-        <li><a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('index') ) %]"><i class="fa fa-users"></i> Users</a></li>
-      </ul>
+        <a id="fb11-admin-menu" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="fb11-admin-menu">
+          <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]"><i class="fa fa-lock"></i> Change Password</a></li>
+          <li><a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('index') ) %]"><i class="fa fa-user"></i> Roles</a></li>
+          <li><a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('index') ) %]"><i class="fa fa-users"></i> Users</a></li>
+        </ul>
       </span>
       <a href="#"><i class="fa fa-question-circle"></i></a>
       <a href="javascript:;" class="favourite-link"><i class="fa fa-heart[% IF page_is_favourite %] favourited[% END %]"></i></a>

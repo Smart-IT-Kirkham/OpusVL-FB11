@@ -10,75 +10,15 @@
     <body class='container-fluid'>
         <!-- Body Wrapper -->
         <div class="wrapper">
-                <!-- Main Navigation -->
-                [% PROCESS bootstrap_navbar.tt %]
-                <!-- Main Content -->
+            <!-- Main Navigation -->
+            [% PROCESS bootstrap_navbar.tt %]
+            <!-- Main Content -->
             <div class="row main-content">
-                [% 
-                    # Hide the sidebar when no user - unless explicitly
-                    # requested
-                    IF ! c.user && ! hide_sidebar.defined;
-                        hide_sidebar = 1;
-                    END 
-                %]
-                <div class="fb11-main-content 
-                    [% IF hide_sidebar %]col-sm-12[% ELSE %]col-md-9[% END %]
-                ">
-                    [% FOREACH msg IN status_msg.list %]
-                        <div class="alert alert-success">
-                            [% msg %]
-                            <button type="button"
-                                    class="close"
-                                    data-dismiss="alert"
-                                    aria-hidden="true"
-                            >&times;</button>
-                        </div>
-                    [% END %]
-                    [% FOREACH msg IN info_msg.list %]
-                        <div class="alert alert-info">
-                            [% msg %]
-                            <button type="button"
-                                    class="close"
-                                    data-dismiss="alert"
-                                    aria-hidden="true"
-                            >&times;</button>
-                        </div>
-                    [% END %]
-                    [% FOREACH msg IN error_msg.list %]
-                        <div class="alert alert-danger">
-                            [% msg %]
-                            <button type="button"
-                                    class="close"
-                                    data-dismiss="alert"
-                                    aria-hidden="true"
-                            >&times;</button>
-                        </div>
-                    [% END %]
-                    [% FOREACH msg IN warning_msg.list %]
-                        <div class="alert alert-warning">
-                            [% msg %]
-                            <button type="button"
-                                    class="close"
-                                    data-dismiss="alert"
-                                    aria-hidden="true"
-                            >&times;</button>
-                        </div>
-                    [% END %]
+                <div class="fb11-main-content col-xs-12">
                     [% content | none %]
                 </div>
-
-                <!-- Side bar -->
-                [% IF c.user %]
-                [% UNLESS hide_sidebar %]
-                <div class="fb11-sidebar col-md-3">
-                    [% PROCESS bootstrap_sidebar.tt %]
-                </div>
-                [% END %]
-                [% END %]
             </div>
-        
-                <!-- /Content -->
-
+            <!-- /Content -->
         </div>
             <!-- Footer -->
         <footer class="row footer">

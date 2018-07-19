@@ -26,6 +26,10 @@ footer {
       flex-shrink: 0;
 }
 
+.main-content {
+  padding-top: 6rem;
+}
+
 /* kill bootstrap pixel-sized nonsense */
 .btn.btn {
   padding: 0 12px;
@@ -56,7 +60,7 @@ footer {
 .fb11-cardlike {
   border: 1px solid #DCDCDC;
   background-color: #fff;
-  margin-bottom: 30px;
+  margin-bottom: 1rem;
   box-shadow: 0 1px 10px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.14);
 }
 
@@ -75,21 +79,16 @@ footer {
 }
 
 .js-tabs .fb11-card.js-tab {
-  padding-top: 30px;
+  padding-top: 2rem;
 }
 
 .fb11-card-ancillary {
-  overflow-y: hidden;
   position: relative;
-  top: -1px;
   padding: 0 10px;
-  margin: 0 -10px;
 }
 
 .fb11-card-ancillary > .fb11-card {
   border-top: none;
-  margin-top: 0;
-  margin-bottom: 10px;
 }
 
 /* Setting borders top & left on the container, then bottom & right on the
@@ -161,11 +160,6 @@ h1 strong.field.field-name {
 
 .fb11-card > h1:first-child {
   /* counteract the padding */
-  margin-top: 0;
-}
-
-.fb11-main-content {
-  margin-bottom: 10px;
 }
 
 .fb11-main-content > h1 {
@@ -175,24 +169,6 @@ h1 strong.field.field-name {
 }
 
 /* col-md breakpoint */
-@media (min-width: 992px) {
-  .fb11-main-content {
-    margin-bottom: 30px;
-  }
-}
-
-.fb11-main-content > h1 {
-  margin-top: 50px;
-}
-
-.fb11-main-content > h1:first-child {
-  margin-top: 10px;
-}
-
-.fb11-sidebar {
-  padding-top: 10px;
-}
-
 nav > .nav {
   /* @extends .fb11-card */
   background-color: #fff;
