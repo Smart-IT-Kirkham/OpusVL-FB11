@@ -1,261 +1,416 @@
+html,
+body {
+  height: 100%;
+}
+
 body {
   font-family: "Source Sans Pro", Helvetica, Arial, Geneva, sans-serif;
   background-color: #eee;
   font-size: initial;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: column nowrap;
+      flex-flow: column nowrap;
+  -ms-flex-pack: center;
+      justify-content: center;
+  padding-top: 6em;
+}
+
+.wrapper {
+  -ms-flex: 1 0 auto;
+      flex: 1 0 auto;
+}
+
+footer {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
 }
 
 /* kill bootstrap pixel-sized nonsense */
-
 .btn.btn {
-    padding: 0 12px;
+  padding: 0 12px;
 }
 
 .btn.btn,
 .form-control.form-control,
 .dropdown-menu.dropdown-menu {
-    font-size: initial;
-    line-height: 2;
+  font-size: initial;
+  line-height: 2;
 }
 
 .btn.btn,
 .form-control.form-control:not(textarea) {
-    height: 2.4em;
+  height: 2.4em;
 }
 
 .form-control.form-control {
-    line-height:1;
+  line-height: 1;
 }
 
 .fb11-card:first-child,
 .fb11-cardlike:first-child {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .fb11-card,
 .fb11-cardlike {
-    border: 1px solid #DCDCDC;
-    background-color: #fff;
-    margin-bottom: 30px;
-    box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
+  border: 1px solid #DCDCDC;
+  background-color: #fff;
+  margin-bottom: 30px;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.14);
 }
+
 .fb11-card {
-    /* fb11-cardlike means the element has its own internal styling */
-    padding: 20px 30px;
+  /* fb11-cardlike means the element has its own internal styling */
+  padding: 20px 30px;
 }
+
 .fb11-card .header-controls.row > * {
-    margin-top: 0.6em;
+  margin-top: 0.6em;
 }
-.fb11-card:last-child, .js-tabs .fb11-card.js-tab {
-    margin-bottom: 0;
-}
+
+.fb11-card:last-child,
 .js-tabs .fb11-card.js-tab {
-    padding-top: 30px;
+  margin-bottom: 0;
+}
+
+.js-tabs .fb11-card.js-tab {
+  padding-top: 30px;
 }
 
 .fb11-card-ancillary {
-    overflow-y: hidden;
-    position: relative;
-    top: -1px;
-    padding: 0 10px;
-    margin: 0 -10px;
+  overflow-y: hidden;
+  position: relative;
+  top: -1px;
+  padding: 0 10px;
+  margin: 0 -10px;
 }
 
 .fb11-card-ancillary > .fb11-card {
-    border-top: none;
-    margin-top: 0;
-    margin-bottom: 10px;
+  border-top: none;
+  margin-top: 0;
+  margin-bottom: 10px;
 }
 
 /* Setting borders top & left on the container, then bottom & right on the
  * children, produces a "collapsed" border - but only if you don't space out the
  * children. You can't have a collapsed border if you do. */
 .fb11-status-bar {
-    display: flex;
-    flex-wrap: wrap;
-    border-top: 1px solid #ddd;
-    border-left: 1px solid #ddd;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
 }
 
 .fb11-status-bar .datum {
-    flex-grow: 1;
-    flex-shrink: 0;
-    flex-basis: max-content;
-    border-bottom: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    white-space: nowrap;
+  -ms-flex-positive: 1;
+      flex-grow: 1;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  -ms-flex-preferred-size: max-content;
+      flex-basis: max-content;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  white-space: nowrap;
 }
 
 .fb11-status-bar .datum > .name {
-    font-weight: bold;
-    background: #eee;
-    display: inline-block;
-    padding: 0.2em 0.6em;
-    height: 100%;
+  font-weight: bold;
+  background: #eee;
+  display: inline-block;
+  padding: 0.2em 0.6em;
+  height: 100%;
 }
 
 .fb11-status-bar .datum > .value {
-    display: inline-block;
-    padding: 0.1em 0.5em;
+  display: inline-block;
+  padding: 0.1em 0.5em;
 }
 
 .fb11-status-bar .line-break {
-    height: 0px;
-    width: 100%;
-    border: none;
+  height: 0px;
+  width: 100%;
+  border: none;
 }
 
 .fb11-status-bar + * {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
-a:focus, a:hover { color: #737070; }
-h1 { 
-    font-weight: lighter;
-    padding-bottom: 4px;
-    border-bottom: 2px solid #eee; 
-    color: #777;
+a:focus,
+a:hover {
+  color: #737070;
 }
 
-    h1 strong.field.field-name {
-        font-weight: 400;
-        font-size: 130%;
-        padding: 0 0.4em;
-        color: #333;
-        border-bottom: 5px solid rgba(0, 0, 0, 0.08);
-    }
-    .fb11-card > h1:first-child {
-        /* counteract the padding */
-        margin-top: 0;
-    }
+h1 {
+  font-weight: lighter;
+  padding-bottom: 4px;
+  border-bottom: 2px solid #eee;
+  color: #777;
+}
+
+h1 strong.field.field-name {
+  font-weight: 400;
+  font-size: 130%;
+  padding: 0 0.4em;
+  color: #333;
+  border-bottom: 5px solid rgba(0, 0, 0, 0.08);
+}
+
+.fb11-card > h1:first-child {
+  /* counteract the padding */
+  margin-top: 0;
+}
 
 .fb11-main-content {
-    margin-bottom: 10px;
-}
-    .fb11-main-content > h1 {
-        border-bottom: 2px solid #ddd;
-        padding-left: 0.1em;
-        margin-bottom: 0.7em;
-    }
-
-/* col-md breakpoint */
-@media (min-width: 992px) {
-    .fb11-main-content {
-        margin-bottom: 30px;
-    }
+  margin-bottom: 10px;
 }
 
 .fb11-main-content > h1 {
-    margin-top: 50px;
+  border-bottom: 2px solid #ddd;
+  padding-left: 0.1em;
+  margin-bottom: 0.7em;
+}
+
+/* col-md breakpoint */
+@media (min-width: 992px) {
+  .fb11-main-content {
+    margin-bottom: 30px;
+  }
+}
+
+.fb11-main-content > h1 {
+  margin-top: 50px;
 }
 
 .fb11-main-content > h1:first-child {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .fb11-sidebar {
-    padding-top: 10px;
+  padding-top: 10px;
 }
 
 nav > .nav {
-    /* @extends .fb11-card */
-    background-color: #fff;
-    margin-top: 10px;
-    margin-bottom: 0;
-    box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
-    padding: 0;
+  /* @extends .fb11-card */
+  background-color: #fff;
+  margin-top: 10px;
+  margin-bottom: 0;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.14);
+  padding: 0;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-align: center;
+      align-items: center;
 }
 
-    nav .nav>li {
-        display: block;
-    }
+nav .nav > li {
+  display: block;
+}
 
-        nav .nav>li.brand {
-            background: #caeeff;
-            box-shadow: 0px 0px 3px rgba(0,0,0,0.14);
-        }
+nav .nav > li.brand {
+  background: #caeeff;
+  box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.14);
+}
 
-    /* Override bootstrap "overlay" style" */
-    li.dropdown ul.dropdown-menu {
-        float: none;
-        position: static;
-        min-width: initial;
-        top: initial;
-        left: initial;
-        border: none;
-    }
+/* Override bootstrap "overlay" style" */
+li.dropdown ul.dropdown-menu {
+  float: none;
+  position: static;
+  min-width: initial;
+  top: initial;
+  left: initial;
+  border: none;
+}
 
 @media (min-width: 550px) {
-    nav .nav>li {
-        display:inline-block;
-    }
-
-        nav .nav>li.brand {
-            box-shadow: 3px 0px 3px rgba(0,0,0,0.14);
-        }
-
-        /* reinstate bootstrap "overlay" style */
-        li.dropdown ul.dropdown-menu {
-            /* @extends .dropdown-menu */
-            position: absolute;
-            top: 100%;
-            left: 0;
-            float: left;
-            min-width: 160px;
-            border: 1px solid #ccc;
-            border: 1px solid rgba(0,0,0,.15);
-        }
-
-
+  nav .nav > li {
+    display: inline-block;
+  }
+  nav .nav > li.brand {
+    box-shadow: 3px 0px 3px rgba(0, 0, 0, 0.14);
+  }
+  /* reinstate bootstrap "overlay" style */
+  li.dropdown ul.dropdown-menu {
+    /* @extends .dropdown-menu */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    float: left;
+    min-width: 160px;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+  }
 }
 
 /*
 button.btn-nav:before, a.btn-nav:before { content: "\f0c9\00a0"; }
 button.btn-ok:before, a.btn-ok:before { content: "\f058\00a0"; }
 button.btn-cancel:before, a.btn-cancel:before { content: "\f00d\00a0"; }*/
-
-body >.container-fluid:first-child {
+/* body>.container-fluid:first-child {
     background-color: #fff;
     margin-bottom: 20px;
-    box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
-}
-
-.container-fluid {
+    box-shadow: 0 1px 10px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.14);
+} */
+/* .container-fluid {
     padding-left: 30px;
     padding-right: 30px;
-}
-
-.navbar-default .navbar-collapse {
+} */
+.navbar {
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.14);
+  border-radius: 0;
   border-color: #b3b3b3;
-}
-
-.navbar-default {
-  border-color: #b3b3b3;
-  background-color: transparent;
+  background-color: #fff;
   border: none;
   margin-bottom: 2px;
 }
 
-.well, .btn-primary {
+.navbar .navbar-collapse {
+  border-color: #b3b3b3;
+}
+
+.navbar.responsive-hidden .navbar-header {
+  width: 100%;
+}
+
+.navbar.responsive-hidden .nav {
+  width: 100%;
+  overflow: auto;
+}
+
+.navbar.responsive-hidden .nav > li {
+  display: block;
+  float: none;
+}
+
+.navbar.responsive-hidden .nav .open .dropdown-menu {
+  position: static;
+  float: none;
+  width: auto;
+  margin-top: 0;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.navbar.responsive-hidden .visible-in {
+  float: right;
+  margin-bottom: 2rem;
+}
+
+.navbar.responsive-hidden .navbar-toggle {
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.navbar.responsive-hidden .navbar-collapse {
+  float: none;
+}
+
+.navbar .burger-menu {
+  margin-right: 5px;
+}
+
+.navbar .navbar-end {
+  display: inline-block;
+}
+
+.navbar .visible-in {
+  display: block;
+  text-align: right;
+}
+
+.navbar .navbar-start {
+  text-align: left;
+}
+
+.navbar-toggle {
+  -ms-flex-pack: justify;
+      justify-content: space-between;
+  -ms-flex-align: center;
+      align-items: center;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.yamm .dropdown-menu {
+  min-width: auto;
+}
+
+@media screen and (min-width: 768px) {
+  .navbar-toggle {
+    display: none;
+  }
+}
+
+.navbar-collapse {
+  float: right;
+}
+
+.collapsing {
+  max-height: 100%;
+}
+
+.navbar-start {
+  margin-top: 10px;
+}
+
+.navbar-form,
+.navbar-toggle {
+  margin-top: 15px;
+}
+
+.list-unstyled > li {
+  padding-top: 0;
+  padding-bottom: 0;
+  white-space: nowrap;
+}
+
+.list-unstyled > li:last-child {
+  padding-bottom: 1rem;
+}
+
+.shown {
+  visibility: visible;
+  opacity: 1;
+}
+
+.collapse.navbar-collapse:not(.in) > ul.responsive-hidden,
+.collapse.navbar-collapse:not(.in) > .navbar-end.responsive-hidden {
+  display: none;
+}
+
+.well,
+.btn-primary {
   border: 1px solid #b3b3b3;
   background-color: #fafafa;
   color: #333;
 }
 
-.btn-primary:hover, .btn-primary:focus {
+.btn-primary:hover,
+.btn-primary:focus {
   color: #fff;
   background-color: #b3b3b3;
   border: 1px solid #b3b3b3;
 }
 
 .panel {
-    border-radius: 0px;
-    background-color: #fff;
-    border: none;
-    box-shadow: 0 1px 10px rgba(0,0,0,0.14), 0 1px 2px rgba(0,0,0,0.14); 
+  border-radius: 0px;
+  background-color: #fff;
+  border: none;
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.14);
 }
 
-.panel-default, .panel-default>.panel-heading { border-color: #b3b3b3; }
-.panel-default>.panel-heading {
+.panel-default,
+.panel-default > .panel-heading {
+  border-color: #b3b3b3;
+}
+
+.panel-default > .panel-heading {
   background-color: #f8f8f8;
   border-color: #f8f8f8;
   border-radius: 0px;
@@ -263,190 +418,203 @@ body >.container-fluid:first-child {
 }
 
 .panel-title {
-    color: #444;
+  color: #444;
 }
 
 .fb11-center {
-    position: relative;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    margin: auto;
+  position: relative;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 }
 
 .content-box {
-    padding: 15px;
-    background: #eee;
-    border-radius: 5px;
-    margin-bottom: 15px;
+  padding: 15px;
+  background: #eee;
+  border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 img.responsive-img {
-    max-width:100% !important;
-    height:auto;
+  max-width: 100% !important;
+  height: auto;
 }
 
-.panel-icons > a { padding-right: 10px; }
+.panel-icons > a {
+  padding-right: 10px;
+}
+
 .panel-icons > a > .fa {
-    font-size: 25px;
+  font-size: 25px;
 }
 
 /* centered columns styles */
 .row-centered {
-    text-align:center;
+  text-align: center;
 }
+
 .col-centered {
-    display:inline-block;
-    float:none;
-    /* reset the text-align */
-    text-align:left;
-    /* inline-block space fix */
-    margin-right:-4px;
+  display: inline-block;
+  float: none;
+  /* reset the text-align */
+  text-align: left;
+  /* inline-block space fix */
+  margin-right: -4px;
 }
 
 .footer {
-    margin-top: 0px;
-    background-color: #555;
-    padding-top: 30px;
-    padding-bottom: 30px;
+  margin-top: 0px;
+  background-color: #555;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 .navbar-brand {
-    font-weight: 400;
-    font-size: 125%;
-    padding-left: 0px;
+  font-weight: 400;
 }
 
-.navbar-brand > span.opusvl-blue { color: #6c9cd8; }
+.navbar-brand > span.opusvl-blue {
+  color: #6c9cd8;
+}
 
-.alert > div > a.hide-alert { color: inherit; }
+.alert > div > a.hide-alert {
+  color: inherit;
+}
 
+.favourited {
+  color: #a94442;
+}
 
- .favourited { color: #a94442; }
+.fb11-option-list > .col-sm-6 {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
 
+#fb11-admin-menu {
+  padding-right: 10px;
+}
 
-.fb11-option-list > .col-sm-6 { padding-top: 5px; padding-bottom: 5px; }
-
-#fb11-admin-menu { padding-right: 10px; }
-#fb11-admin-menu > i { font-size: 25px; }
+#fb11-admin-menu > i {
+  font-size: 25px;
+}
 
 /**
  * We add margin below the left panel so that the right ones
  * align correctly. Obviously this looks weird on mobiles, so let's
  * remove the margin.
  */
-
 .fb11-available-users {
-    margin-bottom: 300px;
+  margin-bottom: 300px;
 }
 
 @media screen and (max-width: 640px) {
-    .fb11-available-users {
-        margin-bottom: 10px;
-    }
+  .fb11-available-users {
+    margin-bottom: 10px;
+  }
 }
 
 .fb11-user-avatar {
-    height: 100px;
-    width: 100px;
+  height: 100px;
+  width: 100px;
 }
 
 .fb11-avatar-sidebar {
-    height: 25px;
-    vertical-align: bottom;
+  height: 25px;
+  vertical-align: bottom;
 }
 
 i.superpose {
-    margin-left: -0.5em;
+  margin-left: -0.5em;
 }
 
 .grab-handle {
-    cursor: -webkit-grab;
-    cursor: grab;
+  cursor: grab;
 }
 
 div.dataTables_wrapper {
-    padding-top: 1em;
-    margin-bottom: 30px;
+  padding-top: 1em;
+  margin-bottom: 30px;
 }
 
 /**
  * Tabify stuff
  */
-
 ul.nav.nav-tabs {
-    position: relative;
-    top: 2px;
+  position: relative;
+  top: 2px;
 }
 
 ul.nav.nav-tabs li a {
-    border: none;
-    border-radius: 0;
+  border: none;
+  border-radius: 0;
 }
 
 ul.nav.nav-tabs li.active a {
-    outline: none;
-    box-shadow: none;
-    border: 1px solid #DCDCDC; /* $card_border_colour */
-    border-bottom: none;
+  outline: none;
+  box-shadow: none;
+  border: 1px solid #DCDCDC;
+  /* $card_border_colour */
+  border-bottom: none;
 }
 
 ul.nav.nav-tabs li a:hover {
-    background-color: rgba(127,127,127,0.2);
+  background-color: rgba(127, 127, 127, 0.2);
 }
 
 ul.nav.nav-tabs li.active a:hover {
-    background-color: white;
+  background-color: white;
 }
 
 .js-tabs .js-tab {
-    display: none;
+  display: none;
 }
+
 .js-tabs .js-tab.current {
-    display: block !important;
+  display: block !important;
 }
 
 .js-tabs .js-tabs li.error a {
-    color: red;
-    font-weight: bold;
+  color: red;
+  font-weight: bold;
 }
 
 /* DataTables overrides */
-
 table.dataTable thead .field.sorting,
-table.dataTable thead .field.sorting_asc, 
+table.dataTable thead .field.sorting_asc,
 table.dataTable thead .field.sorting_desc,
-table.dataTable thead .field.sorting_asc_disabled, 
+table.dataTable thead .field.sorting_asc_disabled,
 table.dataTable thead .field.sorting_desc_disabled {
-    white-space: nowrap;
+  white-space: nowrap;
 }
 
 table.dataTable thead .field.sorting:after,
-table.dataTable thead .field.sorting_asc:after, 
+table.dataTable thead .field.sorting_asc:after,
 table.dataTable thead .field.sorting_desc:after,
-table.dataTable thead .field.sorting_asc_disabled:after, 
+table.dataTable thead .field.sorting_asc_disabled:after,
 table.dataTable thead .field.sorting_desc_disabled:after {
-    position: static;
-    right: initial;
-    display: inline-block;
-    vertical-align: middle;
-    margin-left: 0.4em;
-    font-size: 90%;
+  position: static;
+  right: initial;
+  display: inline-block;
+  vertical-align: middle;
+  margin-left: 0.4em;
+  font-size: 90%;
 }
 
 table.dataTable span.export-only {
-    display: none;
+  display: none;
 }
 
 /* Utility styles */
 .deleted {
-    text-decoration: line-through;
-    opacity: 0.4;
+  text-decoration: line-through;
+  opacity: 0.4;
 }
 
 /* a fontawesome icon that "annotates" something, like a footnote */
 .fa-anno {
-    font-size: 35%;
-    vertical-align: super;
+  font-size: 35%;
+  vertical-align: super;
 }
+/*# sourceMappingURL=fb11.css.map */

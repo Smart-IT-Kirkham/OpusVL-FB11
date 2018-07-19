@@ -1,7 +1,7 @@
 [% BLOCK nav_bar_item %]
-    <dl class="list-unstyled">
+    <ul class="list-unstyled">
         [% IF group %] <dt><h4>[% group %]</h4></dt> [% END %]
-        <dd><ul class="list-unstyled">
+        <ul class="list-unstyled">
             [% FOR action IN actions %]
                 [%# I don't know what this is for. Why does the data structure
                   contain stuff it doesn't need to? Fix this. %]
@@ -11,88 +11,92 @@
                     </li>
                 [% END %]
             [% END %]
-        </ul></dd>
-    </dl>
+        </ul>
+    </ul>
 [% END %]
 
-<div class="navbar navbar-default yamm" role="navigation">
-  <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <a class="navbar-brand" href="/">
-      <i class="fa fa-home"></i>
-      [% c.config.name %]
-    </a>
-  </div>
-  <div class="navbar-collapse collapse">
-
-    <!-- Left nav -->
-    <ul class="nav navbar-nav">
-      [% IF c.user %]
-        [% apps = c.menu_data %]
-        [% FOR app IN apps %]
-            <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="/[% app.controller.action_namespace %]">[% IF (app.controller.fb11_icon) %]<i class="fa fa-[% app.controller.fb11_icon %]"></i> [% END %][% app.controller.fb11_name %] <span class="caret"></span></a>
-              <div class="dropdown-menu yamm-fw">
-                <div class="yamm-content row">
-                  [% IF app.actions.size > 1; SET cols=6; ELSE; set cols=12; END %]
-                  <div class="col-md-[% cols %]">
-                    [% FOR group IN app.actions %]
-                        [% # Put the 1st, 3rd etc in the first (possibly only) column. Count is 1-indexed.
-                          IF loop.count % 2 == 0; NEXT; END
-                        %]
-                        [% INCLUDE nav_bar_item
-                            actions = group.actions
-                            group   = group.group
-                        %]
-                    [% END %]
-                  </div>
-                  [% IF app.actions.size > 1 %]
-                      <div class="col-md-[% cols %]">
-                        [% FOR group IN app.actions %]
-                            [% # Put the even-numbered ones in this col
-                              IF loop.count % 2 == 1; NEXT; END
-                            %]
-                            [% INCLUDE nav_bar_item
-                                actions=group.actions
-                                group=group.group
-                            %]
-                        [% END %]
-                      </div>
-                  [% END %]
-
-                </div>  <!-- /yamm-content -->
-              </div>
-            </li>
-        [% END %]
-      [% END %]
-    </ul>
-    <div class="col-sm-3 col-md-3">
-        <form class="navbar-form" role="search" action="/search" name="search">
-        <div class="input-group">
-            <input type="text" class="form-control" placeholder="Search" name="q">
-            <div class="input-group-btn">
-                <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-            </div>
-        </div>
-        </form>
+<nav class="navbar navbar-default  navbar-fixed-top yamm" role="navigation">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"> 
+        <i class="fa fa-home fa-2x"></i> [% UNLESS c.user %] OPUS <span class="opusvl-blue">VL</span>[% ELSE %][% c.config.name %][% END %]
+      </a>
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <div class="burger-menu">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+          </div>
+          <span>Menu</span>
+      </button>
     </div>
 
-    [% IF page_options && page_options.size > 0 %]
-    <ul class="nav navbar-nav navbar-right">
-      <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-bars"></i></a>
-        <ul class="dropdown-menu">
-          [% FOREACH option IN page_options %]
-          <li><a href="[% option.url %]">[% option.title %]</a></li>
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav navbar-start">
+        [% IF c.user %]
+          [% apps = c.menu_data %]
+          [% FOR app IN apps %]
+              <li class="dropdown">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="/[% app.controller.action_namespace %]">[% IF (app.controller.fb11_icon) %][% END %][% app.controller.fb11_name %] <span class="caret"></span></a>
+                <div class="dropdown-menu yamm-fw">
+                  <div class="yamm-content row">
+                    [% IF app.actions.size > 1; SET cols=6; ELSE; set cols=12; END %]
+                    <div class="col-md-[% cols %]">
+                      [% FOR group IN app.actions %]
+                          [% # Put the 1st, 3rd etc in the first (possibly only) column. Count is 1-indexed.
+                            IF loop.count % 2 == 0; NEXT; END
+                          %]
+                          [% INCLUDE nav_bar_item
+                              actions = group.actions
+                              group   = group.group
+                          %]
+                      [% END %]
+                    </div>
+                    [% IF app.actions.size > 1 %]
+                        <div class="col-md-[% cols %]">
+                          [% FOR group IN app.actions %]
+                              [% # Put the even-numbered ones in this col
+                                IF loop.count % 2 == 1; NEXT; END
+                              %]
+                              [% INCLUDE nav_bar_item
+                                  actions=group.actions
+                                  group=group.group
+                              %]
+                          [% END %]
+                        </div>
+                    [% END %]
+
+                  </div>  <!-- /yamm-content -->
+                </div>
+              </li>
           [% END %]
+        [% END %]
+      </ul>
+      <div class="navbar-end">
+        <form class="navbar-form" role="search" action="/search" name="search">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search" name="q">
+            <div class="input-group-btn">
+              <button class="btn btn-default" type="submit">
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      [% IF page_options && page_options.size > 0 %]
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-bars"></i></a>
+            <ul class="dropdown-menu">
+              [% FOREACH option IN page_options %]
+              <li><a href="[% option.url %]">[% option.title %]</a></li>
+              [% END %]
+            </ul>
+          </li>
         </ul>
-      </li>
-    </ul>
-    [% END %]
+      [% END %]
+    </div>
   </div>
-</div>
+</nav>

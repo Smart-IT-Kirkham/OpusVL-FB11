@@ -1,6 +1,7 @@
 <meta charset="utf-8">
 <title>[% IF homepage %][% title or c.config.name %][% ELSE %][% title or c.controller.fb11_name %][% END %]</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 [% IF header.favicon %]
     <link rel="shortcut icon" href="[% header.favicon %]" type="image/png">
 [% ELSE %]

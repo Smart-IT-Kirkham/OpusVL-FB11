@@ -7,16 +7,13 @@
     [% PROCESS clickjack.tt %]
 
     </head>
-    <body>
-        <!-- Container -->
-        <div class="container-fluid">
-            [% PROCESS bootstrap_navbar.tt %]
-            <!-- Content -->
-        </div>
-        <div class="container-fluid">
-            <div class="row">
+    <body class='container-fluid'>
+        <!-- Body Wrapper -->
+        <div class="wrapper">
+                <!-- Main Navigation -->
+                [% PROCESS bootstrap_navbar.tt %]
                 <!-- Main Content -->
-
+            <div class="row main-content">
                 [% 
                     # Hide the sidebar when no user - unless explicitly
                     # requested
@@ -24,7 +21,6 @@
                         hide_sidebar = 1;
                     END 
                 %]
-
                 <div class="fb11-main-content 
                     [% IF hide_sidebar %]col-sm-12[% ELSE %]col-md-9[% END %]
                 ">
@@ -80,18 +76,52 @@
                 [% END %]
                 [% END %]
             </div>
+        
+                <!-- /Content -->
+
         </div>
-            <!-- /Content -->
             <!-- Footer -->
-        <div class="container-fluid footer">
-            <div class="row">
-                <div class="col-sm-12">
-                    <a href="http://www.opusvl.com" target="_blank"><img style="height: 30px;" class="center-block" src="/static/images/opusvl_built_with_fb_footer.svg" border="0"></a>
-                </div>
+        <footer class="row footer">
+            <div class="col-sm-12">
+                <a href="http://www.opusvl.com" target="_blank"><img style="height: 30px;" class="center-block" src="/static/images/opusvl_built_with_fb_footer.svg" border="0"></a>
             </div>
-        </div>
+        </footer>
         <!-- /Container -->
+
         <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+        <script>
+            var $body = $("body"),
+                $nav = $(".navbar"),
+                $bar = $(".collapse.navbar-collapse > ul.nav"),
+                $toggle = $("button.navbar-toggle"),
+                $seachContainer = $("div.navbar-end");
+            function navresize() {
+                setTimeout(function () {
+                    $body.removeClass("responsive-hidden");
+                    $nav.removeClass("responsive-hidden");
+                    $bar.removeClass("responsive-hidden");
+                    $seachContainer.removeClass("responsive-hidden");
+                    $toggle.removeClass("shown");
+                      $('.navbar-end ').removeClass('visible-in')
+                    if ($nav.innerHeight() > 86) {
+                        $body.addClass("responsive-hidden");
+                        $nav.addClass("responsive-hidden");
+                        $bar.addClass("responsive-hidden");
+                        $toggle.addClass("shown");
+                        $seachContainer.addClass("responsive-hidden");
+                        $('.navbar-header').css('justify-content', 'flex-start')
+                        $('.navbar-end ').addClass('visible-in')
+                    }
+                    if ($('.navbar-collapse').attr('style') === 'height: 0px;' || $('.navbar-collapse').attr('style') === 'height: 1px;' || $('.navbar-collapse').attr('style') === 'undefined') {
+                        $('.navbar-collapse').removeAttr('style')
+                        navresize()
+                    }
+                })
+            }
+            navresize()
+            $(window).on("resize ", navresize);
+            $(window).on('orientationchange', navresize())
+        </script>
     </body>
 </html>
 
