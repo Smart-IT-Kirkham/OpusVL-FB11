@@ -337,11 +337,15 @@ li.dropdown ul.dropdown-menu {
     display: none;
 }
 
-.well,
-.btn-primary {
+.well {
     border: 1px solid #b3b3b3;
     background-color: #fafafa;
     color: #333;
+}
+
+.btn-primary {
+    border: 1px solid #b3b3b3;
+    color: white;
 }
 
 .btn-primary:hover,
@@ -589,8 +593,67 @@ table.dataTable span.export-only {
 }
 
 // table styles
-table {
-    td {
-        word-break: break-word;
+// the breakword might work for some tables but no all so disabled for the time
+// table {
+//     td {
+//         word-break: break-word;
+//     }
+// }
+div.dataTables_wrapper {
+    margin: 0 auto;
+}
+
+// forms fixing stuff
+fieldset {
+    legend {
+        border-bottom: 0 solid transparent;
+        font-weight: 600;
+        padding-top: 2rem;
     }
+    select {
+        &.form-control {
+            width: fit-content;
+        }
+    }
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 2em;
+    padding: 1rem;
+    label {
+        margin-right: 15px;
+        width: 20rem;
+    }
+    input {
+        max-width: fit-content;
+    }
+    &:nth-child(odd) {
+        background-color: #f5f5f5;
+    }
+    &:focus-within {
+        background-color: #9bdef8;
+    }
+}
+
+.dflex {
+    display: flex;
+}
+
+.justify-content-end {
+    justify-content: flex-end;
+}
+
+.has-error {
+    span {
+        margin-left: 15px;
+        color: orangered;
+        order: 3;
+    }
+}
+
+.link_button_add {
+    margin-top: 1rem;
 }

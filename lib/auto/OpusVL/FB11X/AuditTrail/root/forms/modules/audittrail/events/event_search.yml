@@ -13,6 +13,10 @@ elements:
         multiple: 1
         empty_first: 1
         empty_first_label: All Events
+        container_attributes:
+          class: form-group
+        attributes:
+          class: form-control
 
       - type: Text
         name: username
