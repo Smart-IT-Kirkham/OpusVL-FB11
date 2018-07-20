@@ -1,5 +1,5 @@
 [% manage = c.can_access(c.controller.action_for('role_management')) %]
-<div class="col-sm-6 fb11-sidebar">
+<div class="col-sm-5 col-lg-4 fb11-sidebar">
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">Available Roles</div>
@@ -7,16 +7,17 @@
         <div class="panel-body">
         [% FOR role IN c.user.roles_modifiable %]
             <div class="row fb11-option-list">
-                <div class="col-sm-6">
-                    [% role %]
+                <div class="col-xs-6">
+                    [% role %] 
                 </div>
-                <div class="col-sm-6">
-                    <div class="btn-group" role="group" aria-label="...">
-                      <a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('show_role'), [ role ] ) %]" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Access"><i class="fa fa-user"></i></a>
-                      <a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('role_management'), [ role ] ) %]" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Management"><i class="fa fa-wrench"></i></a>
-                      <a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('delete_role'), [ role ] ) %]" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
-                    </div>
+                <div class="col-xs-6">
+                      <span class="btn-group" role="group" aria-label="...">
+                      <a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('show_role'), [ role ] ) %]" type="button" class="btn btn-info" data-toggle="tooltip" data-placement="top" title="Access"><i class="fa fa-user"></i></a>
+                      <a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('role_management'), [ role ] ) %]" type="button" class="btn btn-warning" data-toggle="tooltip" data-placement="top" title="Management"><i class="fa fa-wrench"></i></a>
+                      <a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('delete_role'), [ role ] ) %]" type="button" class="btn btn-danger" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></a>
+                    </span>
                 </div>
+                <hr class='col-xs-12'>
             </div>
         [% END %]
         </div>
@@ -31,7 +32,7 @@
                 <div class="input-group">
                     <input type="text" name="rolename" class="form-control" value="">
                     <span class="input-group-btn">
-                        <button class="btn btn-default" name="addrolebutton" type="submit"><i class="fa fa-plus"></i> Add Role</button>
+                        <button class="btn btn-default" name="addrolebutton" type="submit"><i class="fa fa-plus"></i>Add Role</button>
                     </span>
                 </div>
             </form>

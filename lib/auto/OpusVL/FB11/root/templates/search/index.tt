@@ -1,36 +1,45 @@
 [% USE HTML %]
     <h1>Search results</h1>
-        [% IF (search_results.size > 0) %]
-            <p style="font-style: italic">Here are your results for query: "[% query %]"</p>
-            <div class="well">
-            [% query_regex = '(?i)(' _ query.split('\s+').join('|') _ ')' %]
-            [% FOREACH resultset IN search_results %]
-                <h3>[% resultset.name %]</h3>
-                <ul class="search_results">
-                    [% FOREACH result IN resultset.results %]
-                        <li>
-                            <a href="[% result.url %]">[% HTML.escape(result.name).replace(query_regex,'<strong>$1</strong>') | none %]</a>
-                            <div class="search_result_description">
-                                [% IF result.description %]
-                                    [% HTML.escape(result.description).replace(query_regex,'<strong>$1</strong>') | none %]
-                                [% ELSE %]
-                                    No description
-                                [% END %]
-                            </div>
-                        </li>
+        <div class="search-content">
+            [% IF (search_results.size > 0) %]
+                <p style="font-style: italic">Here are your results for query: "[% query %]"</p>
+                <div class="well">
+                    [% query_regex = '(?i)(' _ query.split('\s+').join('|') _ ')' %]
+                    [% FOREACH resultset IN search_results %]
+                        <h3>[% resultset.name %]</h3>
+                        <ul class="search_results">
+                            [% FOREACH result IN resultset.results %]
+                                <li>
+                                    <a href="[% result.url %]">[% HTML.escape(result.name).replace(query_regex,'<strong>$1</strong>') | none %]</a>
+                                    <div class="search_result_description">
+                                        [% IF result.description %]
+                                            [% HTML.escape(result.description).replace(query_regex,'<strong>$1</strong>') | none %]
+                                        [% ELSE %]
+                                            No description
+                                        [% END %]
+                                    </div>
+                                </li>
+                            [% END %]
+                        </ul>
                     [% END %]
-                </ul>
+                </div>
+            [% ELSE %]
+                [% PROCESS search_form message = 'Sorry, no documents matched your query:' %]
             [% END %]
-        [% ELSE %]
-            [% PROCESS search_form message = 'Sorry, no documents matched your query:' %]
-        [% END %]
         </div>
     [% BLOCK search_form %]
-        <form>
-            <p>
-                [% message %]
-                <input type="text" name="q" value="[% query %]">
-                <input type="submit" value="Search">
-            </p>
+        <form class='form-horizontal'>
+            <div class="form-group">
+            <label class='col-xs-12 col-sm-4 control-label' for="search-box">[% message %]</label>
+               <div class="col-xs-12 col-sm-4">
+                <input class="form-control" id='search-box'  type="text" name="q" value="[% query %]" >
+                </div>
+                <div class="col-xs-12 col-sm-2 ">
+                    <button class='btn btn-default' type="submit" >Search</button>
+                </div>
+            </div>
+            <div class="form-group">
+            </div>
+            
         </form>
     [% END %]

@@ -2,10 +2,8 @@
 [%- USE today = DateTime(today = 1); -%]
 <html lang="en">
     <head>
-
     [% PROCESS wrapper_head.tt %]
     [% PROCESS clickjack.tt %]
-
     </head>
     <body class='container-fluid'>
         <!-- Body Wrapper -->
@@ -27,7 +25,6 @@
             </div>
         </footer>
         <!-- /Container -->
-
         <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
         <script>
             var $body = $("body"),

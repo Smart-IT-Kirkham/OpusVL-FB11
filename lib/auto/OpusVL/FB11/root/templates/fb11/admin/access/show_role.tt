@@ -1,38 +1,37 @@
 
 <div class="row">
   [% PROCESS fb11/admin/access/side_bar.tt %]
-  <div class="col-sm-6">
-    <div class="fb11-card">
+  <div class="col-sm-7 col-lg-8">
+    <div class="fb11-card show-role">
       [% IF access_control_role_tree.defined %]
         <h1>Access Tree for <strong>[% c.stash.role.role %]</strong></h1>
         <form id="roles" class="form" role="form" method='POST' action='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('show_role'), [ c.stash.role.role ] )  %]'>
           [% IF fb11_features  %]
-            <ul>
             [% FOREACH app IN fb11_features.keys.sort %]
-            <li class="app"><span>[% app | html %]<span></li>
-              <ul>
-                [% FOREACH feature IN fb11_features.$app.keys.sort %]
-                  <li
-                    [% IF fb11_features.$app.$feature %]class="allowed"[% END %]
-                  >
-                    <input
-                      type="checkbox"
-                      id="feature_[% app| html %]/[% feature| html %]"
-                      name="feature_[% app| html %]/[% feature| html %]"
-                      [% IF fb11_features.$app.$feature %]
-                        checked="checked"[% END %]
-                      value="allow"
+              <div class="col-sm-6 app"><span>[% app | html %]<span>
+                <ul>
+                  [% FOREACH feature IN fb11_features.$app.keys.sort %]
+                    <li
+                      [% IF fb11_features.$app.$feature %]class="allowed"[% END %]
                     >
-                    <label for="feature_[% app| html %]/[% feature| html %]">[% feature| html %]</label>
-                  </li>
-                [% END %]
-              </ul>
-              [% END %]
+                      <input
+                        type="checkbox"
+                        id="feature_[% app| html %]/[% feature| html %]"
+                        name="feature_[% app| html %]/[% feature| html %]"
+                        [% IF fb11_features.$app.$feature %]
+                          checked="checked"[% END %]
+                        value="allow"
+                      >
+                      <label for="feature_[% app| html %]/[% feature| html %]">[% feature| html %]</label>
+                    </li>
+                  [% END %]
+                </ul>
+              </div>
             [% END %]
-          </ul>
+          [% END %]
+          <div class="clearfix"></div>
           [% access_control_role_tree.expandAll | none %]
-
-          <button class="btn btn-success" type='submit' name='savebutton'><i class="fa fa-check"></i> Save</button>
+          <button class="btn btn-success" type='submit' name='savebutton'><i class="fa fa-check"></i>Save</button>
         </form>
       [% ELSE %]
 

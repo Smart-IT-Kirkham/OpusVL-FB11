@@ -3,9 +3,10 @@
 	<div class="col-sm-12">
 		<div class="well">
 			<h1> Are you sure? </h1>
-
 	    	[% question %]
+			<div class="confirm-buttons">
+				[% form.render | none %]
+			</div>
 	    </div>
-	    [% form.render | none %]
 	</div>
 </div>

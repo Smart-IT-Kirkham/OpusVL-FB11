@@ -3,5 +3,5 @@
 Please try another url.
 </p>
 <p>
-<a href="/">Home</a>
+<a class='btn btn-info' href="/">Home</a>
 </p>
