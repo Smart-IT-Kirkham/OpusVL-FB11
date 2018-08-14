@@ -3,21 +3,21 @@ package OpusVL::FB11::Form::Role::Users;
 use Moose::Role;
 
 sub validate_username {
-	my ($self, $field) = @_;
-	unless ($self->update_only) {
-		my $user_rs = $self->ctx->model('FB11AuthDB::User');
-		if ($user_rs->find({ username => $field->value })) {
-			$field->add_error('Username must be unique');
-		}
-	}
+    my ($self, $field) = @_;
+    unless ($self->update_only) {
+        my $user_rs = $self->ctx->model('FB11AuthDB::User');
+        if ($user_rs->find({ username => $field->value })) {
+            $field->add_error('Username must be unique');
+        }
+    }
 }
 
 sub validate_password {
-	my ($self, $field) = @_;
-	my $ctx = $self->ctx;
-	my $password = $field->value;
+    my ($self, $field) = @_;
+    my $ctx = $self->ctx;
+    my $password = $field->value;
 
-	my ($pass_min_length, $pass_numerics, $pass_symbols) = (
+    my ($pass_min_length, $pass_numerics, $pass_symbols) = (
         $ctx->config->{FB11}->{password_min_characters},
         $ctx->config->{FB11}->{password_force_numerics},
         $ctx->config->{FB11}->{password_force_symbols},
@@ -37,11 +37,11 @@ sub validate_password {
 }
 
 sub validate_newpassword {
-	my ($self, $field) = @_;
-	my $ctx = $self->ctx;
-	my $password = $field->value;
+    my ($self, $field) = @_;
+    my $ctx = $self->ctx;
+    my $password = $field->value;
 
-	my ($pass_min_length, $pass_numerics, $pass_symbols) = (
+    my ($pass_min_length, $pass_numerics, $pass_symbols) = (
         $ctx->config->{FB11}->{password_min_characters},
         $ctx->config->{FB11}->{password_force_numerics},
         $ctx->config->{FB11}->{password_force_symbols},

@@ -1,5 +1,9 @@
 <div class="fb11-card">
-  <h1>[% IF c.stash.h1 %][% c.stash.h1 %][% ELSE %] User [% END %] </h1>
+  <h1>[% verb %] User 
+    [% IF thisuser %]
+      <strong class="field field-name">[% thisuser.name %]</strong>
+    [% END %]
+  </h1>
 
   [% form.render | none %]
 </div>

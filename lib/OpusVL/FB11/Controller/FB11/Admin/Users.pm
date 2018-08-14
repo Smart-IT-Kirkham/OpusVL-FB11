@@ -21,6 +21,8 @@ __PACKAGE__->config
 has_forms (
     user_role_form => 'Admin::Users',
     confirm_form   => 'Confirm',
+    user_edit_form => 'Admin::Users::Edit',
+    user_add_form  => 'Admin::Users::Add',
 );
 
 =head2 auto
@@ -71,40 +73,27 @@ sub adduser
 {
     my ( $self, $c ) = @_;
 
-    push @{$c->stash->{breadcrumbs}}, {
-        name    => 'Add',
-        url     => $c->uri_for($c->controller('FB11::Admin::Users')->action_for('adduser'))
-    };
-
-    $c->stash->{page_options} = [
-        { url => $c->uri_for($self->action_for('index')), title => 'Back to users' },
-    ];
-
-    my $form = $self->form($c, 'Admin::AddUser');
+    my $form = $self->user_add_form(ctx => $c);
+    my $user = $c->model('FB11AuthDB::User')->new_result({});
 
     $c->stash->{form} = $form;
-    $form->process($c->req->params);
+    $form->process(
+        params => $c->req->params,
+        posted => !!$c->req->params->{'submit-it'},
+        item => $user,
+    );
 
     if ($form->validated) {
-        my $password = $form->field('password')->value;
-        my $new_user = $c->model('FB11AuthDB::User')->create({
-            username => $form->field('username')->value,
-            password => $password,
-            email    => $form->field('email')->value,
-            name     => $form->field('name')->value,
-            tel      => $form->field('tel')->value,
-            status   => $form->field('status')->value,
-        });
-
+        $user->discard_changes;
         $c->flash(
             status_msg => 'User added',
         );
-        
-        $c->res->redirect($c->uri_for($self->action_for('show_user'), [ $new_user->id ]));
+
+        $c->res->redirect($c->uri_for($self->action_for('show_user'), [ $user->id ]));
         $c->detach;
     }
 
-    $c->stash->{h1}       = "Add User";
+    $c->stash->{verb} = "Create";
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
@@ -323,14 +312,6 @@ sub reset_password_form
         $c->flash->{status_msg} = 'Reset password';
         $c->response->redirect( $prev_url );
     }
-    # FIXME: wut is this?
-    #else
-    #{
-    #    $c->stash->{form}->default_values( {
-    #            newpassword => mkpasswd,
-    #            user => $user->username,
-    #        });
-    #}
 }
 
 =head2 edit_user
@@ -345,39 +326,23 @@ sub edit_user
     : PathPart('form')
     : Args(0)
     : FB11Feature('User Administration')
-{   
+{
     my ( $self, $c ) = @_;
-    $c->stash->{page_options} = [
-        { url => $c->uri_for($self->action_for('show_user'), [ $c->stash->{thisuser}->id ]), title => 'Back to ' . $c->stash->{thisuser}->name },
-        { url => $c->uri_for($self->action_for('index')), title => 'Show users' },
-    ];
-    my $form = $self->form($c, 'Admin::AddUser', { update => 1 });
+    my $form = $self->user_edit_form(ctx => $c);
     $c->stash->{form} = $form;
 
-    push @{$c->stash->{breadcrumbs}}, {
-        name    => 'Edit',
-        url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('edit_user'), [ $c->stash->{thisuser}->id ])
-    };
+    $form->process(
+        item => $c->stash->{thisuser},
+        params => $c->req->params,
+        posted => !!$c->req->params->{'submit-it'},
+    );
 
-    my @fields = qw<username password name email tel status>;
-
-    my $defaults = {};
-    $defaults->{$_} = $c->stash->{thisuser}->$_
-        for @fields;
-
-    $form->process(init_object => $defaults, params => $c->req->params);
     if ($form->validated) {
-        for (@fields) {
-            if (my $res = $form->field($_)->value) {
-                $c->stash->{thisuser}->$_($res);
-            }
-        }
-        $c->stash->{thisuser}->update;
         $c->flash->{status_msg} = "User updated";
         $c->res->redirect($c->req->uri);
     }
 
-    $c->stash->{h1}       = "Edit User";
+    $c->stash->{verb} = "Edit";
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
