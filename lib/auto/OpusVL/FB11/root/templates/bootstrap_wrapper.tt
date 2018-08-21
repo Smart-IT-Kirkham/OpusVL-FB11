@@ -25,7 +25,7 @@
             </div>
         </footer>
         <!-- /Container -->
-        <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    
         <script>
             var $body = $("body"),
                 $nav = $(".navbar"),
