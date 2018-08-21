@@ -617,12 +617,17 @@ fieldset {
     }
 }
 
+form.dflex {
+    flex-wrap: wrap;
+}
+
 .form-group {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-left: 2em;
     padding: 1rem;
+    width: 100%;
     label {
         margin-right: 15px;
         width: 20rem;

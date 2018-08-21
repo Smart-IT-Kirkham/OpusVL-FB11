@@ -616,6 +616,11 @@ fieldset select.form-control {
   width: fit-content;
 }
 
+form.dflex {
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+}
+
 .form-group {
   display: -ms-flexbox;
   display: flex;
@@ -625,6 +630,7 @@ fieldset select.form-control {
       justify-content: flex-start;
   margin-left: 2em;
   padding: 1rem;
+  width: 100%;
 }
 
 .form-group label {
