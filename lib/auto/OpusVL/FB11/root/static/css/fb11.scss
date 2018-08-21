@@ -621,13 +621,16 @@ form.dflex {
     flex-wrap: wrap;
 }
 
+.content_block {
+    width: 100%;
+}
+
 .form-group {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-left: 2em;
-    padding: 1rem;
-    width: 100%;
+    padding: 1rem; // width: 100%;
     label {
         margin-right: 15px;
         width: 20rem;

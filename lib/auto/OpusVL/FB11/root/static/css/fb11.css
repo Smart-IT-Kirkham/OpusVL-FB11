@@ -621,6 +621,10 @@ form.dflex {
       flex-wrap: wrap;
 }
 
+.content_block {
+  width: 100%;
+}
+
 .form-group {
   display: -ms-flexbox;
   display: flex;
@@ -630,7 +634,6 @@ form.dflex {
       justify-content: flex-start;
   margin-left: 2em;
   padding: 1rem;
-  width: 100%;
 }
 
 .form-group label {
