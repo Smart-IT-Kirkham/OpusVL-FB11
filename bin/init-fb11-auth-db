@@ -22,7 +22,6 @@ GetOptions (
     'username|U=s'
     #    'resultset|rs=s',
 );
-use Data::Dump; dd \%option; dd \@ARGV;
 my $app = shift or pod2usage({ -msg => "Missing app name", -exitval => 1 });;
 eval "require $app" or die $@;
 
