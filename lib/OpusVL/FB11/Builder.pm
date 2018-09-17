@@ -113,6 +113,7 @@ This software is licensed according to the "IP Assignment Schedule" provided wit
 
 =cut
 
+use v5.24;
 use Moose;
 use File::ShareDir qw/module_dir/;
 use Try::Tiny;
@@ -304,7 +305,7 @@ override _build_config => sub
     # All FB11 modules should be using lib/auto style, so this fixes path_to
     # I have no fucking idea how to find out what the path should be if it
     # doesn't exist
-    $config->{home} = try { File::ShareDir::module_dir($self->appname) } catch { undef };
+    $config->{home} = $apppath[0] if @apppath;
 
     return $config;
 };
