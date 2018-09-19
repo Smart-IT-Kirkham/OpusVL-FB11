@@ -19,4 +19,8 @@ sub build_render_list {
     [qw/username password submit/]
 }
 
+sub build_form_element_attr {
+    { autocomplete => 'off' }
+}
+
 1;
