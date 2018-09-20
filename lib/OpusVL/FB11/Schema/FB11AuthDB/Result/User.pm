@@ -140,6 +140,18 @@ sub role_names {
     $self->roles->get_column('role')->all;
 }
 
+=head2 has_role
+
+Returns true if the user has the given role (string name) (case sensitive)
+
+=cut
+
+sub has_role {
+    my $self = shift;
+    my $role = shift;
+    grep { $_ eq $role } $self->role_names;
+}
+
 =head2 set_default_avatar
 
 Create an avatar record with the defaults set, and return it.

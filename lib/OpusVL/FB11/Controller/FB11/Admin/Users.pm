@@ -302,7 +302,11 @@ sub reset_password_form
         $c->detach;
     }
 
-    my $form = $self->form($c, 'Admin::Users::PasswordReset');
+    my $form = $self->form($c, 'Admin::Users::PasswordReset',
+        {
+            admin_mode => !!$c->user->has_role('Admin')
+        }
+    );
     $c->stash->{form} = $form;
     $form->process($c->req->params);
     if ($form->validated) {
