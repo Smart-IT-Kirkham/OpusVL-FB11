@@ -284,8 +284,6 @@ sub reset_password
     my $user = $c->stash->{thisuser};
     my $prev_url = $c->uri_for( $self->action_for('show_user'), [ $user->id ] );
 
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Reset password', url => $c->uri_for( $c->controller('FB11::Admin::Access')->action_for('reset_password'), [ $user->id ] ) } );
-
     $c->forward('/fb11/admin/users/reset_password_form', [ $prev_url, $user ] );
 }
 
