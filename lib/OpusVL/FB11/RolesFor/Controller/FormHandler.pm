@@ -53,12 +53,11 @@ sub form {
         die "Could not use form $form: $@\n";
     }
 
+    $opts //= {};
     my %args = ( ctx => $c );
-    if ($opts) {
-        if ($opts->{update}) { $args{update_only} = 1; }
-    }
+    if (delete $opts->{update}) { $args{update_only} = 1; }
 
-    return $form->new(%args);
+    return $form->new(%args, %$opts);
 }
 
 
