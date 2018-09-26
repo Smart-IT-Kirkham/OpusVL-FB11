@@ -36,36 +36,41 @@
         [% apps = c.menu_data %]
         [% FOR app IN apps %]
             <li class="dropdown">
-              <a class="dropdown-toggle" data-toggle="dropdown" href="/[% app.controller.action_namespace %]">[% IF (app.controller.fb11_icon) %]<i class="fa fa-[% app.controller.fb11_icon %]"></i> [% END %][% app.controller.fb11_name %] <span class="caret"></span></a>
-              <div class="dropdown-menu yamm-fw">
-                <div class="yamm-content row">
-                  [% IF app.actions.size > 1; SET cols=6; ELSE; set cols=12; END %]
-                  <div class="col-md-[% cols %]">
-                    [% FOR group IN app.actions %]
-                        [% # Put the 1st, 3rd etc in the first (possibly only) column. Count is 1-indexed.
-                          IF loop.count % 2 == 0; NEXT; END
-                        %]
-                        [% INCLUDE nav_bar_item
-                            actions = group.actions
-                            group   = group.group
-                        %]
-                    [% END %]
-                  </div>
-                  [% IF app.actions.size > 1 %]
-                      <div class="col-md-[% cols %]">
-                        [% FOR group IN app.actions %]
-                            [% # Put the even-numbered ones in this col
-                              IF loop.count % 2 == 1; NEXT; END
-                            %]
-                            [% INCLUDE nav_bar_item
-                                actions=group.actions
-                                group=group.group
-                            %]
-                        [% END %]
-                      </div>
+              <a class="dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false"
+                href="#" data-target="#menu-[% app.controller.fb11_name.lc %]"
+              >
+                [% IF (app.controller.fb11_icon) %]
+                  <i class="fa fa-[% app.controller.fb11_icon %]"></i>
+                [% END %]
+                [% app.controller.fb11_name %] <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu" id="#menu-[% app.controller.fb11_name.lc %]">
+                [% IF app.actions.size > 1; SET cols=6; ELSE; set cols=12; END %]
+                <div class="col-md-[% cols %]">
+                  [% FOR group IN app.actions %]
+                      [% # Put the 1st, 3rd etc in the first (possibly only) column. Count is 1-indexed.
+                        IF loop.count % 2 == 0; NEXT; END
+                      %]
+                      [% INCLUDE nav_bar_item
+                          actions = group.actions
+                          group   = group.group
+                      %]
                   [% END %]
-
-                </div>  <!-- /yamm-content -->
+                </div>
+                [% IF app.actions.size > 1 %]
+                    <div class="col-md-[% cols %]">
+                      [% FOR group IN app.actions %]
+                          [% # Put the even-numbered ones in this col
+                            IF loop.count % 2 == 1; NEXT; END
+                          %]
+                          [% INCLUDE nav_bar_item
+                              actions=group.actions
+                              group=group.group
+                          %]
+                      [% END %]
+                    </div>
+                [% END %]
               </div>
             </li>
         [% END %]
