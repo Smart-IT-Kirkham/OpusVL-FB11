@@ -3,7 +3,7 @@
     <div class="user-name">[% c.user.obj.name %]</div>
   	<div class="panel-icons">
       <span class="dropdown">
-      <a id="fb11-admin-menu" data-target="#" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
+      <a id="fb11-admin-menu" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
       <ul class="dropdown-menu" role="menu" aria-labelledby="fb11-admin-menu">
         <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]"><i class="fa fa-lock"></i> Change Password</a></li>
         <li><a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('index') ) %]"><i class="fa fa-user"></i> Roles</a></li>
