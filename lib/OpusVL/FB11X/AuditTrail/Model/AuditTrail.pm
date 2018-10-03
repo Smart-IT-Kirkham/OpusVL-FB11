@@ -35,6 +35,11 @@ sub provided_services {
 
 with 'OpusVL::FB11::Role::Brain';
 
+after BUILD => sub {
+    my $self = shift;
+    OpusVL::FB11::Hive->register_brain($self);
+};
+
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2015 OpusVL
