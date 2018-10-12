@@ -9,6 +9,14 @@ use Class::Load qw/load_class/;
 use List::Gather;
 use Data::Munge qw/elem/;
 use Scalar::Util qw/refaddr/;
+use failures qw/
+    fb11::hive::no_brain
+    fb11::hive::no_service
+    fb11::hive::bad_brain
+    fb11::hive::conflict::service
+    fb11::hive::conflict::brain
+    fb11::hive::check
+/;
 
 # ABSTRACT: Marshals different parts of FB11 so they can communicate
 
@@ -64,8 +72,19 @@ sub register_brain {
     my $class = shift;
     my $brain = shift;
 
-    # TODO handle collisions
-    say "Registering ", ref $brain, " as ", $brain->short_name;
+    my $sn = $brain->short_name;
+    my $conflict = $brains{$sn};
+
+    if ($conflict) {
+        failure::fb11::hive::conflict::brain->throw(
+            msg => "Brain name $is is already taken by brain " . ref $conflict,
+            payload => {
+                short_name => $sn,
+                brain => $brain,
+                existing => $conflict
+            }
+        )
+    }
     $brains{$brain->short_name} = $brain;
 
     push $providers{$_}->@*, $brain for $brain->provided_services;
@@ -86,13 +105,26 @@ sub set_service {
     my $brain_name = shift;
 
     if (exists $services{$service_name}) {
-        # TODO formal exception object
-        die "Service $service_name already taken by brain $services{$service_name}";
+        failure::fb11::hive::conflict::service->throw(
+            msg => "Service $service_name already taken by brain " . ref $services{$service_name},
+            payload => {
+                service => $service_name,
+                brain => $brain_name,
+                existing => $services{$service_name}
+            }
+        )
     }
     unless ($class->_brain($brain_name)->can_provide_service($service_name)) {
-        # TODO formal exception object
-        die "Brain $brain_name cannot provide service $service_name";
+        failure::fb11::hive::bad_brain->throw(
+            msg => "Brain registered as $brain_name does not provide service $service_name",
+            payload => {
+                brain_name => $brain_name,
+                brain => $class->_brain($brain_name),
+                service => $service_name
+            }
+        )
     }
+
     $services{$service_name} = $brain_name;
 }
 
@@ -100,8 +132,12 @@ sub _brain {
     my $class = shift;
     my $name = shift;
 
-    # TODO formal exception object
-    confess "No brain registered under the name $name"
+    failure::fb11::hive::no_brain->throw(
+        msg => "No brain registered under the name $name",
+        payload => {
+            brain_name => $name
+        }
+    )
         unless $brains{$name};
 
     return $brains{$name};
@@ -173,8 +209,13 @@ sub service {
     my $service_name = shift;
 
     my $brain = $services{$service_name};
-    # TODO formal exception object
-    confess "Nothing provides the service $service_name"
+
+    failure::fb11::hive::no_service->throw(
+        msg => "Nothing provides the service $service_name",
+        payload => {
+            service => $service_name
+        }
+    )
         unless $brain;
 
     my $hat = $class->__hat($brain, $service_name);
