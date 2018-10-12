@@ -22,31 +22,58 @@ use failures qw/
 
 =head1 DESCRIPTION
 
-This is a fledgling attempt at making FB11 a better component-based
-architecture. The way it works is to stuff everything in a big hash.
+The Hive is a repository for L<Brains|OpusVL::FB11::Role::Brain>. It can
+instantiate them for you, and stores the brains for later access, either by the
+hats they wear or the services they provide.
 
-Each component has core behaviour called the brain, which holds the business
-logic for that component. The component would then probably also provide an
-FB11X suite of modules that would be the web UI into the brain; but with the
-proper architecture, we may end up being able to merge behaviour into core pages
-thanks to FormHandler.
+=head1 HATS, SERVICES, NAMES
 
-To register your brain with this module, simply use the L<Brain
-Role|OpusVL::FB11::Role::Brain> in whatever class in your component is going to
-be responsible for stuff. By adding the appropriate FB11X component into your
-Catalyst application, this will then be constructed and, thus, registered
-automatically.
+The difference between hats and services is simply that only one brain can be
+the provider of a service at any one time, while brains can wear as many hats as
+they want and the same hat (or at least, hat type) can be worn by many brains.
+Otherwise, a service is really a hat.
 
-=head2 Future development
+The name of a brain uniquely identifies the I<instantiated object> within the
+hive. Therefore, more than one brain cannot have the same name. However, if
+coded correctly, you should be able to provide the C<short_name> of a brain at
+construction time; this means you could actually create two brains of the same
+class, call them different things, configure them differently, and then have
+them provide different services.
 
-Our FB11 applications are usually scripted by just using the Catalyst
-application, waiting for it to compile, and then grabbing the model out of it.
-This has the benefit of automatically doing everything that is already done
-automatically. It has the drawback of requiring you to compile the Catalyst
-application when all you want is the business logic.
+If you want.
 
-We would want to develop this further to make it easier to pull together all the
-brains without having to go via Catalyst in the first place.
+=head1 BUILDING A HIVE
+
+You have options for how to build a hive, and you can combine them happily.
+
+=head2 Configuration
+
+When you call C<<OpusVL::FB11::Hive->init>> you can provide a hashref that
+configures the hive. This is the preferred way, since it means the hive does all
+the work for you - it instantiates all the brains and then checks everything
+will work, and dies if not.
+
+You should do this after any manual installation of brains, so that services and
+named brains can be in place before the sanity check. However, it is not
+strictly necessary to do things in this order if the dependencies don't enforce
+it.
+
+See L</CONFIGURATION> for the hashref format.
+
+=head2 Manually
+
+You can create a Brain yourself (using C<new>) and then register it with the
+hive afterwards.
+
+    my $brain = My::App::Brain->new( %brain_config );
+    OpusVL::FB11::Hive->register_brain($brain);
+
+The advantage of this is that you can wait until you know what's going on before
+you decide what to do. Recall that all brains have a C<short_name> property,
+which uniquely identifies that brain. This means you can later decide which of
+several brains you wish to use to provide a given service.
+
+    OpusVL::FB11::Hive->set_service('some_service', 'my::service::provider');
 
 =cut
 
@@ -95,7 +122,9 @@ sub register_brain {
 
 B<Arguments>: C<$service_name>, C<$brain_name>
 
-Call this to specify that brain C<$brain_name> is to provide the service C<$service_name> for this app.
+Call this to specify that brain C<$brain_name> is to provide the service
+C<$service_name> for this app. There must therefore already be a brain
+identified by C<$brain_name>.
 
 =cut
 
@@ -104,6 +133,7 @@ sub set_service {
     my $service_name = shift;
     my $brain_name = shift;
 
+    # FIXME - Allow provider to be changed at runtime?
     if (exists $services{$service_name}) {
         failure::fb11::hive::conflict::service->throw(
             msg => "Service $service_name already taken by brain " . ref $services{$service_name},
@@ -303,6 +333,71 @@ sub __cached_hat {
 }
 
 1;
+
+=head1 CONFIGURATION
+
+You may configure the Hive up-front by providing a hashref to the L</init> method.
+
+    OpusVL::FB11::Hive->init( $config );
+
+This is the best way of setting up the hive, since it will run certain checks
+when complete. It will instantiate and initialise brains, register services, and
+then call L</check>. See also L</DEPENDENCIES>.
+
+The hashref looks something like this:
+
+    {
+        brains => [
+            {
+                # This class will be instantiated and registered for you
+                class => "OpusVL::FB11::Brain::SysParams",
+                # This will be passed to the constructor
+                constructor => {
+                    ...
+                }
+        ],
+        services => {
+            sysparams => {
+                # This is the short_name of the brain you want to provide this
+                # service.
+                brain => 'sysparams'
+            }
+        },
+    }
+
+=head2 Properties
+
+=head3 brains
+
+An array of brain configuration hashrefs. Each contains:
+
+B<class>: The class name of the brain
+
+B<constructor>: Anything for the constructor of the brain.
+
+Note that brains will have to accept references in their constructors.
+
+=head3 services
+
+A hash of service names. The values are more hashrefs:
+
+B<brain>: The C<short_name> of the brain you want to use for this service.
+
+=head1 DEPENDENCIES
+
+Brains can declare that they have dependencies on services or other brains.
+
+It is better to declare a dependency on a service where possible, because this
+offers the most flexibility in terms of interoperability of components. However,
+for sanity reasons you may wish your brains to declare dependencies on one
+another within an individual component; for example, you may wish your app's
+PSGI brain to rely on your app's data model brain.
+
+By using only brain names (C<short_name>) or service names, different brains can
+be installed to satisfy these dependencies, for example test brains.
+
+To define dependencies, simply override the C<dependencies> method on your
+brain. See L<OpusVL::FB11::Role::Brain/dependencies>.
 
 =head1 SERVICES
 
