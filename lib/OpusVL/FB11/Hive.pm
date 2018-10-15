@@ -6,19 +6,25 @@ use v5.24;
 
 use Carp;
 use Class::Load qw/load_class/;
-use List::Gather;
 use Data::Munge qw/elem/;
+use List::Gather;
+use Module::Runtime 'use_package_optimistically';
+use Safe::Isa;
 use Scalar::Util qw/refaddr/;
+use Try::Tiny;
+
 use failures qw/
     fb11::hive::no_brain
     fb11::hive::no_service
     fb11::hive::bad_brain
     fb11::hive::conflict::service
     fb11::hive::conflict::brain
+    fb11::hive::config
     fb11::hive::check
+    fb11::hive::init
 /;
 
-# ABSTRACT: Marshals different parts of FB11 so they can communicate
+# ABSTRACT: Registers units of behaviour so they can communicate
 
 =head1 DESCRIPTION
 
@@ -73,7 +79,7 @@ you decide what to do. Recall that all brains have a C<short_name> property,
 which uniquely identifies that brain. This means you can later decide which of
 several brains you wish to use to provide a given service.
 
-    OpusVL::FB11::Hive->set_service('some_service', 'my::service::provider');
+    OpusVL::FB11::Hive->set_service('some_service', 'my_brain_name');
 
 =cut
 
@@ -83,6 +89,18 @@ my %hat_providers;
 my %services;
 my %hats;
 my %brain_initialised;
+
+=head1 PACKAGE VARIABLES
+
+=head2 C<$INIT>
+
+This will be set to a true value when L</init> has been run. This prevents
+accidental re-initialisation of brains that have already been initialised, and
+activates more stringent checks in certain methods.
+
+=cut
+
+our $INIT = 0;
 
 =head1 CLASS METHODS
 
@@ -103,14 +121,14 @@ sub register_brain {
     my $conflict = $brains{$sn};
 
     if ($conflict) {
-        failure::fb11::hive::conflict::brain->throw(
-            msg => "Brain name $is is already taken by brain " . ref $conflict,
+        failure::fb11::hive::conflict::brain->throw({
+            msg => "Brain name $sn is already taken by brain " . ref $conflict,
             payload => {
                 short_name => $sn,
                 brain => $brain,
                 existing => $conflict
             }
-        )
+        })
     }
     $brains{$brain->short_name} = $brain;
 
@@ -135,24 +153,24 @@ sub set_service {
 
     # FIXME - Allow provider to be changed at runtime?
     if (exists $services{$service_name}) {
-        failure::fb11::hive::conflict::service->throw(
+        failure::fb11::hive::conflict::service->throw({
             msg => "Service $service_name already taken by brain " . ref $services{$service_name},
             payload => {
                 service => $service_name,
                 brain => $brain_name,
                 existing => $services{$service_name}
             }
-        )
+        })
     }
     unless ($class->_brain($brain_name)->can_provide_service($service_name)) {
-        failure::fb11::hive::bad_brain->throw(
+        failure::fb11::hive::bad_brain->throw({
             msg => "Brain registered as $brain_name does not provide service $service_name",
             payload => {
                 brain_name => $brain_name,
                 brain => $class->_brain($brain_name),
                 service => $service_name
             }
-        )
+        })
     }
 
     $services{$service_name} = $brain_name;
@@ -162,12 +180,12 @@ sub _brain {
     my $class = shift;
     my $name = shift;
 
-    failure::fb11::hive::no_brain->throw(
+    failure::fb11::hive::no_brain->throw({
         msg => "No brain registered under the name $name",
         payload => {
             brain_name => $name
         }
-    )
+    })
         unless $brains{$name};
 
     return $brains{$name};
@@ -232,6 +250,8 @@ sub hats {
 
 Returns the hat for the given service, as registered with L<set_service>.
 
+B<TODO>: If only one brain provides a service, should we just pick it?
+
 =cut
 
 sub service {
@@ -240,12 +260,12 @@ sub service {
 
     my $brain = $services{$service_name};
 
-    failure::fb11::hive::no_service->throw(
+    failure::fb11::hive::no_service->throw({
         msg => "Nothing provides the service $service_name",
         payload => {
             service => $service_name
         }
-    )
+    })
         unless $brain;
 
     my $hat = $class->__hat($brain, $service_name);
@@ -290,16 +310,143 @@ sub fancy_hat {
 
 =head2 init
 
-Initialise the hive.
+B<Arguments>: C<$config>?
+
+Initialise all registered brains, then call L</check>. You may pass a hashref to
+register brains via config. See L</BUILDING A HIVE> and L</CONFIGURATION>.
+
+Note you do not have to call this first. You may set up as many brains as you
+like in code before you call this.
+
+Dies (as a result of L</check>) if the hive is inconsistent at the end of it.
 
 =cut
 
 sub init {
     my $class = shift;
-    # TODO $class->check unless $checked;
+    my $config = shift;
+    my @problems;
 
+    if ($INIT) {
+        failure::fb11::hive::init->throw({
+            msg => "Refusing to init a second time!"
+        });
+    }
+
+    if ($config) {
+        if ($config->{brains}) {
+            for my $b_conf ($config->{brains}->@*) {
+                try {
+                    $b_conf->{class} // failure::fb11::hive::config->throw({
+                        msg => "Brain configured without class parameter",
+                        payload => {
+                            specific_config => $b_conf
+                        }
+                    });
+
+                    use_package_optimistically($b_conf->{class});
+                    my $b = $b_conf->{class}->new($b_conf->{constructor} // ());
+                    $class->register_brain($b);
+                }
+                catch {
+                    if ($_->$_isa('failure::fb11::hive')) {
+                        push @problems, $_
+                    }
+                    else {
+                        die $_
+                    }
+                }
+            }
+        }
+        if ($config->{services}) {
+            for my $s_name (keys $config->{services}->%*) {
+                my $s_conf = $config->{services}->{$s_name};
+                try {
+                    $class->set_service($s_name, $s_conf->{brain});
+                }
+                catch {
+                    if ($_->$_isa('failure::fb11::hive')) {
+                        push @problems, $_
+                    }
+                    else {
+                        die $_
+                    }
+                }
+            }
+        }
+    }
     $class->_init_brain($_) for $class->_brain_names;
     # TODO do it in dependency order
+    # Can we do that? We don't check dependencies are sane until check()
+
+    $class->check(@problems);
+    $INIT = 1;
+}
+
+=head2 check
+
+Checks the hive for consistency. This will die with as many errors as we can
+find, or not die at all if there are no errors. See L</DEPENDENCIES>.
+
+The exception will be of type C<failure::fb11::hive::check>, and will contain a
+list of exceptions in its C<payload>. Its C<msg> will be all the C<msg>s from
+those exceptions concatenated with newlines. See L<failures>.
+
+L</init> calls this with a list of errors it's already found. This ensures that
+we find as many errors as we can before we die with a single exception.
+
+=cut
+
+sub check {
+    my $class = shift;
+    my @problems = @_;
+
+    for my $brain_name ($class->_brain_names) {
+        my $brain = $brains{$brain_name};
+
+        my $deps = $brain->dependencies;
+        for my $dep_name (( $deps->{brains} // [] )->@*) {
+            try {
+                $class->_brain($dep_name);
+            }
+            catch {
+                if ($_->$_isa('failure::fb11::hive::no_brain')) {
+                    $_->payload( {
+                        brain => $brain,
+                        dependency => $dep_name
+                    });
+                    push @problems, $_;
+                }
+                else {
+                    die $_;
+                }
+            };
+        }
+
+        for my $service (( $deps->{services} // [] )->@*) {
+            try {
+                $class->service($service)
+            }
+            catch {
+                if ($_->$_isa('failure::fb11::hive::no_service')) {
+                    $_->payload({
+                        brain => $brain,
+                        dependency => $service
+                    });
+                    push @problems, $_;
+                }
+            }
+        }
+    }
+
+    if (@problems) {
+        __reset();
+        my $all_msgs = join "\n", map $_->msg, @problems;
+        failure::fb11::hive::check->throw({
+            msg => "Hive check failed!\n$all_msgs",
+            payload => \@problems
+        });
+    }
 }
 
 sub _init_brain {
@@ -314,6 +461,11 @@ sub _init_brain {
     $brain_initialised{$brain_name} = 1;
 }
 
+# reset everything. TODO - if we use a singleton we can just destroy the object
+sub __reset {
+    %brains = %providers = %hat_providers = %services = %hats = %brain_initialised = ();
+    $INIT = 0;
+}
 
 sub __cache_hat {
     my $class = shift;
@@ -373,9 +525,10 @@ An array of brain configuration hashrefs. Each contains:
 
 B<class>: The class name of the brain
 
-B<constructor>: Anything for the constructor of the brain.
+B<constructor>: Hashref for the constructor of the brain.
 
-Note that brains will have to accept references in their constructors.
+It is assumed your brain is a Moose object because of the Brain role, and
+therefore can be constructed by hashref. Behaviour otherwise is unsupported.
 
 =head3 services
 
@@ -387,11 +540,11 @@ B<brain>: The C<short_name> of the brain you want to use for this service.
 
 Brains can declare that they have dependencies on services or other brains.
 
-It is better to declare a dependency on a service where possible, because this
-offers the most flexibility in terms of interoperability of components. However,
-for sanity reasons you may wish your brains to declare dependencies on one
-another within an individual component; for example, you may wish your app's
-PSGI brain to rely on your app's data model brain.
+It is better to declare dependencies on services rather than brains where
+possible, because this offers the most flexibility in terms of interoperability
+of components. However, for sanity reasons you may wish your brains to declare
+dependencies on one another within an individual component; for example, you may
+wish your app's PSGI brain to rely on your app's data model brain.
 
 By using only brain names (C<short_name>) or service names, different brains can
 be installed to satisfy these dependencies, for example test brains.

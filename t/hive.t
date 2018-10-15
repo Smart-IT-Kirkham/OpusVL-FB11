@@ -42,9 +42,10 @@ subtest "Fancy Hats" => sub {
 BEGIN {
     package Test::Brain {
         use Moose;
-        with 'OpusVL::FB11::Role::Brain';
         has ran_initialise => (is => 'rw', isa => 'Bool', required => 0);
-        sub short_name { "TEST::brain1" }
+        has short_name => (is => 'ro', default => "TEST::brain1" );
+        with 'OpusVL::FB11::Role::Brain';
+
         sub hats { qw<TEST::hat1>, 'TEST::hat2' => { class => '+Test::SharedHat' } }
         sub provided_services { qw<TEST::hat1> }
         sub init { shift->ran_initialise(1) }
@@ -64,8 +65,8 @@ BEGIN {
 
     package Test::Brain2 {
         use Moose;
+        has short_name => ( is => 'ro', default => "TEST::brain2" );
         with 'OpusVL::FB11::Role::Brain';
-        sub short_name { "TEST::brain2" }
         sub hats { qw<TEST::hat1 TEST::brain2 TEST::brain2::subhat> }
     }
 

@@ -215,4 +215,29 @@ A hook to initialise the brain. This will be called from the hive when it is ini
 
 sub init {}
 
+=head2 dependencies
+
+Returns zero, one, or two arrayrefs of dependencies, in a hashref.
+L<OpusVL::FB11::Hive/check> will use this list to check consistency.
+
+The hashref can contain C<services> and/or C<brains>. C<brains> uses the
+C<short_name> property of the brains, and C<services> uses the service/hat
+names.
+
+It is recommended that you rely on services rather than brains, but within a
+self-contained system you can use the C<brains> key to maintain a sort of ersatz
+compile-time checking.
+
+    {
+        brains => [
+            'my-data-model'
+        ],
+        services => [
+            'sysparams'
+        ]
+    }
+
+=cut
+
+sub dependencies {+{}}
 1;
