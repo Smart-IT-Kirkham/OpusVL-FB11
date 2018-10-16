@@ -20,7 +20,7 @@ sub has_forms {
                 $form = "${base}::Form::${form}";
             }
             require_module $form;
-            
+
             my $to_install = "${caller}::${method}";
 
             if (defined &{$to_install}) {
@@ -35,10 +35,6 @@ sub form {
     my ($self, $c, $form, $opts) = @_;
     my $base = scalar caller;
     $base =~ s/::Controller::(.+)//g;
-
-    #if (not ref $c eq $base) {
-    #    die "form() expects '${base}' object as second parameter. Received " . ref($c) . " instead\n";
-    #}
 
     my $caller = scalar caller;
     # absolute module
@@ -55,9 +51,9 @@ sub form {
 
     $opts //= {};
     my %args = ( ctx => $c );
-    if (delete $opts->{update}) { $args{update_only} = 1; }
+    if ($opts->{update}) { $args{update_only} = 1; }
 
-    return $form->new(%args, %$opts);
+    return $form->new(%args, %{ $opts->{constructor} // {} });
 }
 
 
