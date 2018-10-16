@@ -156,6 +156,16 @@ after 'insert' => sub {
     shift->set_default_avatar();
 };
 
+# FIXME DEBT XXX !!!
+# Time constraint and laziness means I've not made a new DH version for the
+# cascade delete changes. Instead, I'm doing this
+# DELETE THIS LATER or so help me I'll roll the BOFH dice
+before delete => sub {
+    my $self = shift;
+    $self->roles->delete;
+    $self->users_roles->delete;
+    $self->avatar->delete;
+};
 
 =head1 METHODS
 
