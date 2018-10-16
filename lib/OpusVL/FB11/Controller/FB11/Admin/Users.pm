@@ -362,14 +362,15 @@ sub delete_user
 {
     my ( $self, $c ) = @_;
 
-    $c->stash->{question} = "Are you sure you want to delete the user:" . $c->stash->{thisuser}->username;
+    $c->stash->{question} = "Are you sure you want to delete the user <strong>" . $c->stash->{thisuser}->username . "</strong>?";
+    $c->stash->{show_permanence_warning} = 1;
     $c->stash->{template} = 'fb11/admin/confirm.tt';
     $c->stash->{form} = $self->confirm_form;
     my $form = $c->stash->{form};
     $form->process($c->req->params);
     if ($form->validated) {
         if ($c->req->params->{submitok}) {
-            $c->stash->{thisuser}->status('deleted');
+            $c->stash->{thisuser}->delete;
             $c->flash->{status_msg} = "User deleted";
             $c->res->redirect( $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('index') ) );
         }
