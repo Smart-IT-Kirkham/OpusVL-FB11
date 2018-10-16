@@ -1,5 +1,30 @@
 {{ $NEXT }}
 
+0.037     2018-10-16 18:05:16+01:00 Europe/London
+
+  - Using $c->form now allows form constructor parameters
+  - Fixed user admin pages
+  - Fixed user creation and editing
+  - User must supply their current password to change it
+  - Admin does not have to supply the user's password to change it
+  - User deletion now actually deletes the user instead of using a soft delete
+    that is ignored anyway
+  - Added boolean support to OpenAPI-to-FormHandler algorithm
+  - Added "apps.yml" to select PSGI and set default environment from config
+  - Added legacy user parameters back onto user edit page - using hats!
+  - Fixes and improvements to parameters hat & role
+  - More things now done automatically, so FB11X boilerplate is reduced further
+  - DB script no longer tries to deploy if we don't need to
+  - DB script also properly throws errors that should not be caught
+  - Removed home link and merged it with the app name
+  - DataTable defaults now only apply to DataTables using the defaults (instead
+    of being "base" settings for all DTs)
+  - Undid the attempts at making DataTables responsive
+  - Updated jQuery and Bootstrap after pentesting
+  - Login form has autocomplete="off" for no reason whatsoever, after pentesting
+  - New CSS class: fb11-cardlike, for styling but not positioning
+  - Tidied several files and removed vestigial bits of code
+
 0.036     2018-06-19 13:21:27+01:00 Europe/London
 
   - Added new brains and hats architecture
