@@ -122,7 +122,7 @@ __PACKAGE__->has_many(
   "users_roles",
   "OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole",
   { "foreign.users_id" => "self.id" },
-  { cascade_copy => 0, cascade_delete => 0 },
+  { cascade_copy => 0, cascade_delete => 1 },
 );
 
 =head2 avatar
@@ -136,7 +136,7 @@ Related object: L<OpusVL::FB11::Schema::FB11AuthDB::Result::UserAvatar>
 __PACKAGE__->has_one(
     avatar => 'OpusVL::FB11::Schema::FB11AuthDB::Result::UserAvatar',
     { 'foreign.user_id' => 'self.id' },
-    { cascade_copy => 0, cascade_delete => 0 },
+    { cascade_copy => 0, cascade_delete => 1 },
 );
 
 =head2 roles
