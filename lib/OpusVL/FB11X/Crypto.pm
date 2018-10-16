@@ -2,7 +2,7 @@ package OpusVL::FB11X::Crypto;
 
 with 'OpusVL::FB11::RolesFor::Plugin';
 
-our $VERSION = '0.037';
+our $VERSION = '0.038';
 
 after 'setup_components' => sub {
     my $class = shift;
