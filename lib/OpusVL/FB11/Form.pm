@@ -198,6 +198,7 @@ sub _to_field_name {
         string => 'Text',
         array => 'Select',
         number => 'Number',
+        boolean => 'Checkbox',
     );
 
     sub _to_field_type {
