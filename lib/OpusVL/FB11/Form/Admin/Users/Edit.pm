@@ -1,6 +1,7 @@
 package OpusVL::FB11::Form::Admin::Users::Edit;
 
 use OpusVL::FB11::Plugin::FormHandler;
+with 'HTML::FormHandler::TraitFor::Model::DBIC';
 
 has_field 'username' => (
     type        => 'Text',
