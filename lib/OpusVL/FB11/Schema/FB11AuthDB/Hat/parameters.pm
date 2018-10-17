@@ -15,7 +15,7 @@ This will only really work if the brain that wears it is the FB11AuthDB itself.
 
 =cut
 
-our $VERSION = '0.038';
+our $VERSION = '0.039';
 use Moose;
 with 'OpusVL::FB11::Role::Hat::parameters';
 

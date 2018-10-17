@@ -3,7 +3,7 @@ package OpusVL::FB11::Form;
 use v5.24;
 use OpusVL::FB11::Plugin::FormHandler;
 
-our $VERSION = '0.038';
+our $VERSION = '0.039';
 
 # ABSTRACT: Place to hold form-based functions
 
