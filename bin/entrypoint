@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use v5.20;
 use Path::Class;
+use YAML::Tiny;
 
 if ($ENV{LOCAL_LIBS}) {
     for my $lib (split /:/, $ENV{LOCAL_LIBS}) {
