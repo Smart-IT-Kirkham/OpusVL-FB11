@@ -22,3 +22,11 @@ docker: dist
 ifeq ($(PUSH), 1)
 	docker push quay.io/opusvl/fb11:latest
 endif
+release:
+	docker pull quay.io/opusvl/fb11:latest
+	[ `docker run --rm -u root quay.io/opusvl/fb11:latest head -n1 /root/OpusVL-FB11-gitrev` = `git rev-parse HEAD` ]
+	dzil release
+	- docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:$(version)
+ifeq ($(PUSH), 1)
+	- docker push quay.io/opusvl/fb11:$(version)
+endif
