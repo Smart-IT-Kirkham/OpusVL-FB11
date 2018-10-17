@@ -23,8 +23,10 @@ ifeq ($(PUSH), 1)
 	docker push quay.io/opusvl/fb11:latest
 endif
 release:
+	- @echo "If this fails, make sure you pushed the last image you built"
 	docker pull quay.io/opusvl/fb11:latest
-	[ `docker run --rm -u root quay.io/opusvl/fb11:latest head -n1 /root/OpusVL-FB11-gitrev` = `git rev-parse HEAD` ]
+	@[ `docker run --rm -u root quay.io/opusvl/fb11:latest head -n1 /root/OpusVL-FB11-gitrev` = `git rev-parse HEAD` ] \
+		|| echo "Ensure your git repository is on the commit from which the latest image was built (or rebuild and retest)."
 	dzil release
 	- docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:$(version)
 ifeq ($(PUSH), 1)
