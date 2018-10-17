@@ -115,7 +115,6 @@ __PACKAGE__->has_one(
 
 use Moose;
 use File::ShareDir 'module_dir';
-use OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User;
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
 __PACKAGE__->setup_authdb;
 
