@@ -1,5 +1,9 @@
 {{ $NEXT }}
 
+0.038     2018-10-17 09:45:16+01:00 Europe/London
+
+  - Fixed error in entrypoint
+
 0.037     2018-10-16 18:05:16+01:00 Europe/London
 
   - Using $c->form now allows form constructor parameters
