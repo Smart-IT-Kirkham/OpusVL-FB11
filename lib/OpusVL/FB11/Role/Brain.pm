@@ -48,7 +48,7 @@ default implementation of this is empty.
         )
     }
 
-Each hat is a simple string that names the hat, and optionally may be configure
+Each hat is a simple string that names the hat, and optionally may be configured
 with a hashref.
 
 The simple names are the "friendly" names of the hats, and are what other
