@@ -19,10 +19,10 @@ as well as reading.
 
 B<Arguments>: C<$username>, C<$realm>?
 
-B<Arguments>: C<\@user_info>, C<$realm>?
+B<Arguments>: C<\%user_info>, C<$realm>?
 
-Locate the user by username (or some list of user_info), and optionally by realm
-if you are using them.
+Locate the user by username (or some hashref of user_info), and optionally by
+realm if you are using them.
 
 The class L<failure::auth::no_user|failures> is available to throw an exception
 if it is not found.
@@ -58,7 +58,7 @@ would use to log in. Returns that user again.
 
 B<Arguments>: C<[ $username, $realm? ]>, C<$credential>, C<@credentials>?
 
-B<Arguments>: C<[ \@user_info, $realm? ]>, C<$credential>, C<@credentials>?
+B<Arguments>: C<[ \%user_info, $realm? ]>, C<$credential>, C<@credentials>?
 
 Concatenates the behaviour of L</find_user> and L</check_password>. You can
 override this if you want to perform that more efficiently.
