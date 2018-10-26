@@ -42,10 +42,13 @@ throw an exception if the credentials do not match.
 
 =head2 create_user
 
-B<Arguments>: C<$user_data>
+B<Arguments>: C<$username>, C<$password>, C<$user_data>
 
 Create and return a user object out of C<$user_data>. This interface does not
 tell you how to store your user, nor which fields it should have.
+
+You can use C<failure::auth::bad_credentials> if you don't like the password
+they supplied.
 
 =head2 set_credentials
 
@@ -62,6 +65,17 @@ B<Arguments>: C<[ \%user_info, $realm? ]>, C<$credential>, C<@credentials>?
 
 Concatenates the behaviour of L</find_user> and L</check_password>. You can
 override this if you want to perform that more efficiently.
+
+=head2 create_guest_user
+
+Your auth is not required to implement this, so the default throws an exception
+saying that the chosen auth service does not support it.
+
+This is intended to create a user with no credentials, which thus can only be
+recovered by your keeping hold of some generated data about it.
+
+If you implement this, it is expected that you return an object that can be used
+with L</find_user> to recover it later.
 
 =cut
 
@@ -80,6 +94,10 @@ sub authenticate {
     failure::auth::no_user->throw("User not found") if not $u;
 
     $self->check_credentials($u, @_);
+}
+
+sub create_guest_user {
+    failure::auth::no_user->throw("This auth hat does not support guest users");
 }
 
 1;
