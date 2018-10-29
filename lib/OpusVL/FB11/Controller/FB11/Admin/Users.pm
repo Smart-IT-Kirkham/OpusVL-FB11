@@ -37,14 +37,7 @@ sub auto
 {
     my ( $self, $c ) = @_;
 
-    # add to the bread crumb..
-    push ( @{ $c->stash->{breadcrumbs} }, { name => 'Users', url => $c->uri_for( $c->controller('FB11::Admin::Users')->action_for('index') ) } );
-
-    # stash all users..
-    my $users_rs = $c->model('FB11AuthDB::User')->search;
-    $users_rs->result_class('DBIx::Class::ResultClass::HashRefInflator');
-    my @users = $users_rs->all;
-    $c->stash->{users} = \@users;
+    $c->stash->{users_rs} = $c->model('FB11AuthDB::User');
 }
 
 =head2 index
@@ -350,9 +343,47 @@ sub edit_user
     $c->stash->{template} = "fb11/admin/users/user_form.tt";
 }
 
+=head2 disable_user
+
+Disables the user, disallowing access.
+
+=cut
+
+sub disable_user
+    : Chained('user_specific')
+    : PathPart('disable')
+    : Args(0)
+    : FB11Feature('User Administration')
+{
+    my ($self, $c) = @_;
+
+    $c->stash->{thisuser}->update({
+        status => 'disabled'
+    });
+}
+
+=head2 enable_user
+
+(Re-)Enables the user, permitting access.
+
+=cut
+
+sub enable_user
+    : Chained('user_specific')
+    : PathPart('enable')
+    : Args(0)
+    : FB11Feature('User Administration')
+{
+    my ($self, $c) = @_;
+
+    $c->stash->{thisuser}->update({
+        status => 'enabled'
+    });
+}
 =head2 delete_user
 
-    End of chain.
+Attempts to delete the user record. This is only accessible to administrators
+and only when DEV_MODE=1.  Will crash if anything restricts the deletion.
 
 =cut
 
@@ -360,7 +391,7 @@ sub delete_user
     : Chained('user_specific')
     : PathPart('delete')
     : Args(0)
-    : FB11Feature('User Administration')
+    : FB11Feature('Administrator')
 {
     my ( $self, $c ) = @_;
 
