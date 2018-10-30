@@ -360,6 +360,9 @@ sub disable_user
     $c->stash->{thisuser}->update({
         status => 'disabled'
     });
+
+    $c->flash->{status_msg} = "User disabled";
+    $c->res->redirect($c->uri_for($self->action_for('index')));
 }
 
 =head2 enable_user
@@ -379,6 +382,8 @@ sub enable_user
     $c->stash->{thisuser}->update({
         status => 'enabled'
     });
+    $c->flash->{status_msg} = "User enabled";
+    $c->res->redirect($c->uri_for($self->action_for('index')));
 }
 =head2 delete_user
 
