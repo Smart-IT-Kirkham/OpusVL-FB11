@@ -1,123 +1,144 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::User;
 
-# Created by DBIx::Class::Schema::Loader
-# DO NOT MODIFY THE FIRST PART OF THIS FILE
-
-use strict;
-use warnings;
-
+use Moose;
 use OpusVL::FB11::Hive;
+use File::ShareDir 'module_dir';
+use namespace::autoclean;
+extends 'DBIx::Class::Core';
+with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
 
-use base 'DBIx::Class::Core';
+our $VERSION = '0.001';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
-
-=head1 NAME
-
-OpusVL::FB11::Schema::FB11AuthDB::Result::User
-
-=cut
-
 __PACKAGE__->table("users");
+
+=head1 DESCRIPTION
+
+This is the core FB11 user class, the default auth method for an FB11
+application. It works with L<Catalyst::Plugin::Authentication> via the consumed
+role L<OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User>.
 
 =head1 ACCESSORS
 
 =head2 id
 
-  data_type: 'integer'
-  is_auto_increment: 1
-  is_nullable: 0
+Auto-incremented user ID
 
 =head2 username
 
-  data_type: 'text'
-  is_nullable: 0
+B<Considered for deprecation>
+
+The username to log in with. We should probably deprecate this in favour of just
+using the email address.
 
 =head2 password
 
-  data_type: 'text'
-  is_nullable: 0
+The database does not encrypt the password; this is set up by
+L<OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User/setup_authdb> for
+some reason.
+
+DEBT: I tried to pull this behaviour into this class but it broke.
 
 =head2 email
 
-  data_type: 'text'
-  is_nullable: 0
+A preferable unique value to use as the login username. This can be assumed to
+be a valid email address, and therefore you can send emails to users with this.
 
 =head2 name
 
-  data_type: 'text'
-  is_nullable: 0
+User's real name, or preferred name, or whatever.
 
 =head2 tel
 
-  data_type: 'text'
-  is_nullable: 0
+User's telephone number. This has been required for a long time but we should
+really get around to creating a new DB version where it is not.
 
 =head2 status
 
-  data_type: 'text'
-  default_value: 'active'
-  is_nullable: 0
+Either 'enabled' or 'disabled'.
+
+FIXME: The DB default is 'active', which we need a new DB version to change.
 
 =cut
 
 __PACKAGE__->add_columns(
-  "id",
-  { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
-  "username",
-  { data_type => "text", is_nullable => 0 },
-  "password",
-  { data_type => "text", is_nullable => 0 },
-  "email",
-  { data_type => "text", is_nullable => 0 },
-  "name",
-  { data_type => "text", is_nullable => 0 },
-  "tel",
-  { data_type => "text", is_nullable => 1 },
-  "status",
-  { data_type => "text", default_value => "active", is_nullable => 0 },
-  "last_login",
-  { data_type => 'timestamp', is_nullable => 1 },
-  "last_failed_login",
-  { data_type => 'timestamp', is_nullable => 1 },
+    id => {
+        data_type => "integer",
+        is_auto_increment => 1,
+        is_nullable => 0
+    },
+    username => {
+        data_type => "text",
+        is_nullable => 0
+    },
+    password => {
+        data_type => "text",
+        is_nullable => 0
+    },
+    email => {
+        data_type => "text",
+        is_nullable => 0
+    },
+    name => {
+        data_type => "text",
+        is_nullable => 0
+    },
+    tel => {
+        data_type => "text",
+        is_nullable => 1
+    },
+    status => {
+        data_type => "text",
+        default_value => "active", #FIXME
+        is_nullable => 0
+    },
+    last_login => {
+        data_type => 'timestamp',
+        is_nullable => 1
+    },
+    last_failed_login => {
+        data_type => 'timestamp',
+        is_nullable => 1
+    },
 );
 __PACKAGE__->set_primary_key("id");
 __PACKAGE__->add_unique_constraint(["username"]);
 __PACKAGE__->resultset_attributes({ order_by => [ 'name' ] });
+__PACKAGE__->setup_authdb;
 
 =head1 RELATIONS
 
-
 =head2 users_roles
 
-Type: has_many
+A user has many L<OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole>s. These
+are more complicated than simple strings for hysterical raisins. You can deal
+with the strings themselves by using L</role_names>, which you should do because
+then you are not tied to this user structure.
 
-Related object: L<OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole>
+See also
+L<OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User/setup_authdb>, which
+adds a many-to-many called C<roles>.
 
 =cut
 
 __PACKAGE__->has_many(
-  "users_roles",
-  "OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole",
+  users_roles => 'OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole',
   { "foreign.users_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 1 },
 );
 
+=head2 avatar
+
+A user has one L<OpusVL::FB11::Schema::FB11AuthDB::Result::UserAvatar> for some
+reason. Present state of functionality of this part of the system is unknown.
+
+=cut
 
 __PACKAGE__->has_one(
-    'avatar',
-    'OpusVL::FB11::Schema::FB11AuthDB::Result::UserAvatar',
+    avatar => 'OpusVL::FB11::Schema::FB11AuthDB::Result::UserAvatar',
     { 'foreign.user_id' => 'self.id' },
     { cascade_copy => 0, cascade_delete => 1 },
 );
-
-# Created by DBIx::Class::Schema::Loader v0.07000 @ 2010-05-24 12:56:09
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:UaxbxFRL86+fBRmFpWtSSQ
-
-use Moose;
-use File::ShareDir 'module_dir';
-with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
-__PACKAGE__->setup_authdb;
 
 # create an avatar for new users
 # default to profile.png
@@ -140,7 +161,9 @@ before delete => sub {
 
 =head2 role_names
 
-Returns role names the user is a member of.
+Returns role names the user is a member of. This is the preferable interface
+into roles, because every other user auth under the sun just uses string names
+for roles (or "groups").
 
 =cut
 
@@ -167,7 +190,7 @@ sub has_role {
 Create an avatar record with the defaults set, and return it.
 Uses root/static/images/profile.png as the default avatar.
 
-Be sure to check the ->avatar field is null before you call this.
+Overrides the current value of the avatar field.
 
 =cut
 
@@ -211,6 +234,8 @@ sub get_or_default_avatar {
 }
 
 =head2 augmentation_for
+
+FIXME: Are we still using this or is this left over from hat experimentation?
 
 Given a string name, finds the component so named and requests any augmented
 data provided thereby.
@@ -284,13 +309,4 @@ sub methods_for_delegation {
     ]
 }
 
-=head1 COPYRIGHT and LICENSE
-
-Copyright (C) 2010 OpusVL
-
-This software is licensed according to the "IP Assignment Schedule" provided with the development project.
-
-=cut
-
-# You can replace this text with custom content, and it will be preserved on regeneration
 1;
