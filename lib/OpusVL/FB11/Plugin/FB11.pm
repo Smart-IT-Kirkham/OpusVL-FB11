@@ -486,11 +486,6 @@ sub can_access
         return 1 
     }
 
-    # No access if no user, or user is disabled
-    # Some legacy apps have 'active' status users so we can't look for 'enabled'
-    # status
-    return unless $c->user;
-    return if $c->user->status eq 'disabled';
     # check if action path matches that of the 'access denied' action path.. in which case, we must allow access..
     if ( $action_path eq $c->config->{'fb11_access_denied'} )
     {
@@ -518,6 +513,12 @@ sub can_access
         $c->log->debug("The following action has FB11AllAccess / Public for $action_path . No access control being applied ") if $c->debug;
         return 1;
     }
+
+    # No access if no user, or user is disabled
+    # Some legacy apps have 'active' status users so we can't look for 'enabled'
+    # status
+    return unless $c->user;
+    return if $c->user->status eq 'disabled';
 
     # check if we have list of actionpaths to allow (regardless of rules)...
     if(  $c->user )
