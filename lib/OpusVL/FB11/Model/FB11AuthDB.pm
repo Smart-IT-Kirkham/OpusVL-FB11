@@ -9,11 +9,6 @@ __PACKAGE__->config(
     traits => 'SchemaProxy'
 );
 
-after BUILD => sub {
-    my $self = shift;
-    OpusVL::FB11::Hive->register_brain($self->schema);
-};
-
 =head1 NAME
 
 OpusVL::FB11::Model::FB11AuthDB - Catalyst DBIC Schema Model
