@@ -26,6 +26,7 @@ GetOptions(\%option,
     'help|h|?', 
     'connection-info|c=s',
     'catalyst-config|C=s',
+    'use-environment|E',
     'user|u=s', 
     'password|p=s', 
     'force|f',
@@ -91,7 +92,7 @@ sub connection_params () {
         my $dbhost = $ENV{FB11_DB_HOST} || 'db';
 
         $dsn = sprintf $dsn, $driver, $dbname, $dbhost;
-        say "Generated DSN $dsn";
+
         return {
             dsn => $dsn,
             user => $ENV{FB11_DB_USER},
