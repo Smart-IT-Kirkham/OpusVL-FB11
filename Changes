@@ -1,5 +1,10 @@
 {{ $NEXT }}
 
+  - Reverted changes to User model that caused issues
+  - Users can no longer be deleted; instead they can be activated and
+    deactivated. This prevents crashes caused when FB11X modules restrict user
+    deletion because they have used the user ID to audit things
+
 0.038     2018-10-17 09:45:16+01:00 Europe/London
 
   - Fixed error in entrypoint
