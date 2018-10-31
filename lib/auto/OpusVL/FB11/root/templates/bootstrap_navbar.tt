@@ -32,7 +32,6 @@
 
     <!-- Left nav -->
     <ul class="nav navbar-nav">
-      [% IF c.user %]
         [% apps = c.menu_data %]
         [% FOR app IN apps %]
             <li class="dropdown">
@@ -74,7 +73,6 @@
               </div>
             </li>
         [% END %]
-      [% END %]
     </ul>
     <div class="col-sm-3 col-md-3">
         <form class="navbar-form" role="search" action="/search" name="search">
