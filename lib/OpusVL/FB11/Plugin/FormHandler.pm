@@ -7,20 +7,24 @@ use HTML::FormHandler::Moose ();
 use HTML::FormHandler ();
 
 sub import {
-	my ($class) = @_;
-	my $caller = caller;
+    my ($class) = @_;
+    my $caller = caller;
 
-	{
-		no strict 'refs';
-		HTML::FormHandler::Moose->import::into($caller);
-		@{"${caller}::ISA"} = qw(HTML::FormHandler);
+    {
+        no strict 'refs';
+        HTML::FormHandler::Moose->import::into($caller);
+        @{"${caller}::ISA"} = qw(HTML::FormHandler);
 
-		my $has = *{"${caller}::has"}{CODE};
-		$has->("widget_wrapper", is => 'rw', default => sub { "Bootstrap3" });
-		$has->("ctx", is => 'rw');
-		$has->("update_only", is => 'rw', default => sub { 0 });
-		$has->("+is_html5", is => 'rw', default => sub { 1 });
-	}
+        my $has = *{"${caller}::has"}{CODE};
+        $has->("widget_wrapper", is => 'rw', default => sub { "Bootstrap3" });
+        $has->("ctx", is => 'rw');
+        $has->("update_only", is => 'rw', default => sub { 0 });
+        $has->("+is_html5", is => 'rw', default => sub { 1 });
+        $has->("+field_name_space", is => 'rw', default => sub {[
+            'OpusVL::FB11::Form::Field',
+            ($caller =~ s/Form::\K.+//r) . 'Field'
+        ]});
+    }
 }
 
 1;
