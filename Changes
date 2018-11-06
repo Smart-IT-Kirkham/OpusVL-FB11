@@ -4,6 +4,8 @@
   - Users can no longer be deleted; instead they can be activated and
     deactivated. This prevents crashes caused when FB11X modules restrict user
     deletion because they have used the user ID to audit things
+  - The shown-with JavaScript now supports negations on the comparator:
+        class="shown-with" rel="[name=some-field]@~notthisvalue"
 
 0.038     2018-10-17 09:45:16+01:00 Europe/London
 
