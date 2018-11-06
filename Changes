@@ -1,5 +1,7 @@
 {{ $NEXT }}
 
+0.040     2018-11-06 11:18:03+00:00 Europe/London
+
   - Reverted changes to User model that caused issues
   - Users can no longer be deleted; instead they can be activated and
     deactivated. This prevents crashes caused when FB11X modules restrict user
