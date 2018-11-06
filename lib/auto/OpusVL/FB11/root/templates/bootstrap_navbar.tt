@@ -37,7 +37,9 @@
             <li class="dropdown">
               <a class="dropdown-toggle" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false"
-                href="#" data-target="#menu-[% app.controller.fb11_name.lc %]"
+                href="#" data-target="#menu-
+                  [%- app.controller.fb11_name.lc.replace('[^[:alnum:]]', '-') -%]
+                "
               >
                 [% IF (app.controller.fb11_icon) %]
                   <i class="fa fa-[% app.controller.fb11_icon %]"></i>
