@@ -49,7 +49,7 @@ if (my $appname = $ENV{FB11_APP}) {
 
     my $environment = $service->{default_environment} // {};
     for (keys %{$environment}) {
-        $ENV{$_} //= $environment->{$_};
+        $ENV{$_} ||= $environment->{$_};
     }
 }
 
