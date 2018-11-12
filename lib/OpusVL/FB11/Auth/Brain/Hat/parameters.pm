@@ -1,5 +1,4 @@
-package OpusVL::FB11::Schema::FB11AuthDB::Hat::parameters;
-
+package OpusVL::FB11::Auth::Brain::Hat::parameters;
 # ABSTRACT: Provides an interface to the legacy user parameters
 
 =head1 DESCRIPTION
@@ -46,7 +45,7 @@ Returns a hashref that matches L</get_parameter_schema>, or undef.
 sub get_augmented_data {
     my $self = shift;
     my $user = shift;
-    my $resultset = $self->__brain->resultset('UsersParameter')
+    my $resultset = $self->schema->resultset('UsersParameter')
         ->search({ users_id => $user->id });
 
     return {
@@ -73,7 +72,7 @@ only have a type, and maybe a default.
 
 sub get_parameter_schema {
     my $self = shift;
-    my $parameters = $self->__brain->resultset('Parameter')->search({}, { order_by => 'parameter' });
+    my $parameters = $self->schema->resultset('Parameter')->search({}, { order_by => 'parameter' });
 
     my $schema = {
         title => "Legacy Parameters",
@@ -108,8 +107,8 @@ sub set_augmented_data {
     my $user = shift;
     my $hashref = shift;
 
-    my $param_rs = $self->__brain->resultset('Parameter');
-    my $user_param_rs = $self->__brain->resultset('UsersParameter');
+    my $param_rs = $self->schema->resultset('Parameter');
+    my $user_param_rs = $self->schema->resultset('UsersParameter');
 
     for my $param (keys %$hashref) {
         my $param_obj = $param_rs->find({ parameter => $param });
@@ -144,5 +143,10 @@ sub set_parameter_schema {
 }
 
 sub register_extension{}
+
+sub _schema {
+    my $self = shift;
+    $self->__brain->schema;
+}
 
 1;

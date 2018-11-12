@@ -141,8 +141,6 @@ sub load_config {
         $$valref =~ s/__ENV\((.+?)\)__/$ENV{$1}/g;
     };
 
-    use Data::Dump; dd $cfg;
-
     if ($path) {
         while (my ($key) = $path =~ m{/(.+)?(/|$)}gc) {
             failure::fb11::hive::config->throw({
