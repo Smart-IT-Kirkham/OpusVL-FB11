@@ -14,11 +14,16 @@ has short_name => (
 );
 
 sub hats {
-    qw/auth parameters/;
+    (
+        qw/auth parameters/,
+        fb11authdb => {
+            class => 'auth'
+        }
+    )
 }
 
 sub provided_services {
-    qw/auth/
+    qw/auth fb11authdb/
 }
 
 with 'OpusVL::FB11::Role::Brain';
