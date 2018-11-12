@@ -6,7 +6,9 @@ use v5.24;
 
 use Carp;
 use Class::Load qw/load_class/;
+use Config::Any;
 use Data::Munge qw/elem/;
+use Data::Visitor::Tiny;
 use List::Gather;
 use Module::Runtime 'use_package_optimistically';
 use Safe::Isa;
@@ -104,6 +106,131 @@ our $INIT = 0;
 
 =head1 CLASS METHODS
 
+=head2 load_config
+
+B<Arguments:> C<$filename>, C<$path>?
+
+Opens the file C<$filename> with L<Config::Any> so you can use any format,
+provided you give it a suitable extension, then calls L</init> with the
+contents.
+
+With C<$path> you can specify a subsection of the config hash, using a simple
+directory-like format: C</key1/key2/...>
+
+This supports the Catalyst-style placeholder C<__ENV(...)__> to load environment
+variables.
+
+=cut
+
+sub load_config {
+    my $class = shift;
+    my $filename = shift;
+    my $path = shift;
+
+    my $cfg = Config::Any->load_files({
+        files => [ $filename ],
+        use_ext => 1,
+        flatten_to_hash => 1,
+    });
+
+    $cfg = $cfg->{$filename};
+
+    visit $cfg, sub {
+        my ($key, $valref) = @_;
+        return if ref $$valref;
+        $$valref =~ s/__ENV\((.+?)\)__/$ENV{$1}/g;
+    };
+
+    use Data::Dump; dd $cfg;
+
+    if ($path) {
+        while (my ($key) = $path =~ m{/(.+)?(/|$)}gc) {
+            failure::fb11::hive::config->throw({
+                msg => "Path $path does not apply to file $filename"
+            }) unless exists $cfg->{$key};
+
+            $cfg = $cfg->{$key};
+        }
+    }
+
+    $class->init($cfg);
+}
+
+=head2 init
+
+B<Arguments>: C<$config>?
+
+Initialise all registered brains, then call L</check>. You may pass a hashref to
+register brains via config. See L</BUILDING A HIVE> and L</CONFIGURATION>.
+
+Note you do not have to call this first. You may set up as many brains as you
+like in code before you call this.
+
+Dies (as a result of L</check>) if the hive is inconsistent at the end of it.
+
+=cut
+
+sub init {
+    my $class = shift;
+    my $config = shift;
+    my @problems;
+
+    if ($INIT) {
+        failure::fb11::hive::init->throw({
+            msg => "Refusing to init a second time!"
+        });
+    }
+
+    if ($config) {
+        if ($config->{brains}) {
+            for my $b_conf ($config->{brains}->@*) {
+                try {
+                    $b_conf->{class} // failure::fb11::hive::config->throw({
+                        msg => "Brain configured without class parameter",
+                        payload => {
+                            specific_config => $b_conf
+                        }
+                    });
+
+                    use_package_optimistically($b_conf->{class});
+                    my $b = $b_conf->{class}->new($b_conf->{constructor} // ());
+                    $class->register_brain($b);
+                }
+                catch {
+                    if ($_->$_isa('failure::fb11::hive')) {
+                        push @problems, $_
+                    }
+                    else {
+                        die $_
+                    }
+                }
+            }
+        }
+        if ($config->{services}) {
+            for my $s_name (keys $config->{services}->%*) {
+                my $s_conf = $config->{services}->{$s_name};
+                try {
+                    $class->set_service($s_name, $s_conf->{brain});
+                }
+                catch {
+                    if ($_->$_isa('failure::fb11::hive')) {
+                        push @problems, $_
+                    }
+                    else {
+                        die $_
+                    }
+                }
+            }
+        }
+    }
+    $class->_init_brain($_) for $class->_brain_names;
+    # TODO do it in dependency order
+    # Can we do that? We don't check dependencies are sane until check()
+
+    $class->check(@problems);
+    $INIT = 1;
+}
+
 =head2 register_brain
 
 Call this to register a brain by its short_name as a component, and by all its
@@ -127,7 +254,8 @@ sub register_brain {
                 short_name => $sn,
                 brain => $brain,
                 existing => $conflict
-            }
+            },
+            trace => failure->croak_trace,
         })
     }
     $brains{$brain->short_name} = $brain;
@@ -151,15 +279,17 @@ sub set_service {
     my $service_name = shift;
     my $brain_name = shift;
 
+    say "Registering $brain_name as $service_name";
     # FIXME - Allow provider to be changed at runtime?
     if (exists $services{$service_name}) {
         failure::fb11::hive::conflict::service->throw({
-            msg => "Service $service_name already taken by brain " . ref $services{$service_name},
+            msg => "Service $service_name already taken by brain " . $services{$service_name},
             payload => {
                 service => $service_name,
                 brain => $brain_name,
                 existing => $services{$service_name}
-            }
+            },
+            trace => failure->croak_trace
         })
     }
     unless ($class->_brain($brain_name)->can_provide_service($service_name)) {
@@ -306,81 +436,6 @@ sub fancy_hat {
     }
 
     $class->__hat($brain, $hat);
-}
-
-=head2 init
-
-B<Arguments>: C<$config>?
-
-Initialise all registered brains, then call L</check>. You may pass a hashref to
-register brains via config. See L</BUILDING A HIVE> and L</CONFIGURATION>.
-
-Note you do not have to call this first. You may set up as many brains as you
-like in code before you call this.
-
-Dies (as a result of L</check>) if the hive is inconsistent at the end of it.
-
-=cut
-
-sub init {
-    my $class = shift;
-    my $config = shift;
-    my @problems;
-
-    if ($INIT) {
-        failure::fb11::hive::init->throw({
-            msg => "Refusing to init a second time!"
-        });
-    }
-
-    if ($config) {
-        if ($config->{brains}) {
-            for my $b_conf ($config->{brains}->@*) {
-                try {
-                    $b_conf->{class} // failure::fb11::hive::config->throw({
-                        msg => "Brain configured without class parameter",
-                        payload => {
-                            specific_config => $b_conf
-                        }
-                    });
-
-                    use_package_optimistically($b_conf->{class});
-                    my $b = $b_conf->{class}->new($b_conf->{constructor} // ());
-                    $class->register_brain($b);
-                }
-                catch {
-                    if ($_->$_isa('failure::fb11::hive')) {
-                        push @problems, $_
-                    }
-                    else {
-                        die $_
-                    }
-                }
-            }
-        }
-        if ($config->{services}) {
-            for my $s_name (keys $config->{services}->%*) {
-                my $s_conf = $config->{services}->{$s_name};
-                try {
-                    $class->set_service($s_name, $s_conf->{brain});
-                }
-                catch {
-                    if ($_->$_isa('failure::fb11::hive')) {
-                        push @problems, $_
-                    }
-                    else {
-                        die $_
-                    }
-                }
-            }
-        }
-    }
-    $class->_init_brain($_) for $class->_brain_names;
-    # TODO do it in dependency order
-    # Can we do that? We don't check dependencies are sane until check()
-
-    $class->check(@problems);
-    $INIT = 1;
 }
 
 =head2 check
