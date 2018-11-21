@@ -201,16 +201,15 @@ override _build_config => sub
 
     $config->{'View::PDF::Reuse'}->{'INCLUDE_PATH'} = $pdf_path;
 
-    # .. add template dir into the config for View::FB11TT...
-    my $inc_path = $config->{'View::FB11TT'}->{'INCLUDE_PATH'};
-    push @$inc_path, map "$_/root/templates", $path, @apppath;
-
-    # Configure View::FB11TT...
+    # Make sure the app's paths are included before FB11's paths, so templates
+    # can be overridden
     my $tt_dirs = $config->{'View::FB11TT'}->{'INCLUDE_PATH'};
-    # ...(add to include_path)..
-    push @$tt_dirs, map "$_/root/formfu", $path, @apppath;
-    push @$tt_dirs, $self->inherited_path_to('root','templates'); # don't know what this achieves
-    push @$tt_dirs, map "$_/root/templates", $path, @apppath;
+    for (@apppath, $path) {
+        push @$tt_dirs, "$_/root/templates";
+        push @$tt_dirs, "$_/root/formfu";
+    }
+    # supports legacy /root rather than /lib/auto/root
+    push @$tt_dirs, $self->inherited_path_to('root','templates');
 
     $config->{'View::FB11TT'}->{'INCLUDE_PATH'}         = $tt_dirs;
     $config->{'View::FB11TT'}->{'TEMPLATE_EXTENSION'}   = '.tt';
