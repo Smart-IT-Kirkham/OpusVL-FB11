@@ -229,7 +229,6 @@ override _build_config => sub
 
     $config->{'Plugin::Authentication'} =
     {
-        %{ $config->{'Plugin::Authentication'} || {} },
         default_realm   => 'fb11',
         fb11          => 
         {
@@ -246,6 +245,7 @@ override _build_config => sub
                role_field         => 'role',
             }
         },
+        %{ $config->{'Plugin::Authentication'} || {} },
     };
 
     $config->{'View::Email'} =
