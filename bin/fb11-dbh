@@ -84,6 +84,20 @@ sub connection_params () {
         return @$info if ref $info eq 'ARRAY';
         return $info;
     }
+    elsif ($option{'use-environment'}) {
+        my $dsn = 'dbi:%s:dbname=%s;host=%s';
+        my $driver = $ENV{FB11_DB_DRIVER} || 'Pg';
+        my $dbname = $ENV{FB11_DB_NAME} || 'fb11';
+        my $dbhost = $ENV{FB11_DB_HOST} || 'db';
+
+        $dsn = sprintf $dsn, $driver, $dbname, $dbhost;
+        say "Generated DSN $dsn";
+        return {
+            dsn => $dsn,
+            user => $ENV{FB11_DB_USER},
+            password => $ENV{FB11_DB_PASSWORD},
+        }
+    }
     else {
         return {
             dsn => $option{'connection-info'} // '',
@@ -321,8 +335,9 @@ sub _ignoring_existing_files(&) {
 =head1 SYNOPSIS
 
     fb11-dbh [--help|-h|-?] [--target|-t VERSION] [--connection-info|-c DSN]
-        [--force|-f] [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD]
-        [--verbose|-v] SCHEMA COMMAND
+        [--catalyst-config|-C SECTION] [--use-environment|-E] [--force|-f]
+        [--prepare|--ddl] [--user|-u USER] [--password|-p PASSWORD] [--verbose|-v]
+        SCHEMA COMMAND
 
 
 =head1 DESCRIPTION
@@ -538,6 +553,15 @@ The special target 'version' is used to prepare the version table files.
 
 Username with which to connect to the database. Not used if not provided.
 
+=head2 --use-environment
+
+=head2 -E
+
+Uses the environment variables C<FB11_DB_DRIVER> (C<Pg>), C<FB11_DB_USER>
+(C<fb11>), and C<FB11_DB_HOST> (C<db>) to construct the DSN. (Parens indicate
+defaults.) Then uses C<FB11_DB_USER> and C<FB11_DB_PASSWORD> to connect to that
+(no defaults).
+
 =head2 --use-moduledir
 
 =head2 --no-use-moduledir
@@ -621,7 +645,5 @@ straight up run them.
 =over
 
 =item Ask DeploymentHandler to get the versioning scheme, rather than assuming int.
-
-=item Use environment variables for stuff
 
 =back
