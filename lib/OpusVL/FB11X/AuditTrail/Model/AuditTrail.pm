@@ -12,6 +12,10 @@ __PACKAGE__->config(
     traits => 'SchemaProxy',
 );
 
+# FIXME
+# This brain is inside out. It is allowing Catalyst to construct it rather than
+# taking its construction info from the hive. Correctly, this model should be a
+# thin interface into the object constructed by the hive.
 has short_name => (
     is => 'rw',
     lazy => 1,
