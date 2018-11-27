@@ -2,6 +2,7 @@ package OpusVL::FB11X::AuditTrail::Model::AuditTrail;
 
 use strict;
 use warnings;
+use v5.14;
 use Moose;
 BEGIN {
     extends 'Catalyst::Model::DBIC::Schema';
@@ -38,6 +39,16 @@ sub provided_services {
 }
 
 with 'OpusVL::FB11::Role::Brain';
+
+after BUILD => sub {
+    my $self = shift;
+    # FIXME Something calls this twice
+    # But if I try to turn the Schema itself into a brain, everything goes pete
+    # tong. I don't have time to debug that problem right now.
+    state $done;
+    OpusVL::FB11::Hive->register_brain($self) unless $done;
+    $done = 1;
+};
 
 =head1 COPYRIGHT and LICENSE
 
