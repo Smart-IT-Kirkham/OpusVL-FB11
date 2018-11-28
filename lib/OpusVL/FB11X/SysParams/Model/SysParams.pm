@@ -3,19 +3,25 @@ package OpusVL::FB11X::SysParams::Model::SysParams;
 use strict;
 use warnings;
 
+use v5.14;
 use Moose;
 use OpusVL::FB11X::SysParams::Brain;
+use OpusVL::FB11::Hive;
 extends 'Catalyst::Model::DBIC::Schema';
 
 __PACKAGE__->config(
     schema_class => 'OpusVL::SysParams::Schema',
 );
 
-# DEBT : This constructs the Brain and forgets about it, because it registers
-# itself. This is here until we get the Hive to find its own brains based on
-# config.
+# DEBT: We add the brain to the hive because we have to let Catalyst construct
+# this model. We need to invert this so that the Catalyst model simply returns
+# the service (and then stop using the Catalyst model in the first place)
 after BUILD => sub {
-    OpusVL::FB11X::SysParams::Brain->new({ _schema => $_[0]->schema })
+    state $done;
+    OpusVL::FB11::Hive->register_brain(
+        OpusVL::FB11X::SysParams::Brain->new({ _schema => $_[0]->schema })
+    ) unless $done;
+    $done = 1;
 };
 
 =head1 COPYRIGHT and LICENSE
