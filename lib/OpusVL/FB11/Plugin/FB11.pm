@@ -20,7 +20,7 @@ package OpusVL::FB11::Plugin::FB11;
 ###########################################################################################################################
 use Moose;
 use namespace::autoclean;
-use 5.010;
+use v5.24;
 use Tree::Simple;
 use Tree::Simple::Visitor::FindByPath;
 use Data::Munge qw/elem/;
@@ -352,6 +352,12 @@ sub _build_fb11_actiontree
             if ( my $allowed_roles = $c->_allowed_roles_from_db( $action_path ) )
             {
                 $fb11_action_object->access_only( $allowed_roles );
+            }
+
+            if (my $controller_acl = $cont->fb11_acl) {
+                if (my $roles = $controller_acl->{$name}) {
+                    push $fb11_action_object->{access_only}->@*, @$roles;
+                }
             }
 
             # If this is deeper than a top level action_path...

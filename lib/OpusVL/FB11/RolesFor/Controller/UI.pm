@@ -57,16 +57,9 @@ package OpusVL::FB11::RolesFor::Controller::UI;
 
 =cut
 
-##################################################################################################################################
-# use lines.
-##################################################################################################################################
 use strict;
 use Moose::Role;
 use List::UtilsBy 'sort_by';
-
-##################################################################################################################################
-# moose calls.
-##################################################################################################################################
 
 has fb11                      => ( is => 'ro',    isa => 'Int',                       default => 1 );
 has fb11_name                 => ( is => 'rw',    isa => 'Str',                       default => 'FB11' );
@@ -76,6 +69,7 @@ has navigation_items_merged     => ( is => 'rw',    isa => 'Bool', default => 0 
 has fb11_method_group_order   => ( is => 'rw',    isa => 'Int', default => 0);
 has fb11_method_group         => ( is => 'rw',    isa => 'Str', default => '');
 has fb11_order                => ( is => 'rw',    isa => 'Int', default => 0);
+has fb11_acl                  => ( is => 'rw', isa => 'HashRef', default => sub {+{}} );
 
 has _default_order              => ( is => 'rw',    isa => 'Int', default => 0);
 
