@@ -6,8 +6,17 @@
       <a id="fb11-admin-menu" href="#" data-toggle="dropdown" aria-haspopup="true" role="button" aria-expanded="false"><i class="fa fa-cog"></i></a>
       <ul class="dropdown-menu" role="menu" aria-labelledby="fb11-admin-menu">
         <li><a href="[% c.uri_for( c.controller('FB11::User').action_for('change_password') ) %]"><i class="fa fa-lock"></i> Change Password</a></li>
-        <li><a href="[% c.uri_for( c.controller('FB11::Admin::Access').action_for('index') ) %]"><i class="fa fa-user"></i> Roles</a></li>
-        <li><a href="[% c.uri_for( c.controller('FB11::Admin::Users').action_for('index') ) %]"><i class="fa fa-users"></i> Users</a></li>
+        [% href = c.uri_for(
+        c.controller('FB11::Admin::Access').action_for('index') ).as_string %]
+        [% IF c.can_access(href) %]
+          <li><a href="href"><i class="fa fa-user"></i> Roles</a></li>
+        [% END %]
+
+        [% href = c.uri_for(
+        c.controller('FB11::Admin::Users').action_for('index') ).as_string %]
+        [% IF c.can_access(href) %]
+          <li><a href="[% %]"><i class="fa fa-users"></i> Users</a></li>
+        [% END %]
       </ul>
       </span>
       <a href="#"><i class="fa fa-question-circle"></i></a>
