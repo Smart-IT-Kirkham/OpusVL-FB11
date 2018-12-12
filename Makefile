@@ -1,6 +1,8 @@
 .PHONY: clean dist docker
 
 version = $(shell dzil distversion)
+rcversion = $(shell dzil distversion --rc)
+lastrcversion = $(shell dzil distversion --rc | perl -lpe 's/(\d)+$$/$$1-1/e')
 LIBFILES   = $(shell git ls-files lib)
 BINFILES   = $(shell git ls-files bin script)
 TFILES     = $(shell git ls-files t)
@@ -19,16 +21,19 @@ docker: dist
 		--build-arg version=`dzil distversion` \
 		--build-arg gitrev="`set -x ; git rev-parse HEAD ; git status ; git diff`" \
 		-t quay.io/opusvl/fb11:latest .
+rc: docker
+	docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:v$(rcversion)
+	git tag v$(rcversion)
 ifeq ($(PUSH), 1)
-	docker push quay.io/opusvl/fb11:latest
+	docker push quay.io/opusvl/fb11:v$(rcversion)
 endif
 release:
 	- @echo "If this fails, make sure you pushed the last image you built"
-	docker pull quay.io/opusvl/fb11:latest
-	@[ `docker run --rm -u root quay.io/opusvl/fb11:latest head -n1 /root/OpusVL-FB11-gitrev` = `git rev-parse HEAD` ] \
+	docker pull quay.io/opusvl/fb11:v$(lastrcversion)
+	@[ `docker run --rm -u root quay.io/opusvl/fb11:v$(lastrcversion) head -n1 /root/OpusVL-FB11-gitrev` = `git rev-parse HEAD` ] \
 		|| echo "Ensure your git repository is on the commit from which the latest image was built (or rebuild and retest)."
 	dzil release
-	- docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:$(version)
+	- docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:v$(version)
 ifeq ($(PUSH), 1)
-	- docker push quay.io/opusvl/fb11:$(version)
+	- docker push quay.io/opusvl/fb11:v$(version)
 endif
