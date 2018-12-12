@@ -24,6 +24,9 @@
                         hide_sidebar = 1;
                     END 
                 %]
+                <div class="fb11-header">
+                  [% TRY; INCLUDE header.tt; CATCH; END %]
+                </div>
 
                 <div class="fb11-main-content 
                     [% IF hide_sidebar %]col-sm-12[% ELSE %]col-md-9[% END %]
