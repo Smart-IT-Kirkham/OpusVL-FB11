@@ -4,27 +4,7 @@ use strict;
 use warnings;
 use v5.24;
 
-use Carp;
-use Class::Load qw/load_class/;
-use Config::Any;
-use Data::Munge qw/elem/;
-use Data::Visitor::Tiny;
-use List::Gather;
-use Module::Runtime 'use_package_optimistically';
-use Safe::Isa;
-use Scalar::Util qw/refaddr/;
-use Try::Tiny;
-
-use failures qw/
-    fb11::hive::no_brain
-    fb11::hive::no_service
-    fb11::hive::bad_brain
-    fb11::hive::conflict::service
-    fb11::hive::conflict::brain
-    fb11::hive::config
-    fb11::hive::check
-    fb11::hive::init
-/;
+use OpusVL::FB11::Hive::Instance;
 
 # ABSTRACT: Registers units of behaviour so they can communicate
 
@@ -83,75 +63,44 @@ several brains you wish to use to provide a given service.
 
     OpusVL::FB11::Hive->set_service('some_service', 'my_brain_name');
 
-=cut
-
-my %brains;
-my %providers;
-my %hat_providers;
-my %services;
-my %hats;
-my %brain_initialised;
-
-=head1 PACKAGE VARIABLES
-
-=head2 C<$INIT>
-
-This will be set to a true value when L</init> has been run. This prevents
-accidental re-initialisation of brains that have already been initialised, and
-activates more stringent checks in certain methods.
-
-=cut
-
-our $INIT = 0;
-
 =head1 CLASS METHODS
 
-=head2 load_config
+=head2 instance
 
-B<Arguments:> C<$filename>, C<$path>?
+Sets or returns the singleton instance that backs the behaviour.
 
-Opens the file C<$filename> with L<Config::Any> so you can use any format,
-provided you give it a suitable extension, then calls L</init> with the
-contents.
-
-With C<$path> you can specify a subsection of the config hash, using a simple
-directory-like format: C</key1/key2/...>
-
-This supports the Catalyst-style placeholder C<__ENV(...)__> to load environment
-variables.
+Creates a new instance if one has not been created.
 
 =cut
 
-sub load_config {
+sub instance {
     my $class = shift;
-    my $filename = shift;
-    my $path = shift;
+    my $i = shift;
 
-    my $cfg = Config::Any->load_files({
-        files => [ $filename ],
-        use_ext => 1,
-        flatten_to_hash => 1,
-    });
+    state $instance = OpusVL::FB11::Hive::Instance->new;;
 
-    $cfg = $cfg->{$filename};
+    $instance = $i if $i;
+    $instance;
+}
 
-    visit $cfg, sub {
-        my ($key, $valref) = @_;
-        return if ref $$valref;
-        $$valref =~ s/__ENV\((.+?)\)__/$ENV{$1}/g;
-    };
+=head2 configure
 
-    if ($path) {
-        while (my ($key) = $path =~ m{/(.+)?(/|$)}gc) {
-            failure::fb11::hive::config->throw({
-                msg => "Path $path does not apply to file $filename"
-            }) unless exists $cfg->{$key};
+B<Arguments>: C<$config>
 
-            $cfg = $cfg->{$key};
-        }
-    }
+Configures the hive with the given hashref. See L</BUILDING A HIVE> and
+L</CONFIGURATION>.
 
-    $class->init($cfg);
+You may run this multiple times with different configs, but they mustn't have
+collisions.
+
+=cut
+
+sub configure {
+    my $class = shift;
+    my $config = shift;
+
+    $class->instance($class->instance->configured($config));
+    $class;
 }
 
 =head2 init
@@ -170,63 +119,9 @@ Dies (as a result of L</check>) if the hive is inconsistent at the end of it.
 
 sub init {
     my $class = shift;
-    my $config = shift;
-    my @problems;
-
-    if ($INIT) {
-        failure::fb11::hive::init->throw({
-            msg => "Refusing to init a second time!"
-        });
-    }
-
-    if ($config) {
-        if ($config->{brains}) {
-            for my $b_conf ($config->{brains}->@*) {
-                try {
-                    $b_conf->{class} // failure::fb11::hive::config->throw({
-                        msg => "Brain configured without class parameter",
-                        payload => {
-                            specific_config => $b_conf
-                        }
-                    });
-
-                    use_package_optimistically($b_conf->{class});
-                    my $b = $b_conf->{class}->new($b_conf->{constructor} // ());
-                    $class->register_brain($b);
-                }
-                catch {
-                    if ($_->$_isa('failure::fb11::hive')) {
-                        push @problems, $_
-                    }
-                    else {
-                        die $_
-                    }
-                }
-            }
-        }
-        if ($config->{services}) {
-            for my $s_name (keys $config->{services}->%*) {
-                my $s_conf = $config->{services}->{$s_name};
-                try {
-                    $class->set_service($s_name, $s_conf->{brain});
-                }
-                catch {
-                    if ($_->$_isa('failure::fb11::hive')) {
-                        push @problems, $_
-                    }
-                    else {
-                        die $_
-                    }
-                }
-            }
-        }
-    }
-    $class->_init_brain($_) for $class->_brain_names;
-    # TODO do it in dependency order
-    # Can we do that? We don't check dependencies are sane until check()
-
-    $class->check(@problems);
-    $INIT = 1;
+    $DB::single=1;
+    $class->instance($class->instance->initialised);
+    $class;
 }
 
 =head2 register_brain
@@ -242,24 +137,8 @@ sub register_brain {
     my $class = shift;
     my $brain = shift;
 
-    my $sn = $brain->short_name;
-    my $conflict = $brains{$sn};
-
-    if ($conflict) {
-        failure::fb11::hive::conflict::brain->throw({
-            msg => "Brain name $sn is already taken by brain " . ref $conflict,
-            payload => {
-                short_name => $sn,
-                brain => $brain,
-                existing => $conflict
-            },
-            trace => failure->croak_trace,
-        })
-    }
-    $brains{$brain->short_name} = $brain;
-
-    push $providers{$_}->@*, $brain for $brain->provided_services;
-    push $hat_providers{$_}->@*, $brain for $brain->_hat_names;
+    $class->instance($class->instance->with_brain_registered($brain));
+    $class;
 }
 
 =head2 set_service
@@ -274,53 +153,8 @@ identified by C<$brain_name>.
 
 sub set_service {
     my $class = shift;
-    my $service_name = shift;
-    my $brain_name = shift;
-
-    say "Registering $brain_name as $service_name";
-    # FIXME - Allow provider to be changed at runtime?
-    if (exists $services{$service_name}) {
-        failure::fb11::hive::conflict::service->throw({
-            msg => "Service $service_name already taken by brain " . $services{$service_name},
-            payload => {
-                service => $service_name,
-                brain => $brain_name,
-                existing => $services{$service_name}
-            },
-            trace => failure->croak_trace
-        })
-    }
-    unless ($class->_brain($brain_name)->can_provide_service($service_name)) {
-        failure::fb11::hive::bad_brain->throw({
-            msg => "Brain registered as $brain_name does not provide service $service_name",
-            payload => {
-                brain_name => $brain_name,
-                brain => $class->_brain($brain_name),
-                service => $service_name
-            }
-        })
-    }
-
-    $services{$service_name} = $brain_name;
-}
-
-sub _brain {
-    my $class = shift;
-    my $name = shift;
-
-    failure::fb11::hive::no_brain->throw({
-        msg => "No brain registered under the name $name",
-        payload => {
-            brain_name => $name
-        }
-    })
-        unless $brains{$name};
-
-    return $brains{$name};
-}
-
-sub _brain_names {
-    return keys %brains;
+    $class->instance($class->instance->with_service_set(@_));
+    $class;
 }
 
 =head2 hat
@@ -328,7 +162,7 @@ sub _brain_names {
 B<Arguments>: C<$brain>, C<$hat_name>
 
 Looks up the brain C<$brain> and returns its hat C<$hat_name>. Dies if C<$brain>
-is not registered.
+is not registered, or isn't wearing that hat.
 
 =cut
 
@@ -337,23 +171,7 @@ sub hat {
     my $brain = shift;
     my $hat_name = shift;
 
-    return $class->__hat($brain, $hat_name);
-}
-
-sub __hat {
-    my $class = shift;
-    my $brain = shift;
-    my $hat_name = shift;
-
-    my $brain_name = ref($brain) ? $brain->short_name : $brain;
-
-    my $cached = $class->__cached_hat($brain_name, $hat_name);
-    return $cached if $cached;
-
-    my $hat_obj = $class->_brain($brain_name)->_construct_hat($hat_name);
-    $class->__cache_hat($brain_name, $hat_name, $hat_obj);
-
-    return $hat_obj;
+    return $class->instance->hat($brain, $hat_name);
 }
 
 =head2 hats
@@ -368,17 +186,15 @@ instantiated hats.
 =cut
 
 sub hats {
-    my $self = shift;
+    my $class = shift;
     my $hat_name = shift;
 
-    return map { $self->__hat($_, $hat_name) } $hat_providers{$hat_name}->@*;
+    return $class->instance->hats($hat_name);
 }
 
 =head2 service
 
 Returns the hat for the given service, as registered with L<set_service>.
-
-B<TODO>: If only one brain provides a service, should we just pick it?
 
 =cut
 
@@ -386,21 +202,7 @@ sub service {
     my $class = shift;
     my $service_name = shift;
 
-    my $brain = $services{$service_name};
-
-    failure::fb11::hive::no_service->throw({
-        msg => "Nothing provides the service $service_name",
-        payload => {
-            service => $service_name
-        }
-    })
-        unless $brain;
-
-    my $hat = $class->__hat($brain, $service_name);
-
-    # TODO look for a standard interface (role) for that service name and, if it exists, check the hat consumes it
-
-    return $hat;
+    $class->instance->service($service_name)
 }
 
 =head2 fancy_hat
@@ -433,7 +235,7 @@ sub fancy_hat {
         $hat .= ('::' . $subhat);
     }
 
-    $class->__hat($brain, $hat);
+    $class->instance->hat($brain, $hat);
 }
 
 =head2 check
@@ -452,89 +254,9 @@ we find as many errors as we can before we die with a single exception.
 
 sub check {
     my $class = shift;
-    my @problems = @_;
-
-    for my $brain_name ($class->_brain_names) {
-        my $brain = $brains{$brain_name};
-
-        my $deps = $brain->dependencies;
-        for my $dep_name (( $deps->{brains} // [] )->@*) {
-            try {
-                $class->_brain($dep_name);
-            }
-            catch {
-                if ($_->$_isa('failure::fb11::hive::no_brain')) {
-                    $_->payload( {
-                        brain => $brain,
-                        dependency => $dep_name
-                    });
-                    push @problems, $_;
-                }
-                else {
-                    die $_;
-                }
-            };
-        }
-
-        for my $service (( $deps->{services} // [] )->@*) {
-            try {
-                $class->service($service)
-            }
-            catch {
-                if ($_->$_isa('failure::fb11::hive::no_service')) {
-                    $_->payload({
-                        brain => $brain,
-                        dependency => $service
-                    });
-                    push @problems, $_;
-                }
-            }
-        }
-    }
-
-    if (@problems) {
-        __reset();
-        my $all_msgs = join "\n", map $_->msg, @problems;
-        failure::fb11::hive::check->throw({
-            msg => "Hive check failed!\n$all_msgs",
-            payload => \@problems
-        });
-    }
-}
-
-sub _init_brain {
-    my $class = shift;
-    my $brain_name = shift;
-    # TODO should we track whether brains have been initialised, or should the brains themselves?
-    #      Advantage of this doing it is the brains don't each need to keep track of whether they're inited, and
-    #      we won't need a confusing pair of "init" and "_init" methods on the brains themselves to keep it active.
-    #      Advantage of brains doing it is they can prevent accidental extra calls from elsewhere than the hive.
-    return if $brain_initialised{$brain_name};
-    $class->_brain($_)->init;
-    $brain_initialised{$brain_name} = 1;
-}
-
-# reset everything. TODO - if we use a singleton we can just destroy the object
-sub __reset {
-    %brains = %providers = %hat_providers = %services = %hats = %brain_initialised = ();
-    $INIT = 0;
-}
-
-sub __cache_hat {
-    my $class = shift;
-    my $brain = shift;
-    my $hat_name = shift;
-    my $hat = shift;
-
-    $hats{$brain}->{$hat_name} = $hat;
-}
-
-sub __cached_hat {
-    my $class = shift;
-    my $brain = shift;
-    my $hat_name = shift;
-
-    $hats{$brain}->{$hat_name};
+    # Check doesn't mutate so we don't need to overwrite the instance.
+    $class->instance->check;
+    $class;
 }
 
 1;

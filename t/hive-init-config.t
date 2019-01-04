@@ -6,6 +6,7 @@ use Data::Dump 'pp';
 use Test::Most 'no_plan';
 use YAML::XS;
 use_ok 'OpusVL::FB11::Hive';
+use_ok 'OpusVL::FB11::Hive::Instance';
 
 my $config = Load do { local $/; <DATA> };
 
@@ -15,21 +16,21 @@ subtest "Invalid config" => sub {
     # The only way the config itself can be invalid is if it uses a brain to
     # provide a service the brain doesn't say it provides.
     my $c = $config->{test1}->{invalid};
-    throws_ok { $hive->init($c) } "failure::fb11::hive::check";
+    throws_ok { $hive->configure($c)->init } "failure::fb11::hive::config";
     my $exception = $@;
 
-    is scalar $exception->payload->@*, 1, "One check error";
-    cmp_deeply $exception->payload->[0], Isa('failure::fb11::hive::bad_brain'), "Wrong brain for service";
+    is scalar $exception->payload->{errors}->@*, 1, "One check error";
+    cmp_deeply $exception->payload->{errors}->[0], Isa('failure::fb11::hive::bad_brain'), "Wrong brain for service";
 
     $c = $config->{test1}->{valid};
-    lives_ok { $hive->init($c); } "Now valid.";
-    throws_ok { $hive->init($c); } "failure::fb11::hive::init", "Cannot init twice";
-    $hive->__reset;
+    lives_ok { $hive->configure($c)->init } "Now valid.";
+    throws_ok { $hive->init } "failure::fb11::hive::init", "Cannot init twice";
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
 subtest "Invalid deps - brains" => sub {
     my $c = $config->{test2}->{invalid};
-    throws_ok { $hive->init($c) } "failure::fb11::hive::check";
+    throws_ok { $hive->configure($c)->init } "failure::fb11::hive::check";
     my $exception = $@;
 
     is scalar $exception->payload->@*, 1, "One check error";
@@ -41,12 +42,13 @@ subtest "Invalid deps - brains" => sub {
     }, "Error payload has useful info";
 
     $c = $config->{test2}->{valid};
-    lives_ok { $hive->init($c); $hive->__reset } "Now valid.";
+    lives_ok { $hive->configure($c)->init } "Now valid.";
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
 subtest "Invalid deps - services" => sub {
     my $c = $config->{test3}->{invalid};
-    throws_ok { $hive->init($c) } "failure::fb11::hive::check";
+    throws_ok { $hive->configure($c)->init } "failure::fb11::hive::check";
     my $exception = $@;
 
     is scalar $exception->payload->@*, 1, "One check error";
@@ -58,12 +60,13 @@ subtest "Invalid deps - services" => sub {
     }, "Error payload has useful info";
 
     $c = $config->{test3}->{valid};
-    lives_ok { $hive->init($c); $hive->__reset } "Now valid.";
+    lives_ok { $hive->configure($c)->init; } "Now valid.";
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
 subtest "Invalid deps - both" => sub {
     my $c = $config->{test4}->{invalid};
-    throws_ok { $hive->init($c) } "failure::fb11::hive::check";
+    throws_ok { $hive->configure($c)->init } "failure::fb11::hive::check";
     my $exception = $@;
 
     is scalar $exception->payload->@*, 2, "Two check errors!!"
@@ -84,7 +87,8 @@ subtest "Invalid deps - both" => sub {
     }, "Error payload has useful info";
 
     $c = $config->{test4}->{valid};
-    lives_ok { $hive->init($c); $hive->__reset } "Now valid.";
+    lives_ok { $hive->configure($c)->init } "Now valid.";
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
 BEGIN {

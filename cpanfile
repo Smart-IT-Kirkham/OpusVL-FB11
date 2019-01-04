@@ -8,6 +8,7 @@ requires 'DateTime';
 requires 'DateTime::Format::Pg';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
 requires 'DBIx::Class::TimeStamp';
+requires 'Exporter::Easy';
 requires 'Getopt::Compact';
 requires 'Getopt::Long';
 requires 'failures';
