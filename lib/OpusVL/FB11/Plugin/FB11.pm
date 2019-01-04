@@ -354,6 +354,7 @@ sub _build_fb11_actiontree
                 $fb11_action_object->access_only( $allowed_roles );
             }
 
+            # TODO: _allowed_roles_from_config
             if (my $controller_acl = $cont->fb11_acl) {
                 if (my $roles = $controller_acl->{$name}) {
                     push $fb11_action_object->{access_only}->@*, @$roles;
