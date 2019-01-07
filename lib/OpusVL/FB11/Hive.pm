@@ -5,6 +5,11 @@ use warnings;
 use v5.24;
 
 use OpusVL::FB11::Hive::Instance;
+use OpusVL::FB11::Hive::Config;
+use Safe::Isa;
+use failures qw/
+    type
+/;
 
 # ABSTRACT: Registers units of behaviour so they can communicate
 
@@ -77,10 +82,45 @@ sub instance {
     my $class = shift;
     my $i = shift;
 
-    state $instance = OpusVL::FB11::Hive::Instance->new;;
+    state $instance = OpusVL::FB11::Hive::Instance->new;
 
     $instance = $i if $i;
     $instance;
+}
+
+=head2 transform
+
+B<Arguments>: C<< $f: Hive -> Hive >>
+
+Takes a Klingon subref, which will be passed the instance and returns a new one;
+replaces the current instance with it.
+
+    OpusVL::FB11::Hive->transform( $transform_function );
+
+Recall that all "mutators" on L<OpusVL::FB11::Hive::Instance> return clones for
+you, so creating this subref is easy if you stick to the public interface.
+
+A Klingon subref follows the mantra "Succeed or die. Do not return in failure."
+
+May throw a C<failure::type> if the subref did not return the same class or a
+subclass of the current hive.
+
+=cut
+
+sub transform {
+    my $class = shift;
+    my $f = shift;
+
+    $DB::single=$::break;
+    my $i = $class->instance;
+    my $m = $f->($i);
+
+    my $wanted = ref $i;
+    my $got = ref $m;
+    failure::type->throw("Expected $wanted, got $got") unless $m->$_isa($wanted);
+
+    $class->instance($m);
+    $class;
 }
 
 =head2 configure
@@ -88,7 +128,7 @@ sub instance {
 B<Arguments>: C<$config>
 
 Configures the hive with the given hashref. See L</BUILDING A HIVE> and
-L</CONFIGURATION>.
+L<OpusVL::FB11::Hive::Config/CONFIGURATION>.
 
 You may run this multiple times with different configs, but they mustn't have
 collisions.
@@ -99,7 +139,10 @@ sub configure {
     my $class = shift;
     my $config = shift;
 
-    $class->instance($class->instance->configured($config));
+    $class->transform(sub {
+        my $hive = shift;
+        OpusVL::FB11::Hive::Config::configure_hive($hive, $config);
+    });
     $class;
 }
 
@@ -119,7 +162,6 @@ Dies (as a result of L</check>) if the hive is inconsistent at the end of it.
 
 sub init {
     my $class = shift;
-    $DB::single=1;
     $class->instance($class->instance->initialised);
     $class;
 }
@@ -260,56 +302,6 @@ sub check {
 }
 
 1;
-
-=head1 CONFIGURATION
-
-You may configure the Hive up-front by providing a hashref to the L</init> method.
-
-    OpusVL::FB11::Hive->init( $config );
-
-This is the best way of setting up the hive, since it will run certain checks
-when complete. It will instantiate and initialise brains, register services, and
-then call L</check>. See also L</DEPENDENCIES>.
-
-The hashref looks something like this:
-
-    {
-        brains => [
-            {
-                # This class will be instantiated and registered for you
-                class => "OpusVL::FB11::Brain::SysParams",
-                # This will be passed to the constructor
-                constructor => {
-                    ...
-                }
-        ],
-        services => {
-            sysparams => {
-                # This is the short_name of the brain you want to provide this
-                # service.
-                brain => 'sysparams'
-            }
-        },
-    }
-
-=head2 Properties
-
-=head3 brains
-
-An array of brain configuration hashrefs. Each contains:
-
-B<class>: The class name of the brain
-
-B<constructor>: Hashref for the constructor of the brain.
-
-It is assumed your brain is a Moose object because of the Brain role, and
-therefore can be constructed by hashref. Behaviour otherwise is unsupported.
-
-=head3 services
-
-A hash of service names. The values are more hashrefs:
-
-B<brain>: The C<short_name> of the brain you want to use for this service.
 
 =head1 DEPENDENCIES
 

@@ -7,7 +7,6 @@ use Class::Load qw/load_class/;
 use Config::Any;
 use Data::Munge qw/elem/;
 use List::Gather;
-use Module::Runtime 'use_package_optimistically';
 use Safe::Isa;
 use Scalar::Util qw/refaddr/;
 use Try::Tiny;
@@ -133,91 +132,17 @@ sub _cloned {
     });
 }
 
-
-=head1 MUTATOR METHODS
+=head1 CONFIGURATOR METHODS
 
 All of these methods return a B<clone> of the invocant with the change made.
 
 Consuming code should be sure to destroy their original hive and replace it with
 the clone when using these methods.
 
-=head2 configured
-
-B<Arguments>: C<$config>
-
-Takes a hashref and returns a copy of the hive configured from that hashref. See
-L<OpusVL::FB11::Hive/CONFIGURATION>.
-
-Exceptions under the C<failure::fb11::hive> namespace will be collated. If any
-such exceptions are caught, a new exception is thrown of type
-C<failure::fb11::hive::config>, whose payload contains the C<config> hashref and
-the array of C<errors> produced.
-
-=cut
-
-sub configured {
-    my $clone = shift->_cloned;
-    my $config = shift;
-    my @problems;
-
-    if ($config->{brains}) {
-        for my $b_conf ($config->{brains}->@*) {
-            try {
-                $b_conf->{class} // failure::fb11::hive::config->throw({
-                    msg => "Brain configured without class parameter",
-                    payload => {
-                        specific_config => $b_conf
-                    }
-                });
-
-                use_package_optimistically($b_conf->{class});
-                my $br = $b_conf->{class}->new($b_conf->{constructor} // ());
-                $clone->_register_brain($br->short_name, $br);
-            }
-            catch {
-                if ($_->$_isa('failure::fb11::hive')) {
-                    push @problems, $_
-                }
-                else {
-                    die $_
-                }
-            }
-        }
-    }
-    if ($config->{services}) {
-        for my $s_name (keys $config->{services}->%*) {
-            my $s_conf = $config->{services}->{$s_name};
-            try {
-                $clone->_set_service($s_name, $s_conf->{brain});
-            }
-            catch {
-                if ($_->$_isa('failure::fb11::hive')) {
-                    push @problems, $_
-                }
-                else {
-                    die $_
-                }
-            }
-        }
-    }
-
-    if (@problems) {
-        my $all_msgs = join "\n", map $_->msg, @problems;
-        failure::fb11::hive::config->throw({
-            msg => "Errors while configuring Hive!\n$all_msgs",
-            payload => {
-                config => $config,
-                errors => \@problems
-            }
-        });
-    }
-
-    $clone;
-}
-
 =head2 initialised
 
-Returns a copy of the hive that has been initialised. This means it calls L<OpusVL::FB11::Role::Brain/init> on each brain.
+Returns a copy of the hive that has been initialised. This means it calls
+L<OpusVL::FB11::Role::Brain/init> on each brain.
 
 L</check> is called before brains are initialised, so the method may die as a
 result of that.
@@ -358,6 +283,8 @@ returns the invocant. If it returns, everything we're able to check is fine.
 Actually dies with a collection of errors, stored in an exception of type
 L<failure::fb11::hive::check>. The C<payload> of this exception is an arrayref
 of exceptions thrown during check time.
+
+See also L<OpusVL::FB11::Hive/DEPENDENCIES>.
 
 =cut
 
