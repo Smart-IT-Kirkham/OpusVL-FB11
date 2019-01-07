@@ -22,9 +22,12 @@ subtest "Invalid config" => sub {
     is scalar $exception->payload->{errors}->@*, 1, "One check error";
     cmp_deeply $exception->payload->{errors}->[0], Isa('failure::fb11::hive::bad_brain'), "Wrong brain for service";
 
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
+
     $c = $config->{test1}->{valid};
     lives_ok { $hive->configure($c)->init } "Now valid.";
     throws_ok { $hive->init } "failure::fb11::hive::init", "Cannot init twice";
+
     $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
@@ -41,8 +44,11 @@ subtest "Invalid deps - brains" => sub {
         dependency => 'TEST::brain2'
     }, "Error payload has useful info";
 
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
+
     $c = $config->{test2}->{valid};
     lives_ok { $hive->configure($c)->init } "Now valid.";
+
     $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
@@ -59,8 +65,11 @@ subtest "Invalid deps - services" => sub {
         dependency => 'TEST::service'
     }, "Error payload has useful info";
 
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
+
     $c = $config->{test3}->{valid};
     lives_ok { $hive->configure($c)->init; } "Now valid.";
+
     $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
@@ -86,8 +95,11 @@ subtest "Invalid deps - both" => sub {
         dependency => 'TEST::service'
     }, "Error payload has useful info";
 
+    $hive->instance(OpusVL::FB11::Hive::Instance->new);
+
     $c = $config->{test4}->{valid};
     lives_ok { $hive->configure($c)->init } "Now valid.";
+
     $hive->instance(OpusVL::FB11::Hive::Instance->new);
 };
 
