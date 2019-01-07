@@ -8,7 +8,7 @@ use Config::Any;
 use Data::Visitor::Tiny;
 use failures qw(
     fb11::util::load_config
-    )
+);
 
 our $VERSION="1";
 
