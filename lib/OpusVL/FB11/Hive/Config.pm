@@ -58,7 +58,6 @@ sub configure_hive {
                 $hive = $hive->with_brain_registered($br);
             }
             catch {
-                say $_;
                 if ($_->$_isa('failure::fb11::hive')) {
                     push @problems, $_
                 }
