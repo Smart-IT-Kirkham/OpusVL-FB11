@@ -57,8 +57,6 @@ really get around to creating a new DB version where it is not.
 
 Either 'enabled' or 'disabled'.
 
-FIXME: The DB default is 'active', which we need a new DB version to change.
-
 =cut
 
 __PACKAGE__->add_columns(
@@ -89,7 +87,7 @@ __PACKAGE__->add_columns(
     },
     status => {
         data_type => "text",
-        default_value => "active", #FIXME
+        default_value => "enabled",
         is_nullable => 0
     },
     last_login => {
