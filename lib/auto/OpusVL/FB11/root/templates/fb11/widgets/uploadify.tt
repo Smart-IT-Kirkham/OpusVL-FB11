@@ -1,5 +1,7 @@
-<form action="[% action %]" class="dropzone" id="new-asset-upload"
-  >
+<form action="[% action %]" class="dropzone"
+  id="new-asset-upload"
+  method="post"
+>
   <div class="fallback">
     <input type="file" name="file" multiple>
   </div>
