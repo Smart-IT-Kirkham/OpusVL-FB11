@@ -27,8 +27,6 @@ if ($ENV{DEV_MODE}) {
     }
 }
 
-exec @ARGV or die $! if @ARGV;
-
 # Read default environment info from an /apps.yml
 # Makes app selection easier for users of our container without them having to know the ins and outs
 # of everything that must be altered together.  e.g. PSGI and CATALYST_CONFIG usually vary together.
@@ -52,6 +50,8 @@ if (my $appname = $ENV{FB11_APP}) {
         $ENV{$_} ||= $environment->{$_};
     }
 }
+
+exec @ARGV or die $! if @ARGV;
 
 $ENV{PSGI} ||= '/opt/perl5/bin/opusvl_fb11website.psgi';  # TODO do we want this now we have apps thing?
 
