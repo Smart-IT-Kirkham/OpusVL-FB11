@@ -30,11 +30,12 @@ if ($ENV{DEV_MODE}) {
 # Read default environment info from an /apps.yml
 # Makes app selection easier for users of our container without them having to know the ins and outs
 # of everything that must be altered together.  e.g. PSGI and CATALYST_CONFIG usually vary together.
-if (($ENV{FB11_APPFILE} or -e "/apps.yml") and not $ENV{FB11_APP}) {
-    die "APPFILE specified or /apps.yml is present but you have not specified FB11_APP";
-}
 if (my $appname = $ENV{FB11_APP}) {
     $ENV{FB11_APPFILE} ||= '/apps.yml';
+
+    die "FB11_APP was set but $ENV{FB11_APPFILE} does not exist"
+        unless -e $ENV{FB11_APPFILE};
+
     say STDERR "Apps file: $ENV{FB11_APPFILE}";
     say STDERR "Application selection: FB11_APP=$appname";
 
@@ -53,7 +54,18 @@ if (my $appname = $ENV{FB11_APP}) {
 
 exec @ARGV or die $! if @ARGV;
 
-$ENV{PSGI} ||= '/opt/perl5/bin/opusvl_fb11website.psgi';  # TODO do we want this now we have apps thing?
+if (not $ENV{PSGI}) {
+    my $error = "No PSGI was ever set.";
+
+    if (-e $ENV{FB11_APPFILE}) {
+        my $appfile = YAML::Tiny->read($ENV{FB11_APPFILE})->[0];
+        $error .= " Set PSGI directly or set FB11_APP\n";
+        $error .= "Apps:\n";
+        $error .= join "\n", keys %{ $appfile->{apps} };
+    }
+
+    die "$error\n";
+}
 
 my @cmd;
 
