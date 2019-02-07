@@ -56,7 +56,9 @@ if (my $appname = $ENV{FB11_APP}) {
     }
 }
 
-exec @ARGV or die $! if @ARGV;
+if (@ARGV) {
+    exec @ARGV or die $!
+}
 
 if (not $ENV{PSGI}) {
     my $error = "No PSGI was ever set.";
