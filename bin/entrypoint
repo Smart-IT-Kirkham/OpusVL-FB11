@@ -31,6 +31,10 @@ if ($ENV{DEV_MODE}) {
 # Makes app selection easier for users of our container without them having to know the ins and outs
 # of everything that must be altered together.  e.g. PSGI and CATALYST_CONFIG usually vary together.
 if (my $appname = $ENV{FB11_APP}) {
+    if ($ENV{FB11_APPFILE} and not -e $ENV{FB11_APPFILE}) {
+        die "FB11_APPFILE was set (to $ENV{FB11_APPFILE}), but it does not exist\n";
+    }
+
     $ENV{FB11_APPFILE} ||= '/apps.yml';
 
     die "FB11_APP was set but $ENV{FB11_APPFILE} does not exist"
