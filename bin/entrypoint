@@ -47,7 +47,7 @@ if (my $appname = $ENV{FB11_APP}) {
 
     my $service = $appfile->{apps}->{$appname};
     unless ($service) {
-        die "You specified FB11_APP=$appname but that is not declared in $ENV{APPFILE}";
+        die "You specified FB11_APP=$appname but that is not declared in $ENV{FB11_APPFILE}";
     }
 
     my $environment = $service->{default_environment} // {};
