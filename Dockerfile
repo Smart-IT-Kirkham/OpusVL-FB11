@@ -22,6 +22,8 @@ COPY --from=dbic-catalyst /opt/perl5 /opt/perl5
 COPY dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
 
+RUN useradd -rs /bin/false fb11
+
 RUN apt-get update && apt-get -y install libexpat1-dev libpq5
 
 ENV PATH "/opt/perl5/bin:$PATH"
@@ -54,4 +56,7 @@ RUN echo OpusVL-FB11@$version >> /version
 
 ENV MEMORY_LIMIT 262144
 
+# We intentionally leave the USER as root, and drop privs in the entrypoint.
+# This lets us (and derived images) run initialisation as root without having to
+# worry about running the app as a privileged user
 ENTRYPOINT [ "/usr/local/bin/dumb-init", "--", "/opt/perl5/bin/entrypoint" ]

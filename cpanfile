@@ -36,6 +36,7 @@ requires 'Tree::Simple::VisitorFactory';
 requires 'Try::Tiny';
 requires 'Template::AutoFilter';
 requires 'Template::Alloy' => '1.020';
+requires 'Unix::Groups::FFI';
 requires 'URL::Encode';
 requires 'YAML::Tiny';
 requires 'XML::Simple';

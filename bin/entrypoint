@@ -3,8 +3,14 @@
 use strict;
 use warnings;
 use v5.20;
+use POSIX qw(getuid getgid setuid setgid);
+use Unix::Groups::FFI 'initgroups';
 use Path::Class;
 use YAML::Tiny;
+
+# At some point we may want to configure which user we drop to. For now, this is
+# more than sufficient.
+_setusergroup('fb11');
 
 if ($ENV{LOCAL_LIBS}) {
     for my $lib (split /:/, $ENV{LOCAL_LIBS}) {
@@ -149,6 +155,36 @@ sub installdeps {
         say "Installing deps for $_";
         system( qw(/opt/perl5/bin/cpanm -M http://cpan.opusvl.com --installdeps -nvl), $ENV{HOME}, $_ );
     }
+}
+
+sub _setusergroup {
+        my ($user, $group) = @_;
+
+        $group //= $user;
+
+        # User and group IDs
+        my ($uid, $gid);
+        $! = 0;
+        unless (defined($uid = getpwnam $user)) {
+                die qq{Failed to retrieve user "$user": $!} if $!;
+                die qq{User "$user" does not exist};
+        }
+        $! = 0;
+        unless (defined($gid = getgrnam $group)) {
+                die qq{Failed to retrieve group "$group": $!} if $!;
+                die qq{Group "$group" does not exist};
+        }
+
+        # Check if user and group are already correct
+        return if getuid() == $uid and getgid() == $gid;
+
+        my $rc = setgid($gid);
+        unless (defined $rc and $rc == 0) { die qq{Can't switch to group "$group": $!}; }
+        my $error;
+        { local $@; unless (eval { initgroups($user, $gid); 1 }) { $error = "$!" } }
+        if (defined $error) { die qq{Can't set supplemental groups for user "$user": $error}; }
+        $rc = setuid($uid);
+        unless (defined $rc and $rc == 0) { die qq{Can't switch to user "$user": $!}; }
 }
 
 # PODNAME: entrypoint
