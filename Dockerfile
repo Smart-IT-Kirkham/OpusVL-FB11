@@ -24,7 +24,10 @@ RUN chmod +x /usr/local/bin/dumb-init
 
 RUN useradd -rs /bin/false fb11
 
-RUN apt-get update && apt-get -y install libexpat1-dev libpq5
+RUN apt-get update \
+    && apt-get -y install libexpat1-dev libpq5 libssl-dev gosu \
+    && apt-get clean \
+    && gosu nobody true
 
 ENV PATH "/opt/perl5/bin:$PATH"
 
