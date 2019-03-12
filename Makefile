@@ -24,9 +24,7 @@ docker: dist
 rc: docker
 	docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:v$(rcversion)
 	git tag v$(rcversion)
-ifeq ($(PUSH), 1)
 	docker push quay.io/opusvl/fb11:v$(rcversion)
-endif
 release:
 	- @echo "If this fails, make sure you pushed the last image you built"
 	docker pull quay.io/opusvl/fb11:v$(lastrcversion)
@@ -34,6 +32,4 @@ release:
 		|| echo "Ensure your git repository is on the commit from which the latest image was built (or rebuild and retest)."
 	dzil release
 	- docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:v$(version)
-ifeq ($(PUSH), 1)
 	- docker push quay.io/opusvl/fb11:v$(version)
-endif
