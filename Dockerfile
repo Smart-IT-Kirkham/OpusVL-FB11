@@ -1,23 +1,22 @@
-FROM quay.io/opusvl/perl-dev:v5.26.2 as dbic-catalyst
+#FROM quay.io/opusvl/perl-dev:v5.26.2 as dbic-catalyst
 
-ENV PERL_CPANM_OPT=' \
-    --configure-timeout 84000 \
-    --build-timeout 84000 \
-    --test-timeout 84000 \
-    --mirror http://cpan.opusvl.com'
+#ENV PERL_CPANM_OPT=' \
+    #--configure-timeout 84000 \
+    #--build-timeout 84000 \
+    #--test-timeout 84000 \
+    #--mirror http://cpan.opusvl.com'
 
-RUN apt-get update \
-    && apt-get install -y postgresql-9.6 libpq-dev \
-    && apt-get clean
+#RUN apt-get update \
+    #&& apt-get install -y postgresql-9.6 libpq-dev \
+    #&& apt-get clean
 
-ENV PATH "/opt/perl5/bin:$PATH"
-RUN cpanm Module::Version
+#ENV PATH "/opt/perl5/bin:$PATH"
+#RUN cpanm Module::Version
 
 # ----- #
 # FB11 is a framework, so aimed at developers, so its "release" is a development
 # image
-FROM quay.io/opusvl/perl-dev:v5.26.2 as release
-COPY --from=dbic-catalyst /opt/perl5 /opt/perl5
+FROM quay.io/opusvl/opusvl-perl-base:current
 
 COPY dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
 RUN chmod +x /usr/local/bin/dumb-init
