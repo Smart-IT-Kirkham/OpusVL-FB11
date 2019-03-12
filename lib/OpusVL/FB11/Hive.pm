@@ -111,7 +111,6 @@ sub transform {
     my $class = shift;
     my $f = shift;
 
-    $DB::single=$::break;
     my $i = $class->instance;
     my $m = $f->($i);
 
