@@ -2,7 +2,7 @@
 
 version = $(shell dzil distversion)
 rcversion = $(shell dzil distversion --rc)
-lastrcversion = $(shell dzil distversion --rc | perl -lpe 's/(\d)+$$/$$1-1/e')
+lastrcversion = $(shell dzil distversion --rc | perl -lpe 's/(\d+)$$/$$1-1/ge')
 LIBFILES   = $(shell git ls-files lib)
 BINFILES   = $(shell git ls-files bin script)
 TFILES     = $(shell git ls-files t)
