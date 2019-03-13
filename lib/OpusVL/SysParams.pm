@@ -23,7 +23,7 @@ has 'schema' => (isa => 'DBIx::Class::Schema', is => 'ro', required => 1,
 
 # ABSTRACT: Module to handle system wide parameters
 
-our $VERSION = '0.041';
+our $VERSION = '0.042';
 
 
 =head1 SYNOPSIS

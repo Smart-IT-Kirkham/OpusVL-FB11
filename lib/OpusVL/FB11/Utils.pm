@@ -10,7 +10,7 @@ use failures qw(
     fb11::util::load_config
 );
 
-our $VERSION="1";
+our $VERSION = '0.042';
 
 # ABSTRACT: Various utils with nowhere to live
 
