@@ -1,5 +1,64 @@
 {{ $NEXT }}
 
+0.041     2019-03-13 12:05:31+00:00 Europe/London
+
+  - Hive changes:
+    - The Hive is now implemeted as a singleton object. This means you can
+      construct your own Hive if you want.
+    - Changes to this object are implemented as transformations on it, following
+      the immutability principles of functional programming.
+    - The Hive now throws proper exceptions (see p3rl.org/failures) instead of
+      dumb strings.
+    - The Hive now has an init method, to which configuration is passed. This
+      will throw an exception as early as possible if the requested
+      configuration cannot be satisfied. See perldoc for more on this.
+    - Configuration now parses __ENV(XYZ)__ tokens, like Catalyst's own config.
+    - Services are no longer selected automatically; the Hive must be told
+      explicitly which Brain provides which service.
+    - Brains will no longer register themselves by default.
+    - The FB11AuthDB brain is no longer auto-registered. Apps should register it
+      in config.
+    - Audit Trail and SysParams brains still register themselves but will stop
+      doing so in the near future.
+    - An *experimental* Auth hat role has been created, to attempt to define an
+      interface for authentication hats. This should not be considered generally
+      usable.
+    - Lots of documentation fixes - patches still welcome.
+  - Docker changes:
+    - Base docker image has been replaced, so many things have been removed from
+      our own Dockerfile.
+    - Dockerfile leaves us as root; the entrypoint now uses gosu to run commands
+      as fb11. This means that derived images still have root for their own
+      entrypoints. It also means that if you provide a command to the
+      entrypoint, you have to use gosu yourself or drop user first.
+    - Improved error reporting when the entrypoint doesn't know what to do.
+    - If you give the entrypoint a command to run, it will be run in the
+      environment implied by the FB11_APP environment variable, i.e. the same
+      environment as the app itself.
+    - Default environment in the apps.yml will now replace empty variables as
+      well as unset (false ones as opposed to only undefined ones).
+  - Test changes:
+    - All the tests have been deleted except for the Hive tests, which are the
+      only ones that still worked.
+  - Styling changes:
+    - The Help and Favourite buttons have been removed because they don't work.
+    - The Notifications side card has been removed because we don't have
+      notifications yet.
+    - App templates are now discovered before FB11 base templates.
+    - Non-alnum characters in menu names no longer cause the menu to fail to
+      activate.
+    - Various fixes to determining whether a user can access a link.
+      - Gear icon access is now actually tested.
+  - Miscellaneous changes:
+    - Users will no longer fall into the purgatory of being "active". They are
+      either "enabled" or "disabled".
+    - Controllers can now define ACL rules as part of their configuration, on
+      top of the existing method of using :FB11Feature attributes on their
+      paths.
+    - The fb11-dbh script now has a -E flag, which will take connection
+      parameters from the environment. See perldoc.
+    - FB11 auth config no longer clobbers app-specific auth config.
+
 0.040     2018-11-06 11:18:03+00:00 Europe/London
 
   - Reverted changes to User model that caused issues
