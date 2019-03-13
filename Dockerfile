@@ -1,22 +1,6 @@
-FROM quay.io/opusvl/opusvl-perl-base:current
-
-COPY dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
-RUN chmod +x /usr/local/bin/dumb-init
+FROM quay.io/opusvl/opusvl-perl-base:release-1
 
 RUN useradd -rs /bin/false fb11
-
-RUN apt-get update \
-    && apt-get -y install libexpat1-dev libpq5 libssl-dev gosu \
-    && apt-get clean \
-    && gosu nobody true
-
-ENV PATH "/opt/perl5/bin:$PATH"
-
-ENV PERL_CPANM_OPT=' \
-    --configure-timeout 84000 \
-    --build-timeout 84000 \
-    --test-timeout 84000 \
-    --mirror http://cpan.opusvl.com'
 
 COPY vendor/* /root/vendor/
 RUN if [ "$(ls /root/vendor)" ]; then \
@@ -29,11 +13,13 @@ RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 ARG gitrev
 RUN if [ -z "$gitrev" ]; then echo "gitrev not provided"; exit 2; fi;
 
+# Oops ... fix this
+RUN cpanm -n DBIx::Class::DeploymentHandler::VersionStorage::WithSchema
+
 RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
 
 COPY OpusVL-FB11-$version.tar.gz .
-RUN cpanm --notest Catalyst::Plugin::Static::Simple
-RUN cpanm -n ./OpusVL-FB11-$version.tar.gz \
+RUN cpanm ./OpusVL-FB11-$version.tar.gz \
     && rm ./OpusVL-FB11-$version.tar.gz
 
 RUN echo OpusVL-FB11@$version >> /version
