@@ -29,6 +29,7 @@ requires 'PerlX::Maybe';
 requires 'Plack::Handler::Martian';
 requires 'Pod::Usage';
 requires 'String::MkPasswd';
+requires 'Switch::Plain';
 requires 'Template::Plugin::DateTime';
 requires 'Tree::Simple';
 requires 'Tree::Simple::View';
