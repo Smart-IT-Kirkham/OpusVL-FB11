@@ -1,11 +1,11 @@
 package OpusVL::FB11::DeploymentHandler;
 
-use Moose;
+use Moo;
 
 extends 'DBIx::Class::DeploymentHandler::Dad';
 # a single with would be better, but we can't do that
 # see: http://rt.cpan.org/Public/Bug/Display.html?id=46347
-with 'DBIx::Class::DeploymentHandler::WithApplicatorDumple' => {
+use MooX::Role::Parameterized::With 'DBIx::Class::DeploymentHandler::WithApplicatorDumple' => {
     interface_role       => 'DBIx::Class::DeploymentHandler::HandlesDeploy',
     class_name           => 'DBIx::Class::DeploymentHandler::DeployMethod::SQL::Translator',
     delegate_name        => 'deploy_method',
