@@ -9,7 +9,7 @@ use failures qw/
     fb11::hive::config
 /;
 
-our $VERSION = '0.042';
+our $VERSION = '0.043';
 
 # ABSTRACT: At least one function for configuring a hive
 
