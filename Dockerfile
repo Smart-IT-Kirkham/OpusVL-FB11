@@ -42,7 +42,6 @@ FROM quay.io/opusvl/opusvl-perl-base:release-2 AS FB11-Final
 
 RUN PATH="/opt/perl5/bin:$PATH" && echo OpusVL-FB11@$version >> /version
 COPY --from=FB11 /opt /opt
-ENV MEMORY_LIMIT 262144
 
 # We intentionally leave the USER as root, and drop privs in the entrypoint.
 # This lets us (and derived images) run initialisation as root without having to
