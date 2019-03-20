@@ -11,9 +11,6 @@ RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
 # Poison path so we can use our version of perl
 ENV PATH="/opt/perl5/bin:$PATH"
 
-# Add a user for fb11
-RUN useradd -rs /bin/false fb11
-
 # Copy in vendor specific riles
 COPY vendor/* /root/vendor/
 RUN if [ "$(ls /root/vendor)" ]; then \
@@ -39,8 +36,10 @@ RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz
 
 FROM quay.io/opusvl/opusvl-perl-base:release-2 AS FB11-Final
 
+RUN PATH="/opt/perl5/bin:$PATH" \
+    && echo OpusVL-FB11@$version >> /version \
+    && useradd -rs /bin/false fb11
 
-RUN PATH="/opt/perl5/bin:$PATH" && echo OpusVL-FB11@$version >> /version
 COPY --from=FB11 /opt /opt
 
 # We intentionally leave the USER as root, and drop privs in the entrypoint.
