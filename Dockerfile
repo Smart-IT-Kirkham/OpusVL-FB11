@@ -36,8 +36,8 @@ RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz
 
 FROM quay.io/opusvl/opusvl-perl-base:release-2 AS FB11-Final
 
-RUN PATH="/opt/perl5/bin:$PATH" \
-    && echo OpusVL-FB11@$version >> /version \
+ENV PATH="/opt/perl5/bin:$PATH"
+RUN echo OpusVL-FB11@$version >> /version \
     && useradd -rs /bin/false fb11
 
 COPY --from=FB11 /opt /opt
