@@ -3,14 +3,14 @@
 > Business and Social Application Framework
 
 **Flexibase** is a set of pre-built software components that can be assembled to deliver business functions as part of a business application.
-.
+
 It is an extension of the Catalyst MVC framwework with additional features suitable for building business applications including:
 
 - Responsive design user interface
 - Automatically generated menus
 - Applicaiton composition
 - Audit trail
-- Mouular components
+- Modular components
 - Role-based access control
 - LDAP integration
 - Website CMS
