@@ -4,6 +4,7 @@ package OpusVL::FB11X::SysParams::Brain::Strategy::Global;
 
 use Moose;
 use OpusVL::SysParams;
+with 'OpusVL::SysParams::Role::Strategy';
 
 has _component => (
     is => 'rw'
