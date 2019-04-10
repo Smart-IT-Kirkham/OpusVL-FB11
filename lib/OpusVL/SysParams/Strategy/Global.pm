@@ -1,4 +1,4 @@
-package OpusVL::FB11X::SysParams::Brain::Strategy::Global;
+package OpusVL::SysParams::Strategy::Global;
 
 # ABSTRACT: The sysparams strategy where all params are global.
 
@@ -22,9 +22,7 @@ has __brain => (
     is => 'rw'
 );
 
-sub set { shift->_sysparams->set(@_) }
-
-sub get { shift ->_sysparams->get(@_) }
+sub value_of { shift ->schema->resultset('SysInfo')->get(@_) }
 
 1;
 
