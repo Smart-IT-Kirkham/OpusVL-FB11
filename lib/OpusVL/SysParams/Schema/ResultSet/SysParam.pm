@@ -6,7 +6,11 @@ our $VERSION = '0';
 
 # ABSTRACT: Formalises and simplifies sysparam naming behaviour
 
-use parent 'DBIx::Class::ResultSet';
+use Moose;
+use MooseX::NonMoose;
+extends 'DBIx::Class::ResultSet';
+
+has namespace => ( is => 'ro' );
 
 =head1 DESCRIPTION
 
@@ -30,6 +34,10 @@ See L<OpusVL::SysParams>.
 sub find_by_name {
     my $self = shift;
     my $name = shift;
+
+    if (my $ns = $self->{sysparams_namespace}) {
+        $name = $ns . '::' . $name;
+    }
 
     $self->find({ name => $name });
 }
@@ -56,11 +64,16 @@ sub with_namespace {
     my $self = shift;
     my $ns = shift;
 
-    $self->search({
-        name => {
-            -like => $ns . '::%'
-        }
-    });
+    # DBIC is way old, but this seems to be allowed by the code, so I'm doing it
+    my $clone = $self->search;
+    if ($clone->{sysparams_namespace}) {
+        $clone->{sysparams_namespace} .= '::' . $ns;
+    }
+    else {
+        $clone->{sysparams_namespace} = $ns;
+    }
+
+    $clone;
 }
 
 =head2 in_name_order

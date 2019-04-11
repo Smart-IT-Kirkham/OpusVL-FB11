@@ -30,9 +30,8 @@ small data items that configure system behaviour.
             }
         },
         services => {
-            # Register the sysparams brain to supply the sysparams::namespaced
-            # service
-            'sysparams::namespaced' => { brain => 'sysparams' }
+            # Register the sysparams brain to supply the sysparams service
+            sysparams => { brain => 'sysparams' }
         }
     });
 

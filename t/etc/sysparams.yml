@@ -1,0 +1,19 @@
+schema_class: OpusVL::SysParams::Schema
+traits:
+  - Testpostgresql
+fail_on_schema_break: 1
+fixture_sets:
+  some_params:
+    - SysParam
+    - - - name
+        - label
+        - data_type
+        - value
+      - - test::namespace::value
+        - "Test/Namespace/Value"
+        - text
+        - '"test value"'
+      - - test::namespace::array
+        - "Test/Namespace/Array"
+        - text
+        - '["value1", "value2"]'

@@ -106,16 +106,18 @@ __PACKAGE__->add_columns(
         data_type   => "text",
         is_nullable => 0,
         serializer_class => 'JSON',
+        serializer_options => { allow_nonref => 1 },
     },
     comment => {
         data_type   => "text",
         is_nullable => 1,
     },
     data_type => {
-        data_type => 'enum',
+        data_type => 'text',
         is_nullable => 0,
         default_value => 'text',
         serializer_class => 'JSON',
+        serializer_options => { allow_nonref => 1 },
     },
 );
 

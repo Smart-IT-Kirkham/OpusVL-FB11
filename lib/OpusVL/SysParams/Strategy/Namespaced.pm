@@ -64,9 +64,12 @@ sub value_of {
     my $self = shift;
     my $param = shift;
 
-    $self->schema->resultset('SysInfo')
+    my $p = $self->schema->resultset('SysParam')
         ->with_namespace($self->namespace)
-        ->find({ name => $param });
+        ->find_by_name($param);
+
+    return $p->value if $p;
+    return;
 }
 
 1;
