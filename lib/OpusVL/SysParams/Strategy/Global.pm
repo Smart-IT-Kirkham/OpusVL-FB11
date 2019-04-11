@@ -22,7 +22,7 @@ has __brain => (
     is => 'rw'
 );
 
-sub value_of { shift ->schema->resultset('SysInfo')->get(@_) }
+sub value_of { shift ->schema->resultset('SysParams')->find_by_name(@_) }
 
 1;
 
