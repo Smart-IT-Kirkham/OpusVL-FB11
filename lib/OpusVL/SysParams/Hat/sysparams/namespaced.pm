@@ -8,7 +8,7 @@ with 'OpusVL::FB11::Role::Hat::sysparams';
 
 sub for_component {
     OpusVL::FB11X::SysParams::Brain::Strategy::Namespaced->new({
-        _component => $_[1],
+        namespace => $_[1],
         __brain => $_[0]->__brain
     });
 }

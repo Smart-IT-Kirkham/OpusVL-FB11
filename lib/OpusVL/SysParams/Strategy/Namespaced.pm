@@ -45,7 +45,7 @@ Returns the value of the provided parameter within the namespace in C<namespace>
 
 =cut
 
-has component => (
+has namespace => (
     is => 'ro'
 );
 
@@ -60,14 +60,9 @@ sub value_of {
     my $self = shift;
     my $param = shift;
 
-    $self->schema->resultset('SysInfo')->find({ name => $self->namespaced_param($param) });
+    $self->schema->resultset('SysInfo')
+        ->with_namespace($self->namespace)
+        ->find({ name => $param });
 }
-
-sub namespaced_param {
-    my $self = shift;
-    my $parma = shift;
-    join '::', $self->component, $param
-}
-
 
 1;
