@@ -10,11 +10,11 @@ has _component => (
     is => 'rw'
 );
 
-has _sysparams => (
+has schema => (
     is => 'rw',
     lazy => 1,
     default => sub {
-        OpusVL::SysParams->new({ schema => $_[0]->__brain->_schema })
+        OpusVL::SysParams::Schema->connect($_[0]->__brain->connect_info)
     },
 );
 
