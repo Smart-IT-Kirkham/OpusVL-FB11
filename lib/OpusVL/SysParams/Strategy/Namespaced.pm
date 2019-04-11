@@ -5,6 +5,10 @@ use v5.24;
 use Moose;
 with 'OpusVL::SysParams::Role::Strategy';
 
+our $VERSION = '0';
+
+# ABSTRACT: A sysparams strategy that understands namespaces
+
 =head1 DESCRIPTION
 
 This strategy uses the component name as a namespace for the system parameters.

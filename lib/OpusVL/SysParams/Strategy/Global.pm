@@ -6,6 +6,8 @@ use Moose;
 use OpusVL::SysParams;
 with 'OpusVL::SysParams::Role::Strategy';
 
+our $VERSION = '0';
+
 has _component => (
     is => 'rw'
 );

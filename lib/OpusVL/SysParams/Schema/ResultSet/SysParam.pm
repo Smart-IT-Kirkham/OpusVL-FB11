@@ -1,8 +1,14 @@
 package OpusVL::SysParams::Schema::ResultSet::SysParam;
+use strict;
+use warnings;
+
+our $VERSION = '0';
+
+# ABSTRACT: Formalises and simplifies sysparam naming behaviour
 
 use parent 'DBIx::Class::ResultSet';
 
-=head1 SYNOPSIS
+=head1 DESCRIPTION
 
 This ResultSet only makes it a bit easier to find an
 L<OpusVL::SysParams::Schema::Result::SysParam> object. The actual creation of

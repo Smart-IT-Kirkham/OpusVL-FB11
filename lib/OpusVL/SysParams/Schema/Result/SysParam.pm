@@ -3,6 +3,9 @@ package OpusVL::SysParams::Schema::Result::SysParam;
 use strict;
 use warnings;
 
+our $VERSION = '0';
+# ABSTRACT: Defines the storage for system parameters
+
 use parent 'DBIx::Class::Core';
 
 __PACKAGE__->load_components('InflateColumn::Serializer', 'Core');

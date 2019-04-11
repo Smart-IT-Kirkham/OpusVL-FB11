@@ -1,5 +1,6 @@
 package OpusVL::SysParams::Hat::sysparams::legacy;
 
+our $VERSION = '0';
 # ABSTRACT: Implements sysparams with no regard for namespacing
 
 use Moose;

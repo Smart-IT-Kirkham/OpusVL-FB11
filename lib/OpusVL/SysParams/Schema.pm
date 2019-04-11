@@ -1,20 +1,26 @@
 package OpusVL::SysParams::Schema;
 
-=head1 SYNOPSIS
+use strict;
+use warnings;
 
-This is the DBIx::Class schema for the SysParams module.
+# ABSTRACT: DBIC schema to store sysparams
+
+our $VERSION = '0';
+
+=head1 DESCRIPTION
+
+This schema stores system parameters. It uses a single table to store all
+parameters for all components.
+
+This version formalises the use of C<::> as a namespace separator. See
+L<OpusVL::SysParams::Schema::ResultSet::SysParams>.
 
 =cut
 
-use Moose;
-use namespace::autoclean;
-extends 'DBIx::Class::Schema';
+use parent 'DBIx::Class::Schema';
 
 __PACKAGE__->load_namespaces;
-
-__PACKAGE__->meta->make_immutable(inline_constructor => 0);
 
 sub schema_version { 2 }
 
 1;
-

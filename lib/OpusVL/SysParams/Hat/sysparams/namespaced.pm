@@ -1,6 +1,7 @@
 package OpusVL::SysParams::Hat::sysparams::namespaced;
 
-# ABSTRACT: Uses the component name as a namespace for components
+our $VERSION = '0';
+# ABSTRACT: Uses the component name as a namespace for parameters
 
 use Moose;
 use OpusVL::SysParams::Brain::Strategy::Global;
