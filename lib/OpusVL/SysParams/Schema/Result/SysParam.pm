@@ -6,7 +6,9 @@ use warnings;
 our $VERSION = '0';
 # ABSTRACT: Defines the storage for system parameters
 
-use parent 'DBIx::Class::Core';
+use Moose;
+use MooseX::NonMoose;
+extends 'DBIx::Class::Core';
 
 __PACKAGE__->load_components('InflateColumn::Serializer', 'Core');
 
@@ -122,6 +124,43 @@ __PACKAGE__->add_columns(
 );
 
 __PACKAGE__->set_primary_key("name");
+
+# InflateColumn::Serializer assumes that a nonref value is already serialised,
+# which is wrong for our purposes. We wrap all these methods to force the value
+# to always be a hashref, and to transparently return the real value.
+
+# Note we intentionally do not wrap get_column, or we'd never be able to get at
+# the real value if we need to, and we risk getting into a loop if DBIC itself
+# calls get_column.
+
+# Also note that this result class shouldn't really be used outside of the
+# sysparams component, because other components should interact with the Hat,
+# whose interface does not allow this object through.
+around value => sub {
+    my $orig = shift;
+    my $self = shift;
+    my @args = @_;
+
+    if (@args) {
+        $args[0] = {value => $args[0]};
+    }
+
+    my $ret = $self->$orig(@args);
+
+    return $ret->{value};
+};
+
+around update => sub {
+    my $orig = shift;
+    my $self = shift;
+    my $href = shift;
+
+    if (exists $href->{value}) {
+        $href->{value} = { value => $href->{value} };
+    }
+
+    $self->$orig($href);
+};
 
 1;
 
