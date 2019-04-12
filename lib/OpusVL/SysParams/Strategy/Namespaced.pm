@@ -19,7 +19,7 @@ the component if it is useful to do so.
 =head1 SYNPOSIS
 
     my $sysparams = OpusVL::FB11::Hive->service('sysparams')
-        ->for_component('fb11::base')
+        ->for_component('fb11::core')
 
 This strategy is installed as the default provider for the C<sysparams> service
 when you use L<OpusVL::SysParams> as the brain. See the documentation for that
