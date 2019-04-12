@@ -111,4 +111,40 @@ sub in_label_order {
     });
 }
 
+=head2 set_default
+
+B<Arguments>: C<$name>, C<$data>
+
+Creates C<$name> (in the current namespace) if it does not exist, using C<$data> to do so.
+
+C<$data> should be a hashref with C<value>, C<label>, C<comment>, and
+C<data_type> in it, with C<comment> being optional.
+
+This method does not guarantee its return value yet.
+
+=cut
+
+sub set_default {
+    my $self = shift;
+    my $name = shift;
+    my $data = shift;
+
+    # We paper over the value accessor in the Result class, but this probably
+    # skips that, so we do the same thing here.
+    $data->{value} = { value => $data->{value} };
+    my $param = $self->find_or_create({
+        name => $self->_namespaced_name($name),
+        %$data,
+    });
+}
+
+# Returns the fully namespaced name if we have set a namespace, or just the name
+# if we have not
+sub _namespaced_name {
+    my $ns = $_[0]->{sysparams_namespace};
+    # Make sure we do a definedness check, because the empty string is a valid
+    # namespace
+    defined $ns ? $ns . '::' . $_[1] : $_[1]
+}
+
 1;
