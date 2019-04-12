@@ -35,38 +35,43 @@ sub find_by_name {
     my $self = shift;
     my $name = shift;
 
-    if (my $ns = $self->{sysparams_namespace}) {
-        $name = $ns . '::' . $name;
-    }
-
-    $self->find({ name => $name });
+    $self->find({ name => $self->_namespaced_name($name) });
 }
 
 =head2 with_namespace
 
-Searches only for parameters in the given namespace.
+Searches only for parameters in the given namespace. Returns a new object with
+the namespace built in. Calling it on an object that already has a namespace
+will add the new namespace under the existing one.
 
-    $schema->resultset('SysParams')->with_namespace('fb11::core')->find_by_name('theme');
+    $schema->resultset('SysParam')
+        ->with_namespace('fb11::core')
+        ->find_by_name('theme');
     # Equivalent:
-    $schema->resultset('SysParams')->find_by_name('fb11::core::theme');
+    $schema->resultset('SysParam')
+        ->with_namespace('fb11')
+        ->with_namespace('core')
+        ->find_by_name('theme');
+    # Equivalent:
+    $schema->resultset('SysParam')
+        ->find_by_name('fb11::core::theme');
     # Expected usage:
     my $core_params = $schema->resultset('SysParams')->with_namespace('fb11::core');
     my $params = $core_params->in_name_order->all;
 
-TODO: Subsequent calls should drill down the namespaces.
-
-    # This should be equivalent but isn't
-    $schema->resultset('SysParams')->with_namespace('fb11')->with_namespace('core');
+If you don't pass a namespace, the empty namespace is used.
 
 =cut
 
 sub with_namespace {
     my $self = shift;
-    my $ns = shift;
+    my $ns = shift // '';
 
     # DBIC is way old, but this seems to be allowed by the code, so I'm doing it
     my $clone = $self->search;
-    if ($clone->{sysparams_namespace}) {
+
+    # Remember to allow for the empty string as a valid namespace!
+    if (exists $clone->{sysparams_namespace}) {
         $clone->{sysparams_namespace} .= '::' . $ns;
     }
     else {

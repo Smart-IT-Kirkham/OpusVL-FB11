@@ -24,4 +24,10 @@ fixtures_ok 'some_params';
     ok $arr_p->value->@* == 2, "Deserialised two items correctly";
 }
 
+{
+    my $ns = SysParam->with_namespace;
+    ok my $p = $ns->find_by_name('root.value'), "Found value in root namespace";
+    ok $p->value eq 'root value', "Found correct value";
+}
+
 done_testing;

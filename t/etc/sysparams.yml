@@ -17,3 +17,7 @@ fixture_sets:
         - "Test/Namespace/Array"
         - text
         - '["value1", "value2"]'
+      - - ::root.value
+        - "Root Value"
+        - text
+        - '"root value"'
