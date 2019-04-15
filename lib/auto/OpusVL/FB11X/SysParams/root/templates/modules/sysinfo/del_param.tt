@@ -1,7 +1,0 @@
-<h1>System Parameters</h1>
-
-<div class="content_block">
-<p>Are you sure you want to delete [% param_name | html %] = [% param_value | html %]?</p>
-</div>
-
-[% form.render | none %]
