@@ -4,7 +4,6 @@ package OpusVL::SysParams::Role::Manager;
 
 our $VERSION = '0';
 use Moose::Role;
-with 'OpusVL::SysParams::Role::Strategy';
 
 =haed1 DESCRIPTION
 
@@ -12,6 +11,25 @@ This Manager role is a superset of L<OpusVL::SysParams::Role::Strategy> and
 implements all of the functionality you'd want on top of getting a value.
 
 =head1 REQUIRED METHODS
+
+=head2 value_of
+
+B<Arguments>: C<$param>
+
+Returns the deserialised value of this parameter.
+
+=head2 all_params
+
+Returns a list of parameters. To encourage consistency in naming, "parameter"
+refers only to the name of the parameter.
+
+=head2 all_params_fulldata
+
+Returns a list of the full data for all parameters. This will be a list of
+hashrefs containing all data that a parameter can have: C<name>, C<value>,
+C<label>, C<comment>, C<data_type>.
+
+The C<value> will be deserialised.
 
 =head2 set_value
 
@@ -50,6 +68,6 @@ returned.
 
 =cut
 
-requires qw/set_value metadata_for set_default/;
+requires qw/value_of all_params all_params_fulldata set_value metadata_for set_default/;
 
 1;

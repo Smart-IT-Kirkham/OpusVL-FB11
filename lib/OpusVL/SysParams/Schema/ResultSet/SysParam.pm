@@ -10,8 +10,6 @@ use Moose;
 use MooseX::NonMoose;
 extends 'DBIx::Class::ResultSet';
 
-has namespace => ( is => 'ro' );
-
 =head1 DESCRIPTION
 
 This ResultSet only makes it a bit easier to find an
@@ -38,6 +36,40 @@ sub find_by_name {
     $self->find({ name => $self->_namespaced_name($name) });
 }
 
+=head2 all_param_names
+
+Returns a list of all parameter names within the current namespace, with the
+namespace removed.
+
+=cut
+
+sub all_param_names {
+    my $self = shift;
+    my $ns = $self->{sysparams_namespace};
+    my @all = $self->namespaced_search->get_column('name')->all;
+    map $self->_denamespaced_name($_), @all;
+}
+
+=head2 all_param_data
+
+Returns a list of all parameters as hashrefs containing C<name>, C<value>,
+C<label>, C<comment>, C<data_type> - with the value being deserialised already.
+
+=cut
+
+sub all_param_data {
+    my $self = shift;
+    my $ns = $self->{sysparams_namespace};
+
+    map { +{
+        name => $self->_denamespaced_name($_->name),
+        value => $_->value,
+        label => $_->label,
+        comment => $_->comment,
+        data_type => $_->data_type,
+    }} $self->namespaced_search->all;
+}
+
 =head2 with_namespace
 
 Searches only for parameters in the given namespace. Returns a new object with
@@ -60,6 +92,8 @@ will add the new namespace under the existing one.
     my $params = $core_params->in_name_order->all;
 
 If you don't pass a namespace, the empty namespace is used.
+
+See also L</namespaced_search>.
 
 =cut
 
@@ -129,12 +163,50 @@ sub set_default {
     my $name = shift;
     my $data = shift;
 
-    # We paper over the value accessor in the Result class, but this probably
-    # skips that, so we do the same thing here.
+    # The wrapped value and data_type setter in the Result class is not used by
+    # find_or_create. This seems the easiest place to do this.
     $data->{value} = { value => $data->{value} };
+
+    $data->{data_type} = { value => $data->{data_type} };
+
     my $param = $self->find_or_create({
         name => $self->_namespaced_name($name),
         %$data,
+    });
+}
+
+=head2 namespaced_search
+
+After calling L</with_namespace> zero or more times, this method can be used to
+actually create the resultset that uses the provided namespace. It can be used
+in place of L<DBIx::Class::ResultSet/search>.
+
+This is necessary because we cannot I<remove> a search for a namespace once it
+is established, so we defer the establishment of the namespace until you ask for
+it.
+
+Note that this won't translate further searches to add the namespace. For
+example, this probably isn't what you want:
+
+    ...->with_namespace('a::namespace')
+        ->find({ name => 'leaf.name.of.param' });
+
+This will produce C<WHERE name LIKE 'a::namespace::%' AND name =
+'leaf.name.of.param'>. Use L</find_by_name> for that example, or if you really
+must you can use C<_namespaced_name($param)>, but don't do that if you can avoid
+it, because it's private.
+
+=cut
+
+sub namespaced_search {
+    my $self = shift;
+
+    return $self if not defined $self->{sysparams_namespace};
+
+    $self->search({
+        name => {
+            -like => $self->{sysparams_namespace} . '::%'
+        }
     });
 }
 
@@ -145,6 +217,17 @@ sub _namespaced_name {
     # Make sure we do a definedness check, because the empty string is a valid
     # namespace
     defined $ns ? $ns . '::' . $_[1] : $_[1]
+}
+
+# Removes the current namespace from the parameter name and returns the result
+sub _denamespaced_name {
+    my $ns = $_[0]->{sysparams_namespace};
+    my $name = $_[1];
+    # Make sure we do a definedness check, because the empty string is a valid
+    # namespace
+    my $rm = defined $ns ? $ns . '::' : '';
+
+    $name =~ s/^$rm//r;
 }
 
 1;

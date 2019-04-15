@@ -50,10 +50,13 @@ has connect_info => (
     is => 'ro'
 );
 
-sub provided_services { qw/sysparams/ }
+sub provided_services { qw/sysparams sysparams::management/ }
 sub hats {
     sysparams => {
         class => 'sysparams::namespaced'
+    },
+    'sysparams::management' => {
+        class => 'sysparams::management::namespaced'
     }
 }
 

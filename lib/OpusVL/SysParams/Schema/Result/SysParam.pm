@@ -117,7 +117,7 @@ __PACKAGE__->add_columns(
     data_type => {
         data_type => 'text',
         is_nullable => 0,
-        default_value => 'text',
+        default_value => '{"value":"text"}',
         serializer_class => 'JSON',
         serializer_options => { allow_nonref => 1 },
     },
@@ -136,7 +136,7 @@ __PACKAGE__->set_primary_key("name");
 # Also note that this result class shouldn't really be used outside of the
 # sysparams component, because other components should interact with the Hat,
 # whose interface does not allow this object through.
-around value => sub {
+around [qw/value data_type/] => sub {
     my $orig = shift;
     my $self = shift;
     my @args = @_;
@@ -158,6 +158,10 @@ around update => sub {
     if (exists $href->{value}) {
         $href->{value} = { value => $href->{value} };
     }
+    if (exists $href->{data_type}) {
+        $href->{data_type} = { value => $href->{data_type} };
+    }
+
 
     $self->$orig($href);
 };

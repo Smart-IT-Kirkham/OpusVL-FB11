@@ -1,16 +1,20 @@
 package OpusVL::SysParams::Hat::sysparams::namespaced;
 
 our $VERSION = '0';
+
 # ABSTRACT: Uses the component name as a namespace for parameters
 
 use Moose;
-use OpusVL::SysParams::Brain::Strategy::Global;
 with 'OpusVL::FB11::Role::Hat::sysparams';
 
+use OpusVL::SysParams::Reader;
+
 sub for_component {
-    OpusVL::FB11X::SysParams::Brain::Strategy::Namespaced->new({
-        namespace => $_[1],
-        __brain => $_[0]->__brain
+    OpusVL::SysParams::Reader->new({
+        manager => OpusVL::SysParams::Manager::Namespaced->new({
+            namespace => $_[1],
+            __brain => $_[0]->__brain
+        })
     });
 }
 

@@ -11,13 +11,13 @@ fixture_sets:
         - value
       - - test::namespace::value
         - "Test/Namespace/Value"
-        - text
+        - '{"value":"text"}'
         - '{"value":"test value"}'
       - - test::namespace::array
         - "Test/Namespace/Array"
-        - text
+        - '{"value":"text"}'
         - '{"value":["value1", "value2"]}'
       - - ::root.value
         - "Root Value"
-        - text
+        - '{"value":"text"}'
         - '{"value":"root value"}'

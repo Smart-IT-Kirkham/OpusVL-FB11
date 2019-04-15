@@ -3,7 +3,6 @@ package OpusVL::SysParams::Manager::Namespaced;
 use v5.24;
 use Moose;
 use PerlX::Maybe;
-extends 'OpusVL::SysParams::Strategy::Namespaced';
 with 'OpusVL::SysParams::Role::Manager';
 
 our $VERSION = '0';
@@ -63,6 +62,26 @@ to L</namespace>, but otherwise behaviour is the same.
 
 =cut
 
+sub value_of {
+    my $self = shift;
+    my $param = shift;
+
+    my $p = $self->_rs->find_by_name($param)
+    or return;
+
+    $p->value;
+}
+
+sub all_params {
+    my $self = shift;
+    $self->_rs->all_param_names;
+}
+
+sub all_params_fulldata {
+    my $self = shift;
+    $self->_rs->all_param_data;
+}
+
 sub set_value {
     my $self = shift;
     my $param = shift;
@@ -81,7 +100,7 @@ sub metadata_for {
     my $p = $self->_rs->find_by_name($param) or return;
 
     return +{
-        map { $_ => $p->get_column($_) } qw/comment label data_type/
+        map { $_ => $p->$_ } qw/comment label data_type/
     };
 }
 
@@ -98,7 +117,7 @@ sub set_default {
 }
 
 sub _rs {
-    $_[0]->schema->resultset('SysParam')->with_namespace($_[0]->namespace)
+    $_[0]->schema->resultset('SysParam')->with_namespace($_[0]->namespace // ())
 }
 
 1;
