@@ -2,7 +2,6 @@ package OpusVL::SysParams::Hat::sysparams::management::namespaced;
 
 use v5.24;
 use Moose;
-use OpusVL::SysParams::Schema;
 use OpusVL::SysParams::Manager::Namespaced;
 with 'OpusVL::FB11::Role::Hat::sysparams::management';
 
@@ -21,13 +20,13 @@ See L<OpusVL::FB11::Role::Hat::sysparams::management>.
 sub for_component {
     OpusVL::SysParams::Manager::Namespaced->new({
         namespace => $_[1],
-        schema => OpusVL::SysParams::Schema->connect($_[0]->__brain->connect_info->@*)
+        schema => $_[0]->__brain->schema
     });
 }
 
 sub for_all_components {
     OpusVL::SysParams::Manager::Namespaced->new({
-    schema => OpusVL::SysParams::Schema->connect($_[0]->__brain->connect_info->@*)
+        schema => $_[0]->__brain->schema
     });
 }
 
