@@ -444,7 +444,7 @@ sub _init_brain {
     # But a brain should probably also check this itself, because init is a
     # public interface to brains, so they can be initialised without us knowing.
     return if $self->_brain_initialised->{$brain_name};
-    $self->_brain($brain_name)->init;
+    $self->_brain($brain_name)->init($self);
     $self->_brain_initialised->{$brain_name} = 1;
     $self;
 }
