@@ -2,7 +2,7 @@
   <div class="col-sm-12">
     <div class="fb11-card">
       <h1>System Parameters</h1>
-      [% IF sys_info.count > 0 %]
+      [% IF sysparams %]
         <table class="table parameters">
           <thead>
             <tr>
@@ -12,34 +12,26 @@
             </tr>
           </thead>
           <tbody>
-            [% WHILE (param = sys_info.next) %]
+            [% FOR param IN sysparams %]
               <tr class="record record-parameter">
-                  <td class="field field-name"
-                      colspan="3"
-                  >
-                    [% param.name %]
-                  </td>
+                <td class="field field-name" colspan="3">
+                  [% param.name %]
+                </td>
               </tr>
               <tr class="record record-parameter">
                 <td class="field field-label">
                   [% (param.label || "(No Label)") | html %]
                 </td>
                 <td class="field field-value">
-                  [% PROCESS modules/sysinfo/display_params.tt param=param %]
+                  [% PROCESS sysparams/widgets/display_value.tt value=param.value %]
                 </td>
                 <td>
                   <div class="btn-group">
-                    <a class="btn btn-primary" href="[%
-                      urls.sys_info_set(param.name) %]"
+                    <a class="btn btn-primary" href="/sysparams/edit/[%
+                      param.name %]"
                       title="Edit Setting"
                     >
                       <i class="fa fa-pencil"></i>
-                    </a>
-                    <a class="btn btn-danger" href="[%
-                      urls.sys_info_del(param.name) %]"
-                      title="Delete Setting"
-                    >
-                        <i class="fa fa-trash"></i>
                     </a>
                   </div>
                 </td>
@@ -53,9 +45,3 @@
     </div>
   </div> <!-- /col-sm-12 -->
 </div> <!-- /row -->
-
-<div class="row">
-    <div class="col-sm-12">
-        <a class="btn btn-primary" href="[% urls.sys_info_new %]"><i class="fa fa-plus"></i> Create a parameter</a>
-    </div>
-</div>
