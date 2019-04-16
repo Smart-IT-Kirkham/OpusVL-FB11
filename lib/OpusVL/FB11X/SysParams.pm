@@ -3,6 +3,8 @@ use Moose::Role;
 use CatalystX::InjectComponent;
 use namespace::autoclean;
 
+with 'OpusVL::FB11::RolesFor::Plugin';
+
 our $VERSION = '0.043';
 # ABSTRACT: UI Module for setting the SysParams.
 
@@ -23,6 +25,7 @@ you
 
 after 'setup_components' => sub {
     my $class = shift;
+    $class->add_paths(__PACKAGE__);
 
     CatalystX::InjectComponent->inject(
         into      => $class,
