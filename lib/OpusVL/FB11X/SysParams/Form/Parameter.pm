@@ -28,7 +28,7 @@ sub html_name {
 
 sub html_label {
     my ($self, $field) = @_;
-    return "<h4>" . $field->value . "</h4">;
+    return "<h4>" . $field->value . "</h4>";
 }
 
 no HTML::FormHandler::Moose;

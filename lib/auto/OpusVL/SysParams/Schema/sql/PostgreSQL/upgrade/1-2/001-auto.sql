@@ -18,7 +18,7 @@ CREATE TABLE "sysparams" (
   "label" text NOT NULL,
   "value" text NOT NULL,
   "comment" text,
-  "data_type" character varying DEFAULT 'text' NOT NULL,
+  "data_type" character varying DEFAULT '{"value":"text"}' NOT NULL,
   PRIMARY KEY ("name")
 );
 

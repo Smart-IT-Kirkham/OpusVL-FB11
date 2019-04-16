@@ -33,7 +33,7 @@ sub list_params
     my $self = shift;
     my $c    = shift;
 
-    $c->stash->{sysoarams} = OpusVL::FB11::Hive
+    $c->stash->{sysparams} = OpusVL::FB11::Hive
         ->service('sysparams::management')
         ->for_all_components
         ->all_params_fulldata;
@@ -49,8 +49,8 @@ sub set_param
         ->service('sysparams::management')
         ->for_all_components;
 
-    my $meta = $manager->metadata_for($param) // $c->detach('/not_found');
-    my $value = $manager->value_of($param);
+    my $meta = $manager->metadata_for($name) // $c->detach('/not_found');
+    my $value = $manager->value_of($name);
 
     my $label = $meta->{label};
 
@@ -62,16 +62,14 @@ sub set_param
 
     my $form = $self->edit_form;
     $c->stash->{form} = $form;
-    $c->stash->{param} = $param;
 
     $form->process(
         params => $c->req->params,
-        item => $param,
         posted => !!$c->req->method eq 'POST',
     );
     if ($form->validated) {
         $c->flash->{status_msg} = 'System Parameter Successfully Altered';
-        $c->res->redirect($return_url);
+        $c->res->redirect($c->uri_for($self->action_for('list_params')));
         $c->detach;
     }
 }

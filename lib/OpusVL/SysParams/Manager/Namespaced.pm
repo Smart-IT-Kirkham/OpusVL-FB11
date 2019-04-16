@@ -50,9 +50,6 @@ has namespace => (
 
 has schema => (
     is => 'ro',
-    default => sub {
-        OpusVL::SysParams::Schema->connect($_[0]->__brain->connect_info)
-    }
 );
 
 =head1 METHODS

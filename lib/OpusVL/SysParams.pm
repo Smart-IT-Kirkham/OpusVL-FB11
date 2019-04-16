@@ -6,6 +6,12 @@ use JSON;
 use Data::Munge qw/elem/;
 
 use Moose;
+
+has short_name => (
+    is => 'ro',
+    default => 'sysparams'
+);
+
 with 'OpusVL::FB11::Role::Brain';
 
 # ABSTRACT: Module to handle system wide parameters

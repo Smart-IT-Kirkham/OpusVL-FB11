@@ -1,7 +1,10 @@
 package OpusVL::SysParams::Hat::sysparams::management::namespaced;
 
-use Moose::Role;
-with 'OpusVL::SysParams::Hat::sysparams';
+use v5.24;
+use Moose;
+use OpusVL::SysParams::Schema;
+use OpusVL::SysParams::Manager::Namespaced;
+with 'OpusVL::FB11::Role::Hat::sysparams::management';
 
 our $VERSION = '0';
 # ABSTRACT: Creates interfaces to read and write sysparams.
@@ -18,13 +21,13 @@ See L<OpusVL::FB11::Role::Hat::sysparams::management>.
 sub for_component {
     OpusVL::SysParams::Manager::Namespaced->new({
         namespace => $_[1],
-        __brain => $_[0]->__brain
+        schema => OpusVL::SysParams::Schema->connect($_[0]->__brain->connect_info->@*)
     });
 }
 
 sub for_all_components {
     OpusVL::SysParams::Manager::Namespaced->new({
-        __brain => $_[0]->__brain
+    schema => OpusVL::SysParams::Schema->connect($_[0]->__brain->connect_info->@*)
     });
 }
 

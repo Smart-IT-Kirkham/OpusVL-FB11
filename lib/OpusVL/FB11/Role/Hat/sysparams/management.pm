@@ -1,7 +1,7 @@
 package OpusVL::FB11::Role::Hat::sysparams::management;
 
 use Moose::Role;
-extends 'OpusVL::FB11::Role::Hat::sysparams';
+with 'OpusVL::FB11::Role::Hat::sysparams';
 
 our $VERSION = '0';
 
