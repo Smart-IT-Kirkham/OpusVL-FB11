@@ -22,9 +22,14 @@ RUN apt-get update \
     && apt-get -y install build-essential libpq-dev postgresql-10
 
 # Finally install the FB11 tarball, use the OpusVL backing mirror
+# We CANNOT run the tests right now. Test::Postgresql58 REFUSES to run as root.
+# Test::PostgreSQL itself seems to work fine as root but we are not given the
+# option to use that.
+# To run the tests as user we need a user whose home directory exists and can be
+# written to by cpanm, (it wants /home/user/.cpanm)
 COPY OpusVL-FB11-$version.tar.gz .
 RUN /opt/perl5/bin/cpanm --installdeps
-RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
+RUN /opt/perl5/bin/cpanm -nM http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
     || ( cat /root/.cpanm/work/*/build.log && exit 1 )
 
 
