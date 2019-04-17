@@ -221,6 +221,9 @@ The second initialisation phase. This is passed the Hive object that is doing
 the initialisation. At this point you are guaranteed that all Brains registered
 with the hive are available.
 
+You should always use this C<$hive> object. Using L<OpusVL::FB11::Hive>'s
+singleton behaviour is liable to break.
+
 =cut
 
 sub pre_hive_init {}
