@@ -45,7 +45,8 @@ You can instead provide one yourself for e.g. testing, if you want to.
 =cut
 
 has namespace => (
-    is => 'ro'
+    is => 'ro',
+    predicate => 'has_namespace'
 );
 
 has schema => (
@@ -114,7 +115,14 @@ sub set_default {
 }
 
 sub _rs {
-    $_[0]->schema->resultset('SysParam')->with_namespace($_[0]->namespace // ())
+    my $self = shift;
+    my $rs = $self->schema->resultset('SysParam');
+
+    if ($self->has_namespace) {
+        return $rs->with_namespace($self->namespace)
+    }
+
+    return $rs;
 }
 
 1;
