@@ -7,6 +7,7 @@ requires 'Data::Visitor::Tiny';
 requires 'DateTime';
 requires 'DateTime::Format::Pg';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
+requires 'DBIx::Class::InflateColumn::Serializer';
 requires 'DBIx::Class::InflateColumn::Serializer::JSON';
 requires 'DBIx::Class::TimeStamp';
 requires 'Exporter::Easy';
