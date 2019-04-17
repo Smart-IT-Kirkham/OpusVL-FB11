@@ -1,7 +1,17 @@
 package OpusVL::FB11::Utils;
+
+use DateTime::Format::ISO8601;
 use v5.24;
 use Exporter::Easy (
-    OK => [qw( load_config )]
+    OK => [qw( 
+        load_config 
+        text_to_dates 
+        extract_service_history 
+        validate datetimify
+        extract_service_history
+        suppliers_name_function
+        get_all_transport_suppliers
+    )]
 );
 
 use Config::Any;
@@ -9,6 +19,19 @@ use Data::Visitor::Tiny;
 use failures qw(
     fb11::util::load_config
 );
+
+use Moose;
+use DateTime;
+use Scalar::Util 'looks_like_number';
+use failures qw/validation::date/;
+use Safe::Isa;
+
+has 'module_name'   => ( is => 'rw', isa => 'Str' );
+has 'field_name'    => ( is => 'rw', isa => 'Str' );
+has schema          => (is => 'rw');
+
+has holidays => (isa => 'ArrayRef', is => 'ro', required => 1);
+has _holiday_map => (isa => 'HashRef', is => 'ro', lazy => 1, builder => '_build_holiday_map');
 
 our $VERSION = '0.043';
 
@@ -67,6 +90,244 @@ sub load_config {
     }
 
     return $cfg;
+}
+
+=head2 text_to_dates
+
+B<Arguments:> C<$text>
+
+Returns an arrayref of sorted ISO8601 formatted dates
+
+=cut
+
+sub text_to_dates
+{
+    my $text = shift;
+    my @dates = $text =~ m|(\d+[/-]\d+[/-]\d+)|g;
+    my @d = sort map { DateTime::Format::ISO8601->parse_datetime( $_ =~ s/\//-/gr ) } @dates;
+    return \@d;
+}
+
+
+=head2 validate
+
+=cut
+
+sub validate
+{
+    my ($self, $value, $params, $opts) = @_;
+
+    if ($self->module_name and $self->field_name) {
+        my ($mod, $field) = ($self->module_name, $self->field_name);
+
+        my $sys  = $self->schema->resultset('SysInfo');
+        my $from = $sys->get("${mod}.${field}_date_from");
+        my $to   = $sys->get("${mod}.${field}_date_to");
+        my $now  = DateTime->now;
+        if ($from or $to) {
+            if ($from) {
+                # relative validation
+                if (looks_like_number($from)) {
+                    if (my $dtfrom = $self->datetimify($value)) {
+                        if ($dtfrom < $now->clone->subtract(months => $from)) {
+                            my $message = "Specified date is below $from month(s)";
+                            failure::validation::date->throw($message);
+                        }
+                    }
+                }
+                # absolute validation
+                else {
+                    my $dt = $self->datetimify($value);
+                    if (my $dtfrom = $self->datetimify($from)) {
+                        if ($dt < $dtfrom) {
+                            my $message = "Date is before ${from}";
+                            failure::validation::date->throw($message);
+                        }
+                    }
+                    else {
+                        my $message = "Invalid date";
+                        failure::validation::date->throw($message);
+                    }
+                }
+            }
+            
+            if ($to) {
+                # relative validation
+
+                my $dt = $self->datetimify($value);
+                if (looks_like_number($to)) {
+                    if (my $dtto = $self->datetimify($value)) {
+                        if ($dtto > $now->clone->add(months => $to)) {
+                            my $message = "Specified date is over $to month(s) away";
+                            failure::validation::date->throw($message);
+                        } 
+                    }
+                }
+                # absolute validation
+                else {
+                    if (my $dtto = $self->datetimify($to)) {
+                        if ($dt > $dtto) {
+                            my $message = "Date exceeds ${to}";
+                            failure::validation::date->throw($message);
+                        }
+                    }
+                    else {
+                        my $message = "Invalid date";
+                        failure::validation::date->throw($message);
+                    }
+                }
+            }
+        }
+    }
+
+    return 1;
+}
+
+=head2 datetimify 
+
+=cut
+
+sub datetimify {
+    my ($self, $str) = @_;
+    my ($day, $month, $year);
+   
+    if($str->$_isa('DateTime'))
+    {
+        return $str;
+    }
+    # Aqaurius is really intuitive for developers, and as such
+    # will provide dates as values in many inconsistent formats
+    # eg: sometimes UK standards, sometimes American, sometimes wearing a fruit salad hat
+
+    if (index($str, '/') != -1) {
+        ($day, $month, $year)  = split '/', $str;
+    }
+    elsif ($str =~ /(\d{4})-(\d{2})-(\d{2})\s+\d{2}:\d{2}:\d{2}/) {
+        ($day, $month, $year) = ($3, $2, $1);
+    }
+    elsif (index($str, '-') != -1) {
+        ($day, $month, $year) = split '-', $str;
+    }
+
+    if ($day and $month and $year) {
+        return DateTime->new(
+            day     => $day,
+            month   => $month,
+            year    => $year,
+        );
+    }
+
+    return;
+}
+
+=head2 extract_service_history
+
+=cut
+
+sub extract_service_history 
+{
+    my $string = shift;
+
+    my ($history) = $string =~ /No(w) Due?.*/i;
+    unless($history)
+    {
+        ($history) = $string =~ /(D)(ue)?.*/i;
+    }
+    unless($history)
+    {
+        ($history) = $string =~ /^(D|C|P|N|W).*/i;
+    }
+    unless($history)
+    {
+        return undef;
+    }
+    return uc($history);
+}
+
+
+=head2 suppliers_name_function
+
+=cut
+
+sub suppliers_name_function {
+    my @suppliers = @_;
+    my %supplier_names_hash = map { ($_->{id} => $_->{name}) } @suppliers;
+    return sub {
+        my $supplier_id = shift;
+        return $supplier_names_hash{$supplier_id};
+    };
+}
+
+=head2 get_all_transport_suppliers
+
+=cut
+
+sub get_all_transport_suppliers {
+    my $schema = shift;
+    # Unless you specify a category in the search, Partner returns a union of Partner and Supplier
+    # anyway.  As this is what we want in this case, querying Supplier as well only results in duplicates.
+    # If behaviour of Supplier/Partner or each one's get_transport_suppliers methods changes, we'll need
+    # to update this method too.
+    my @transport_partners = $schema->class('Partner')->get_transport_suppliers_and_partners;
+    return sort { $a->name cmp $b->name } @transport_partners;
+}
+
+=head2 _build_holiday_map
+
+=cut
+
+sub _build_holiday_map
+{
+    my $self = shift;
+    my %holidays = map { $_->ymd => 1 } @{$self->holidays};
+    return \%holidays;
+}
+
+=head2 is_holiday
+
+=cut 
+
+sub is_holiday
+{
+    my $self = shift;
+    my $date = shift;
+
+    return $self->_holiday_map->{$date->ymd} || 0;
+}
+
+=head2 is_working_day
+
+=cut 
+
+sub is_working_day
+{
+    my $self = shift;
+    my $date = shift;
+
+    return 0 if($date->dow > 5 || $self->is_holiday($date));
+
+    return 1;
+}
+
+=head2 subtract_working_days
+
+=cut 
+
+sub subtract_working_days
+{
+    my $self = shift;
+    my $date = shift;
+    my $days = shift;
+
+    my $new_day = $date->clone;
+    for(my $i = 0; $i < $days; $i++)
+    {
+        do {
+            $new_day->subtract(days => 1);
+        } while( !$self->is_working_day($new_day));
+    }
+
+    return $new_day;
 }
 
 1;
