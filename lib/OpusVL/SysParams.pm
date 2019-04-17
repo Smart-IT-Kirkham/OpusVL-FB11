@@ -94,7 +94,6 @@ sub init {
         for my $param (keys %$all_params) {
             my $spec = $all_params->{$param};
             my $value = delete $spec->{value};
-            say "Setting $param to $value";
             $manager->set_default($param, $value, $spec);
         }
     }

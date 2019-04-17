@@ -23,7 +23,10 @@
                   [% (param.label || "(No Label)") | html %]
                 </td>
                 <td class="field field-value">
-                  [% PROCESS sysparams/widgets/display_value.tt value=param.value %]
+                  [% INCLUDE sysparams/widgets/display_value.tt
+                    leaf_type=param.data_type
+                    value=param.value
+                  %]
                 </td>
                 <td>
                   <div class="btn-group">

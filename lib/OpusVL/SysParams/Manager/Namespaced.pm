@@ -71,12 +71,12 @@ sub value_of {
 
 sub all_params {
     my $self = shift;
-    $self->_rs->all_param_names;
+    $self->_rs->in_name_order->all_param_names;
 }
 
 sub all_params_fulldata {
     my $self = shift;
-    $self->_rs->all_param_data;
+    $self->_rs->in_name_order->all_param_data;
 }
 
 sub set_value {

@@ -33,10 +33,19 @@ sub list_params
     my $self = shift;
     my $c    = shift;
 
-    $c->stash->{sysparams} = OpusVL::FB11::Hive
-        ->service('sysparams::management')
-        ->for_all_components
-        ->all_params_fulldata;
+    my $params = $c->stash->{sysparams} = [
+        OpusVL::FB11::Hive
+            ->service('sysparams::management')
+            ->for_all_components
+            ->all_params_fulldata
+    ];
+
+    $c->stash->{widget_for_value} = sub {
+        my $val = shift;
+        if (my $r = ref $val) {
+            return lc $r;
+        }
+    };
 }
 
 sub set_param
