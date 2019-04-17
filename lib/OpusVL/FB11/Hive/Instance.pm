@@ -169,7 +169,8 @@ sub initialised {
 
     $clone->check;
 
-    $clone->_init_brain($_) for $clone->_brain_names;
+    $clone->_pre_hive_init_brain($_) for $clone->_brain_names;
+    $clone->_hive_init_brain($_) for $clone->_brain_names;
 
     $clone->_initialised(1);
 
@@ -436,7 +437,7 @@ sub service {
     return $self->hat($brain, $service_name);
 }
 
-sub _init_brain {
+sub _pre_hive_init_brain {
     my $self = shift;
     my $brain_name = shift;
 
@@ -444,8 +445,22 @@ sub _init_brain {
     # But a brain should probably also check this itself, because init is a
     # public interface to brains, so they can be initialised without us knowing.
     return if $self->_brain_initialised->{$brain_name};
-    $self->_brain($brain_name)->init($self);
+    $self->_brain($brain_name)->pre_hive_init;
     $self->_brain_initialised->{$brain_name} = 1;
+    $self;
+}
+
+sub _hive_init_brain {
+    my $self = shift;
+    my $brain_name = shift;
+
+    # We don't want to die if we haven't run pre_hive_init first, because, as
+    # mentioned above, we might not be told that a brain has been initialised.
+    # It might be sensible to define these as private methods that should only
+    # ever be called from the hive or from tests.
+    return if $self->_brain_initialised->{$brain_name};
+    $self->_brain($brain_name)->hive_init($self);
+    $self->_brain_initialised->{$brain_name} = 2;
     $self;
 }
 

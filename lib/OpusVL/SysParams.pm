@@ -76,7 +76,7 @@ sub hats {
     },
 }
 
-sub init {
+sub hive_init {
     my $self = shift;
     my $hive = shift;
 

@@ -207,13 +207,24 @@ sub can_provide_service {
     return elem($service_name, [$self->provided_services]);
 }
 
-=head2 init
+=head2 pre_hive_init
 
-A hook to initialise the brain. This will be called from the hive when it is initialised.
+The first initialisation phase. You may want to check your brain is even capable
+of doing its job, like testing for required schema connections. Feel free to
+throw L<failures>.
+
+=head2 hive_init
+
+B<Arguments>: C<$hive>
+
+The second initialisation phase. This is passed the Hive object that is doing
+the initialisation. At this point you are guaranteed that all Brains registered
+with the hive are available.
 
 =cut
 
-sub init {}
+sub pre_hive_init {}
+sub hive_init {}
 
 =head2 dependencies
 
