@@ -22,20 +22,15 @@ sub for_component {
 
 =head1 DESCRIPTION
 
-Wear this hat to provide legacy sysparams.
-
-This is done by using the L<OpusVL::FB11X::SysParams::Brain::Strategy::Global>
-strategy for parameters, and as such, the value you pass to C<for_component> has
-no effect.
+Wear this hat to provide sysparams using the namespacing concept. This is the
+one where all the params are in the same table and we use C<::> in the param
+name to namespace them.
 
 =head1 SYNOPSIS
 
-package My::SysParams::Brain;
-
-use Moose;
-with 'OpusVL::FB11::Role::Brain';
-
-...
-
-sub hats { qw/sysparams::legacy/ }
-sub provided_services { qw/sysparams::legacy/ }
+    sub hats { qw/sysparams/ }
+    sub provided_services {
+        sysparams => {
+            class => 'sysparams::namespaced'
+        }
+    }
