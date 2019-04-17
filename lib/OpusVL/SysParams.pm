@@ -41,18 +41,27 @@ small data items that configure system behaviour.
         },
         services => {
             # Register the sysparams brain to supply the sysparams service
-            sysparams => { brain => 'sysparams' }
+            sysparams => { brain => 'sysparams' },
+            # And the management service
+            'sysparams::management' => { brain => 'sysparams' }
         }
     });
 
-    OpusVL::FB11::Hive->service('sysparams::namespaced')->for_component('myapp')->get('some.key');
+    OpusVL::FB11::Hive->service('sysparams')->for_component('myapp')->get('some.key');
 
 =head1 SERVICES
 
 =head2 sysparams
 
-This returns the Hat that uses the Namespaced strategy. See
-L<OpusVL::SysParams::Strategy::Namespaced>.
+Returns a hat that accesses the sysparams. See
+L<OpusVL::SysParams::Hat::sysparams::namespaced>.
+
+=head2 sysparams::management
+
+Returns a hat that allows sysparams management.See
+L<OpusVL::SysParams::Hat::sysparams::management::namespaced>.
+
+=head2
 
 =cut
 
@@ -75,6 +84,17 @@ sub hats {
         class => 'sysparams::management::namespaced'
     },
 }
+
+=head1 METHODS
+
+=head2 hive_init
+
+Once all brains are available we search for those wearing the
+C<sysparams::consumer> hat and use them to initialise sysparams.
+
+See L<OpusVL::SysParams::Role::Hat::sysparams::consumer>.
+
+=cut
 
 sub hive_init {
     my $self = shift;

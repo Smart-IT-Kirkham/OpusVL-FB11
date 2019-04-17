@@ -141,11 +141,16 @@ the clone when using these methods.
 
 =head2 initialised
 
-Returns a copy of the hive that has been initialised. This means it calls
-L<OpusVL::FB11::Role::Brain/init> on each brain.
+Returns a copy of the hive that has been initialised.
 
 L</check> is called before brains are initialised, so the method may die as a
 result of that.
+
+Then, each brain has two initialisation phases. First is
+L<OpusVL::FB11::Role::Brain/pre_hive_init>, which is not given a hive object.
+The brain is being prepared but other brains may not be available yet. Then we
+run L<OpusVL::FB11::Role::Brain/hive_init>, which I<is> provided a hive object,
+which can be used to access other brains and their hats.
 
 You cannot initialise twice; if you try to create an initialised clone of an
 initialised object, a C<failure::fb11::hive::init> is thrown. This is instead of
