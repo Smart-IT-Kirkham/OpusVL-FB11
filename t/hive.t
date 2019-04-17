@@ -49,7 +49,7 @@ BEGIN {
 
         sub hats { qw<TEST::hat1>, 'TEST::hat2' => { class => '+Test::SharedHat' } }
         sub provided_services { qw<TEST::hat1> }
-        sub init { shift->ran_initialise(1) }
+        sub hive_init { shift->ran_initialise(1) }
     }
 
     package Test::Brain::Hat::TEST::hat1 {
