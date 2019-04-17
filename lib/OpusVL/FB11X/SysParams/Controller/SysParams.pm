@@ -58,7 +58,13 @@ sub set_param
         ->service('sysparams::management')
         ->for_all_components;
 
-    my $meta = $manager->metadata_for($name) // $c->detach('/not_found');
+    # This is going to take some work so we'll do it later.
+    $c->flash->{error_msg} = "Not yet implemented";
+    $c->detach('/not_found');
+
+    my $meta = $manager->metadata_for($name)
+        // $c->detach('/not_found');
+
     my $value = $manager->value_of($name);
 
     my $label = $meta->{label};
