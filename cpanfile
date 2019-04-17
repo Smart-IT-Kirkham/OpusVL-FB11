@@ -24,6 +24,7 @@ requires 'List::Gather';
 requires 'List::Util';
 requires 'List::UtilsBy';
 requires 'Moose';
+requires 'MooseX::NonMoose';
 requires 'MooseX::ClassAttribute';
 requires 'Net::LDAP';
 requires 'parent';
@@ -105,3 +106,5 @@ requires 'HTML::FormHandler::TraitFor::Model::DBIC';
 
 requires 'OpusVL::AppKit::Schema::AppKitAuthDB';
 requires 'OpusVL::DBIC::Helper';
+
+test_requires 'Test::Postgresql58';
