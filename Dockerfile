@@ -1,22 +1,38 @@
-FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11-layer0
+FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11
+
+FROM FB11 AS FB11-layer0
 
 # Do some checks no point continuing otherwise
 ARG version
 RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 
-# Install build-essential again
-RUN apt-get update && apt-get install -y build-essential
+# Re add in the neccesary packages for postgres
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(cat /etc/os-tag)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
+RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+
+#
+# Add in development libraries
+#
+
+# Which postgres version are we targetting (add this to /etc)
+ARG PG_VERSION=postgresql-server-dev-10
+
+# Add Postgres
+RUN apt-get update \
+    && apt-get -y install build-essential libpq-dev postgresql-10
 
 # Finally install the FB11 tarball, use the OpusVL backing mirror
 COPY OpusVL-FB11-$version.tar.gz .
 RUN /opt/perl5/bin/cpanm --installdeps
-RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz
+RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
+    || ( cat /root/.cpanm/work/*/build.log && exit 1 )
+
 
 #
 # Clean up the final image
 #
 
-FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11-Final
+FROM FB11 AS FB11-Final
 
 # Arguments
 ARG version
