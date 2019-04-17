@@ -29,7 +29,11 @@ RUN apt-get update \
 # written to by cpanm, (it wants /home/user/.cpanm)
 COPY OpusVL-FB11-$version.tar.gz .
 RUN /opt/perl5/bin/cpanm --installdeps
-RUN /opt/perl5/bin/cpanm -nM http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
+
+RUN useradd -rs /bin/false -d /tmp -g 0 testuser
+RUN chmod -R 775 /opt
+USER testuser
+RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
     || ( cat /root/.cpanm/work/*/build.log && exit 1 )
 
 
