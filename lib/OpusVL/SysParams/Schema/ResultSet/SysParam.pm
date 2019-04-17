@@ -46,7 +46,7 @@ namespace removed.
 
 sub all_param_names {
     my $self = shift;
-    my $ns = $self->{sysparams_namespace};
+    my $ns = $self->{attrs}->{sysparams_namespace};
     my @all = $self->namespaced_search->get_column('name')->all;
     map $self->_denamespaced_name($_), @all;
 }
@@ -60,7 +60,7 @@ C<label>, C<comment>, C<data_type> - with the value being deserialised already.
 
 sub all_param_data {
     my $self = shift;
-    my $ns = $self->{sysparams_namespace};
+    my $ns = $self->{attrs}->{sysparams_namespace};
 
     map { +{
         name => $self->_denamespaced_name($_->name),
@@ -106,11 +106,11 @@ sub with_namespace {
     my $clone = $self->search;
 
     # Remember to allow for the empty string as a valid namespace!
-    if (exists $clone->{sysparams_namespace}) {
-        $clone->{sysparams_namespace} .= '::' . $ns;
+    if (exists $clone->{attrs}->{sysparams_namespace}) {
+        $clone->{attrs}->{sysparams_namespace} .= '::' . $ns;
     }
     else {
-        $clone->{sysparams_namespace} = $ns;
+        $clone->{attrs}->{sysparams_namespace} = $ns;
     }
 
     $clone;
@@ -202,11 +202,11 @@ it, because it's private.
 sub namespaced_search {
     my $self = shift;
 
-    return $self if not defined $self->{sysparams_namespace};
+    return $self if not defined $self->{attrs}->{sysparams_namespace};
 
     $self->search({
         name => {
-            -like => $self->{sysparams_namespace} . '::%'
+            -like => $self->{attrs}->{sysparams_namespace} . '::%'
         }
     });
 }
@@ -214,7 +214,7 @@ sub namespaced_search {
 # Returns the fully namespaced name if we have set a namespace, or just the name
 # if we have not
 sub _namespaced_name {
-    my $ns = $_[0]->{sysparams_namespace};
+    my $ns = $_[0]->{attrs}->{sysparams_namespace};
     # Make sure we do a definedness check, because the empty string is a valid
     # namespace
     defined $ns ? $ns . '::' . $_[1] : $_[1]
@@ -222,7 +222,7 @@ sub _namespaced_name {
 
 # Removes the current namespace from the parameter name and returns the result
 sub _denamespaced_name {
-    my $ns = $_[0]->{sysparams_namespace};
+    my $ns = $_[0]->{attrs}->{sysparams_namespace};
     my $name = $_[1];
     # Make sure we do a definedness check, because the empty string is a valid
     # namespace

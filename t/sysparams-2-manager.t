@@ -62,15 +62,8 @@ ok $p->@* == 2, "Correctly deserialised";
     eq_or_diff scalar $strat->value_of('array'), $manager->value_of('array'), "Both strats return same value_of";
 }
 
-eq_or_diff [$manager->all_params], ['value', 'array', 'new.test.value' ], "Correct names returned from all_params";
+eq_or_diff [$manager->all_params], [ 'array', 'new.test.value', 'value', ], "Correct names returned from all_params";
 eq_or_diff [$manager->all_params_fulldata], [
-    {
-        name => 'value',
-        label => "Test/Namespace/Value",
-        data_type => 'text',
-        value => 'test value',
-        comment => undef,
-    },
     {
         name => 'array',
         label => "Test/Namespace/Array",
@@ -83,6 +76,13 @@ eq_or_diff [$manager->all_params_fulldata], [
         label => "New test value",
         data_type => 'text',
         value => "Better value",
+        comment => undef,
+    },
+    {
+        name => 'value',
+        label => "Test/Namespace/Value",
+        data_type => 'text',
+        value => 'test value',
         comment => undef,
     },
 ], "Correct full data";
