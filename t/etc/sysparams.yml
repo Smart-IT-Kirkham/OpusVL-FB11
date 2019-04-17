@@ -1,0 +1,23 @@
+schema_class: OpusVL::SysParams::Schema
+traits:
+  - Testpostgresql
+fail_on_schema_break: 1
+fixture_sets:
+  some_params:
+    - SysParam
+    - - - name
+        - label
+        - data_type
+        - value
+      - - test::namespace::value
+        - "Test/Namespace/Value"
+        - '{"value":"text"}'
+        - '{"value":"test value"}'
+      - - test::namespace::array
+        - "Test/Namespace/Array"
+        - '{"value":"text"}'
+        - '{"value":["value1", "value2"]}'
+      - - ::root.value
+        - "Root Value"
+        - '{"value":"text"}'
+        - '{"value":"root value"}'

@@ -1,0 +1,50 @@
+<div class="row">
+  <div class="col-sm-12">
+    <div class="fb11-card">
+      <h1>System Parameters</h1>
+      [% IF sysparams %]
+        <table class="table parameters">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Value</th>
+              <th width="12%"></th>
+            </tr>
+          </thead>
+          <tbody>
+            [% FOR param IN sysparams %]
+              <tr class="record record-parameter">
+                <td class="field field-name" colspan="3">
+                  [% param.name %]
+                </td>
+              </tr>
+              <tr class="record record-parameter">
+                <td class="field field-label">
+                  [% (param.label || "(No Label)") | html %]
+                </td>
+                <td class="field field-value">
+                  [% INCLUDE sysparams/widgets/display_value.tt
+                    leaf_type=param.data_type
+                    value=param.value
+                  %]
+                </td>
+                <td>
+                  <div class="btn-group">
+                    <a class="btn btn-primary" href="/sysparams/edit/[%
+                      param.name %]"
+                      title="Edit Setting"
+                    >
+                      <i class="fa fa-pencil"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            [% END %]
+          </tbody>
+        </table>
+      [% ELSE %]
+        <p>There are no system parameters configured</p>
+      [% END %]
+    </div>
+  </div> <!-- /col-sm-12 -->
+</div> <!-- /row -->

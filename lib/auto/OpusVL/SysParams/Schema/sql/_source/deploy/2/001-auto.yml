@@ -1,0 +1,171 @@
+---
+schema:
+  procedures: {}
+  tables:
+    sys_info:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - name
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+      fields:
+        comment:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: comment
+          order: 4
+          size:
+            - 0
+        data_type:
+          data_type: enum
+          default_value: ~
+          extra:
+            labels:
+              - Text
+              - Multiline Text
+              - Object
+              - List
+              - Boolean
+            list:
+              - text
+              - textarea
+              - object
+              - array
+              - bool
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: data_type
+          order: 5
+          size:
+            - 0
+        label:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: label
+          order: 2
+          size:
+            - 0
+        name:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: name
+          order: 1
+          size:
+            - 0
+        value:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: value
+          order: 3
+          size:
+            - 0
+      indices: []
+      name: sys_info
+      options: []
+      order: 1
+    sysparams:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - name
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+      fields:
+        comment:
+          data_type: text
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: comment
+          order: 4
+          size:
+            - 0
+        data_type:
+          data_type: enum
+          default_value: text
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: data_type
+          order: 5
+          size:
+            - 0
+        label:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: label
+          order: 2
+          size:
+            - 0
+        name:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: name
+          order: 1
+          size:
+            - 0
+        value:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: value
+          order: 3
+          size:
+            - 0
+      indices: []
+      name: sysparams
+      options: []
+      order: 2
+  triggers: {}
+  views: {}
+translator:
+  add_drop_table: 0
+  filename: ~
+  no_comments: 0
+  parser_args:
+    sources:
+      - SysInfo
+      - SysParam
+  parser_type: SQL::Translator::Parser::DBIx::Class
+  producer_args: {}
+  producer_type: SQL::Translator::Producer::YAML
+  show_warnings: 0
+  trace: 0
+  version: 0.11024
