@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y build-essential
 
 # Finally install the FB11 tarball, use the OpusVL backing mirror
 COPY OpusVL-FB11-$version.tar.gz .
-RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz 
+RUN /opt/perl5/bin/cpanm --installdeps
+RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz
 
 #
 # Clean up the final image
