@@ -449,9 +449,9 @@ sub _pre_hive_init_brain {
     # We avoid initialising a brain twice by just doing nothing.
     # But a brain should probably also check this itself, because init is a
     # public interface to brains, so they can be initialised without us knowing.
-    return if $self->_brain_initialised->{$brain_name};
+    return if $self->_brain_initialised->{$brain_name}->{pre_hive_init};
     $self->_brain($brain_name)->pre_hive_init;
-    $self->_brain_initialised->{$brain_name} = 1;
+    $self->_brain_initialised->{$brain_name}->{pre_hive_init} = 1;
     $self;
 }
 
@@ -463,9 +463,9 @@ sub _hive_init_brain {
     # mentioned above, we might not be told that a brain has been initialised.
     # It might be sensible to define these as private methods that should only
     # ever be called from the hive or from tests.
-    return if $self->_brain_initialised->{$brain_name};
+    return if $self->_brain_initialised->{$brain_name}->{hive_init};
     $self->_brain($brain_name)->hive_init($self);
-    $self->_brain_initialised->{$brain_name} = 2;
+    $self->_brain_initialised->{$brain_name}->{hive_init} = 1;
     $self;
 }
 
