@@ -27,6 +27,8 @@ RUN apt-get update \
 # option to use that.
 # To run the tests as user we need a user whose home directory exists and can be
 # written to by cpanm, (it wants /home/user/.cpanm)
+
+# Until I fixed it :D ^
 COPY OpusVL-FB11-$version.tar.gz .
 RUN /opt/perl5/bin/cpanm --installdeps
 
@@ -34,8 +36,10 @@ RUN useradd -rs /bin/false -d /tmp -g 0 testuser
 RUN chmod -R 775 /opt
 USER testuser
 RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
-    || ( cat /root/.cpanm/work/*/build.log && exit 1 )
+    || ( cat /tmp/.cpanm/work/*/build.log && exit 1 )
 
+# Swap back to root incase we add anything else
+USER root
 
 #
 # Clean up the final image
