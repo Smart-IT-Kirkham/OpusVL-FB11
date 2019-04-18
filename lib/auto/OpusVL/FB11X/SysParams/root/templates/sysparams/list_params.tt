@@ -19,8 +19,17 @@
                 </td>
               </tr>
               <tr class="record record-parameter">
-                <td class="field field-label">
-                  [% (param.label || "(No Label)") | html %]
+                <td>
+                  <p class="field field-label">
+                    [% (param.label || "(No Label)") | html %]
+                  </p>
+                  <p class="field field-comment">
+                    [% IF param.comment %]
+                      [% param.comment %]
+                    [% ELSE %]
+                      &nbsp;
+                    [% END %]
+                  </p>
                 </td>
                 <td class="field field-value">
                   [% INCLUDE sysparams/widgets/display_value.tt

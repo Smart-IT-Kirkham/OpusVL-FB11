@@ -1,8 +1,11 @@
-table.parameters tr.record:nth-child(even) td {
+table.parameters tr.record:nth-child(2n) td {
     border-top: 0;
 }
 
-td.field-name {
+.record-parameter .field-label {
+    font-weight: bold;
+}
+.record-parameter .field-name {
     font-size:75%;
     opacity:0.75;
     padding: 0.5em !important;
