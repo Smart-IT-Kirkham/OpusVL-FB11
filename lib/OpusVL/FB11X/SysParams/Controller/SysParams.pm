@@ -18,6 +18,7 @@ __PACKAGE__->config
     fb11_myclass       => 'OpusVL::FB11X::SysParams',
     fb11_shared_module => 'Admin',
     fb11_method_group  => 'System',
+    fb11_css           => ['/static/sysparams/sysparams.css']
 );
 
 has_forms (
