@@ -6,7 +6,6 @@ use namespace::autoclean;
 use OpusVL::SysParams;
 use Try::Tiny;
 use HTML::Entities;
-use OpusVL::FB11X::SysParams::Form::SysParam;
 
 
 BEGIN { extends 'Catalyst::Controller'; }
