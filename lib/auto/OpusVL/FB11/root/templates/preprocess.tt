@@ -33,6 +33,7 @@
             '/static/js/jquery.datetimepicker.full.min.js',
             '/static/js/jquery.shown-with.js',
             '/static/js/jquery.tabify.js',
+            '/static/js/jquery.checkall.js',
             '/static/js/fb11.js',
             '/static/js/fb11-datetimepicker.js',
             '/static/js/chosen.jquery.min.js',
