@@ -8,25 +8,33 @@
         <form id="roles" class="form" role="form" method='POST' action='[% c.uri_for( c.controller('FB11::Admin::Access').action_for('show_role'), [ c.stash.role.role ] )  %]'>
           [% IF fb11_features  %]
             <ul>
-            [% FOREACH app IN fb11_features.keys.sort %]
-            <li class="app"><span>[% app | html %]<span></li>
-              <ul>
-                [% FOREACH feature IN fb11_features.$app.keys.sort %]
-                  <li
-                    [% IF fb11_features.$app.$feature %]class="allowed"[% END %]
-                  >
-                    <input
-                      type="checkbox"
-                      id="feature_[% app| html %]/[% feature| html %]"
-                      name="feature_[% app| html %]/[% feature| html %]"
-                      [% IF fb11_features.$app.$feature %]
-                        checked="checked"[% END %]
-                      value="allow"
+              [% FOREACH app IN fb11_features.keys.sort %]
+              [% app_for_param = app.lc.replace(' ', '-') %]
+              <li class="app">
+                <input type="checkbox" class="check-all"
+                  rel="ul#[% app_for_param %] input">
+                <span>[% app | html %]<span>
+                <ul id="[%app_for_param %]">
+                  [% FOREACH feature IN fb11_features.$app.keys.sort %]
+                  [% feature_for_param = feature.lc.replace(' ', '-') %]
+                    <li
+                      [% IF fb11_features.$app.$feature %]class="allowed"[% END %]
                     >
-                    <label for="feature_[% app| html %]/[% feature| html %]">[% feature| html %]</label>
-                  </li>
-                [% END %]
-              </ul>
+                      <input
+                        type="checkbox"
+                        id="feature_[% app_for_param %]/[% feature_for_param %]"
+                        [%- # Don't use the for_param here just in case it
+                        breaks -%]
+                        name="feature_[% app | html %]/[% feature | html %]"
+                        [% IF fb11_features.$app.$feature %]
+                          checked="checked"[% END %]
+                        value="allow"
+                      >
+                      <label for="feature_[% app_for_param %]/[% feature_for_param %]">[% feature| html %]</label>
+                    </li>
+                  [% END %]
+                </ul>
+              </li>
               [% END %]
             [% END %]
           </ul>
