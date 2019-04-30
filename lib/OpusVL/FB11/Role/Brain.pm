@@ -91,7 +91,14 @@ In practice, it is usually better to have some hats for identification purposes
 and some hats for providing services, and not to combine the roles into a single
 hat.
 
-=head1 METHODS
+=head1 PROPERTIES
+
+=head2 hive
+
+This is the L<OpusVL::FB11::Hive::Instance> in which the brain is registered.
+Normally the hive will construct the brain for you, and therefore provide itself
+to fill in this parameter (and therefore each brain will only exist in a single
+hive).
 
 =head2 short_name
 
@@ -110,7 +117,14 @@ if necessary (since it is now a constructor parameter).
 
 =cut
 
+has hive => (
+    is => 'ro',
+    isa => 'OpusVL::FB11::Hive::Instance',
+);
+
 requires 'short_name';
+
+=head1 METHODS
 
 =head2 hats
 

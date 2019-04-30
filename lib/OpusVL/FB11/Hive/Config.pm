@@ -3,6 +3,7 @@ package OpusVL::FB11::Hive::Config;
 use v5.24;
 use Module::Runtime 'use_package_optimistically';
 use Safe::Isa;
+use Scalar::IfDefined qw/lifdef/;
 use Try::Tiny;
 
 use failures qw/
@@ -54,7 +55,12 @@ sub configure_hive {
                 });
 
                 use_package_optimistically($b_conf->{class});
-                my $br = $b_conf->{class}->new($b_conf->{constructor} // ());
+                my $br = $b_conf->{class}->new(
+                    +{
+                        hive => $hive,
+                        lifdef {%$_} $b_conf->{constructor}
+                    }
+                );
                 $hive = $hive->with_brain_registered($br);
             }
             catch {
