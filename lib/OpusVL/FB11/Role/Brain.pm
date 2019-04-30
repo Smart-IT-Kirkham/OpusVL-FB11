@@ -44,7 +44,8 @@ default implementation of this is empty.
                 class => '+OpusVL::FB11::Hat::dbic_schema::is_brain'
             },
             new_hat_type => {
-                class => 'hat_for_new_type'
+                class => 'hat_for_new_type',
+                constructor => { ... }
             }
         )
     }
@@ -73,6 +74,10 @@ the middle.
 With the Brain itself being C<MyApp::Brain>, the above example would look for
 C<MyApp::Brain::Hat::parameters>, C<OpusVL::FB11::Hat::dbic_schema::is_brain>,
 and C<MyApp::Brain::Hat::hat_for_new_hat_type>.
+
+The hashref with C<class> in it may also contain the key C<constructor>. This
+hashref will be passed to the C<new> method on the class, irrespective of
+whether the class was discovered from this hashref or from the default lookup.
 
 =head2 Services
 
