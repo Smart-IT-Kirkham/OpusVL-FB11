@@ -6,6 +6,7 @@ use OpusVL::FB11::Hive;
 use Moose::Role;
 use Module::Runtime 'use_package_optimistically';
 use Data::Munge qw<elem>;
+use Scalar::IfDefined qw/lifdef/;
 use v5.24;
 
 =head1 DESCRIPTION
@@ -166,7 +167,10 @@ sub _construct_hat {
     }
 
     use_package_optimistically($actual_class);
-    return $actual_class->new({__brain => $self});
+    return $actual_class->new({
+        __brain => $self,
+        lifdef {%$_} $config{$hat_name}->{constructor}
+    });
 }
 
 sub _hat_names {
