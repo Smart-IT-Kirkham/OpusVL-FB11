@@ -57,6 +57,9 @@ RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
 # Poison path so we can use our version of perl
 ENV PATH="/opt/perl5/bin:$PATH"
 
+# Copy all the old opt to the new opt
+COPY --from=FB11-layer0 /opt /opt
+
 # Copy in vendor specific riles
 COPY vendor/* /root/vendor/
 RUN if [ "$(ls /root/vendor)" ]; then \
@@ -67,9 +70,6 @@ fi
 # Echo the version to the root of the file system
 RUN echo OpusVL-FB11@$version >> /version \
     && useradd -rs /bin/false fb11
-
-# Copy all the old opt to the new opt
-COPY --from=FB11-layer0 /opt /opt
 
 # We intentionally leave the USER as root, and drop privs in the entrypoint.
 # This lets us (and derived images) run initialisation as root without having to
