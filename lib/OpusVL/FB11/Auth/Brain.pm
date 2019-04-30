@@ -28,7 +28,13 @@ sub hats {
         qw/auth parameters/,
         fb11authdb => {
             class => 'auth'
-        }
+        },
+        'dbicdh::consumer' => {
+            class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
+            constructor => {
+                priority => 0,
+            }
+        },
     )
 }
 

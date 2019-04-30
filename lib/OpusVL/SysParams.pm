@@ -83,6 +83,9 @@ sub hats {
     'sysparams::management' => {
         class => 'sysparams::management::namespaced'
     },
+    'dbicdh::consumer' => {
+        class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
+    },
 }
 
 =head1 METHODS
