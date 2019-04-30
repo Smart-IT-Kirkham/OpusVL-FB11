@@ -30,7 +30,7 @@ RUN apt-get update \
 
 # Until I fixed it :D ^
 COPY OpusVL-FB11-$version.tar.gz .
-RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz
+RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz ||:
 
 RUN useradd -rs /bin/false -d /tmp -g 0 testuser
 RUN chmod -R 775 /opt
