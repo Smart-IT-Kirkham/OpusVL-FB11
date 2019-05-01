@@ -28,8 +28,6 @@ sub deploy_and_upgrade {
 
     my @dh_consumers = sort_by {$_->priority} $hive->hats('dbicdh::consumer');
 
-    say scalar @dh_consumers;
-
     for my $hat (@dh_consumers) {
         my $schema = $hat->schema;
         my $v_deploy = $hat->start_at;
