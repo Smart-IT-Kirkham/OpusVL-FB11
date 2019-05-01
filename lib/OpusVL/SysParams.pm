@@ -124,4 +124,9 @@ sub hive_init {
     $guard->commit;
 }
 
+sub dependencies {
+    {
+        brains => ['fb11-auth']
+    }
+}
 1;
