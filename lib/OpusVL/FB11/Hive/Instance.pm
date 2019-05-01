@@ -442,6 +442,13 @@ sub service {
     return $self->hat($brain, $service_name);
 }
 
+
+# Dependency philosophy:
+# 1) This algorithm won't initialise a brain twice
+# 2) If brain X has dependencies, we initialise those first
+# 3) If brain X is a dependency of Y, and we do X first, that's what we want
+# So we just make sure to init all dependencies of the current brain first.
+
 sub _pre_hive_init_brain {
     my $self = shift;
     my $brain_name = shift;
@@ -450,7 +457,13 @@ sub _pre_hive_init_brain {
     # But a brain should probably also check this itself, because init is a
     # public interface to brains, so they can be initialised without us knowing.
     return if $self->_brain_initialised->{$brain_name}->{pre_hive_init};
-    $self->_brain($brain_name)->pre_hive_init;
+
+    my $brain = $self->_brain($brain_name);
+    if (my $deps = $brain->dependencies->{brains}) {
+        $self->_pre_hive_init_brain($_) for @$deps;
+    }
+
+    $brain->pre_hive_init;
     $self->_brain_initialised->{$brain_name}->{pre_hive_init} = 1;
     $self;
 }
@@ -464,7 +477,13 @@ sub _hive_init_brain {
     # It might be sensible to define these as private methods that should only
     # ever be called from the hive or from tests.
     return if $self->_brain_initialised->{$brain_name}->{hive_init};
-    $self->_brain($brain_name)->hive_init($self);
+
+    my $brain = $self->_brain($brain_name);
+    if (my $deps = $brain->dependencies->{brains}) {
+        $self->_hive_init_brain($_) for @$deps;
+    }
+
+    $brain->hive_init($self);
     $self->_brain_initialised->{$brain_name}->{hive_init} = 1;
     $self;
 }
