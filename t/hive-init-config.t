@@ -145,6 +145,11 @@ BEGIN {
         }});
         with 'OpusVL::FB11::Role::Brain';
     }
+
+    package TestInit::Brain::WithService::Hat::TEST::service {
+        use Moose;
+        with 'OpusVL::FB11::Role::Hat';
+    }
 }
 
 __DATA__
