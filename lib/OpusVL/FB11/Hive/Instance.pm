@@ -3,7 +3,6 @@ use Moose;
 use v5.24;
 
 use Carp;
-use Class::Load qw/load_class/;
 use Config::Any;
 use Data::Munge qw/elem/;
 use List::Gather;
@@ -332,6 +331,7 @@ sub check {
                     });
                     push @problems, $_;
                 }
+                else { die $_ }
             }
         }
     }
