@@ -5,6 +5,7 @@ our $VERSION = '0';
 
 use v5.24;
 use Moose;
+use Try::Tiny;
 use OpusVL::FB11::Schema::FB11AuthDB;
 
 =head1 DESCRIPTION
@@ -111,6 +112,66 @@ sub hive_init {
     my $hive = shift;
 
     $hive->service('dbicdh::manager')->deploy_and_upgrade($hive);
+
+    # XXX TEMPORARY
+    # This is not where this should live but this is sort of the right place.
+    # The correct behaviour would be a UI that does this on request, which we
+    # can direct to if we have no auth data yet.
+    $self->_setup_fb11admin($hive);
+}
+
+sub _setup_fb11admin {
+    my $self = shift;
+    my $hive = shift;
+
+    # If we don't have an app, just don't do it. This only matters if there's an
+    # app to provide auth to (although why are you here if there's no app?)
+    my $app = try { $hive->service('fb11::app') } catch { undef }
+        or return;
+
+    my $feature_list = $app->auth_feature_list;
+
+    # XXX Because this is temporary I'm not bothering to see if something else
+    # is providing auth. The ability to change auth provider is way further
+    # ahead than the ability to set up FB11 on first run.
+
+    # Find any user. If there is none, create basic fb11admin user.
+    my $Users = $self->schema->resultset('User');
+    my $user = $Users->first;
+
+    return if $user;
+
+    $user = $Users->create({
+        username => 'fb11admin',
+        email    => 'fb11admin@localhost',
+        name     => 'Administrator',
+        password => 'fb11password'
+    });
+
+    warn "**** Created fb11admin / fb11password! Change the password!";
+
+    for my $section (keys %$feature_list) {
+        my $roles = $feature_list->{$section};
+
+        for my $role (keys %$roles) {
+            $self->schema->resultset('Aclfeature')->find_or_create({
+                feature => $section . '/' . $role
+            });
+        }
+    }
+    my $admin_role = $self->schema->resultset('Role')->find_or_create({
+        role => 'Admin'
+    });
+
+    $self->schema->txn_do(sub {
+        for my $feature ( $self->schema->resultset('Aclfeature')->all ) {
+            $admin_role->add_to_aclfeatures($feature)
+                unless $admin_role->aclfeatures->find($feature->id);
+        }
+    });
+
+    $user->add_to_roles($admin_role)
+
 }
 
 with 'OpusVL::FB11::Role::Brain';
