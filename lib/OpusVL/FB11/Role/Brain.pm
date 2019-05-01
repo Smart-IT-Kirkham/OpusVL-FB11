@@ -4,7 +4,7 @@ package OpusVL::FB11::Role::Brain;
 
 use OpusVL::FB11::Hive;
 use Moose::Role;
-use Module::Runtime 'use_module';
+use Module::Runtime 'use_package_optimistically';
 use Data::Munge qw<elem>;
 use Scalar::IfDefined qw/lifdef/;
 use v5.24;
@@ -159,7 +159,7 @@ sub _construct_hat {
         $actual_class = "${ns}::Hat::${actual_class}";
     }
 
-    use_module($actual_class);
+    use_package_optimistically($actual_class);
     return $actual_class->new({
         __brain => $self,
         lifdef {%$_} $config{$hat_name}->{constructor}
