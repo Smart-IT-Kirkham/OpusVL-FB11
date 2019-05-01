@@ -18,6 +18,14 @@ sub for_component {
     });
 }
 
+sub for_all_components {
+    OpusVL::SysParams::Reader->new({
+        manager => OpusVL::SysParams::Manager::Namespaced->new({
+            __brain => $_[0]->__brain
+        })
+    });
+}
+
 1;
 
 =head1 DESCRIPTION
