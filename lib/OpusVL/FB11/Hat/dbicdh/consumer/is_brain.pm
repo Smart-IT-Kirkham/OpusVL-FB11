@@ -2,7 +2,7 @@ package OpusVL::FB11::Hat::dbicdh::consumer::is_brain;
 
 # ABSTRACT: A dbicdh::consumer where the schema is on the brain
 our $VERSION = '0';
-use 5.24;
+use v5.24;
 use Moose;
 
 =head1 DESCRIPTION
