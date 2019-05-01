@@ -99,13 +99,6 @@ hat.
 
 =head1 PROPERTIES
 
-=head2 hive
-
-This is the L<OpusVL::FB11::Hive::Instance> in which the brain is registered.
-Normally the hive will construct the brain for you, and therefore provide itself
-to fill in this parameter (and therefore each brain will only exist in a single
-hive).
-
 =head2 short_name
 
 This identifies the I<instantiated> brain in the hive. You have to implement
@@ -122,11 +115,6 @@ This way, another object of the same class can be instantiated with a new name
 if necessary (since it is now a constructor parameter).
 
 =cut
-
-has hive => (
-    is => 'ro',
-    isa => 'OpusVL::FB11::Hive::Instance',
-);
 
 requires 'short_name';
 
