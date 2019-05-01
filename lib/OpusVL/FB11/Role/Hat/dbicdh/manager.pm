@@ -4,6 +4,8 @@ package OpusVL::FB11::Role::Hat::dbicdh::manager;
 our $VERSION = '0';
 use Moose::Role;
 
+with 'OpusVL::FB11::Role::Hat';
+
 =head1 DESCRIPTION
 
 Hats of this type are worn to declare a service that will manage schemata that
@@ -26,5 +28,5 @@ assumption in this role.
 
 =cut
 
-requires 'deploy_and_upgrade'
+requires 'deploy_and_upgrade';
 1;
