@@ -170,8 +170,12 @@ sub _setup_fb11admin {
         }
     });
 
-    $user->add_to_roles($admin_role)
+    $user->add_to_roles($admin_role);
 
+    # This is bullshit. FB11 caches all the stuff but I have no idea how and the
+    # ACL is dumb as shit. We can remove most of this code anyway when we get a
+    # proper ACL so fuck it.
+    die "Now restart the app because of reasons";
 }
 
 with 'OpusVL::FB11::Role::Brain';
