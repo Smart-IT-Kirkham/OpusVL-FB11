@@ -71,6 +71,9 @@ fi
 RUN echo OpusVL-FB11@$version >> /version \
     && useradd -rs /bin/false fb11
 
+# There is now a default PSGI you can rely on
+ENV PSGI /opt/perl5/bin/fb11.psgi
+
 # We intentionally leave the USER as root, and drop privs in the entrypoint.
 # This lets us (and derived images) run initialisation as root without having to
 # worry about running the app as a privileged user
