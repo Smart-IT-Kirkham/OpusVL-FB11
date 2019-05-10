@@ -26,7 +26,7 @@ Returns a I<connected> schema. The schema must implement C<schema_version>.
 
 =head2 priority
 
-This defaults to 1, but you can increase this number to increase your niceness.
+This defaults to 10, but you can increase this number to increase your niceness.
 
 The value 0 is reserved for the core L<OpusVL::FB11::Schema::FB11AuthDB> schema,
 which I<must> be installed before everything else.
@@ -47,7 +47,7 @@ We always upgrade to the current version according to C<schema_version>.
 
 requires 'schema';
 
-sub priority {1}
+sub priority {10}
 sub start_at {1}
 
 1;
