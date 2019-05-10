@@ -148,6 +148,5 @@ use OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::Role;
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::Role';
 __PACKAGE__->setup_authdb;
 
-=cut
 # You can replace this text with custom content, and it will be preserved on regeneration
 1;

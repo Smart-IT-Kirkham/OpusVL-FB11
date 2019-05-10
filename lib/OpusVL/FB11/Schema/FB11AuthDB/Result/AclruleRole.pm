@@ -1,7 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::AclruleRole;
 
-# Created by DBIx::Class::Schema::Loader
-# DO NOT MODIFY THE FIRST PART OF THIS FILE
+# ABSTRACT: Part of the home-grown ACL that is bad
+our $VERSION = '0';
 
 use strict;
 use warnings;
@@ -9,12 +9,6 @@ use warnings;
 use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
-
-=head1 NAME
-
-OpusVL::FB11::Schema::FB11AuthDB::Result::AclruleRole
-
-=cut
 
 __PACKAGE__->table("aclrule_role");
 
@@ -86,10 +80,4 @@ __PACKAGE__->belongs_to(
   { on_delete => "CASCADE", on_update => "CASCADE" },
 );
 
-
-# Created by DBIx::Class::Schema::Loader v0.07000 @ 2010-05-24 11:55:45
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:X3+DpCtMxshGiDCu4SJglg
-
-=cut
-# You can replace this text with custom content, and it will be preserved on regeneration
 1;

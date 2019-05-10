@@ -1,7 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::Parameter;
 
-# Created by DBIx::Class::Schema::Loader
-# DO NOT MODIFY THE FIRST PART OF THIS FILE
+# ABSTRACT: DEPRECATED - Legacy way of adding flexible parameters to users
+our $VERSION = '0';
 
 use strict;
 use warnings;
@@ -9,12 +9,6 @@ use warnings;
 use base 'DBIx::Class::Core';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
-
-=head1 NAME
-
-OpusVL::FB11::Schema::FB11AuthDB::Result::Parameter
-
-=cut
 
 __PACKAGE__->table("parameter");
 
@@ -80,15 +74,10 @@ __PACKAGE__->has_many(
   { cascade_copy => 0, cascade_delete => 0 },
 );
 
-
-# Created by DBIx::Class::Schema::Loader v0.07000 @ 2010-05-24 12:44:30
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5JfGAXTv11j54ikGYSKpuQ
-
+# FIXME - what is this
 use Moose;
 use OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::Parameter;
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::Parameter';
 __PACKAGE__->setup_authdb;
 
-=cut
-# You can replace this text with custom content, and it will be preserved on regeneration
 1;
