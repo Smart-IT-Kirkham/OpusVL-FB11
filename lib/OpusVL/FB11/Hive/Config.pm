@@ -3,7 +3,6 @@ package OpusVL::FB11::Hive::Config;
 use v5.24;
 use Module::Runtime 'use_package_optimistically';
 use Safe::Isa;
-use Scalar::IfDefined qw/lifdef/;
 use Try::Tiny;
 
 use failures qw/
