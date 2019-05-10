@@ -30,29 +30,29 @@ sub deploy_and_upgrade {
 
     for my $hat (@dh_consumers) {
         my $schema = $hat->schema;
-        my $v_deploy = $hat->start_at;
-        my $v_upgrade = $schema->schema_version;
+        my $deploy_version = $hat->start_at;
+        my $upgrade_version = $schema->schema_version;
         my $module = ref $schema;
 
         my $dh = OpusVL::FB11::DeploymentHandler->new({
             schema => $schema,
             script_directory => module_dir(ref $schema) . '/sql',
-            to_version => $v_upgrade,
+            to_version => $upgrade_version,
         });
 
         my $v_current = try { $dh->database_version } catch {0};
         unless ($v_current) {
-            say "Deploying $module at $v_deploy";
+            say "Deploying $module at $deploy_version";
             my $ddl = $dh->deploy({
-                version => $v_deploy
+                version => $deploy_version
             });
             $dh->add_database_version({
-                version => $v_deploy,
+                version => $deploy_version,
                 ddl => $ddl,
             });
         }
 
-        say "Upgrading $module from $v_current to $v_upgrade";
+        say "Upgrading $module from $v_current to $upgrade_version";
         $dh->upgrade;
     }
 }
