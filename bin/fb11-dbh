@@ -7,7 +7,7 @@ use strict;
 use warnings;
 use 5.014;
 
-use Config::JFDI;
+use Config::ZOMG;
 use Pod::Usage;
 use Try::Tiny;
 use OpusVL::FB11::DeploymentHandler;
@@ -67,7 +67,7 @@ sub connection_params () {
             )
         }
 
-        my $cfg = Config::JFDI->open( path => $file )
+        my $cfg = Config::ZOMG->open( file => $file )
             or pod2usage(
                 message => "Doesn't look like we can use $file",
                 verbose => 0,
