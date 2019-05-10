@@ -87,7 +87,7 @@ is both the manager and consumer.
 # TODO retest legacy parameters against someone who has them
 sub hats {
     (
-        qw/auth parameters/,
+        qw/parameters/,
         fb11authdb => {
             class => 'auth'
         },
@@ -102,7 +102,7 @@ sub hats {
 }
 
 sub provided_services {
-    qw/auth fb11authdb dbicdh::manager/
+    qw/fb11authdb dbicdh::manager/
 }
 
 # TODO: I don't like this being done automatically but we have to make sure DBs
