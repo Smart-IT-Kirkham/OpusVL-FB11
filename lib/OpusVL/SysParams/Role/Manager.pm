@@ -5,7 +5,7 @@ package OpusVL::SysParams::Role::Manager;
 our $VERSION = '0';
 use Moose::Role;
 
-=haed1 DESCRIPTION
+=head1 DESCRIPTION
 
 This Manager role is a superset of L<OpusVL::SysParams::Role::Strategy> and
 implements all of the functionality you'd want on top of getting a value.

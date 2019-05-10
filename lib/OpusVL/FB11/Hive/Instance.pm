@@ -187,7 +187,7 @@ B<Arguments>: C<OpusVL::FB11::Role::Brain $brain>
 
 Returns a clone of the hive with this brain registered. Dies with
 C<failure::fb11::hive::conflict::brain> if there is already a brain registered
-with the same L<OpusVL::FB11::Role::Brain/short_name|short_name>.
+with the same L<short_name|OpusVL::FB11::Role::Brain/short_name>.
 
 =cut
 

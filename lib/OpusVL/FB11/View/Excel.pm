@@ -1,13 +1,14 @@
 package OpusVL::FB11::View::Excel;
 
-=head1 NAME
+# ABSTRACT: Slightly tweaked Catalyst::View::Excel::Template::Plus
+our $VERSION = '0';
 
-OpusVL::FB11::View::Excel
+=encoding utf8
 
 =head1 DESCRIPTION
 
 This is our Catalyst::View::Excel::Template::Plus view that makes use of Excel::Template::Plus
-Assuming you have used the OpusVL::FB11::RolesFor::Plugin->add_paths(__PACKAGE__) call 
+Assuming you have used the OpusVL::FB11::RolesFor::Plugin->add_paths(__PACKAGE__) call
 in your module the excel templates should pick things up from the same place as all the regular
 tt templates.  It just expects the filenames to end C<.xml.tt>.
 
@@ -63,12 +64,6 @@ L<http://search.cpan.org/perldoc?Excel::Template::Plus>
 L<OpusVL::FB11::RolesFor::Plugin> - simplifies setting up the template paths for your modules.
 
 =back
-
-=head1 COPYRIGHT and LICENSE
-
-Copyright (C) 2011 OpusVL
-
-This software is licensed according to the "IP Assignment Schedule" provided with the development project.
 
 =cut
 
