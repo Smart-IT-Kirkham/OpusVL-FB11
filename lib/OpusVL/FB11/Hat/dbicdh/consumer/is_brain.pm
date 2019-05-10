@@ -23,7 +23,7 @@ need to tweak its config. See the L</SYNOPSIS> below, which shows the defaults.
 
     sub hats {
         'dbicdh::consumer' => {
-            class => +'OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
+            class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
             constructor => {
                 schema_property => 'schema',
                 start_at => 1,
