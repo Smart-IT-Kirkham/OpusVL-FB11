@@ -1,6 +1,9 @@
 package OpusVL::FB11X::Crypto;
 
-use Moose;
+use Moose::Role;
+use CatalystX::InjectComponent;
+use namespace::autoclean;
+
 with 'OpusVL::FB11::RolesFor::Plugin';
 
 our $VERSION = '0.043';
