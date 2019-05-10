@@ -107,4 +107,9 @@ requires 'HTML::FormHandler::TraitFor::Model::DBIC';
 requires 'OpusVL::AppKit::Schema::AppKitAuthDB';
 requires 'OpusVL::DBIC::Helper';
 
+# Audit Trail - Try removing these when we rewrite it
+requires 'DBIx::Class::Helper::ResultSet::SetOperations';
+requires 'MooseX::ClassAttribute';
+requires 'Exporter::Easy';
+
 test_requires 'Test::Postgresql58';
