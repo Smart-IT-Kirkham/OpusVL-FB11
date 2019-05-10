@@ -1,6 +1,6 @@
 requires 'Catalyst::Model::Adaptor';
 requires 'Config::General';
-requires 'Config::JFDI';
+requires 'Config::ZOMG';
 requires 'Cpanel::JSON::XS';
 requires 'Crypt::Eksblowfish::Bcrypt';
 requires 'Data::Munge';
