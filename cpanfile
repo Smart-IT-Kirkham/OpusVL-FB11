@@ -1,3 +1,4 @@
+requires 'Catalyst::Model::Adaptor';
 requires 'Config::General';
 requires 'Config::JFDI';
 requires 'Cpanel::JSON::XS';
@@ -5,6 +6,7 @@ requires 'Crypt::Eksblowfish::Bcrypt';
 requires 'Data::Munge';
 requires 'Data::Visitor::Tiny';
 requires 'DateTime';
+requires 'DateTime::Format::ISO8601';
 requires 'DateTime::Format::Pg';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
 requires 'DBIx::Class::InflateColumn::Serializer';

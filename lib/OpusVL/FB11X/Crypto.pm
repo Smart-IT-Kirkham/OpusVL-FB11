@@ -1,5 +1,6 @@
 package OpusVL::FB11X::Crypto;
 
+use Moose;
 with 'OpusVL::FB11::RolesFor::Plugin';
 
 our $VERSION = '0.043';
@@ -14,6 +15,6 @@ after 'setup_components' => sub {
         component => 'OpusVL::FB11X::Crypto::Model::Crypto',
         as        => 'Model::Crypto'
     );
-}
+};
 
 1;
