@@ -172,9 +172,8 @@ sub _setup_fb11admin {
 
     $user->add_to_roles($admin_role);
 
-    # This is bullshit. FB11 caches all the stuff but I have no idea how and the
-    # ACL is dumb as shit. We can remove most of this code anyway when we get a
-    # proper ACL so fuck it.
+    # I hate this but it's necessary. I couldn't find a way of refreshing the
+    # ACL that actually worked, short of restarting the app.
     die "Now restart the app because of reasons";
 }
 
