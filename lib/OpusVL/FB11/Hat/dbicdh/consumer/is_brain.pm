@@ -27,7 +27,7 @@ need to tweak its config. See the L</SYNOPSIS> below, which shows the defaults.
             constructor => {
                 schema_property => 'schema',
                 start_at => 1,
-                priority => 1,
+                sequence => 1,
             }
         }
     }

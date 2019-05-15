@@ -79,7 +79,7 @@ because, in principle, FB11 should not require a database to run.
 
 =head2 dbicdh::consumer
 
-The FB11AuthDB is deployed and upgraded as the zeroth priority schema, and thus
+The FB11AuthDB is deployed and upgraded as the highest priority schema, and thus
 is both the manager and consumer.
 
 =cut
@@ -94,7 +94,7 @@ sub hats {
         'dbicdh::consumer' => {
             class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
             constructor => {
-                priority => 0,
+                sequence => 0,
             }
         },
         'dbicdh::manager',

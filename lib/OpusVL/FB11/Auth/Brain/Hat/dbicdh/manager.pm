@@ -26,7 +26,7 @@ sub deploy_and_upgrade {
     my $self = shift;
     my $hive = shift;
 
-    my @dh_consumers = sort_by {$_->priority} $hive->hats('dbicdh::consumer');
+    my @dh_consumers = sort_by {$_->sequence} $hive->hats('dbicdh::consumer');
 
     for my $hat (@dh_consumers) {
         my $schema = $hat->schema;
