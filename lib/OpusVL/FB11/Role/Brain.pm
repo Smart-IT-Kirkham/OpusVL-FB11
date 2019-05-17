@@ -44,7 +44,7 @@ default implementation of this is empty.
                 class => '+OpusVL::FB11::Hat::dbic_schema::is_brain'
             },
             new_hat_type => {
-                class => 'hat_for_new_type',
+                class => 'class_of_new_hat_type',
                 constructor => { ... }
             }
         )

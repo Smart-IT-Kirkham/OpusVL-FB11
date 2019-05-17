@@ -79,7 +79,7 @@ because, in principle, FB11 should not require a database to run.
 
 =head2 dbicdh::consumer
 
-The FB11AuthDB is deployed and upgraded as the zeroth priority schema, and thus
+The FB11AuthDB is deployed and upgraded as the highest priority schema, and thus
 is both the manager and consumer.
 
 =cut
@@ -94,7 +94,7 @@ sub hats {
         'dbicdh::consumer' => {
             class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
             constructor => {
-                priority => 0,
+                sequence => 0,
             }
         },
         'dbicdh::manager',
@@ -170,8 +170,11 @@ sub _setup_fb11admin {
         }
     });
 
-    $user->add_to_roles($admin_role)
+    $user->add_to_roles($admin_role);
 
+    # I hate this but it's necessary. I couldn't find a way of refreshing the
+    # ACL that actually worked, short of restarting the app.
+    die "Now restart the app because of reasons";
 }
 
 with 'OpusVL::FB11::Role::Brain';

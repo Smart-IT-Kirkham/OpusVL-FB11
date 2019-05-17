@@ -23,11 +23,11 @@ need to tweak its config. See the L</SYNOPSIS> below, which shows the defaults.
 
     sub hats {
         'dbicdh::consumer' => {
-            class => +'OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
+            class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
             constructor => {
                 schema_property => 'schema',
                 start_at => 1,
-                priority => 1,
+                sequence => 1,
             }
         }
     }
@@ -45,15 +45,15 @@ This defines the property on the Brain that holds the schema you will be deployi
 
 See L<OpusVL::FB11::Role::Hat::dbicdh::consumer/start_at>
 
-=head2 priority
+=head2 sequence
 
-See L<OpusVL::FB11::Role::Hat::dbicdh::consumer/priority>
+See L<OpusVL::FB11::Role::Hat::dbicdh::consumer/sequence>
 
 =cut
 
 has schema_property => ( is => 'ro', default => 'schema' );
 has start_at => (is => 'ro', default => 1);
-has priority => (is => 'ro', default => 1);
+has sequence => (is => 'ro', default => 10);
 
 with 'OpusVL::FB11::Role::Hat::dbicdh::consumer';
 
