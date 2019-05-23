@@ -47,7 +47,7 @@ small data items that configure system behaviour.
         }
     });
 
-    OpusVL::FB11::Hive->service('sysparams')->for_component('myapp')->get('some.key');
+    OpusVL::FB11::Hive->service('sysparams')->for_component('myapp')->value_of('some.key');
 
 =head1 SERVICES
 
