@@ -51,6 +51,7 @@ has namespace => (
 
 has schema => (
     is => 'ro',
+    required => 1,
 );
 
 =head1 METHODS
