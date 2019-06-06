@@ -82,7 +82,7 @@ has _schema => (
     is => 'ro',
     lazy => 1,
     default => sub {
-        OpusVL::ObjectParams::Schema->connect($_[0]->connect_info->@*);
+        $_[0]->__brain->schema
     }
 );
 
@@ -100,7 +100,7 @@ sub store {
     my $encoded_params = encode_json($params{params});
 
     my $params = $self->_schema->resultset('Storage')->find({
-        object_type => $id->type,
+        object_type => $params{object}->type,
         object_identifier => $encoded_id,
         parameter_owner => $params{extender},
     });
@@ -112,7 +112,7 @@ sub store {
     }
     else {
         $self->_schema->resultset('Storage')->create({
-            object_type => $id->type,
+            object_type => $params{object}->type,
             object_identifier => $encoded_id,
             parameter_owner => $params{extender},
             parameters => $encoded_params,
@@ -131,7 +131,7 @@ sub retrieve {
     # Also we've encoded it as JSON
     # TODO: Put this logic in the resultset
     my $params = $self->_schema->resultset('Storage')->find({
-        object_type => $id->type,
+        object_type => $params{object}->type,
         object_identifier => $encoded,
         parameter_owner => $params{extender},
     });
