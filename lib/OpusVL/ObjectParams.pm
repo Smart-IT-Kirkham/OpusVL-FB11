@@ -43,8 +43,7 @@ Z<>
 
     sub extendee_spec {
         'mycomponent::somedata' => {
-            class => 'MyComponent::Schema::Result::SomeData',
-            driver => 'dbic'
+            # ... FIXME
         }
     }
 
@@ -61,19 +60,24 @@ Z<>
 
     package AnotherComponent::Brain::Hat::objectparams::extender;
 
+    use Moose;
+    with 'OpusVL::ObjectParams::Role::Hat::objectparams::extender';
+
+    # Required
     sub schemas {
         'mycomponent::somedata' => {
             # ... OpenAPI Spec
         }
     }
 
-    sub parameters_for {
+    # Not required
+    sub get_parameters_for {
         my $self = shift;
-        my $type = shift;
-        my $key = shift;
+        my $adapter = shift;
 
-        my $rs = $self->__brain->schema->parameters_resultset($type);
-        $rs->parameters_for($key);
+        # Custom way of storing params on this hat!
+        my $rs = $self->__brain->schema->parameters_resultset($adapter->type);
+        $rs->parameters_for($adapter->id);
     }
 
 =head1 EXTENDING DATA
@@ -86,7 +90,7 @@ L<OpusVL::ObjectParameters::Role::Hat::objectparams::extendee>.
 It is not strictly necessary to export any information about extendable objects.
 Any Brain can, in theory, extend any other Brain's objects if it wants to. The
 strict difference is that if you are declaring your objects as extendable, I<you
-will be looking for them>.
+will be looking for extensions>.
 
 Generally, this means that you will provide a form (probably in a separate UI
 module, but still under your control), or at least some sort of behaviour, that
@@ -115,13 +119,13 @@ An example hashref looks like this:
     {
         'fb11core::user' => {
             # TODO
-            driver => 'dbic'
+            adapter => 'dbic'
         }
     }
 
-We explain drivers further down. Normally the name would represent the I<type>
-of object your extensible object is, but some drivers might represent behaviour
-specific to an individual class or component.
+We explain adapters L<further down|/Extensibles>. Normally the name would
+represent the I<type> of object your extensible object is, but some adapters
+might represent behaviour specific to an individual class or component.
 
 =head2 Extenders
 
@@ -184,10 +188,8 @@ L<OpusVL::ObjectParams::Role::Hat::objectparams::extender>. By default they just
 store and retrieve the data using the built-in storage mechanism. However, you
 can override them if you want to handle the data in a customised way.
 
-Both of these methods will receive a C<$type> and an C<$identifier>. C<$type>
-will be a string corresponding to one of the types you said you could handle in
-C<schemas>. C<$identifier> will be a unique way to identify the object of that
-type. See L</DRIVERS> for how the identifier is produced.
+Both of these methods will receive an C<$adapter> parameter, containing
+sufficient information to identify the object in question. L</Adapters>.
 
 Naturally, C<set_parameters_for> will also receive a hashref conforming to the
 OpenAPI specification you defined in C<schemas>, and C<get_parameters_for> is
@@ -209,11 +211,12 @@ identifier. The simplest adapter is the I<static> adapter, which does not
 actually contain the extensible object at all, and simply has these two data
 items as properties on the adapter itself.
 
-    OpusVL::FB11::Hive->service('objectparams')->get_extensions_for(
-        OpusVL::ObjectParams::Adapter::Static(
+    OpusVL::FB11::Hive->service('objectparams')->get_params_for(
+        object => OpusVL::ObjectParams::Adapter::Static(
             type => 'fb11core::user',
             id => $user->id_for_params
-        )
+        ),
+        extender => 'audit-trail'
     );
 
 Other adapter types can be used as convenient ways of interfacing with common
@@ -244,9 +247,6 @@ sub provided_services {
 sub hive_init {
     my $self = shift;
     my $hive = shift;
-
-    # Check all objectparams::extendees and see that we have a service
-    # corresponding to their drivers.
 }
 
 1;
