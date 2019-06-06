@@ -54,7 +54,9 @@ Return a hashref of parameters for the provided object. See
 L<OpusVL::ObjectParams/Adapters> for what C<$adapter> will be. If you have no
 parameters, return no values (avoid returning an C<undef> in list context).
 
-The hashref should conform to the corresponding OpenAPI schema from L</schemas>, but this is not checked, except at runtime, when your system falls over because you did it wrong.
+The hashref should conform to the corresponding OpenAPI schema from L</schemas>,
+but this is not checked, except at runtime, when your system falls over because
+you did it wrong.
 
 The default implementation retrieves the data from the C<objectparams::storage>
 service, which is provided by ObjectParams if you need it.
@@ -74,6 +76,8 @@ service, which is provided by ObjectParams if you need it.
 
 =cut
 
+requires 'schemas';
+
 has parameter_owner_identifier => (
     is => 'ro',
     lazy => 1,
@@ -84,7 +88,7 @@ sub get_parameters_for {
     my $self = shift;
     my $adapter = shift;
 
-    OpusVL::FB11::Hive->service('objectparams::storage')
+    OpusVL::FB11::Hive->fancy_hat('objectparams', 'storage')
         ->retrieve(
             object => $adapter,
             extender => $self->parameter_owner_identifier
@@ -98,7 +102,7 @@ sub set_parameters_for {
     my $adapter = shift;
     my $params = shift;
 
-    OpusVL::FB11::Hive->service('objectparams::storage')
+    OpusVL::FB11::Hive->fancy_hat('objectparams', 'storage')
         ->store(
             object => $adapter,
             params => $params,

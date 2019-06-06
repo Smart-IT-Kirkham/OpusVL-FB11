@@ -5,6 +5,7 @@ with 'OpusVL::FB11::Role::Hat';
 
 use OpusVL::FB11::Hive;
 use List::Util qw/first/;
+use List::Gather;
 
 use failures qw/objectparams::unknownextender/;
 
@@ -68,6 +69,20 @@ C<parameters>: Hashref of parameters to set
 
 Sets the parameters for the given object, associated with the given extender.
 
+=head2 get_schemas_for
+
+B<Arguments>: C<%args>
+
+C<type>: The semantic type that one of the Brains says it exposes.
+
+Returns a hashref of OpenAPI schemas. The keys are the extender names, and the
+values are the schemas themselves.
+
+This can be used to get a list of possible values to be passed to C<extender>
+for the other methods.
+
+TODO: Accept an object's Adapter as an alternative to C<type>?
+
 =cut
 
 sub get_parameters_for {
@@ -82,6 +97,26 @@ sub set_parameters_for {
     my %args = @_;
 
     $self->_find_extender($args{extender})->set_parameters_for(@args{qw/object parameters/});
+}
+
+sub get_schemas_for {
+    my $self = shift;
+    my %args = @_;
+
+    my $exposed_type = $args{type};
+    my @extenders = OpusVL::FB11::Hive->hats('objectparams::extender');
+
+    my %extenders_with_stuff = gather {
+        for my $extender (@extenders) {
+            my $schemas = $extender->schemas;
+
+            if (my $apropos_schema = $schemas->{ $exposed_type }) {
+                take $extender->parameter_owner_identifier => $apropos_schema
+            }
+        }
+    };
+
+    return \%extenders_with_stuff;
 }
 
 # FIXME - I've implemented this as a search because I didn't define a formal

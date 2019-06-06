@@ -5,13 +5,7 @@ use warnings;
 use strict;
 
 use Moose;
-
-has short_name => (
-    is => 'ro',
-    default => 'objectparams'
-);
-
-with 'OpusVL::FB11::Role::Brain';
+use OpusVL::ObjectParams::Schema;
 
 # ABSTRACT: Module to handle extensions to others' core data.
 our $VERSION = '0';
@@ -229,15 +223,81 @@ to a class to expose the C<extension_adapter> method on the object itself. This
 can either be implemented by the object, by another role, or by an extension of
 the Extensible Role that implements a specific adapter type.
 
-=head1 THE SERVICE
+=head1 BRAIN INFO
+
+This class is a Brain!
+
+=head2 Construction
+
+=over
+
+=item short_name
+
+The default short name of this Brain is C<objectparams>.
+
+=item connect_info
+
+If you ever need to rely on the built-in storage behaviour (which is very
+likely) you will need to pass connect_info so we can connect to the database.
+This is the normal DBI connect_info arrayref.
+
+=item schema
+
+If you want to, you can pass a connected schema instead of connect_info
+
+=back
+
+=head2 Hats and Services
+
+The class wears the following hats:
+
+=over
+
+=item objectparams
+
+This fulfils the objectparams service.
+
+=item objectparams::storage
+
+This can be requested as a L<fancy hat|OpusVL::FB11::Hive/fancy_hat> to access
+built-in parameter storage. See
+L<OpusVL::ObjectParams::Hat::objectparams::storage>.
+
+=back
+
+And provides the following services:
+
+=over
+
+=item objectparams
 
 The C<objectparams> service is documented in
 L<OpusVL::ObjectParams::Hat::objectparams>.
 
+=back
+
 =cut
 
+has short_name => (
+    is => 'ro',
+    default => 'objectparams'
+);
+
+has connect_info => (
+    is => 'ro',
+);
+
+has schema => (
+    is => 'ro',
+    default => sub { OpusVL::ObjectParams::Schema->connect($_[0]->connect_info->@*) },
+    lazy => 1,
+);
+
+with 'OpusVL::FB11::Role::Brain';
+
 sub hats {
-    'objectparams'
+    'objectparams',
+    'objectparams::storage'
 }
 
 sub provided_services {
@@ -247,6 +307,9 @@ sub provided_services {
 sub hive_init {
     my $self = shift;
     my $hive = shift;
+
+    # TODO : This might be where we register extenders with their names so we
+    # don't have to look them up later.
 }
 
 1;
