@@ -87,7 +87,9 @@ is both the manager and consumer.
 # TODO retest legacy parameters against someone who has them
 sub hats {
     (
-        qw/parameters/,
+        qw/
+            objectparams::extendee
+        /,
         fb11authdb => {
             class => 'auth'
         },
