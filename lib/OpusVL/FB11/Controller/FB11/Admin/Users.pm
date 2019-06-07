@@ -167,7 +167,6 @@ sub show_user
         ->service('objectparams')
         ->get_schemas_for(type => 'fb11core::user');
 
-    use Data::Dump; dd $extension_schemata;
     for my $extender (keys %$extension_schemata) {
         my $schema = $extension_schemata->{$extender};
         my $field_config = OpusVL::FB11::Form->openapi_to_formhandler($schema);
