@@ -22,8 +22,8 @@ provides. See L</schemas>.
 
 =head2 schemas
 
-Return a hashref defining the semantic names of objects you will extend, and an
-OpenAPI schema against each one.
+Return a hash-shaped list defining the semantic names of objects you will
+extend, and an OpenAPI schema against each one.
 
 To determine the semantic names of objects, you will have to read the
 documentation of the component that owns those objects. There is currently no
