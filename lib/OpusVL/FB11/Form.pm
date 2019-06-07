@@ -197,8 +197,11 @@ sub _to_field_name {
     my %mapping = (
         string => 'Text',
         array => 'Select',
-        number => 'Number',
         boolean => 'Checkbox',
+        # FIXME This field type doesn't exist.
+        # We will have to use the format information to know which type to use.
+        # This is the point at which we make a proper class structure for it.
+        # number => 'Number',
     );
 
     sub _to_field_type {
