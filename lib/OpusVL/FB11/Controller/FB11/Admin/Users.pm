@@ -221,14 +221,12 @@ sub show_user
         if ($params_form->validated) {
             for my $extender (keys %$extension_schemata) {
                 my $schema = $extension_schemata->{$extender};
-                my $extension_data = OpusVL::FB11::Hive
-                    ->service('objectparams')
+                OpusVL::FB11::Hive->service('objectparams')
                     ->set_parameters_for(
                         object => $params_adapter,
                         extender => $extender,
                         parameters => $params_form->params_back_to_openapi( $schema )
                     )
-                }
             }
 
             $c->flash->{status_msg} = "Successfully updated parameters";
