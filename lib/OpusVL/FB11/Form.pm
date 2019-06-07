@@ -193,8 +193,8 @@ sub _to_field_name {
 }
 
 # Returns an appropriate FormHandler field type for the OpenAPI type
-{
-    my %mapping = (
+sub _to_field_type {
+    state %mapping = (
         string => 'Text',
         array => 'Select',
         boolean => 'Checkbox',
@@ -204,11 +204,9 @@ sub _to_field_name {
         # number => 'Number',
     );
 
-    sub _to_field_type {
-        my $openapi_name = shift;
-        # TODO
-        return $mapping{$openapi_name} || die "I don't know how to render $openapi_name";
-    }
+    my $openapi_name = shift;
+    # TODO
+    return $mapping{$openapi_name} || die "I don't know how to render $openapi_name";
 }
 
 1;
