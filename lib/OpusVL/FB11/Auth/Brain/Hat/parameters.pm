@@ -14,7 +14,15 @@ This will only really work if the brain that wears it is the FB11AuthDB itself.
 
 =cut
 
+# FIXME - This class is an implementation of CUSTOM parameters, which needs to
+# be rewritten. That can be done in terms of ObjectParameters, which has already
+# been rewritten. So we can't support this role just yet.
 our $VERSION = '0.043';
+
+die "Cannot use ". __PACKAGE__ . " for now.";
+
+__END__
+
 use Moose;
 with 'OpusVL::FB11::Role::Hat::parameters';
 

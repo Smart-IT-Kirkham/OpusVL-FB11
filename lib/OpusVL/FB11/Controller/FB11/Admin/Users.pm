@@ -9,6 +9,7 @@ use List::Util qw/pairkeys/;
 
 use OpusVL::FB11::Form;
 use OpusVL::FB11::Hive;
+use OpusVL::ObjectParams::Adapter::Static;
 
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
@@ -152,31 +153,50 @@ sub show_user
     );
     $upload_form->process($c->req->params);
 
-    # TODO - this is probably more useful done elsewhere
     my $params_form_config = {};
-    HAT:
-    for my $hat (OpusVL::FB11::Hive->hats('parameters')) {
-        if (elem 'OpusVL::FB11::Schema::FB11AuthDB::Result::User', [$hat->get_augmented_classes]) {
-            my $schema =  $hat->get_parameter_schema;
-            next HAT if not $schema or not %$schema;
 
-            my $field_config = OpusVL::FB11::Form->openapi_to_formhandler($schema);
-            my $fieldset = {
-                name => $schema->{'x-namespace'},
-                tag => 'fieldset',
-                label => $schema->{title},
-                render_list => [ pairkeys @$field_config ],
-            };
+    # NOTE: I am keying a user on their email address because the *semantic*
+    # type should define an identity key, and this is the only one we have. Ask
+    # me to clarify, I dare you.
+    my $params_adapter = OpusVL::ObjectParams::Adapter::Static->new({
+        id => { email => $c->stash->{thisuser}->email },
+        type => 'fb11core::user'
+    });
 
-            push $params_form_config->{field_list}->@*, @$field_config;
-            push $params_form_config->{block_list}->@*, $fieldset;
-            push $params_form_config->{render_list}->@*, $fieldset->{name};
-            $params_form_config->{defaults} //= {};
+    my $extension_schemata = OpusVL::FB11::Hive
+        ->service('objectparams')
+        ->get_schemas_for(type => 'fb11core::user');
+
+    use Data::Dump; dd $extension_schemata;
+    for my $extender (keys %$extension_schemata) {
+        my $schema = $extension_schemata->{$extender};
+        my $field_config = OpusVL::FB11::Form->openapi_to_formhandler($schema);
+        my $extension_data = OpusVL::FB11::Hive
+            ->service('objectparams')
+            ->get_parameters_for(
+                object => $params_adapter,
+                extender => $extender,
+            )
+        ;
+
+        my $fieldset = {
+            name => $schema->{'x-namespace'},
+            tag => 'fieldset',
+            label => $schema->{title},
+            render_list => [ pairkeys @$field_config ],
+        };
+
+        push $params_form_config->{field_list}->@*, @$field_config;
+        push $params_form_config->{block_list}->@*, $fieldset;
+        push $params_form_config->{render_list}->@*, $fieldset->{name};
+
+        $params_form_config->{defaults} //= {};
+        if ($extension_data) {
             $params_form_config->{defaults} = {
                 $params_form_config->{defaults}->%*,
                 OpusVL::FB11::Form->openapi_to_init_object(
                     $schema,
-                    $hat->get_augmented_data($c->stash->{thisuser})
+                    $extension_data
                 )
                 ->%*
             };
