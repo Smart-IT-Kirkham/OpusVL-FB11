@@ -28,8 +28,14 @@ hashref is the value.
 
 =head3 Config hashref
 
+TODO:
+
 You may specify the C<adapter> key in the config hashref. This will be used to
 look up an adapter for your object. See L<OpusVL::ObjectParameters/Adapters>.
+
+The value is the leaf part of the adapter you want to use, and the module will
+be loaded for you. Using common semantics, if you prefix this value with a +, it
+will be treated as a full module name, and we'll load that instead.
 
 If you don't specify this, you will be expected to construct your own adapter at
 the point you look up parameters through the service.
