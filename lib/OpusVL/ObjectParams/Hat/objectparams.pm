@@ -108,9 +108,9 @@ sub get_schemas_for {
 
     my %extenders_with_stuff = gather {
         for my $extender (@extenders) {
-            my $schemas = $extender->schemas;
+            my %schemas = $extender->schemas;
 
-            if (my $apropos_schema = $schemas->{ $exposed_type }) {
+            if (my $apropos_schema = $schemas{ $exposed_type }) {
                 take $extender->parameter_owner_identifier => $apropos_schema
             }
         }
