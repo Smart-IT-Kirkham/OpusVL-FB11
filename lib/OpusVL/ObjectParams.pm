@@ -297,11 +297,18 @@ with 'OpusVL::FB11::Role::Brain';
 
 sub hats {
     'objectparams',
-    'objectparams::storage'
+    'objectparams::storage',
+    'dbicdh::consumer' => {
+        class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain'
+    }
 }
 
 sub provided_services {
     'objectparams'
+}
+
+sub dependencies {
+    services => [qw/ dbicdh::manager /]
 }
 
 sub hive_init {
