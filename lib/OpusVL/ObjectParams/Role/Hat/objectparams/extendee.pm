@@ -22,9 +22,9 @@ L<OpusVL::ObjectParameters::Role::Extensible> to simplify this arrangement.
 
 =head2 extendee_spec
 
-This will return a hashref configuring the objects you will accept extensions
-to. The semantic name of the object is the key, and a configuration hashref is
-the value.
+This will return a paired list configuring the objects you will accept
+extensions to. The semantic name of the object is the key, and a configuration
+hashref is the value.
 
 =head3 Config hashref
 
