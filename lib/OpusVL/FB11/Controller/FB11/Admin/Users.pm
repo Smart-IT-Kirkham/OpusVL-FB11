@@ -202,6 +202,7 @@ sub show_user
         }
     }
 
+    # Some of the variables here have existed for ages, sorry
     if (%$params_form_config) {
         my $defaults = delete $params_form_config->{defaults};
         push $params_form_config->{field_list}->@*, (
@@ -218,12 +219,14 @@ sub show_user
         );
 
         if ($params_form->validated) {
-            for my $hat (OpusVL::FB11::Hive->hats('parameters')) {
-                my $schema =  $hat->get_parameter_schema;
-                if (elem 'OpusVL::FB11::Schema::FB11AuthDB::Result::User', [$hat->get_augmented_classes]) {
-                    $hat->set_augmented_data(
-                        $c->stash->{thisuser},
-                        $params_form->params_back_to_openapi( $schema )
+            for my $extender (keys %$extension_schemata) {
+                my $schema = $extension_schemata->{$extender};
+                my $extension_data = OpusVL::FB11::Hive
+                    ->service('objectparams')
+                    ->set_parameters_for(
+                        object => $params_adapter,
+                        extender => $extender,
+                        parameters => $params_form->params_back_to_openapi( $schema )
                     )
                 }
             }
