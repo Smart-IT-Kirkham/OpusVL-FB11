@@ -242,7 +242,7 @@ sub hive_init {}
 
 =head2 dependencies
 
-Returns zero, one, or two arrayrefs of dependencies, in a hashref.
+Returns zero, one, or two arrayrefs of dependencies, in a hash-shaped list.
 L<OpusVL::FB11::Hive/check> will use this list to check consistency.
 
 The hashref can contain C<services> and/or C<brains>. C<brains> uses the
@@ -253,7 +253,7 @@ It is recommended that you rely on services rather than brains, but within a
 self-contained system you can use the C<brains> key to maintain a sort of ersatz
 compile-time checking.
 
-    {
+    sub dependencies {
         brains => [
             'my-data-model'
         ],
@@ -264,5 +264,5 @@ compile-time checking.
 
 =cut
 
-sub dependencies {+{}}
+sub dependencies {}
 1;
