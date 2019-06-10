@@ -70,7 +70,6 @@ sub openapi_to_formhandler {
     my $order = $schema->{'x-field-order'} // [ sort keys $schema->{properties}->%* ];
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     for my $field (@$order) {
         my $def = $schema->{properties}->{$field};
@@ -105,7 +104,7 @@ sub openapi_to_formhandler {
             $field{multiple} = 1;
         }
 
-        push @$formhandler, ( $namespace . _to_field_name($field) => \%field )
+        push @$formhandler, ( _with_namespace($namespace, _to_field_name($field)) => \%field )
     }
 
     return $formhandler;
@@ -131,11 +130,10 @@ sub openapi_to_init_object {
     my $output_object = shift;
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     return {
         map {
-            $namespace . _to_field_name($_) => $init_object->{$_}
+            _with_namespace($namespace, _to_field_name($_)) => $init_object->{$_}
         }
         keys %$init_object
     }
@@ -166,12 +164,11 @@ sub params_back_to_openapi {
     my $schema = shift;
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     my $ret = {};
 
     for my $field (keys $schema->{properties}->%*) {
-        my $form_field = $namespace . _to_field_name($field);
+        my $form_field = _with_namespace($namespace, _to_field_name($field));
 
         my $value = $self->field($form_field)->value;
 
@@ -184,6 +181,18 @@ sub params_back_to_openapi {
     }
 
     return $ret;
+}
+
+# Adds the namespace to the field. This lets us change in a single place how
+# namespaces are represented.
+# TODO we should formalise namespaces, but I don't know how yet.
+sub _with_namespace {
+    my $namespace = shift;
+    my $field_name = shift;
+
+    return $field_name if not $namespace;
+
+    return $namespace . '::' . $field_name
 }
 
 # sanitises the field name into lowercase_underscore
