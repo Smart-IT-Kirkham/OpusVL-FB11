@@ -1,3 +1,6 @@
+# FIXME: FB11 won't run without a cache, so we prescribe one here.
+requires 'Cache::Redis';
+
 requires 'Catalyst::Model::Adaptor';
 requires 'Config::General';
 requires 'Config::ZOMG';
