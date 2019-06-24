@@ -153,6 +153,9 @@ sub show_user
     );
     $upload_form->process($c->req->params);
 
+    # TODO Handle the params in a separate place.
+    # All we're doing is adding our own fields to the form, and then looking for
+    # them on POST.
     my $params_form_config = {};
 
     # NOTE: I am keying a user on their email address because the *semantic*
