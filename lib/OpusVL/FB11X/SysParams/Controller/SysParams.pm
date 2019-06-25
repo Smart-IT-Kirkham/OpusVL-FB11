@@ -48,8 +48,8 @@ sub list_params
     };
 }
 
-sub set_param
-    : Path('set')
+sub edit_param
+    : Path('edit')
     : Args(1)
     : FB11Feature('System Parameters')
 {
@@ -58,16 +58,11 @@ sub set_param
         ->service('sysparams::management')
         ->for_all_components;
 
-    # This is going to take some work so we'll do it later.
-    $c->flash->{error_msg} = "Not yet implemented";
-    $c->detach('/not_found');
-
     my $meta = $manager->metadata_for($name)
         // $c->detach('/not_found');
 
     my $value = $manager->value_of($name);
-
-    my $label = $meta->{label};
+    my $is_multi = !!ref $value;
 
     if ($c->req->param ('cancelbutton')) {
         $c->flash->{status_msg} = 'System parameter not changed';
@@ -78,11 +73,25 @@ sub set_param
     my $form = $self->edit_form;
     $c->stash->{form} = $form;
 
+    my $init_obj = {
+        $is_multi ? (values => $value) : (value => $value),
+        name => $name,
+        %$meta
+    };
+
     $form->process(
         params => $c->req->params,
-        posted => !!$c->req->method eq 'POST',
+        posted => $c->req->method eq 'POST',
+        init_object => $init_obj,
     );
+
     if ($form->validated) {
+        if ($is_multi) {
+            $manager->set_value($name, $form->field('values')->value);
+        }
+        else {
+            $manager->set_value($name, $form->field('value')->value);
+        }
         $c->flash->{status_msg} = 'System Parameter Successfully Altered';
         $c->res->redirect($c->uri_for($self->action_for('list_params')));
         $c->detach;
