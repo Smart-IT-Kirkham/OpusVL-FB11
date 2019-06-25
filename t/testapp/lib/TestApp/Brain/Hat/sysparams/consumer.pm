@@ -61,6 +61,20 @@ sub parameter_spec {
             data_type => 'text',
             comment => "You can construct an object type out of subkeys, by using a dot in the name."
         },
+        'enum-array' => {
+            value => [],
+            comment => "By default, no values are selected.",
+            label => "An array of selects",
+            data_type => {
+                type => 'enum',
+                parameters => [
+                    qw/one one
+                    two two
+                    three three
+                    four four/
+                ]
+            },
+        }
     }
 }
 
