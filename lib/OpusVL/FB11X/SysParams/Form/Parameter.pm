@@ -56,7 +56,23 @@ sub html_comment {
     my ($self, $field) = @_;
     return '' unless $field->value;
     return "<p>" . $field->value . "</p>";
+}
 
+sub render_list {
+    my $self = shift;
+
+    my @render = qw/name label comment/;
+
+    if ($self->field('values')->value) {
+        push @render, 'values';
+    }
+    else {
+        push @render, 'value'
+    }
+
+    push @render, 'submitbutton';
+
+    return \@render;
 }
 
 no HTML::FormHandler::Moose;
