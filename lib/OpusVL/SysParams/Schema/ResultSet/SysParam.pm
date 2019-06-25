@@ -164,6 +164,11 @@ sub set_default {
     my $name = shift;
     my $data = shift;
 
+    # You can define a string but we will always turn it into object format.
+    unless (ref $data->{data_type}) {
+        $data->{data_type} = { type => $data->{data_type} }
+    }
+
     # The wrapped value and data_type setter in the Result class is not used by
     # find_or_create. This seems the easiest place to do this.
     $data->{value} = { value => $data->{value} };
