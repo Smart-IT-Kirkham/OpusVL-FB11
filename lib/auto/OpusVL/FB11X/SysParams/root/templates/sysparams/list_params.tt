@@ -1,59 +1,65 @@
-<div class="row">
-  <div class="col-sm-12">
+<div class="fb11-card">
+  <h1>System Parameters</h1>
+  [% FOREACH namespace IN namespaces.sort %]
+    <a class="btn btn-default" href="#ns-[% namespace %]">[% namespace
+      %]</a>
+  [% END %]
+</div>
+
+  [% FOREACH namespace IN namespaces.sort %]
     <div class="fb11-card">
-      <h1>System Parameters</h1>
-      [% IF sysparams %]
-        <table class="table parameters">
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Value</th>
-              <th width="12%"></th>
+      <h2>
+        <a name="ns-[% namespace %]">[% namespace %]</a>
+      </h2>
+
+      [% params = sysparams.item(namespace) %]
+      <table class="table parameters">
+        <thead>
+          <tr>
+            <th>Parameter</th>
+            <th>Value</th>
+            <th width="12%"></th>
+          </tr>
+        </thead>
+        <tbody>
+          [% FOR param IN params.sort('name') %]
+            <tr class="record record-parameter">
+              <td class="field field-name" colspan="3">
+                [% param.name %]
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            [% FOR param IN sysparams %]
-              <tr class="record record-parameter">
-                <td class="field field-name" colspan="3">
-                  [% param.name %]
-                </td>
-              </tr>
-              <tr class="record record-parameter">
-                <td>
-                  <p class="field field-label">
-                    [% (param.label || "(No Label)") | html %]
-                  </p>
-                  <p class="field field-comment">
-                    [% IF param.comment %]
-                      [% param.comment %]
-                    [% ELSE %]
-                      &nbsp;
-                    [% END %]
-                  </p>
-                </td>
-                <td class="field field-value">
-                  [% INCLUDE sysparams/widgets/display_value.tt
-                    leaf_type=param.data_type
-                    value=param.value
-                  %]
-                </td>
-                <td>
-                  <div class="btn-group">
-                    <a class="btn btn-primary" href="/sysparams/edit/[%
-                      param.name %]"
-                      title="Edit Setting"
-                    >
-                      <i class="fa fa-pencil"></i>
-                    </a>
-                  </div>
-                </td>
-              </tr>
-            [% END %]
-          </tbody>
-        </table>
-      [% ELSE %]
-        <p>There are no system parameters configured</p>
-      [% END %]
-    </div>
-  </div> <!-- /col-sm-12 -->
-</div> <!-- /row -->
+            <tr class="record record-parameter">
+              <td>
+                <p class="field field-label">
+                  [% (param.label || "(No Label)") | html %]
+                </p>
+                <p class="field field-comment">
+                  [% IF param.comment %]
+                    [% param.comment %]
+                  [% ELSE %]
+                    &nbsp;
+                  [% END %]
+                </p>
+              </td>
+              <td class="field field-value">
+                [% INCLUDE sysparams/widgets/display_value.tt
+                  leaf_type=param.data_type
+                  value=param.value
+                %]
+              </td>
+              <td>
+                <div class="btn-group">
+                  <a class="btn btn-primary" href="/sysparams/edit/[%
+                    param.name %]"
+                    title="Edit Setting"
+                  >
+                    <i class="fa fa-pencil"></i>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          [% END %]
+        </tbody>
+      </table>
+  </div>
+[% END %]
