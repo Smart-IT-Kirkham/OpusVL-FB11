@@ -63,6 +63,36 @@ sub edit_param
 
     my $value = $manager->value_of($name);
     my $is_multi = !!ref $value;
+    my $is_enum = $meta->{data_type}->{type} eq 'enum';
+
+    # As with every other HTML form module, formhandler totally misses the point
+    # about the difference between a schema and the HTML representation of that
+    # schema. The choice between Text and Select should be done as the very LAST
+    # thing, but HTML form modules force you to decide as the FIRST thing.
+    #
+    # This is therefore completely the wrong thing to do but it appears to be
+    # the only way to do it. Note that I am also working around this module's
+    # problems in the template as well, which is why it doesn't matter the order
+    # in which these fields get created.
+    my %field_list = (
+        value => { type => 'Text' },
+        'values.contains' => {
+            do_label => 0,
+            do_wrapper => 0,
+            type => 'Text',
+            element_attr => {
+                class => 'js-repeatable',
+                'data-repeatable-format' => '(values\.)(\d+)'
+            }
+        }
+    );
+
+    if ($is_enum) {
+        for (qw/value values.contains/) {
+            $field_list{$_}->{type} = 'Select';
+            $field_list{$_}->{options} = $meta->{data_type}->{parameters};
+        }
+    }
 
     if ($c->req->param ('cancelbutton')) {
         $c->flash->{status_msg} = 'System parameter not changed';
@@ -70,9 +100,13 @@ sub edit_param
         $c->detach;
     }
 
-    my $form = $self->edit_form;
+    my $form = $self->edit_form(
+        field_list => [ %field_list ]
+    );
     $c->stash->{form} = $form;
 
+    # We only send values or value, so the template can draw a repeatable or not
+    # as necessary
     my $init_obj = {
         $is_multi ? (values => $value) : (value => $value),
         name => $name,
