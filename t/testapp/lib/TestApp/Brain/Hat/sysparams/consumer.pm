@@ -33,9 +33,10 @@ sub parameter_spec {
         # it. The actual data *structure* is cemented by the value you supply at
         # this point. The array is an array because the value is an array.
         'array' => {
-            label => "An array parameter, which may have multiple values",
+            label => "An array parameter",
             data_type => 'text',
-            value => [ "Test item" ]
+            value => [ "Test item" ],
+            comment => "All the values are the same type",
         },
         'text' => {
             label => "A text parameter",
