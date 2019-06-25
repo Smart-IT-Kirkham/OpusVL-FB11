@@ -16,7 +16,9 @@ has_field comment => ( type => 'Display', label => 'Comment' );
 # I couldn't see a tidy way of creating a field that could be a repeatable or a
 # single field depending on whether I wanted it to be an array or not. So I
 # created two fields, and the controller picks.
-has_field value => ( type => 'Text', do_label => 0 );
+has_field value => (
+    # Moved into controller because I can't have nice things
+);
 
 # "contains" is a special name for repeatable sub-fields; see
 # HTML::FormHandler::Manual::Fields
@@ -25,13 +27,7 @@ has_field values => (
     do_wrapper => 0,
 );
 has_field 'values.contains' => (
-    do_label => 0,
-    do_wrapper => 0,
-    type => 'Text',
-    element_attr => {
-        class => 'js-repeatable',
-        'data-repeatable-format' => '(values\.)(\d+)'
-    }
+    # Moved into controller because I can't have nice things
 );
 
 has_field submitbutton => (
