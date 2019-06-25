@@ -33,12 +33,18 @@ sub list_params
     my $self = shift;
     my $c    = shift;
 
-    my $params = $c->stash->{sysparams} = [
-        OpusVL::FB11::Hive
-            ->service('sysparams::management')
-            ->for_all_components
-            ->all_params_fulldata
-    ];
+    my $namespaces = $c->stash->{namespaces} = [ map { $_->namespace } OpusVL::FB11::Hive->hats('sysparams::consumer') ];
+    my $params = $c->stash->{sysparams} = {
+        map {
+            $_ => [
+                OpusVL::FB11::Hive
+                ->service('sysparams::management')
+                ->for_component($_)
+                ->all_params_fulldata
+            ]
+        }
+        @$namespaces
+    };
 
     $c->stash->{widget_for_value} = sub {
         my $val = shift;
