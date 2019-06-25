@@ -3,7 +3,6 @@ package OpusVL::FB11X::SysParams::Controller::SysParams;
 use strict;
 use Moose;
 use namespace::autoclean;
-use OpusVL::SysParams;
 use Try::Tiny;
 use HTML::Entities;
 
