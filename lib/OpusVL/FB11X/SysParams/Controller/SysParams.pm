@@ -75,7 +75,10 @@ sub edit_param
     # problems in the template as well, which is why it doesn't matter the order
     # in which these fields get created.
     my %field_list = (
-        value => { type => 'Text' },
+        value => {
+            type => 'Text',
+            do_label => 0
+        },
         'values.contains' => {
             do_label => 0,
             do_wrapper => 0,
