@@ -122,6 +122,12 @@ sub edit_param
         init_object => $init_obj,
     );
 
+    # Another formhandler workaround. Woe betide you ever accidentally empty the
+    # array if the controller doesn't do this
+    if ($is_multi and not @$value) {
+        $form->field('values')->add_extra(1)
+    }
+
     if ($form->validated) {
         if ($is_multi) {
             $manager->set_value($name, $form->field('values')->value);
