@@ -1,23 +1,23 @@
 <div class="fb11-card">
-<h1>Set System Parameter</h1>
+  <h1>Set System Parameter</h1>
 
-[% form.render_start | none %]
-  [% form.field('name').render | none %]
-  [% form.field('label').render | none %]
-  [% form.field('comment').render | none %]
+  [% form.render_start | none %]
+    [% form.field('name').render | none %]
+    [% form.field('label').render | none %]
+    [% form.field('comment').render | none %]
 
-  [% IF form.render_list.grep('^values$').size %]
-    <div class="form-group" id="values">
-      [% FOREACH field IN form.field('values').fields %]
-        <div class="input-group">
-          [% field.render | none %]
-        </div>
-      [% END %]
-    </div>
-  [% ELSE %]
-    [% form.field('value').render | none %]
-  [% END %]
-  [% form.field('submitbutton').render | none %]
-[% form.render_end | none %]
+    [% IF form.field('values').value %]
+      <div class="form-group" id="values">
+        [% FOREACH field IN form.field('values').fields %]
+          <div class="input-group">
+            [% field.render | none %]
+          </div>
+        [% END %]
+      </div>
+    [% ELSE %]
+      [% form.field('value').render | none %]
+    [% END %]
+    [% form.field('submitbutton').render | none %]
+  [% form.render_end | none %]
 
 </div>
