@@ -8,15 +8,6 @@
       </li>
     [% END %]
   </ul>
-[% ELSIF widget == 'hash' %]
-  <ul>
-    [% FOREACH pair IN value.pairs %]
-      <li>[% pair.key %]: [% INCLUDE sysparams/widgets/display_value.tt
-        value=v
-        leaf_type=leaf_type %]
-      </li>
-    [% END %]
-  </ul>
 [% ELSE %]
   [% value %]
 [% END %]
