@@ -126,7 +126,7 @@ sub hive_init {
 
 sub dependencies {
     {
-        brains => ['fb11-auth']
+        services => ['dbicdh::manager']
     }
 }
 1;
