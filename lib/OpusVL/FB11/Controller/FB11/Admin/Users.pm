@@ -170,6 +170,12 @@ sub show_user
         ->service('objectparams')
         ->get_schemas_for(type => 'fb11core::user');
 
+    # FIXME: This creates a separate form for parameters, which means the user
+    # will lose data from one form or the other when they press save.
+    # We can probably add this data to the main user form, but first, we have to
+    # implement a utility that separates the posted data and sends them to the
+    # correct extender. Then you can refactor. $params_form_config can be used
+    # as «$self->user_role_form($params_form_config)» to merge the forms together
     for my $extender (keys %$extension_schemata) {
         my $schema = $extension_schemata->{$extender};
         my $field_config = OpusVL::FB11::Form->openapi_to_formhandler($schema);
