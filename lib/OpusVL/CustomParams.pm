@@ -84,6 +84,7 @@ otherwise.
 
 =cut
 
+use v5.24;
 use Moose;
 use OpusVL::CustomParams::Schema;
 
@@ -99,7 +100,7 @@ has connect_info => (
 has schema => (
     is => 'ro',
     lazy => 1,
-    default => sub { OpusVL::CustomParams::Schema->connect($_[0]->connect_info) }
+    default => sub { OpusVL::CustomParams::Schema->connect($_[0]->connect_info->@*) }
 );
 
 with 'OpusVL::FB11::Role::Brain';
