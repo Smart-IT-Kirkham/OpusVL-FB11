@@ -70,7 +70,6 @@ sub openapi_to_formhandler {
     my $order = $schema->{'x-field-order'} // [ sort keys $schema->{properties}->%* ];
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     for my $field (@$order) {
         my $def = $schema->{properties}->{$field};
@@ -105,7 +104,7 @@ sub openapi_to_formhandler {
             $field{multiple} = 1;
         }
 
-        push @$formhandler, ( $namespace . _to_field_name($field) => \%field )
+        push @$formhandler, ( _with_namespace($namespace, _to_field_name($field)) => \%field )
     }
 
     return $formhandler;
@@ -131,11 +130,10 @@ sub openapi_to_init_object {
     my $output_object = shift;
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     return {
         map {
-            $namespace . _to_field_name($_) => $init_object->{$_}
+            _with_namespace($namespace, _to_field_name($_)) => $init_object->{$_}
         }
         keys %$init_object
     }
@@ -166,12 +164,11 @@ sub params_back_to_openapi {
     my $schema = shift;
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     my $ret = {};
 
     for my $field (keys $schema->{properties}->%*) {
-        my $form_field = $namespace . _to_field_name($field);
+        my $form_field = _with_namespace($namespace, _to_field_name($field));
 
         my $value = $self->field($form_field)->value;
 
@@ -186,6 +183,18 @@ sub params_back_to_openapi {
     return $ret;
 }
 
+# Adds the namespace to the field. This lets us change in a single place how
+# namespaces are represented.
+# TODO we should formalise namespaces, but I don't know how yet.
+sub _with_namespace {
+    my $namespace = shift;
+    my $field_name = shift;
+
+    return $field_name if not $namespace;
+
+    return $namespace . '::' . $field_name
+}
+
 # sanitises the field name into lowercase_underscore
 sub _to_field_name {
     my $badname = shift;
@@ -193,19 +202,20 @@ sub _to_field_name {
 }
 
 # Returns an appropriate FormHandler field type for the OpenAPI type
-{
-    my %mapping = (
+sub _to_field_type {
+    state %mapping = (
         string => 'Text',
         array => 'Select',
-        number => 'Number',
         boolean => 'Checkbox',
+        # FIXME This field type doesn't exist.
+        # We will have to use the format information to know which type to use.
+        # This is the point at which we make a proper class structure for it.
+        # number => 'Number',
     );
 
-    sub _to_field_type {
-        my $openapi_name = shift;
-        # TODO
-        return $mapping{$openapi_name} || die "I don't know how to render $openapi_name";
-    }
+    my $openapi_name = shift;
+    # TODO
+    return $mapping{$openapi_name} || die "I don't know how to render $openapi_name";
 }
 
 1;
