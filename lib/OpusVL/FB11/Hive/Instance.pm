@@ -300,8 +300,8 @@ sub check {
     for my $brain_name ($self->_brain_names) {
         my $brain = $self->_brain($brain_name);
 
-        my $deps = $brain->dependencies;
-        for my $dep_name (( $deps->{brains} // [] )->@*) {
+        my %deps = $brain->dependencies;
+        for my $dep_name (( $deps{brains} // [] )->@*) {
             try {
                 $self->_brain($dep_name);
             }
@@ -319,7 +319,7 @@ sub check {
             };
         }
 
-        for my $service (( $deps->{services} // [] )->@*) {
+        for my $service (( $deps{services} // [] )->@*) {
             try {
                 $self->service($service)
             }
@@ -459,7 +459,7 @@ sub _pre_hive_init_brain {
     return if $self->_brain_initialised->{$brain_name}->{pre_hive_init};
 
     my $brain = $self->_brain($brain_name);
-    if (my $deps = $brain->dependencies->{brains}) {
+    if (my $deps = {$brain->dependencies}->{brains}) {
         $self->_pre_hive_init_brain($_) for @$deps;
     }
 
@@ -479,7 +479,7 @@ sub _hive_init_brain {
     return if $self->_brain_initialised->{$brain_name}->{hive_init};
 
     my $brain = $self->_brain($brain_name);
-    if (my $deps = $brain->dependencies->{brains}) {
+    if (my $deps = {$brain->dependencies}->{brains}) {
         $self->_hive_init_brain($_) for @$deps;
     }
 

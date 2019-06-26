@@ -125,8 +125,6 @@ sub hive_init {
 }
 
 sub dependencies {
-    {
-        services => ['dbicdh::manager']
-    }
+    services => ['dbicdh::manager']
 }
 1;
