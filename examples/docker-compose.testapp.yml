@@ -27,7 +27,6 @@ services:
       FB11_HIVE_CONFIG: /opt/local/testapp/testapp/testapp.yml
       FB11_HIVE_CONFIG_PATH: /hive
       CATALYST_CONFIG: /opt/local/testapp/testapp/testapp.yml
-      PERL5OPTS: '-MCarp::Always'
     volumes:
       - $PWD/t/testapp:/opt/local/testapp/testapp
       - $PWD:/opt/local/fb11/fb11
