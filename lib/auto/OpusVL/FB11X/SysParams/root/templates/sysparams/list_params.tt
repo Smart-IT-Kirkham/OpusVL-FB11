@@ -50,7 +50,7 @@
               <td>
                 <div class="btn-group">
                   <a class="btn btn-primary" href="/sysparams/edit/[%
-                    param.name %]"
+                    namespace _ '::' _ param.name %]"
                     title="Edit Setting"
                   >
                     <i class="fa fa-pencil"></i>
