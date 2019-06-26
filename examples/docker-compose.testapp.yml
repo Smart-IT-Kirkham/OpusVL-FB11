@@ -1,0 +1,43 @@
+# This compose file will mount the FB11 code and the test app into an FB11 image
+# and then configures the test app to run. You should run it from the root of
+# the FB11 repository.
+#
+# If something goes wrong, try running 'make docker' to rebuild the image.
+version: '3'
+services:
+
+  # By configuring a Hive that contains the fb11::app service, and then using
+  # the environment to point to that configuration stanza, we can use the
+  # default behaviour of the FB11 docker image to run anything that speaks PSGI.
+  #
+  # All we need to do is ensure that our config file and the test lib are
+  # available inside the container, using volumes.
+  #
+  # We also set DEV_MODE to 1 so that the FB11 image actually looks for the
+  # testapp code we mounted. It looks in /opt/local by default.
+  testapp:
+    image: quay.io/opusvl/fb11
+    environment:
+      DEV_MODE: 1
+      FB11_CACHE_HOST: redis
+      FB11_DB_NAME: fb11
+      FB11_DB_USER: fb11
+      FB11_DB_PASSWORD: fb11pass
+      FB11_DB_HOST: postgresql
+      FB11_HIVE_CONFIG: /opt/local/testapp/testapp/testapp.yml
+      FB11_HIVE_CONFIG_PATH: /hive
+      CATALYST_CONFIG: /opt/local/testapp/testapp/testapp.yml
+    volumes:
+      - $PWD/t/testapp:/opt/local/testapp/testapp
+      - $PWD:/opt/local/fb11/fb11
+    ports:
+      - "7000:5000"
+
+  postgresql:
+    image: postgres:11-alpine
+    environment:
+      POSTGRES_USER: fb11
+      POSTGRES_PASSWORD: fb11pass
+
+  redis:
+    image: redis:alpine

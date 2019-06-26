@@ -88,8 +88,8 @@ The data type can be one of:
 =item B<enum>: A more complex data type that provides a list of options
 
 The enum type use the object form, where its C<parameters> key uses the same
-format as L<HTML::FormHandler::Select/options>. This allows us to both validate
-the values and draw an appropriate form control in the admin UI.
+format as L<HTML::FormHandler::Field::Select/options>. This allows us to both
+validate the values and draw an appropriate form control in the admin UI.
 
 =back
 
