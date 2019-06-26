@@ -5,10 +5,10 @@
 # If something goes wrong, try running 'make docker' to rebuild the image.
 version: '3'
 services:
-
   # By configuring a Hive that contains the fb11::app service, and then using
   # the environment to point to that configuration stanza, we can use the
   # default behaviour of the FB11 docker image to run anything that speaks PSGI.
+  # Check out the t/testapp/testapp.yml for how we configure this Hive.
   #
   # All we need to do is ensure that our config file and the test lib are
   # available inside the container, using volumes.
@@ -19,7 +19,7 @@ services:
     image: quay.io/opusvl/fb11
     environment:
       DEV_MODE: 1
-      FB11_CACHE_HOST: redis
+      FB11_CACHE_HOST: redis:6379
       FB11_DB_NAME: fb11
       FB11_DB_USER: fb11
       FB11_DB_PASSWORD: fb11pass
