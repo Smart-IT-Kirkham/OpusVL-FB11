@@ -35,6 +35,7 @@
             '/static/js/jquery.tabify.js',
             '/static/js/jquery.checkall.js',
             '/static/js/fb11.js',
+            '/static/js/fb11-repeatables.js',
             '/static/js/fb11-datetimepicker.js',
             '/static/js/chosen.jquery.min.js',
             'https://cdn.datatables.net/fixedcolumns/3.2.5/js/dataTables.fixedColumns.min.js',

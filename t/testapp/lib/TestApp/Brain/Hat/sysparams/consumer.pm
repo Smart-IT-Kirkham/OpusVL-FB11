@@ -33,9 +33,10 @@ sub parameter_spec {
         # it. The actual data *structure* is cemented by the value you supply at
         # this point. The array is an array because the value is an array.
         'array' => {
-            label => "An array parameter, which may have multiple values",
+            label => "An array parameter",
             data_type => 'text',
-            value => [ "Test item" ]
+            value => [ "Test item" ],
+            comment => "All the values are the same type",
         },
         'text' => {
             label => "A text parameter",
@@ -60,6 +61,20 @@ sub parameter_spec {
             data_type => 'text',
             comment => "You can construct an object type out of subkeys, by using a dot in the name."
         },
+        'enum-array' => {
+            value => [],
+            comment => "By default, no values are selected.",
+            label => "An array of selects",
+            data_type => {
+                type => 'enum',
+                parameters => [
+                    qw/one one
+                    two two
+                    three three
+                    four four/
+                ]
+            },
+        }
     }
 }
 
