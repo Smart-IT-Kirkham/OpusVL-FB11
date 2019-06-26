@@ -67,12 +67,10 @@ sub dependencies {
     # because this brain provides the fb11::app, and that app includes the FB11X
     # component for editing them. If we missed any of these, it would die at
     # runtime instead of compile time.
-    {
     services => [qw/
         sysparams
         sysparams::management
     /]
-    }
     # You can also rely on Brains by their short_name but this forces a very
     # close coupling. Only ever do this if your Brain is an extension to a very
     # explicit single other Brain; otherwise, it is best to use the Hive to
