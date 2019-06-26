@@ -23,12 +23,14 @@ A JSON field containng the OpenAPI schema.
 
 =cut
 
-primary_column type => (
-    data_type => 'text'
-);
+table 'custom_params';
 
-column schema => (
+primary_column type => {
+    data_type => 'text'
+};
+
+column schema => {
     data_type => 'jsonb'
-);
+};
 
 1;
