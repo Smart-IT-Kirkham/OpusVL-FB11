@@ -73,9 +73,12 @@ $(function() {
         // clone as the original.
         $row.before($clone);
 
-        $row.find(':input').val('')
+        $row.find(':input')
           .attr('name', increment_field_number())
           .attr('id', increment_field_number());
+
+        $row.find(':input:not(:radio,:checkbox)').val('');
+        $row.find(':radio,:checkbox').attr('checked', false);
 
         $row.find('label').attr('for', increment_field_number());
 
