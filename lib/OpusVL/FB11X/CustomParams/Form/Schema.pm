@@ -182,6 +182,41 @@ for you because you probably already have a form from your controller.
 =cut
 
 sub from_openapi {
+    my $class = shift;
+    my $openapi = shift;
+
+    my $init_obj = { fields => [] };
+
+    for my $name (keys %$openapi) {
+        my $property = $openapi->{$name};
+        my $field_spec = {
+            label => $property->{label},
+        };
+
+        my $arity = $property->{type} eq 'array' ? 'multi' : 'single';
+
+        if ($arity eq 'multi') {
+            $property = $property->{items}
+        }
+
+        my $format = $property->{format};
+
+        if ($property->{'x-widget'} // '' eq 'CheckboxGroup') {
+            $format = 'checkbox';
+        }
+
+        elsif ($property->{enum}) {
+            $format = 'enum';
+        }
+
+        $field_spec->{format} = $format;
+        $field_spec->{arity} = $arity;
+        $field_spec->{options} = $property->{enum};
+
+        push $init_obj->{fields}->@*, $field_spec;
+    }
+
+    return $init_obj;
 }
 
 1;
