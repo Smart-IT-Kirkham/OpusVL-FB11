@@ -13,14 +13,6 @@
           <div class="col-md-4">
             [% field.field('format').render | none %]
           </div>
-          <div class="col-md-4">
-            <div class="form-group field field-options data-text">
-              <label>Options</label>
-              [% FOREACH option IN field.field('options').fields %]
-                [% option.render | none %]
-              [% END %]
-            </div>
-          </div>
           <div class="col-md-1">
             <label class="control-label">&nbsp;</label>
             <a href="#" class="delete-row btn btn-block btn-danger
@@ -30,6 +22,14 @@
               "><i
                 class="fa fa-times"></i>
             </a>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group field field-options data-text">
+              <label>Options</label>
+              [% FOREACH option IN field.field('options').fields %]
+                [% option.render | none %]
+              [% END %]
+            </div>
           </div>
         </div>
       [% END %]
