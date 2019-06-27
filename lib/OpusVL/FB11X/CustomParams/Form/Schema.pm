@@ -71,7 +71,6 @@ has_field 'fields.arity' => (
 );
 has_field 'fields.format' => (
     type => 'Select',
-    empty_select => '',
     element_class => [qw/ field field-format data-enum /],
     options => [
         none => "Free text",
