@@ -110,11 +110,6 @@ sub to_openapi {
     my $self = shift;
     my @fields = $self->value->{fields}->@*;
 
-#    fields => [
-#         { arity => "single", format => "datetime", label => "arararr", options => [] },
-#       ],
-#    }
-
     my $openapi = {};
 
     for my $f (@fields) {
