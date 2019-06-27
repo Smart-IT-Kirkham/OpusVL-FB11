@@ -24,6 +24,7 @@ use v5.24;
 use Moose;
 use namespace::autoclean;
 use File::Slurper 'read_text';
+use OpusVL::FB11::Hive;
 # [sic] - for the debug path!
 use Data::Dump qw(pp);
 
@@ -146,6 +147,18 @@ sub debug
         );
     }
 
+    {
+        my $hive = OpusVL::FB11::Hive->instance;
+        my $hive_data = {};
+        $hive_data->{brains} = {map {$_ => { class => ref $hive->_brains->{$_} }} $hive->_brain_names};
+        for my $s (keys $hive->_providers->%*) {
+            my $b = $hive->_providers->{$s};
+            push $hive_data->{brains}->{$_->short_name}->{services}->@*, $s for @$b;
+        }
+
+        $hive_data->{services} = $hive->_services;
+        $c->stash( hive => $hive_data );
+    }
     $c->stash(
         env => pp \%ENV,
         config => pp $c->config,
