@@ -8,6 +8,7 @@ use Moose;
 use namespace::autoclean;
 use Try::Tiny;
 use HTML::Entities;
+use OpusVL::FB11::Hive;
 
 
 BEGIN { extends 'Catalyst::Controller'; }
