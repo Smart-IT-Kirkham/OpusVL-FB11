@@ -13,6 +13,34 @@
   [% END %]
 </div>
 
+<div class="fb11-card">
+  <h1>Hive</h1>
+  <h2>Brains</h2>
+  [% FOREACH pair IN hive.brains.pairs %]
+    <h3>[% pair.key %]</h3>
+    <dl>
+      <dt>Class</dt>
+      <dd>[% pair.value.class %]</dd>
+      <dt>Services</dt>
+      <dd>
+        <ul>
+          [% FOREACH s IN pair.value.services %]
+            <li>[% s %]</li>
+          [% END %]
+        </ul>
+      </dd>
+    </dl>
+  [% END %]
+
+  <h2>Services</h2>
+  <dl>
+    [% FOREACH s IN hive.services.pairs %]
+      <dt>[% s.key %]</dt>
+      <dd>[% s.value %]</dd>
+    [% END %]
+  </dl>
+</div>
+
 <h1>Stash</h1>
 <pre>[% stash_pp %]</pre>
 
