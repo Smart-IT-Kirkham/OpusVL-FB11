@@ -6,6 +6,7 @@ our $VERSION = '0';
 
 use v5.24;
 use Moose;
+use List::Util qw/uniq/;
 with 'OpusVL::FB11::Role::Hat';
 
 =head1 DESCRIPTION
@@ -42,7 +43,7 @@ will work for L<OpusVL::ObjectParams>.
 
 sub available_types {
     my $self = shift;
-    my @objects = map keys $_->exendee_spec->%*, OpusVL::FB11::Hive->hats('objectparams::extendee');
+    my @objects = map keys {$_->extendee_spec}->%*, OpusVL::FB11::Hive->hats('objectparams::extendee');
 
     my @existing = $self->__brain->schema->resultset('CustomParams')->get_column('type')->all;
 
