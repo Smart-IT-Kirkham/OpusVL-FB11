@@ -7,6 +7,8 @@ use DBIx::Class::Candy;
 # ABSTRACT: Stores parameter schemata to supply to ObjectParams
 our $VERSION = '0';
 
+__PACKAGE__->load_components('InflateColumn::Serializer');
+
 =head1 DESCRIPTION
 
 This class represents a simple table that just stores OpenAPI JSON objects against semantic class names.
@@ -30,7 +32,9 @@ primary_column type => {
 };
 
 column schema => {
-    data_type => 'jsonb'
+    data_type => 'jsonb',
+    serializer_class => 'JSON',
+    serializer_options => { allow_nonref => 1 },
 };
 
 1;
