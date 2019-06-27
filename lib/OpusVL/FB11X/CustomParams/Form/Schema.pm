@@ -127,11 +127,18 @@ sub to_openapi {
 
         sswitch ($f->{format}) {
             case 'boolean': {
-                $property->{type} = 'boolean';
-                # A multi checkbox has options, a single doesn't
+                # A multi checkbox is really just a different way of drawing
+                # a multi select, i.e. an array of text values
                 if ($is_multi) {
                     $property->{enum} = $f->{options};
-                    $property->{'x-options'} = [ map { $_, $_ } $f->{options}->@* ]
+                    $property->{'x-options'} = [ map { $_, $_ } $f->{options}->@* ];
+
+                    # FIXME: OpusVL::FB11::Form handles this. We might later
+                    # change how we define this information.
+                    $property->{'x-widget'} = 'CheckboxGroup';
+                }
+                else {
+                    $property->{type} = 'boolean';
                 }
             }
 
@@ -145,14 +152,16 @@ sub to_openapi {
             }
         }
 
-        if ($is_multi and $f->{format} ne 'boolean') {
-            # Multi booleans are handled separately.
+        if ($is_multi) {
             my $real_property = {
                 type => 'array',
-                items => $property
+                items => $property,
+                uniqueItems => \1,  # This should be JSON true
             };
 
+            $real_property->{'x-widget'} = delete $property->{'x-widget'} if $property->{'x-widget'};
             $property = $real_property;
+
         }
 
         # This goes last in case we demoted the original $property to items
