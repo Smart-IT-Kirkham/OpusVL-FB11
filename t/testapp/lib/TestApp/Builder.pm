@@ -25,6 +25,8 @@ override _build_plugins => sub {
     push @$plugins,
         # Allows the end user to configure their system.
         '+OpusVL::FB11X::SysParams',
+        # Allows arbitrary data to be attached to receptive objects.
+        '+OpusVL::FB11X::CustomParams',
     ;
 
     return $plugins;
