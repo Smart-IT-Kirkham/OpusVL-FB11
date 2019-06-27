@@ -48,20 +48,19 @@ sub edit_schema
     :FB11Feature('Object Parameters')
 {
     my ($self, $c, $type) = @_;
-
+    my $service = OpusVL::FB11::Hive->service('customparams');
     my $form = $c->stash->{form} = $self->edit_form;
 
     $form->process(
         params => $c->req->params,
         posted => $c->req->method eq 'POST',
+        init_object => $form->from_openapi($service->get_schema_for($type)),
     );
-    use Data::Dump;
+
     if ($form->validated) {
-        dd $form->value;
-        dd $form->to_openapi;
-    }
-    else {
-        dd $form->errors;
+        $service->set_schema_for($type, $form->to_openapi);
+
+        $c->res->redirect($c->req->uri);
     }
 
 }
