@@ -117,7 +117,7 @@ sub to_openapi {
         my $is_multi = $f->{arity} eq 'multi';
 
         my $property = {
-            type => 'text', # This may change below
+            type => 'string', # This may change below
         };
 
         sswitch ($f->{format}) {
