@@ -160,7 +160,7 @@ sub to_openapi {
         }
 
         # This goes last in case we demoted the original $property to items
-        $property->{label} = $f->{label};
+        $property->{title} = $f->{label};
 
         $openapi->{$name} = $property;
     }
@@ -185,7 +185,7 @@ sub from_openapi {
     for my $name (keys %$openapi) {
         my $property = $openapi->{$name};
         my $field_spec = {
-            label => $property->{label},
+            label => $property->{title},
         };
 
         my $arity = $property->{type} eq 'array' ? 'multi' : 'single';
