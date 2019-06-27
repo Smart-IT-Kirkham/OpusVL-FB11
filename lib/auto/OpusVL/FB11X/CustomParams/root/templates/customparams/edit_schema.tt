@@ -24,7 +24,7 @@
           <div class="col-md-1">
             <label class="control-label">&nbsp;</label>
             <a href="#" class="delete-row btn btn-block btn-danger
-              [% IF [ form.field('forms_fields').fields ].size == 1 %] 
+              [% IF form.field('fields').fields.size == 1 %] 
                 disabled
               [% END %]
               "><i
