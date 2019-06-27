@@ -190,19 +190,25 @@ sub from_openapi {
 
         my $arity = $property->{type} eq 'array' ? 'multi' : 'single';
 
+        # Take format from x-widget *before* doing the multi check, but from
+        # the property hashref *after* doing the multi check
+        my $format;
+        if ($property->{'x-widget'} // '' eq 'CheckboxGroup') {
+            # This got kind of awkward because I wanted the user to be able to
+            # specify "checkbox" and then have totally different behaviour for
+            # single and multi, so I just used "boolean" and got clever :/
+            $format = 'boolean';
+        }
+
         if ($arity eq 'multi') {
             $property = $property->{items}
         }
 
-        my $format = $property->{format};
-
-        if ($property->{'x-widget'} // '' eq 'CheckboxGroup') {
-            $format = 'checkbox';
+        if ($property->{enum}) {
+            $format ||= 'enum';
         }
 
-        elsif ($property->{enum}) {
-            $format = 'enum';
-        }
+        $format ||= $property->{format};
 
         $field_spec->{format} = $format;
         $field_spec->{arity} = $arity;
