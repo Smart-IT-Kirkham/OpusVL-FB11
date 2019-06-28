@@ -33,6 +33,20 @@ hive:
       constructor:
         connect_info: *DB
 
+    # ObjectParams is a service that allows Brains to say they are receptive to
+    # their objects being extended, and other Brains to provide extensions to
+    # them.
+    - class: OpusVL::ObjectParams
+      constructor:
+        connect_info: *DB
+
+    # CustomParams is a service that hooks into ObjectParams by allowing end
+    # users to define extended data through ObjectParams, rather than requiring
+    # a developer to define the schema.
+    - class: OpusVL::CustomParams
+      constructor:
+        connect_info: *DB
+
   # services is an object mapping the service name to the brain providing it.
   # At this stage, you need to know the short name of the brains, which will be
   # documented by them.
@@ -52,6 +66,10 @@ hive:
     # builder.
     sysparams::management:
       brain: sysparams
+    objectparams:
+      brain: objectparams
+    customparams:
+      brain: customparams
 
 # TestApp inherits from FB11, which is still fundamentally a Catalyst app.
 # The connection params are the same as we set up in the hive, so we just link.

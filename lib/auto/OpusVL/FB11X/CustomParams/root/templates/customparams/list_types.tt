@@ -1,0 +1,12 @@
+<div class="fb11-card">
+  <h1>Object Parameters</h1>
+  <h2>Available types</h2>
+
+  <ul>
+    [% FOREACH t IN types %]
+      <li>
+        <a href="/customparams/edit-schema/[% t %]">[% t %]</a>
+      </li>
+    [% END %]
+  </ul>
+</div>
