@@ -121,11 +121,8 @@ sub show_user
     : Args(0)
 {
     my ( $self, $c ) = @_;
+    my $user = $c->stash->{thisuser};
     my $upload_form = $c->stash->{upload_form} = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
-    push @{ $c->stash->{breadcrumbs} }, {
-        name    => $c->stash->{thisuser}->username,
-        url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ])
-    };
 
     my $form_config = $self->_build_object_params_fields($c->stash->{thisuser});
     my $init_obj = delete $form_config->{init_obj} // {};
@@ -157,8 +154,8 @@ sub show_user
         $upload_form->process(params => { @params });
 
         if ($upload_form->validated) {
-            $c->stash->{thisuser}->get_or_default_avatar->update({
-                user_id   => $c->stash->{thisuser}->id,
+            $user->get_or_default_avatar->update({
+                user_id   => $user->id,
                 mime_type => $upload->type,
                 data      => $upload->slurp,
             });
@@ -172,18 +169,21 @@ sub show_user
         for my $role(@$user_roles) {
             my $r = $c->model('FB11AuthDB::Role')->find({ role => $role });
             try {
-                $c->stash->{thisuser}->add_to_users_roles({ role_id => $r->id });
+                $user->add_to_users_roles({ role_id => $r->id });
             }
             catch {
                 die $_ unless /duplicate key/
             }
         }
 
-        $c->stash->{thisuser}->search_related('users_roles',
+        $user->search_related('users_roles',
             { "role.role" => { 'NOT IN' => $user_roles } },
             { join => "role" }
         )->delete;
-        $c->stash->{status_msg} = "User Roles updated";
+
+        $self->_unpack_params_data($user, $form);
+
+        $c->stash->{status_msg} = "User updated";
     }
 }
 
@@ -354,23 +354,41 @@ sub delete_user
     }
 }
 
+sub _extension_schemata {
+    my $self = shift;
+    my $user = shift;
+
+    my $params_adapter = $self->_params_adapter($user);
+    my $params_service = OpusVL::FB11::Hive->service('objectparams');
+
+    $params_service->get_schemas_for(type => 'fb11core::user');
+}
+
+# TODO: This should be done by the User object, which could be achieved simply
+# by implementing a role that knows how to make an adapter for DBIC classes. The
+# User object *might* think its PK is something other than its email - be wary
+# of that.
+sub _params_adapter {
+    my $self = shift;
+    my $user = shift;
+    # NOTE: I am keying a user on their email address because the type
+    # fb11core::user should define a key and email should be it
+    OpusVL::ObjectParams::Adapter::Static->new({
+        id => { email => $user->email },
+        type => 'fb11core::user'
+    });
+}
+
 # Gets all the objectparams::extendee schemas and returns a hash to give to the
 # form constructor.
 sub _build_object_params_fields {
     my $self = shift;
     my $user = shift;
 
-    my $params_form_config = {};
-
-    # NOTE: I am keying a user on their email address because the type
-    # fb11core::user should define a key and these ones are keyed by email
-    my $params_adapter = OpusVL::ObjectParams::Adapter::Static->new({
-        id => { email => $user->email },
-        type => 'fb11core::user'
-    });
     my $params_service = OpusVL::FB11::Hive->service('objectparams');
-
-    my $extension_schemata = $params_service->get_schemas_for(type => 'fb11core::user');
+    my $params_adapter = $self->_params_adapter($user);
+    my $params_form_config = {};
+    my $extension_schemata = $self->_extension_schemata($user);
 
     for my $extender (keys %$extension_schemata) {
         my $schema = $extension_schemata->{$extender};
@@ -407,6 +425,26 @@ sub _build_object_params_fields {
     return $params_form_config;
 }
 
+# De-namespace the form data and send it to its owners. Pass form object
+sub _unpack_params_data {
+    my $self = shift;
+    my $user = shift;
+    my $form = shift;
+
+    my $params_service = OpusVL::FB11::Hive->service('objectparams');
+    my $params_adapter = $self->_params_adapter($user);
+    my $extension_schemata = $self->_extension_schemata($user);
+
+    for my $extender (keys %$extension_schemata) {
+        my $schema = $extension_schemata->{$extender};
+
+        $params_service->set_parameters_for(
+            object => $params_adapter,
+            extender => $extender,
+            parameters => $form->values_for_openapi_schema($schema)
+        )
+    }
+}
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2010 OpusVL
