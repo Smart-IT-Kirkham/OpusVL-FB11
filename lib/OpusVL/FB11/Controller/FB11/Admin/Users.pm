@@ -121,127 +121,36 @@ sub show_user
     : Args(0)
 {
     my ( $self, $c ) = @_;
-    my $form = $self->user_role_form;
-    my $upload_form = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
-    $c->stash->{form} = $form;
-    $c->stash->{upload_form} = $upload_form;
+    my $upload_form = $c->stash->{upload_form} = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
     push @{ $c->stash->{breadcrumbs} }, {
         name    => $c->stash->{thisuser}->username,
         url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ])
     };
 
+    my $form_config = $self->_build_object_params_fields($c->stash->{thisuser});
+    my $init_obj = delete $form_config->{init_obj} // {};
+
     my @options;
     my @selected;
     for my $role ($c->user->roles_modifiable) {
-        my $opts = {
-            value => $role,
-            label => $role,
-        };
-
         if (elem $role, [$c->stash->{thisuser}->role_names]) {
             push @selected, $role,
         }
 
-        push @options, $opts;
+        push @options, $role, $role;
     }
+    $init_obj->{user_roles} = \@selected;
 
+    my $form = $c->stash->{form} = $self->user_role_form(%$form_config);
+
+    # You can't put this in form_config without redefining the entire field
     $form->field('user_roles')->options(\@options);
     $form->process(
-        defaults => { user_roles => \@selected },
+        init_object => $init_obj,
         params => $c->req->params,
         posted => !! $c->req->body_params->{submit_roles}
     );
     $upload_form->process($c->req->params);
-
-    # TODO Handle the params in a separate place.
-    # All we're doing is adding our own fields to the form, and then looking for
-    # them on POST.
-    my $params_form_config = {};
-
-    # NOTE: I am keying a user on their email address because the *semantic*
-    # type should define an identity key, and this is the only one we have. Ask
-    # me to clarify, I dare you.
-    my $params_adapter = OpusVL::ObjectParams::Adapter::Static->new({
-        id => { email => $c->stash->{thisuser}->email },
-        type => 'fb11core::user'
-    });
-
-    my $extension_schemata = OpusVL::FB11::Hive
-        ->service('objectparams')
-        ->get_schemas_for(type => 'fb11core::user');
-
-    # FIXME: This creates a separate form for parameters, which means the user
-    # will lose data from one form or the other when they press save.
-    # We can probably add this data to the main user form, but first, we have to
-    # implement a utility that separates the posted data and sends them to the
-    # correct extender. Then you can refactor. $params_form_config can be used
-    # as «$self->user_role_form($params_form_config)» to merge the forms together
-    for my $extender (keys %$extension_schemata) {
-        my $schema = $extension_schemata->{$extender};
-        my $field_config = OpusVL::FB11::Form->openapi_to_field_list($schema);
-        my $extension_data = OpusVL::FB11::Hive
-            ->service('objectparams')
-            ->get_parameters_for(
-                object => $params_adapter,
-                extender => $extender,
-            )
-        ;
-
-        my $fieldset = {
-            name => $schema->{'x-namespace'},
-            tag => 'fieldset',
-            label => $schema->{title},
-            render_list => [ pairkeys @$field_config ],
-        };
-
-        push $params_form_config->{field_list}->@*, @$field_config;
-        push $params_form_config->{block_list}->@*, $fieldset;
-        push $params_form_config->{render_list}->@*, $fieldset->{name};
-
-        $params_form_config->{defaults} //= {};
-        if ($extension_data) {
-            $params_form_config->{defaults} = {
-                $params_form_config->{defaults}->%*,
-                OpusVL::FB11::Form->openapi_to_init_object(
-                    $schema,
-                    $extension_data
-                )
-                ->%*
-            };
-        }
-    }
-
-    # Some of the variables here have existed for ages, sorry
-    if (%$params_form_config) {
-        my $defaults = delete $params_form_config->{defaults};
-        push $params_form_config->{field_list}->@*, (
-            submit_params => 'Submit'
-        );
-        push $params_form_config->{render_list}->@*, 'submit_params';
-
-        my $params_form = $c->stash->{params_form} = OpusVL::FB11::Form->new($params_form_config);
-
-        $params_form->process(
-            defaults => $defaults,
-            params => $c->req->params,
-            posted => !! $c->req->body_params->{submit_params},
-        );
-
-        if ($params_form->validated) {
-            for my $extender (keys %$extension_schemata) {
-                my $schema = $extension_schemata->{$extender};
-                OpusVL::FB11::Hive->service('objectparams')
-                    ->set_parameters_for(
-                        object => $params_adapter,
-                        extender => $extender,
-                        parameters => $params_form->params_back_to_openapi( $schema )
-                    )
-            }
-
-            $c->flash->{status_msg} = "Successfully updated parameters";
-            $c->res->redirect($c->req->uri);
-        }
-    }
 
     if (my $upload = $c->req->upload('file')) {
         my @params = ( file => $upload );
@@ -447,6 +356,58 @@ sub delete_user
     }
 }
 
+# Gets all the objectparams::extendee schemas and returns a hash to give to the
+# form constructor.
+sub _build_object_params_fields {
+    my $self = shift;
+    my $user = shift;
+
+    my $params_form_config = {};
+
+    # NOTE: I am keying a user on their email address because the type
+    # fb11core::user should define a key and these ones are keyed by email
+    my $params_adapter = OpusVL::ObjectParams::Adapter::Static->new({
+        id => { email => $user->email },
+        type => 'fb11core::user'
+    });
+    my $params_service = OpusVL::FB11::Hive->service('objectparams');
+
+    my $extension_schemata = $params_service->get_schemas_for(type => 'fb11core::user');
+
+    for my $extender (keys %$extension_schemata) {
+        my $schema = $extension_schemata->{$extender};
+        my $field_config = OpusVL::FB11::Form->openapi_to_field_list($schema);
+        my $extension_data = $params_service->get_parameters_for(
+            object => $params_adapter,
+            extender => $extender,
+        );
+
+        my $fieldset = {
+            name => $schema->{'x-namespace'},
+            tag => 'fieldset',
+            label => $schema->{title},
+            render_list => [ pairkeys @$field_config ],
+        };
+
+        push $params_form_config->{field_list}->@*, @$field_config;
+        push $params_form_config->{block_list}->@*, $fieldset;
+        push $params_form_config->{render_list}->@*, $fieldset->{name};
+
+        $params_form_config->{init_obj} //= {};
+        if ($extension_data) {
+            $params_form_config->{init_obj} = {
+                $params_form_config->{init_obj}->%*,
+                OpusVL::FB11::Form->openapi_to_init_object(
+                    $schema,
+                    $extension_data
+                )
+                ->%*
+            };
+        }
+    }
+
+    return $params_form_config;
+}
 
 =head1 COPYRIGHT and LICENSE
 
