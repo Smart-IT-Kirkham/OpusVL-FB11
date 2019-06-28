@@ -178,7 +178,7 @@ sub show_user
     # as «$self->user_role_form($params_form_config)» to merge the forms together
     for my $extender (keys %$extension_schemata) {
         my $schema = $extension_schemata->{$extender};
-        my $field_config = OpusVL::FB11::Form->openapi_to_formhandler($schema);
+        my $field_config = OpusVL::FB11::Form->openapi_to_field_list($schema);
         my $extension_data = OpusVL::FB11::Hive
             ->service('objectparams')
             ->get_parameters_for(
