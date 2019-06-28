@@ -169,23 +169,21 @@ sub show_user
 
     if ($form->validated) {
         my $user_roles = $form->field('user_roles')->value;
-        if (@$user_roles) {
-            foreach my $role(@$user_roles) {
-                my $r = $c->model('FB11AuthDB::Role')->find({ role => $role });
-                try {
-                    $c->stash->{thisuser}->add_to_users_roles({ role_id => $r->id });
-                }
-                catch {
-                    die $_ unless /duplicate key/
-                }
+        for my $role(@$user_roles) {
+            my $r = $c->model('FB11AuthDB::Role')->find({ role => $role });
+            try {
+                $c->stash->{thisuser}->add_to_users_roles({ role_id => $r->id });
             }
-
-            $c->stash->{thisuser}->search_related('users_roles',
-                { "role.role" => { 'NOT IN' => $user_roles } },
-                { join => "role" }
-            )->delete;
-            $c->stash->{status_msg} = "User Roles updated";
+            catch {
+                die $_ unless /duplicate key/
+            }
         }
+
+        $c->stash->{thisuser}->search_related('users_roles',
+            { "role.role" => { 'NOT IN' => $user_roles } },
+            { join => "role" }
+        )->delete;
+        $c->stash->{status_msg} = "User Roles updated";
     }
 }
 
