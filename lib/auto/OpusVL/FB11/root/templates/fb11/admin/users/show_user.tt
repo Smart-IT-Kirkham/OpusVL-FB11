@@ -107,53 +107,59 @@
   </div>
 
   [% IF c.stash.thisuser %]
-    <div class="col-sm-6">
-      <div class="fb11-card">
-        <h1>Details for <strong>[% thisuser.name %]</strong></h1>
-        <div class="row">
-          <div class="col-sm-6">
-            <strong>Name</strong>
+    [% form.render_start | none %]
+      <div class="col-sm-6">
+        <div class="fb11-card">
+          <h1>Details for <strong>[% thisuser.name %]</strong></h1>
+          <div class="row">
+            <div class="col-sm-6">
+              <strong>Name</strong>
+            </div>
+            <div class="col-sm-6">
+              [% thisuser.name %]
+            </div>
           </div>
-          <div class="col-sm-6">
-            [% thisuser.name %]
+          <div class="row">
+            <div class="col-sm-6">
+              <strong>Email</strong>
+            </div>
+            <div class="col-sm-6">
+              [% thisuser.email %]
+            </div>
           </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <strong>Telephone</strong>
+            </div>
+            <div class="col-sm-6">
+              [% thisuser.tel %]
+            </div>
+          </div>
+          <p>
+            <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ thisuser.id ]) %]"
+              class="btn btn-primary"
+            >
+              <i class="fa fa-wrench"></i> Edit user
+            </a>
+          </p>
         </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <strong>Email</strong>
-          </div>
-          <div class="col-sm-6">
-            [% thisuser.email %]
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <strong>Telephone</strong>
-          </div>
-          <div class="col-sm-6">
-            [% thisuser.tel %]
-          </div>
-        </div>
-        <p>
-          <a href="[% c.uri_for(c.controller('FB11::Admin::Users').action_for('edit_user'), [ thisuser.id ]) %]"
-            class="btn btn-primary"
-          >
-            <i class="fa fa-wrench"></i> Edit user
-          </a>
-        </p>
-      </div>
 
-      <div class="fb11-card">
-        <h1>Roles for <strong>[% thisuser.name %]</strong></h1>
-        [% form.render | none %]
-      </div>
+        <div class="fb11-card">
+          <h1>Roles for <strong>[% thisuser.name %]</strong></h1>
+          [% form.field('user_roles').render | none %]
+        </div>
 
-      [% IF params_form %]
         <div class="fb11-card">
           <h1>Parameters for <strong>[% thisuser.name %]</strong></h1>
-          [% params_form.render | none %]
+          [% 
+          # We set up render_list to only contain these fieldsets. Other
+          # fields get rendered individually, manually, because they don't go
+          # here.
+          form.render | none %]
         </div>
-      [% END %]
+
+        [% form.field('submit_roles').render | none %]
+      [% form.render_end | none %]
 
       [% IF c.config.enable_avatar == 1 %]
         <div class="fb11-card">
