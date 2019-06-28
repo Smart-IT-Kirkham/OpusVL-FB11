@@ -34,7 +34,7 @@ sub schemas {
         'x-namespace' => $self->parameter_owner_identifier,
 
         # We define properties to work with
-        # OpusVL::FB11::Form->openapi_to_formhandler. This will need
+        # OpusVL::FB11::Form->openapi_to_field_list. This will need
         # reconsidering in the future, preferably before we've done too much
         # work based on this assumption. The core principle is that we define a
         # schema and figure out how to make it a form later on.

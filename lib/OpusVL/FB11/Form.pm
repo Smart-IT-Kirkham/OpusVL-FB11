@@ -21,7 +21,7 @@ It also has class methods for constructing forms.
 B<Arguments>: C<%$schema>, C<%$hfh_args>?
 
 Creates a new form from an OpenAPI schema object. This just defers to
-L</openapi_to_formhandler> and uses the result as the C<field_list> of a new
+L</openapi_to_field_list> and uses the result as the C<field_list> of a new
 form.
 
 You can also supply the rest of the options to HTML::FormHandler->new in the
@@ -35,7 +35,7 @@ sub new_from_openapi {
     my $schema = shift;
     my $hfh_args = shift || {};
 
-    my $field_list = $class->openapi_to_formhandler($schema);
+    my $field_list = $class->openapi_to_field_list($schema);
 
     if (my $to_merge = $hfh_args->{field_list}) {
         $field_list = [ @$to_merge, @$field_list ];
@@ -46,7 +46,7 @@ sub new_from_openapi {
     return $class->new($hfh_args);
 }
 
-=head2 openapi_to_formhandler
+=head2 openapi_to_field_list
 
 B<Arguments>: C<%$openapi_schema>
 
@@ -56,7 +56,7 @@ Converts the OpenAPI Schema object into a FormHandler field definition arrayref.
 
 =cut
 
-sub openapi_to_formhandler {
+sub openapi_to_field_list {
     my $class = shift;
     my $schema = shift;
 
@@ -114,7 +114,7 @@ sub openapi_to_formhandler {
 
 B<Arguments>: C<%$openapi_schema>, C<%$init_object>
 
-Given the same schema you might pass to L</openapi_to_formhandler>, converts an
+Given the same schema you might pass to L</openapi_to_field_list>, converts an
 object that conforms to that schema into an object that can be used as the
 C<init_object> for a FormHandler form.
 
