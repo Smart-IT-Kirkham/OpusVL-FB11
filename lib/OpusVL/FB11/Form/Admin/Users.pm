@@ -1,6 +1,7 @@
 package OpusVL::FB11::Form::Admin::Users;
 
-use OpusVL::FB11::Plugin::FormHandler;
+use HTML::FormHandler::Moose;
+extends 'OpusVL::FB11::Form';
 
 has_field 'user_roles' => (
     type     => 'Select',

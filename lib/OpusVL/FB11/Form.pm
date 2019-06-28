@@ -143,7 +143,7 @@ sub openapi_to_init_object {
 
 Intended to be run on the object, not the class
 
-=head2 params_back_to_openapi
+=head2 values_for_openapi_schema
 
 B<Arguments>: C<%$openapi_schema>
 
@@ -159,7 +159,7 @@ responsibility of the schema creator.
 
 =cut
 
-sub params_back_to_openapi {
+sub values_for_openapi_schema {
     my $self = shift;
     my $schema = shift;
 
