@@ -263,6 +263,11 @@ This can be requested as a L<fancy hat|OpusVL::FB11::Hive/fancy_hat> to access
 built-in parameter storage. See
 L<OpusVL::ObjectParams::Hat::objectparams::storage>.
 
+=item dbicdh::consumer
+
+We have a DBIC schema so we deploy it. Note that the table may never be used, if
+the default behaviour is never relied on.
+
 =back
 
 And provides the following services:
