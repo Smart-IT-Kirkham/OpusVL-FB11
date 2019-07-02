@@ -4,7 +4,7 @@ package OpusVL::EventLog::Hat::eventlog;
 our $VERSION = '0';
 
 use PerlX::Maybe;
-use Scope::Guard;
+use Scope::Guard 'guard';
 
 use Moose;
 with 'OpusVL::FB11::Role::Hat';
