@@ -10,7 +10,7 @@ use Moose;
 use MooseX::NonMoose;
 extends 'DBIx::Class::Core';
 
-__PACKAGE__->load_components('InflateColumn::Serializer', 'Core');
+__PACKAGE__->load_components('InflateColumn::Serializer');
 
 __PACKAGE__->table('sysparams');
 
