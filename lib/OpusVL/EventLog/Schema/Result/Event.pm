@@ -40,6 +40,12 @@ Date and time of the creation of the event.
 
 =cut
 
+
+#FIXME we need an index on environmental_data || payload
+#and on payload || environmental_data (which might be different if keys collide)
+
+__PACKAGE__->load_components(qw/InflateColumn::Serializer InflateColumn::DateTime/);
+
 table 'event_log';
 
 primary_column id => {
@@ -50,16 +56,19 @@ primary_column id => {
 column object_identifier  => {
     data_type => 'jsonb',
     is_nullable => 0,
+    serializer_class => 'JSON',
 };
 
 column payload => {
     data_type => 'jsonb',
     is_nullable => 0,
+    serializer_class => 'JSON',
 };
 
 column environmental_data => {
     data_type => 'jsonb',
     is_nullable => 1,
+    serializer_class => 'JSON',
 };
 
 column type => {
@@ -71,6 +80,27 @@ column timestamp => {
     data_type => 'timestamptz',
     is_nullable => 0,
     default_value => \'NOW()',
+    inflate_datetime => 1,
 };
+
+=head1 METHODS
+
+=head2 to_event_hashref
+
+Returns the object as the hashref documented in
+L<OpusVL::EventLog::Hat::eventlog/EVENT DATA>.
+
+=cut
+
+sub to_event_hashref {
+    my $self = shift;
+
+    {
+        payload => $self->payload,
+        environmental_data => $self->environmental_data,
+        type => $self->type,
+        timestamp => $self->timestamp,
+    }
+}
 
 1;

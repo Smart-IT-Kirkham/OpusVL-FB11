@@ -3,8 +3,13 @@ package OpusVL::EventLog::Hat::eventlog;
 # ABSTRACT: Implements the eventlog service
 our $VERSION = '0';
 
+use PerlX::Maybe;
+use Scope::Guard;
+
 use Moose;
 with 'OpusVL::FB11::Role::Hat';
+
+has _environmental_data => ( is => 'rw' );
 
 =head1 DESCRIPTION
 
@@ -59,8 +64,8 @@ only handling one request at a time this will not leak data between requests.
             ip => $c->req->ip_addr
         });
 
-This data will be stored against every call made to L<add_event>
-
+This data will be stored against every call made to L<add_event>, as a separate
+field.
 
 =head1 EVENT DATA
 
@@ -88,18 +93,19 @@ meaningful to the system whenever possible.
 
 =item timestamp
 
-The all-important information about when the event was created.
+The all-important information about when the event was created. Provided as a
+DateTime object.
 
 =back
 
 =head1 METHODS
 
-=head2 get_events_for
+=head2 search_events
 
 B<Arguments>: C<%args>
 
-C<object>: Required. Any object that consumes the
-L<OpusVL::EventLog::Role::Adapter> role.
+C<object>: Optional. Any object that consumes the
+L<OpusVL::EventLog::Role::Adapter> role. If not provided, all events are searched.
 
 C<type>: Optional. A single string or arrayref of strings. Events registered
 against any of these types will be returned. C<undef> may be used for untyped
@@ -111,10 +117,23 @@ time range to search on.
 C<before>: Optional. A L<DateTime> object representing the latest bound of the
 time range to search on.
 
-Returns an array of event data hashrefs constrained by any arguments that do so.
+C<event_data>: Optional. A hashref of data to compare to the I<union> of the
+payload and the environmental data. This searches for I<all> of the keys, but
+each key may exist in either object.
+
+C<payload>: Optional. A hashref of data to compare to the payload data stored in
+the events. Using this may be slow.
+
+C<environmental_data>: Optional. A hashref of data to compare to the
+environmental data in effect when the event was created.
+
+Returns an array of event data hashrefs constrained by the provided arguments.
 
 All filters are applied with AND, except that when C<type> is an array, its
-values are compared with OR (actually with IN).
+values are compared with OR (actually with IN). This is the purpose of
+C<event_data>; if you don't know or care which of the two JSON fields would
+contain your data, you can't put it in both C<payload> and C<environmental_data>
+because this would require it to exist in both.
 
 Note that providing an undef type (find events with no type) is different from
 not providing type at all (find events irrespective of type).
@@ -122,6 +141,35 @@ not providing type at all (find events irrespective of type).
 Canny readers may realise that they can probably provide an Adapter that only
 specifies a subset of the required keys, in order to return the history of more
 than one object. This may or may not work as expected. Caveat computator.
+
+=cut
+
+sub search_events {
+    my $self = shift;
+    my %user_search = @_;
+
+    my $schema = $self->__brain->schema;
+    my $rs = $schema->resultset('Event');
+
+    $rs = $rs->of_type($user_search{type})
+        if exists $user_search{type};
+    $rs = $rs->for_object($user_search{object})
+        if $user_search{object};
+
+    $rs = $rs->with_payload_data($user_search{payload})
+        if $user_search{payload};
+    $rs = $rs->with_environmental_data($user_search{environmental_data})
+        if $user_search{environmental_data};
+    $rs = $rs->with_any_data($user_search{event_data})
+        if $user_search{event_data};
+
+    $rs = $rs->events_since($user_search{since})
+        if $user_search{since};
+    $rs = $rs->events_before($user_search{before})
+        if $user_search{before};
+
+    return map $_->to_event_hashref, $rs->all;
+}
 
 =head2 add_event
 
@@ -140,5 +188,47 @@ Adds an event to the history. What it looks like is entirely up to you.
 
 Besides the data here, the event will also have a timestamp generated, and the
 current value of the L</Environmental data> will be stored as well.
+
+=cut
+
+sub add_event {
+    my $self = shift;
+    my %args = @_;
+
+    # TODO: validation. We like Params::ValidationCompiler
+    $self->__brain->schema->resultset('Event')->create({
+        object_identifier => $args{object}->get_identifier,
+        payload => $args{payload},
+  maybe type => $args{type},
+  maybe environmental_data => $self->_environmental_data,
+    })
+}
+
+=head2 set_environmental_data
+
+B<Arguments>: C<\%data>
+
+Merges this data with any existing environmental data. Returns a L<Scope::Guard>
+which will reset the data back to what it was when it leaves scope.
+
+Failing to properly nest your scopes is on you.
+
+This hashref, if it is set, is stored against all events that are created.
+
+=cut
+
+sub set_environmental_data {
+    my $self = shift;
+    my $data = shift;
+
+    my $current_data = $self->_environmental_data;
+
+    $self->_environmental_data({
+        %{$current_data || {}},
+        %$data
+    });
+
+    return guard { $self->_environmental_data($current_data) };
+}
 
 1;
