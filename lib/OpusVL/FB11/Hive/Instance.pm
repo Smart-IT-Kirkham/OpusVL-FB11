@@ -459,8 +459,12 @@ sub _pre_hive_init_brain {
     return if $self->_brain_initialised->{$brain_name}->{pre_hive_init};
 
     my $brain = $self->_brain($brain_name);
-    if (my $deps = {$brain->dependencies}->{brains}) {
-        $self->_pre_hive_init_brain($_) for @$deps;
+    my $deps = {$brain->dependencies};
+    if (my $b_deps = $deps->{brains}){
+        $self->_pre_hive_init_brain($_) for @$b_deps;
+    }
+    if (my $s_deps = $deps->{services}) {
+        $self->_pre_hive_init_brain($self->_service($_)) for @$s_deps;
     }
 
     $brain->pre_hive_init;
@@ -479,8 +483,12 @@ sub _hive_init_brain {
     return if $self->_brain_initialised->{$brain_name}->{hive_init};
 
     my $brain = $self->_brain($brain_name);
-    if (my $deps = {$brain->dependencies}->{brains}) {
-        $self->_hive_init_brain($_) for @$deps;
+    my $deps = {$brain->dependencies};
+    if (my $b_deps = $deps->{brains}) {
+        $self->_hive_init_brain($_) for @$b_deps;
+    }
+    if (my $s_deps = $deps->{services}) {
+        $self->_hive_init_brain($self->_service($_)) for @$s_deps;
     }
 
     $brain->hive_init($self);
