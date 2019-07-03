@@ -98,6 +98,15 @@ DateTime object.
 
 =back
 
+=head1 SEMANTIC TYPES
+
+As mentioned in L<OpusVL::EventLog::Role::Adapter/SEMANTIC TYPES> we want to
+support the idea of semantic types in the Hive, but we don't yet.
+
+When we have them we can identify them in the event log data by looking for hash
+values that define a C<type> key, which will point to a semantic type. The
+C<value> in that hash will then tell us how to recover the object of that type.
+
 =head1 METHODS
 
 =head2 search_events
