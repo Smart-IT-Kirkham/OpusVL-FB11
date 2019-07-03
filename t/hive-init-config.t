@@ -124,9 +124,9 @@ BEGIN {
     package TestCheck::Brain::First {
         use Moose;
         has short_name => (is => 'ro', default => "TEST::brain1");
-        has dependencies => (is => 'ro', default => sub{{
+        sub dependencies {
             brains => [ 'TEST::brain2' ],
-        }});
+        }
         with 'OpusVL::FB11::Role::Brain';
     }
 
@@ -139,10 +139,10 @@ BEGIN {
     package TestCheck::Brain::Meta {
         use Moose;
         has short_name => (is => 'ro', default => "TEST::bigbrain");
-        has dependencies => (is => 'ro', default => sub{{
+        sub dependencies {
             brains   => [ 'TEST::brain2', 'TEST::brain1' ],
             services => [ 'TEST::service' ],
-        }});
+        }
         with 'OpusVL::FB11::Role::Brain';
     }
 
