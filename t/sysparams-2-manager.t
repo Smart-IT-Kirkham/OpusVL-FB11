@@ -38,7 +38,9 @@ ok $p->@* == 2, "Correctly deserialised";
         value => 'simple string',
         metadata => {
             label => "New test value",
-            data_type => 'text',
+            data_type => {
+                type => 'text',
+            }
         }
     };
 
@@ -67,26 +69,33 @@ ok $p->@* == 2, "Correctly deserialised";
     eq_or_diff scalar $strat->value_of('array'), $manager->value_of('array'), "Both strats return same value_of";
 }
 
+
 eq_or_diff [$manager->all_params], [ 'array', 'new.test.value', 'value', ], "Correct names returned from all_params";
 eq_or_diff [$manager->all_params_fulldata], [
     {
         name => 'array',
         label => "Test/Namespace/Array",
-        data_type => 'text',
+        data_type => {
+            type => 'text'
+        },
         value => [ qw/more than two values/ ],
         comment => undef,
     },
     {
         name => 'new.test.value',
         label => "New test value",
-        data_type => 'text',
+        data_type => {
+            type => 'text'
+        },
         value => "Better value",
         comment => undef,
     },
     {
         name => 'value',
         label => "Test/Namespace/Value",
-        data_type => 'text',
+        data_type => {
+            type => 'text'
+        },
         value => 'test value',
         comment => undef,
     },
