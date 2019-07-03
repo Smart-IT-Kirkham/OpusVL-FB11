@@ -47,6 +47,13 @@ hive:
       constructor:
         connect_info: *DB
 
+    # EventLog is a service similar to ObjectParams except the data we store
+    # against the object are specifically intended to be considered events. It
+    # also allows for system events.
+    - class: OpusVL::EventLog
+      constructor:
+        connect_info: *DB
+
   # services is an object mapping the service name to the brain providing it.
   # At this stage, you need to know the short name of the brains, which will be
   # documented by them.
@@ -66,6 +73,8 @@ hive:
     # builder.
     sysparams::management:
       brain: sysparams
+    eventlog:
+      brain: event-log
     objectparams:
       brain: objectparams
     customparams:
