@@ -3,8 +3,9 @@
 use v5.24;
 use strict;
 use warnings;
-use Test::Most;
+use OpusVL::SysParams;
 
+use Test::Most;
 use Test::DBIx::Class -config_path => [qw/t etc sysparams/], qw/SysParam/;
 
 fixtures_ok 'some_params';

@@ -1,10 +1,15 @@
 #!perl
 
 use v5.24;
-use Test::Most;
-use Test::DBIx::Class -config_path => [qw/t etc sysparams/], qw/SysParam/;
+use strict;
+use warnings;
+
+use OpusVL::SysParams;
 use OpusVL::SysParams::Reader;
 use OpusVL::SysParams::Manager::Namespaced;
+
+use Test::Most;
+use Test::DBIx::Class -config_path => [qw/t etc sysparams/], qw/SysParam/;
 
 fixtures_ok 'some_params';
 
