@@ -1,6 +1,6 @@
 -- 
 -- Created by SQL::Translator::Producer::SQLite
--- Created on Tue Jul  2 11:17:35 2019
+-- Created on Wed Jul  3 11:33:19 2019
 -- 
 
 ;
@@ -12,7 +12,7 @@ CREATE TABLE event_log (
   id INTEGER PRIMARY KEY NOT NULL,
   object_identifier jsonb NOT NULL,
   payload jsonb NOT NULL,
-  environmental_data jsonb,
+  tags jsonb,
   type text,
   timestamp timestamptz NOT NULL DEFAULT NOW()
 );
