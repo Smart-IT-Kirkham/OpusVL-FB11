@@ -4,6 +4,7 @@ use Moose;
 use OpusVL::FB11::Hive;
 use File::ShareDir 'module_dir';
 use namespace::autoclean;
+use Try::Tiny;
 extends 'DBIx::Class::Core';
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
 
@@ -141,7 +142,19 @@ __PACKAGE__->has_one(
 # create an avatar for new users
 # default to profile.png
 after 'insert' => sub {
-    shift->set_default_avatar();
+    my $self = shift;
+    $self->set_default_avatar();
+
+    my $event_log = try { OpusVL::FB11::Hive->service('eventlog') } catch {}
+    or return;
+
+    $event_log->add_event(
+        object => $self->_eventlog_adapter,
+        type => 'creation',
+        # Hmm... the first event I ever write doesn't need a payload.
+        # Is this an exception or an invalidation of it being required?
+        payload => {}
+    );
 };
 
 # FIXME DEBT XXX !!!
@@ -153,8 +166,29 @@ before delete => sub {
     $self->roles->delete;
     $self->users_roles->delete;
     $self->avatar->delete;
+
+    my $event_log = try { OpusVL::FB11::Hive->service('eventlog') } catch {}
+    or return;
+
+    $event_log->add_event(
+        object => $self->_eventlog_adapter,
+        type => 'deletion',
+        # The second event I write also needs no payload... Mind you, much of
+        # its payload will be set in the environmental data. Maybe I just can't
+        # think of any right now
+        payload => {}
+    );
 };
 
+sub _eventlog_adapter {
+    my $self = shift;
+    OpusVL::EventLog::Adapter::Static->new({
+        type => 'fb11core::user',
+        id => {
+            email => $self->email
+        }
+    })
+}
 =head1 METHODS
 
 =head2 role_names
