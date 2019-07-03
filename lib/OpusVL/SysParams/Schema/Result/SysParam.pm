@@ -117,7 +117,7 @@ __PACKAGE__->add_columns(
     data_type => {
         data_type => 'text',
         is_nullable => 0,
-        default_value => '{"value":"text"}',
+        default_value => '{"type":"text"}',
         serializer_class => 'JSON',
         serializer_options => { allow_nonref => 1 },
     },
@@ -126,7 +126,7 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("name");
 
 # InflateColumn::Serializer assumes that a nonref value is already serialised,
-# which is wrong for our purposes. We wrap all these methods to force the value
+# which is wrong for our purposes. We wrap the value method to force the value
 # to always be a hashref, and to transparently return the real value.
 
 # Note we intentionally do not wrap get_column, or we'd never be able to get at
@@ -136,7 +136,7 @@ __PACKAGE__->set_primary_key("name");
 # Also note that this result class shouldn't really be used outside of the
 # sysparams component, because other components should interact with the Hat,
 # whose interface does not allow this object through.
-around [qw/value data_type/] => sub {
+around 'value' => sub {
     my $orig = shift;
     my $self = shift;
     my @args = @_;
@@ -158,10 +158,9 @@ around update => sub {
     if (exists $href->{value}) {
         $href->{value} = { value => $href->{value} };
     }
-    if (exists $href->{data_type}) {
+    if (exists $href->{data_type} and not ref $href->{data_type}) {
         $href->{data_type} = { value => $href->{data_type} };
     }
-
 
     $self->$orig($href);
 };

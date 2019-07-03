@@ -169,11 +169,9 @@ sub set_default {
         $data->{data_type} = { type => $data->{data_type} }
     }
 
-    # The wrapped value and data_type setter in the Result class is not used by
+    # The wrapped value setter in the Result class is not used by
     # find_or_create. This seems the easiest place to do this.
     $data->{value} = { value => $data->{value} };
-
-    $data->{data_type} = { value => $data->{data_type} };
 
     my $param = $self->find_or_create({
         name => $self->_namespaced_name($name),
