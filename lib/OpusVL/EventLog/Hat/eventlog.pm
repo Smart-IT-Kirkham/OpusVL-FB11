@@ -66,6 +66,35 @@ only handling one request at a time this will not leak data between requests.
 
 Environmental data will be added to the C<tags> for an event.
 
+=head2 A note on searching
+
+At the time of writing there is no service available to provide searching
+behaviour on Brains. This means that you should implement your own form to
+search on event data.
+
+The reason we can't provide a generic form is there is no way to communicate to
+that generic form the data types in your tags and payloads. This is because we
+also do not have the semantic types in the Hive either.
+
+Since your event creator will know the structure of your payload data, you have
+the opportunity to coerce search data into the correct types before passing the
+request to the search method.
+
+However, you do not have control on what data appear in the environmental data.
+Therefore, anything that adds data into the environmental data should, for now,
+ensure everything is a string.
+
+=head3 C<user> tag
+
+The single exception is that we are provisionally supporting C<fb11core::user>
+as a "semantic type" across all of FB11. Adapted users may be put into tags,
+either via environmental data or at the point of event creation, and passed to
+search, by using the C<user> field.
+
+This is informational only, since any system using the events service currently
+is required to implement its own search form, and therefore the ability to
+support user search is done bespoke per system.
+
 =head1 EVENT DATA
 
 This defines the structure of the hashrefs returned by L</get_events_for>.
