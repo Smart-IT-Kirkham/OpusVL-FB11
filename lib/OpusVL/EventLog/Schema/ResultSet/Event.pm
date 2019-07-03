@@ -84,48 +84,23 @@ sub with_payload_data {
     });
 }
 
-=head2 with_environmental_data
+=head2 with_tags
 
 B<Arguments>: C<\%data>
 
-Searches for events whose environmental data is a superset of this data set.
+Searches for events whose tags data set is a superset of this data set.
 
 =cut
 
-sub with_environmental_data {
+sub with_tags {
     my $self = shift;
     my $data = shift;
 
     $self->search({
-        environmental_data => {
+        tags => {
             '@>' => encode_json($data)
         }
     });
-}
-
-=head2 with_any_data
-
-B<Arguments>: C<\%data>
-
-Searches for events wherein the union of environmental data and payload is a
-superset of the provided data.
-
-In case of key collisions, this performs the union in both directions, allowing
-either value to satisfy the requirement.
-
-=cut
-
-sub with_any_data {
-    my $self = shift;
-    my $data = shift;
-
-    my $encoded_data = encode_json($data);
-
-    # FIXME in the Result class - we should index these
-    $self->search([
-        \[ 'environmental_data || payload @> ?', $encoded_data ],
-        \[ 'payload || environmental_data @> ?', $encoded_data ],
-    ]);
 }
 
 =head2 events_before

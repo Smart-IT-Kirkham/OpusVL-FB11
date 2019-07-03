@@ -65,7 +65,7 @@ column payload => {
     serializer_class => 'JSON',
 };
 
-column environmental_data => {
+column tags => {
     data_type => 'jsonb',
     is_nullable => 1,
     serializer_class => 'JSON',
@@ -97,7 +97,7 @@ sub to_event_hashref {
 
     {
         payload => $self->payload,
-        environmental_data => $self->environmental_data,
+        tags => $self->tags,
         type => $self->type,
         timestamp => $self->timestamp,
     }

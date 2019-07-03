@@ -17,16 +17,6 @@ schema:
           reference_table: ''
           type: PRIMARY KEY
       fields:
-        environmental_data:
-          data_type: jsonb
-          default_value: ~
-          is_nullable: 1
-          is_primary_key: 0
-          is_unique: 0
-          name: environmental_data
-          order: 4
-          size:
-            - 0
         id:
           data_type: int
           default_value: ~
@@ -56,6 +46,16 @@ schema:
           is_unique: 0
           name: payload
           order: 3
+          size:
+            - 0
+        tags:
+          data_type: jsonb
+          default_value: ~
+          is_nullable: 1
+          is_primary_key: 0
+          is_unique: 0
+          name: tags
+          order: 4
           size:
             - 0
         timestamp:

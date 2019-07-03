@@ -91,6 +91,9 @@ subtest "Environmental data" => sub {
             payload => {
                 message => "Testing event"
             },
+            tags => {
+                ip => '127.0.0.1',
+            },
             type => 'test'
         );
 
@@ -102,7 +105,10 @@ subtest "Environmental data" => sub {
 
         is scalar @events, 1, "1 returned from search_events";
 
-        is_deeply $events[0]->{environmental_data}, { user => 'fb11admin' }, "Got environmental data";
+        is_deeply $events[0]->{tags}, {
+            user => 'fb11admin',
+            ip => '127.0.0.1',
+        }, "Got environmental data in tags";
 
         subtest "2 nestings of data" => sub {
             my $guard = $service->set_environmental_data({
@@ -125,7 +131,7 @@ subtest "Environmental data" => sub {
 
             is scalar @events, 2, "2 returned from search_events";
 
-            is_deeply $events[1]->{environmental_data}, {
+            is_deeply $events[1]->{tags}, {
                 user => 'fb11admin',
                 ip => '127.0.0.1'
             }, "Got merged environmental data";
@@ -147,7 +153,7 @@ subtest "Environmental data" => sub {
 
         is scalar @events, 3, "3 returned from search_events";
 
-        is_deeply $events[2]->{environmental_data}, { user => 'fb11admin' }, "Environmental data was reset";
+        is_deeply $events[2]->{tags}, { user => 'fb11admin' }, "Environmental data was reset";
     };
 
     $service->add_event(
@@ -165,7 +171,7 @@ subtest "Environmental data" => sub {
 
     is scalar @events, 4, "4 returned from search_events";
 
-    is_deeply $events[3]->{environmental_data}, undef, "Environmental data was reset";
+    is_deeply $events[3]->{tags}, {}, "Environmental data was reset";
 };
 
 reset_schema;
@@ -177,10 +183,17 @@ subtest "Search by data" => sub {
         object_type => "semantic::type",
         id => { id => 1 }
     });
+    my $tag_adapter = OpusVL::EventLog::Adapter::Static->new({
+        object_type => "fb11core::user",
+        id => { email => 'admin@fb11.app' }
+    });
 
     my $guard = $service->set_environmental_data({
-        user => 'fb11admin',
-        ip => '127.0.0.1',
+        username => 'fb11admin',
+
+        # FIXME: Semantic types are not part of FB11 yet, but when they are,
+        # everything should understand what an adapter is
+        user => $tag_adapter->get_identifier
     });
 
     $service->add_event(
@@ -189,43 +202,40 @@ subtest "Search by data" => sub {
             message => "Testing event",
             data => "Discoverable data",
         },
+        tags => {
+            ip => '127.0.0.1',
+        },
         type => 'test'
     );
 
     my @events = $service->search_events(
-        event_data => { user => 'fb11admin' }
+        tags => { username => 'fb11admin' }
     );
     is scalar @events, 1, "Found by env data";
 
     @events = $service->search_events(
-        event_data => { message => "Testing event" }
+        payload => { message => "Testing event" }
     );
     is scalar @events, 1, "Found by payload data";
 
     @events = $service->search_events(
-        event_data => { ip => '127.0.0.1', data => "Discoverable data" }
-    );
-    is scalar @events, 1, "Found by data in both objects";
-
-    @events = $service->search_events(
-        event_data => {
-            message => "Testing event",
-            data => "Discoverable data",
+        tags => {
+            user => $tag_adapter->get_identifier
         }
     );
-    is scalar @events, 1, "Found by 2 data items in same object";
+    is scalar @events, 1, "Found by tag object identifier";
 
     @events = $service->search_events(
-        event_data => {
+        payload => {
             data => "Not present",
         }
     );
     is scalar @events, 0, "Not found when not present";
 
     @events = $service->search_events(
-        event_data => {
-            message => "Testing event",
-            data => "Not present",
+        tags => {
+            username => "Testing event",
+            user => $tag_adapter->get_identifier
         }
     );
     is scalar @events, 0, "Not found when not present";

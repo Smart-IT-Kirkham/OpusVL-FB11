@@ -64,8 +64,7 @@ only handling one request at a time this will not leak data between requests.
             ip => $c->req->ip_addr
         });
 
-This data will be stored against every call made to L<add_event>, as a separate
-field.
+Environmental data will be added to the C<tags> for an event.
 
 =head1 EVENT DATA
 
@@ -78,12 +77,13 @@ This defines the structure of the hashrefs returned by L</get_events_for>.
 This is the data you (or someone) sent to the system via L<add_event>. Its
 structure is irrelevant to Event Log; it is just a hashref of whatever.
 
-This does mean that events of the same type against the same object could have a
-different structure. This may be something we want to constrain in future.
+This field is intended for display only.
 
-=item environmental_data
+=item tags
 
-This is the L</Environmental data> in effect when the event was created, if any.
+Tags are fields in the event that can be searched on. This is arbitrary data, a
+merger of the L</Environmental data> in effect at the time, and the C<tags>
+passed into L</add_event>.
 
 =item type
 
@@ -126,23 +126,17 @@ time range to search on.
 C<before>: Optional. A L<DateTime> object representing the latest bound of the
 time range to search on.
 
-C<event_data>: Optional. A hashref of data to compare to the I<union> of the
-payload and the environmental data. This searches for I<all> of the keys, but
-each key may exist in either object.
+C<tags>: Optional. A hashref of data to compare to the tags of the events. After
+C<object> and C<type> this is the main way to search for events by the data
+associated with them.
 
 C<payload>: Optional. A hashref of data to compare to the payload data stored in
 the events. Using this may be slow.
 
-C<environmental_data>: Optional. A hashref of data to compare to the
-environmental data in effect when the event was created.
-
 Returns an array of event data hashrefs constrained by the provided arguments.
 
 All filters are applied with AND, except that when C<type> is an array, its
-values are compared with OR (actually with IN). This is the purpose of
-C<event_data>; if you don't know or care which of the two JSON fields would
-contain your data, you can't put it in both C<payload> and C<environmental_data>
-because this would require it to exist in both.
+values are compared with OR (actually with IN).
 
 Note that providing an undef type (find events with no type) is different from
 not providing type at all (find events irrespective of type).
@@ -167,10 +161,8 @@ sub search_events {
 
     $rs = $rs->with_payload_data($user_search{payload})
         if $user_search{payload};
-    $rs = $rs->with_environmental_data($user_search{environmental_data})
-        if $user_search{environmental_data};
-    $rs = $rs->with_any_data($user_search{event_data})
-        if $user_search{event_data};
+    $rs = $rs->with_tags($user_search{tags})
+        if $user_search{tags};
 
     $rs = $rs->events_since($user_search{since})
         if $user_search{since};
@@ -193,6 +185,9 @@ event.
 C<type>: Optional and arbitrary string type for later retrieval. Try to ensure
 the type is meaningful in context, especially if you use the system adapter.
 
+C<tags>: Optional. Adds searchable tags to the event. Merged with environmental
+data, with C<tags> taking precedence.
+
 Adds an event to the history. What it looks like is entirely up to you.
 
 Besides the data here, the event will also have a timestamp generated, and the
@@ -204,12 +199,19 @@ sub add_event {
     my $self = shift;
     my %args = @_;
 
+    my $tags = $args{tags} || {};
+    my $env = $self->_environmental_data || {};
+    $tags = {
+        %$env,
+        %$tags
+    };
+
     # TODO: validation. We like Params::ValidationCompiler
     $self->__brain->schema->resultset('Event')->create({
         object_identifier => $args{object}->get_identifier,
         payload => $args{payload},
+        tags => $tags,
   maybe type => $args{type},
-  maybe environmental_data => $self->_environmental_data,
     })
 }
 
