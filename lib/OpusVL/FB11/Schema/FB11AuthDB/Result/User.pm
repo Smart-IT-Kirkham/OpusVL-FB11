@@ -2,6 +2,7 @@ package OpusVL::FB11::Schema::FB11AuthDB::Result::User;
 
 use Moose;
 use OpusVL::FB11::Hive;
+use OpusVL::EventLog::Adapter::Static;
 use File::ShareDir 'module_dir';
 use namespace::autoclean;
 use Try::Tiny;
