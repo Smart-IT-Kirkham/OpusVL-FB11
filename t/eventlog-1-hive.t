@@ -147,7 +147,7 @@ subtest "Environmental data" => sub {
 
         is Event->count, 3, "3 events in table";
 
-        my @events = $service->search_events(
+        @events = $service->search_events(
             object => $adapter,
         );
 
