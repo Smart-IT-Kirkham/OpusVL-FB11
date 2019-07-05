@@ -1,5 +1,6 @@
 package OpusVL::ObjectParams::Role::Hat::objectparams::extender;
 
+use List::Gather;
 use Moose::Role;
 with 'OpusVL::FB11::Role::Hat';
 
@@ -110,4 +111,27 @@ sub set_parameters_for {
         )
     ;
 }
+
+sub parameter_search {
+    my $self = shift;
+    my %args = @_;
+
+    # Search is namespaced::field => { op => value }
+    my $search = {
+        gather {
+            my $namespace = $self->parameter_owner_identifier;
+            for my $param (keys {$self->__brain->schema}->%*) {
+                $p = $namespace . '::' . $param;
+                take $param => $args{sqla}->{$p} if $args{sqla}->{$p};
+            }
+        }
+    };
+
+    OpusVL::FB11::Hive->fancy_hat('objectparams', 'storage')
+        ->parameter_search(
+            %args,
+            extender => $self->parameter_owner_identifier
+        );
+}
+
 1;
