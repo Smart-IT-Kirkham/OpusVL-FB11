@@ -83,6 +83,35 @@ for the other methods.
 
 TODO: Accept an object's Adapter as an alternative to C<type>?
 
+=head2 parameter_search
+
+B<Arguments>: C<%args>
+
+C<type>: Required. The type of object to search for.
+
+C<simple>: Set of key/value pairs to compare for equality.
+
+C<extended>: Non-equality-operator specifications, similar to L<SQL::Abstract>.
+
+C<simple> parameters should be used in the case where you wish to test equality.
+This will be compared as a subset.
+
+C<extended> is a set of parameters of the format:
+
+    { 'namespaced::name' => { 'operator' => 'value' } }
+
+Searches Brains for objects with these extended parameters. All field names must
+be namespaced so each Brain knows which fields to access. Each Brain returns an
+array of the object identifier hashes that were sourced from the Adapter objects
+when the parameters were creaeted.
+
+Returns an intersection of all of these arrays. The searching code is expected
+to be able to convert these back into the source objects.
+
+TODO: This is a temporary interface. When searching is a Hive service it will
+probably define a more generalised way of specifying search criteria. This can
+be added as a named parameter.
+
 =cut
 
 sub get_parameters_for {

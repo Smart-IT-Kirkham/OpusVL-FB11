@@ -18,6 +18,8 @@ that we can all work with.
 
 =head1 REQUIRED METHODS
 
+FIXME: This might as well just be get_identifier, per EventLog's adapter.
+
 =head2 type
 
 This must return the I<semantic name> for the object, which you define in your
