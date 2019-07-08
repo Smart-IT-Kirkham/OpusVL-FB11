@@ -75,6 +75,20 @@ whoever sent you the parameters is tasked with ensuring this.
 The default implementation sends the data to the C<objectparams::storage>
 service, which is provided by ObjectParams if you need it.
 
+=head2 search_by_parameters
+
+B<Arguments>: C<%args>
+
+Arguments will be passed directly from
+L<OpusVL::ObjectParams::Hat::objectparams/search_by_parameters>; see that method
+for argument list.
+
+This method finds objects extended by this Brain by taking the subset of
+C<%args> that this Brain understands, and applying the search to those.
+
+It is up to the user of the above method to ensure that they have interrogated
+the Brain for its parameter schema in order to provide meaningful data.
+
 =cut
 
 requires 'schemas';
@@ -112,7 +126,7 @@ sub set_parameters_for {
     ;
 }
 
-sub parameter_search {
+sub search_by_parameters {
     my $self = shift;
     my %args = @_;
 
@@ -127,8 +141,9 @@ sub parameter_search {
         }
     };
 
+    # %args is no longer namespaced because we pulled out our own args
     OpusVL::FB11::Hive->fancy_hat('objectparams', 'storage')
-        ->parameter_search(
+        ->search_by_parameters(
             %args,
             extender => $self->parameter_owner_identifier
         );
