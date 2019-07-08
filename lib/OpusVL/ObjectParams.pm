@@ -210,7 +210,7 @@ items as properties on the adapter itself.
             type => 'fb11core::user',
             id => $user->id_for_params
         ),
-        extender => 'audit-trail'
+        extender => 'token-processor'
     );
 
 Other adapter types can be used as convenient ways of interfacing with common
@@ -222,6 +222,60 @@ The L<OpusVL::ObjectParameters::Role::Extensible|Extensible Role> can be applied
 to a class to expose the C<extension_adapter> method on the object itself. This
 can either be implemented by the object, by another role, or by an extension of
 the Extensible Role that implements a specific adapter type.
+
+=head1 SEARCHING
+
+Objects can be searched for based on the parameters they store. This interface
+needs further development because we want to support a generalised searching
+system within the Hive, and to define a consistent search interface in the same
+way that OpenAPI defines a consistent schema interface.
+
+As it stands the way to search for objects based on their parameters is to send
+the namespaced parameters to the
+L<OpusVL::ObjectParams::Hat::objectparams/search_by_parameters> method on the
+service. The parameters can be sent as key/value pairs in C<simple>, or as
+L<SQL::Abstract>-like structures defining an operator and value for each key.
+
+Brains will extract their own data out of the specifications and compare them to
+the data they are storing against the provided type (currently we only support
+searching for a single type), and return the identifiers that match.
+
+These will be the identifiers we created earlier, in L</Adapters>.
+
+The calling code receives a unique intersection of all of these arrays,
+essentially papering over the fact that the search criteria are being applied in
+multiple places.
+
+This means all searches are AND searches; again something we will dispense with
+when searching is properly formalised as a service on the Hive.
+
+Code calling the search function must know how to recover the original data
+object from the ID structures returned by the interface, assuming it needs that
+object in the first place. However, a lot can probably be done with just the
+knowledge of the semantic type and identifier.
+
+Most of the time you would either be part of the Brain defining the type, or
+coupling yourself to it. This will be avoided when the search service exists and
+semantic types are formal parts of the Hive.
+
+    my @objects = OpusVL::FB11::Hive
+        ->service('objectparams')
+        ->search_by_parameters(
+            type => 'fb11core::user',
+            simple => {
+                'tokenprocessor::store' => 1,
+                'customparams::started_at_company' => "Jun 1st 2011",
+            },
+            extended => {
+                'customparams::permissions' => { '>' => 3 }
+            },
+        );
+
+    # [
+    #   { type => 'fb11core::user', email => 'joe@bloggs.com' },
+    #   { type => 'fb11core::user', email => 'fb11admin' },
+    #   ...
+    # ]
 
 =head1 BRAIN INFO
 

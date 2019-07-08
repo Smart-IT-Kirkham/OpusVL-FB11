@@ -141,4 +141,48 @@ sub retrieve {
     return decode_json($params->parameters);
 }
 
+=head2 search_by_parameters
+
+B<Arguments>: C<%args>
+
+C<extender>: Identifier for the parameter owner.
+
+C<simple>: Set of key/value pairs to compare directly to stored parameters.
+
+C<extended>: Set of C<< field => spec >> properties, where spec is something
+like C<< { operator => value } >>, to test against individual properties of the
+parameters object.
+
+Returns the C<object_type> and C<object_identifier> properties of all rows that
+match the given parameters.
+
+=cut
+
+sub search_by_parameters {
+    my $self = shift;
+    my %args = @_;
+
+    my $rs = $self->_schema->resultset('Storage')->search({
+        parameter_owner => $args{extender}
+    });
+
+    if (my $simple = $args{simple}) {
+        $rs = $rs->search({
+            parameters => {
+                '@>' => $simple
+            }
+        })
+    }
+
+    if (my $extended = $args{extended}) {
+        $rs = $rs->search({
+            map qq/parameters->>'$_'/ => $extended->{$_},
+            keys %$extended
+        });
+    }
+
+    # Just give me a list of hashrefs please
+    return $rs->columns([qw/object_type object_identifier/])->hri->all;
+}
+
 1;
