@@ -1,5 +1,10 @@
 package OpusVL::ObjectParams::Role::Hat::objectparams::extender;
 
+use v5.24;
+use failures qw/
+    objectparams::extender::type_not_extended
+    objectparams::extender::field_not_in_schema
+/;
 use List::Gather;
 use Moose::Role;
 with 'OpusVL::FB11::Role::Hat';
@@ -116,6 +121,23 @@ sub set_parameters_for {
     my $self = shift;
     my $adapter = shift;
     my $params = shift;
+
+    my %schemas = $self->schemas;
+    my $type = $adapter->type;
+
+    unless ($schemas{$type}) {
+        failure::objectparams::extender::type_not_extended->throw({
+            msg => $self->parameter_owner_identifier . " does not extend type $type."
+        });
+    }
+
+    for my $param (keys %$params) {
+        unless ($schemas{$type}->{properties}->{$param}) {
+            failure::objectparams::extender::field_not_in_schema->throw({
+                msg => $self->parameter_owner_identifier . " does not define $param on type $type."
+            });
+        }
+    }
 
     OpusVL::FB11::Hive->fancy_hat('objectparams', 'storage')
         ->store(
