@@ -40,33 +40,73 @@ lives_ok { $service = $hive->service('objectparams') } "Fetch objectparams servi
 
 my $schemas = $service->get_schemas_for(type => 'test-extendee::test-object');
 
-is_deeply $schemas, { 'test-extender-1' => { 'x-schema-name' => "Test Extender 1" } }, "Found expected schema";
+is_deeply $schemas, {
+    'test-extender-1' => {
+        'x-schema-name' => "Test Extender 1",
+        properties => { test => {} }
+    }
+}, "Found expected schema";
 
-my $adapter = OpusVL::ObjectParams::Adapter::Static->new(
-    id => { id => 1 }, # Remember all identifiers are objects
-    type => 'test-extendee::test-object'
-);
+subtest Saving => sub {
+    my $adapter = OpusVL::ObjectParams::Adapter::Static->new(
+        id => { id => 1 }, # Remember all identifiers are objects
+        type => 'test-extendee::test-object'
+    );
 
-my $params = $service->get_parameters_for(object => $adapter, extender => 'test-extender-1');
-is $params, undef, "No params yet";
+    my $params = $service->get_parameters_for(object => $adapter, extender => 'test-extender-1');
+    is $params, undef, "No params yet";
 
-subtest "Returned zero values" => sub {
-    my @params = $service->get_parameters_for(object => $adapter, extender => 'test-extender-1');
-    is scalar @params, 0, "Didn't return a scalar undef";
+    subtest "Returned zero values" => sub {
+        my @params = $service->get_parameters_for(object => $adapter, extender => 'test-extender-1');
+        is scalar @params, 0, "Didn't return a scalar undef";
+    };
+
+    throws_ok {
+        $service->set_parameters_for(
+            object => $adapter,
+            extender => 'test-extender-1',
+            parameters => { missing => 'parameter' }
+        );
+    } 'failure::objectparams::extender::field_not_in_schema', "Cannot set parameter not defined on schema.";
+
+    lives_ok {
+        $service->set_parameters_for(
+            object => $adapter,
+            extender => 'test-extender-1',
+            parameters => { test => 'parameter' }
+        );
+    } "Successfully set params";
+
+    # Resultset from Test::DBIx::Class
+    is Storage->count, 1, "In storage";
+    $params = $service->get_parameters_for(object => $adapter, extender => 'test-extender-1');
+    is_deeply $params, { test => 'parameter' }, "Stored parameter";
 };
 
-lives_ok {
-    $service->set_parameters_for(
-        object => $adapter,
-        extender => 'test-extender-1',
-        parameters => { test => 'parameter' }
+subtest Searching => sub {
+    my @results = $service->search_by_parameters(
+        type => 'test-extendee::test-object',
+        simple => {
+            'test-extender-1::test' => 'not found'
+        }
     );
-} "Successfully set params";
 
-# Resultset from Test::DBIx::Class
-is Storage->count, 1, "In storage";
-$params = $service->get_parameters_for(object => $adapter, extender => 'test-extender-1');
-is_deeply $params, { test => 'parameter' }, "Stored parameter";
+    is scalar @results, 0, "Found no objects";
+
+    @results = $service->search_by_parameters(
+        type => 'test-extendee::test-object',
+        simple => {
+            'test-extender-1::test' => 'parameter'
+        }
+    );
+
+    is_deeply \@results, [
+        {
+            object_identifier => { id => 1 },
+            object_type => 'test-extendee::test-object'
+        }
+    ], "Got a list of object IDs";
+};
 
 BEGIN {
     package Test::Extendee {

@@ -5,6 +5,7 @@ with 'OpusVL::FB11::Role::Hat';
 
 use JSON::MaybeXS;
 use OpusVL::FB11::Hive;
+use List::UtilsBy qw/count_by/;
 use List::Util qw/first/;
 use List::Gather;
 
@@ -155,14 +156,16 @@ sub search_by_parameters {
     my $self = shift;
     my %args = @_;
 
-    my @hats = OpusVL::FB11::Hive->hats('objectparams::extender');
+    # Only take hats that say they extend this type!
+    my @hats = grep { {$_->schemas}->{$args{type}} } OpusVL::FB11::Hive->hats('objectparams::extender');
     my @results = map $_->search_by_parameters(%args), @hats;
 
     # I want a list of those hashrefs in @results that appear @hats times,
     # meaning every Hat returned that object and thus all criteria match.
     # I'm convinced there's a way of doing this without serialising them, but I
     # can't work out what it is. Canonical encoding has a cost but is necessary.
-    my $json = JSON::XS->new->canonical;
+    my $json = JSON::MaybeXS->new->canonical;
+
     my %counts = count_by { $json->encode($_) } @results;
 
     # I mean I *could* store JSON => original in a hash and use that
