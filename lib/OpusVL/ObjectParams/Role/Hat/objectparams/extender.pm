@@ -152,21 +152,47 @@ sub search_by_parameters {
     my $self = shift;
     my %args = @_;
 
-    # Search is namespaced::field => { op => value }
-    my $search = {
-        gather {
-            my $namespace = $self->parameter_owner_identifier;
-            for my $param (keys {$self->__brain->schema}->%*) {
-                $p = $namespace . '::' . $param;
-                take $param => $args{sqla}->{$p} if $args{sqla}->{$p};
+    my %search;
+    my %schemas = $self->schemas;
+
+    my $type_schema = $schemas{$args{type}};
+    unless ($type_schema) {
+        failure::objectparams::extender::type_not_extended->throw({
+            msg => $self->parameter_owner_identifier . " does not define type $args{type}."
+        });
+    }
+    my $namespace = $self->parameter_owner_identifier;
+
+    # Pull out items for us and denamespace them.
+    if (my $simple = $args{simple}) {
+        my %params_for_me = (
+            gather {
+                for my $param (keys $type_schema->{properties}->%*) {
+                    my $p = $namespace . '::' . $param;
+                    take $param => $simple->{$p} if $simple->{$p};
+                }
             }
-        }
-    };
+        );
+
+        $search{simple} = \%params_for_me if %params_for_me;
+    }
+    if (my $extended = $args{extended}) {
+        my %params_for_me = (
+            gather {
+                for my $param (keys $type_schema->{properties}->%*) {
+                    my $p = $namespace . '::' . $param;
+                    take $param => $extended->{$p} if $extended->{$p};
+                }
+            }
+        );
+
+        $search{extended} = \%params_for_me if %params_for_me;
+    }
 
     # %args is no longer namespaced because we pulled out our own args
     OpusVL::FB11::Hive->fancy_hat('objectparams', 'storage')
         ->search_by_parameters(
-            %args,
+            %search,
             extender => $self->parameter_owner_identifier
         );
 }

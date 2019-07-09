@@ -168,9 +168,7 @@ sub search_by_parameters {
 
     if (my $simple = $args{simple}) {
         $rs = $rs->search({
-            parameters => {
-                '@>' => $simple
-            }
+            -and => \[ 'parameters @> ?', encode_json($simple) ]
         })
     }
 
@@ -182,7 +180,11 @@ sub search_by_parameters {
     }
 
     # Just give me a list of hashrefs please
-    return $rs->columns([qw/object_type object_identifier/])->hri->all;
+    my @hrs = $rs->columns([qw/object_type object_identifier/])->hri->all;
+
+    $_->{object_identifier} = decode_json($_->{object_identifier}) for @hrs;
+
+    return @hrs;
 }
 
 1;
