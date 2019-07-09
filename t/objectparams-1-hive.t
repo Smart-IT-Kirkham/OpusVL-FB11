@@ -107,7 +107,10 @@ BEGIN {
 
         sub schemas {
             'test-extendee::test-object' => {
-                'x-schema-name' => "Test Extender 1"
+                'x-schema-name' => "Test Extender 1",
+                properties => {
+                    test => {}
+                }
             }
         }
     }
