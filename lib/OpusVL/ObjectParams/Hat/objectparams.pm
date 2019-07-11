@@ -85,6 +85,16 @@ for the other methods.
 
 TODO: Accept an object's Adapter as an alternative to C<type>?
 
+=head2 get_form_schemas_for
+
+See L</get_schemas_for>. Takes the exact same arguments, except calls
+L<OpusVL::ObjectParams::Role::Hat::objectparams::extender/schemas_for_forms> on
+each Hat instead.
+
+Intended to be used by owners of objects when rendering a form for said object.
+Hats may wish to store data against objects intended for use by the system and
+not by the end user.
+
 =cut
 
 sub get_parameters_for {
@@ -103,6 +113,21 @@ sub set_parameters_for {
 
 sub get_schemas_for {
     my $self = shift;
+
+    return $self->_get_generic_schemas_for('schemas', @_);
+}
+
+sub get_form_schemas_for {
+    my $self = shift;
+
+    return $self->_get_generic_schemas_for('schemas_for_forms', @_);
+}
+
+# Gets some type of schemas from the hive by using $getter as a method on each
+# extender Hat, so it can be either a string or a subref
+sub _get_generic_schemas_for {
+    my $self = shift;
+    my $getter = shift;
     my %args = @_;
 
     my $exposed_type = $args{type};
@@ -110,7 +135,7 @@ sub get_schemas_for {
 
     my %extenders_with_stuff = gather {
         for my $extender (@extenders) {
-            my %schemas = $extender->schemas;
+            my %schemas = $extender->$getter;
 
             if (my $apropos_schema = $schemas{ $exposed_type }) {
                 take $extender->parameter_owner_identifier => $apropos_schema

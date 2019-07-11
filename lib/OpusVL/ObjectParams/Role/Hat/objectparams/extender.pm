@@ -43,6 +43,15 @@ existing implementations for examples of that.
 
 =head2 OPTIONAL METHODS
 
+=head2 schemas_for_forms
+
+By default, this returns the same thing as C<schemas>. Anything providing a form
+for an object that can be extended should ask the Hat for these.
+
+If you want to store data against an object but not allow the user to edit it or
+provide it on the form for the corresponding object, you can override
+C<schemas_for_forms> to return a different thing from C<schemas> itself.
+
 =head2 parameter_owner_identifier
 
 This must return a string by which you can identify yourself later. This allows
@@ -103,6 +112,8 @@ has parameter_owner_identifier => (
     lazy => 1,
     default => sub { $_[0]->__brain->short_name }
 );
+
+sub schemas_for_forms { $_[0]->schemas }
 
 sub get_parameters_for {
     my $self = shift;
