@@ -2,6 +2,8 @@ package OpusVL::FB11::Form;
 
 use v5.24;
 use OpusVL::FB11::Plugin::FormHandler;
+use Data::Munge qw/elem/;
+use PerlX::Maybe;
 
 our $VERSION = '0.043';
 
@@ -68,6 +70,7 @@ sub openapi_to_field_list {
     my $formhandler = [];
 
     my $order = $schema->{'x-field-order'} // [ sort keys $schema->{properties}->%* ];
+    my $required = $schema->{required} // [];
 
     my $namespace = $schema->{'x-namespace'} // '';
 
@@ -76,8 +79,13 @@ sub openapi_to_field_list {
 
         # TODO validation
         my %field = (
-            label => $def->{title} // $field
+            label => $def->{title} // $field,
+      maybe default => $def->{default}
         );
+
+        if (elem $field, $required) {
+            $field{required} = 1;
+        }
 
         if (my $options = $def->{'x-options'}) {
             $field{type} = 'Select';
