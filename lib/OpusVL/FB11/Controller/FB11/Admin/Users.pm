@@ -361,7 +361,7 @@ sub _extension_schemata {
     my $params_adapter = $self->_params_adapter($user);
     my $params_service = OpusVL::FB11::Hive->service('objectparams');
 
-    $params_service->get_schemas_for(type => 'fb11core::user');
+    $params_service->get_form_schemas_for(type => 'fb11core::user');
 }
 
 # TODO: This should be done by the User object, which could be achieved simply
