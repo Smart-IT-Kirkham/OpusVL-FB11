@@ -80,14 +80,18 @@ sub openapi_to_field_list {
         # TODO validation
         my %field = (
             label => $def->{title} // $field,
-      maybe default => $def->{default}
+      maybe default => $def->{default},
+      maybe readonly => $def->{'x-readonly'},
         );
 
         if (elem $field, $required) {
             $field{required} = 1;
         }
 
-        if (my $options = $def->{'x-options'}) {
+        if ($def->{'x-hidden'}) {
+            $field{type} = 'Hidden';
+        }
+        elsif (my $options = $def->{'x-options'}) {
             $field{type} = 'Select';
             $field{options} = $options;
             if ($def->{type} eq 'array') {
