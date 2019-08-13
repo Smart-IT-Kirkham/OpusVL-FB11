@@ -4,7 +4,8 @@ use DateTime::Format::ISO8601;
 use v5.24;
 use Exporter::Easy (
     OK => [qw( 
-        load_config 
+        load_config
+        getenv_or_throw
         text_to_dates 
         extract_service_history 
         validate datetimify
@@ -18,7 +19,10 @@ use Config::Any;
 use Data::Visitor::Tiny;
 use failures qw(
     fb11::util::load_config
+    fb11::util::environment_variable::missing
+    fb11::assertion
 );
+
 
 use Moose;
 use DateTime;
@@ -64,6 +68,7 @@ variables.
 sub load_config {
     my $filename = shift;
     my $path = shift;
+    _assert(defined($filename), 'Undefined positional argument 0: $filename');
 
     my $cfg = Config::Any->load_files({
         files => [ $filename ],
@@ -91,6 +96,62 @@ sub load_config {
 
     return $cfg;
 }
+
+=head2 getenv_or_throw
+
+B<Arguments:> C<Str $environment_variable_name>
+B<Returns> C<Str> or B<throws> C<failure::fb11::util::environment_variable::missing>
+
+Return value of named environment variable or throw failure.
+
+=cut
+
+sub getenv_or_throw {
+    my $environment_variable_name = shift;
+    _assert(defined $environment_variable_name,
+        'Missing positional argument 0: $environment_variable_name');
+    return do {
+        if (defined(my $value = $ENV{$environment_variable_name})) {
+            $value
+        }
+        else {
+            failure::fb11::util::environment_variable::missing->throw(
+               "Missing environment variable $environment_variable_name")
+        }
+    }
+}
+
+=head2 _assert
+
+NOT EXPORTED
+
+B<Arguments:> C<$truthy>, C<Str $comment = 'assertion failed'>
+
+Throw C<< failure::fb11::assertion >> with message C<$comment> if not C<$truthy>
+
+Intended for use as a guard to catch developmental defects, to catch errors when all else
+fails, not as a shortcut for throwing exceptions intended for your users.
+
+e.g.
+
+    my $name = shift;
+    _assert(defined($name), 'Undefined positional argument 0: $name');
+    _assert(not ref($name), '$name is a reference');
+
+=cut
+
+sub _assert {
+    my $truthy = shift;
+    my $comment = shift // 'assertion failed';
+    unless ($truthy) {
+        failure::fb11::assertion->throw({
+            msg   => $comment,
+            trace => failure->confess_trace,
+        });
+    }
+    return
+}
+
 
 =head2 text_to_dates
 
