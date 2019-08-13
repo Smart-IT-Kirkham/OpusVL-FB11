@@ -4,10 +4,14 @@ use strict;
 use warnings;
 
 use OpusVL::FB11::Hive;
-use OpusVL::FB11::Utils qw/load_config/;
+use OpusVL::FB11::Utils qw/load_config getenv_or_throw/;
+
+my $hive_config_filename = getenv_or_throw('FB11_HIVE_CONFIG');
+my $hive_config_key_path = $ENV{FB11_HIVE_CONFIG_PATH};
 
 OpusVL::FB11::Hive
-    ->configure(load_config $ENV{FB11_HIVE_CONFIG}, $ENV{FB11_HIVE_CONFIG_PATH})
+    ->configure(
+        load_config($hive_config_filename, $hive_config_key_path))
     ->init;
 
 our $VERSION = '0';
