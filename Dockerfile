@@ -22,7 +22,7 @@ ARG PG_VERSION=postgresql-server-dev-10
 RUN apt-get update \
     && apt-get -y install build-essential libpq-dev postgresql-10
 # Fix upstream fuckery
-RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
+RUN ln -sf /usr/include/locale.h /usr/include/xlocale.h
 
 # Do some checks no point continuing otherwise
 # Do this after apt-get or we will never cache the apt-get
