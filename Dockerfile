@@ -2,6 +2,11 @@ FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11
 
 FROM FB11 AS FB11-layer0
 
+# DEBT a hack to work around fact 'stable' has moved to buster but our base images haven't
+RUN sed -i 's/stable/stretch/g' /etc/apt/sources.list
+# Following is due to Permission Denied removing lockfiles - perhaps corrupted caches from parent image?
+RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
 # Re add in the neccesary packages for postgres
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(cat /etc/os-tag)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
@@ -16,8 +21,6 @@ ARG PG_VERSION=postgresql-server-dev-10
 # Add Postgres
 RUN apt-get update \
     && apt-get -y install build-essential libpq-dev postgresql-10
-# Fix upstream fuckery
-RUN ln -s /usr/include/locale.h /usr/include/xlocale.h
 
 # Do some checks no point continuing otherwise
 # Do this after apt-get or we will never cache the apt-get
