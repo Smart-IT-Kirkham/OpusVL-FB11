@@ -2,6 +2,8 @@ FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11
 
 FROM FB11 AS FB11-layer0
 
+ENV PERL_CPANM_OPT "--mirror http://cpan.opusvl.com --mirror-only"
+
 # DEBT a hack to work around fact 'stable' has moved to buster but our base images haven't
 RUN sed -i 's/stable/stretch/g' /etc/apt/sources.list
 # Following is due to Permission Denied removing lockfiles - perhaps corrupted caches from parent image?
@@ -43,7 +45,8 @@ RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz ||:
 RUN useradd -rs /bin/false -d /tmp -g 0 testuser
 RUN chmod -R 775 /opt
 USER testuser
-RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
+RUN /opt/perl5/bin/cpanm -f Test::Postgresql58
+RUN /opt/perl5/bin/cpanm ./OpusVL-FB11-$version.tar.gz \
     || ( cat /tmp/.cpanm/work/*/build.log && exit 1 )
 
 # Swap back to root incase we add anything else
