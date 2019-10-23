@@ -12,7 +12,7 @@ with 'OpusVL::FB11::Role::Hat';
 use OpusVL::FB11::Hive;
 
 # ABSTRACT: Identifies a Brain with extra data for someone
-our $VERSION = '0';
+our $VERSION = '1';
 
 =head1 DESCRIPTION
 

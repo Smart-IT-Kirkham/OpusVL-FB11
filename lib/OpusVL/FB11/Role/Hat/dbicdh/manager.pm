@@ -1,7 +1,7 @@
 package OpusVL::FB11::Role::Hat::dbicdh::manager;
 
 # ABSTRACT: A hat for a brain that manages DH schemata
-our $VERSION = '0';
+our $VERSION = '1';
 use Moose::Role;
 
 with 'OpusVL::FB11::Role::Hat';

@@ -1,7 +1,7 @@
 package OpusVL::CustomParams::Hat::objectparams::extender;
 
 # ABSTRACT: Provides schemas to ObjectParams by getting them from a database
-our $VERSION = '0';
+our $VERSION = '1';
 
 use List::Gather;
 use OpusVL::FB11::Hive;

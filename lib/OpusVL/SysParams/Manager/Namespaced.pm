@@ -5,7 +5,7 @@ use Moose;
 use PerlX::Maybe;
 with 'OpusVL::SysParams::Role::Manager';
 
-our $VERSION = '0';
+our $VERSION = '1';
 
 # ABSTRACT: Provides a management interface into namespaced sysparams
 

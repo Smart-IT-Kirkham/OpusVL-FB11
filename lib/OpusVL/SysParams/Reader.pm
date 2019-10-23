@@ -2,7 +2,7 @@ package OpusVL::SysParams::Reader;
 
 use Moose;
 
-our $VERSION = '0';
+our $VERSION = '1';
 
 # ABSTRACT: Readonly proxy to a manager
 

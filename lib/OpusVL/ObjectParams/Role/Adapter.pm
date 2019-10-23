@@ -1,7 +1,7 @@
 package OpusVL::ObjectParams::Role::Adapter;
 
 # ABSTRACT: Defines the interface we use to identify an object
-our $VERSION = '0';
+our $VERSION = '1';
 
 use Moose::Role;
 

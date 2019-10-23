@@ -5,7 +5,7 @@ use warnings;
 use DBIx::Class::Candy;
 
 # ABSTRACT: Stores parameters in a naïve way
-our $VERSION = '0';
+our $VERSION = '1';
 
 =head1 DESCRIPTION
 

@@ -1,7 +1,7 @@
 package OpusVL::EventLog::Adapter::Static;
 
 # ABSTRACT: Construct an adapter with any data
-our $VERSION = '0';
+our $VERSION = '1';
 
 use v5.24;
 use Moose;

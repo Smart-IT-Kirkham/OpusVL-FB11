@@ -20,7 +20,7 @@ with 'OpusVL::FB11::Role::Brain';
 
 # ABSTRACT: Module to handle system wide parameters
 
-our $VERSION = '0.043';
+our $VERSION = '1';
 
 =head1 DESCRIPTION
 

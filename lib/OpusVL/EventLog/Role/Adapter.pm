@@ -1,7 +1,7 @@
 package OpusVL::EventLog::Role::Adapter;
 
 # ABSTRACT: Adapts arbitrary data for event storage
-our $VERSION = '0';
+our $VERSION = '1';
 
 use Moose::Role;
 

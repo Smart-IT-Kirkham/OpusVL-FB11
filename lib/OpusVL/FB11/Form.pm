@@ -5,7 +5,7 @@ use OpusVL::FB11::Plugin::FormHandler;
 use Data::Munge qw/elem/;
 use PerlX::Maybe;
 
-our $VERSION = '0.043';
+our $VERSION = '1';
 
 # ABSTRACT: Place to hold form-based functions
 

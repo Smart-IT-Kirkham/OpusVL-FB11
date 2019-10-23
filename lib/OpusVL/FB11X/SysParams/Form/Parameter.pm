@@ -3,7 +3,7 @@ package OpusVL::FB11X::SysParams::Form::Parameter;
 use strict;
 use warnings;
 
-our $VERSION = '0';
+our $VERSION = '1';
 
 # ABSTRACT: A form to set the value of a parameter
 

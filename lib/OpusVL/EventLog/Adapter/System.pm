@@ -1,7 +1,7 @@
 package OpusVL::EventLog::Adapter::System;
 
 # ABSTRACT: Adapter that always identifies system events
-our $VERSION = '0';
+our $VERSION = '1';
 use Moose;
 with 'OpusVL::EventLog::Role::Adapter';
 

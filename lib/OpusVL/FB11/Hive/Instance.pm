@@ -20,7 +20,7 @@ use failures qw/
     fb11::hive::init
 /;
 
-our $VERSION = '0.043';
+our $VERSION = '1';
 
 # ABSTRACT: Backing object for L<OpusVL::FB11::Hive>
 

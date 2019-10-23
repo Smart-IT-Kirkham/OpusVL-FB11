@@ -1,7 +1,7 @@
 package OpusVL::EventLog::Schema;
 
 # ABSTRACT: Parameters schema that supports basic use of parameters.
-our $VERSION = '0';
+our $VERSION = '1';
 
 use strict;
 use warnings;

@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 # ABSTRACT: Packaged queries for events
-our $VERSION = '0';
+our $VERSION = '1';
 
 use Moose;
 use MooseX::NonMoose;

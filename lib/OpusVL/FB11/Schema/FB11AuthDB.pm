@@ -2,7 +2,7 @@ package OpusVL::FB11::Schema::FB11AuthDB;
 
 use strict;
 use warnings;
-our $VERSION = '0.043';
+our $VERSION = '1';
 
 use Moose;
 extends 'DBIx::Class::Schema';

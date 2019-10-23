@@ -1,7 +1,7 @@
 package OpusVL::EventLog;
 
 # ABSTRACT: Simple interface to log events against data or the system
-our $VERSION = '0';
+our $VERSION = '1';
 use Moose;
 use OpusVL::EventLog::Schema;
 use OpusVL::EventLog::Adapter::System;
