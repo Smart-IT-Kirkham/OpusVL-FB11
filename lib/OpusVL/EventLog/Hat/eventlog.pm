@@ -6,6 +6,8 @@ our $VERSION = '1';
 use PerlX::Maybe;
 use Scope::Guard 'guard';
 
+use failures qw/type/;
+
 use Moose;
 with 'OpusVL::FB11::Role::Hat';
 
@@ -234,6 +236,13 @@ sub add_event {
     };
 
     # TODO: validation. We like Params::ValidationCompiler
+    # DEBT Cannot assert $object->DOES('OpusVL::FB11::Role::Object::Identifiable')
+    # because Catalyst (or Catalyst::AppBuilder) appears to copy classes to a different name,
+    # and Moose's 'DOES' method doesn't see the new name.
+    # For example, AppName::DB::Schema::Result::Bar becomes
+    # AppName::Model::DBSchema::Bar when registered in the usual way as
+    # Model::DBSchema.
+    # _assert_does($object, 'OpusVL::FB11::Role::Object::Identifiable');
     $self->__brain->schema->resultset('Event')->create({
         object_identifier => $args{object}->fb11_unique_identifier,
         payload => $args{payload},
@@ -241,6 +250,21 @@ sub add_event {
   maybe type => $args{type},
     })
 }
+
+# sub _assert_does {
+#     my ($object, $role) = @_;
+#     unless (
+#         (defined $object)
+#         and (ref $object)
+#         # and ($object->can('does'))
+#         # and ($object->does($role))
+#         and (UNIVERSAL::DOES($object, $role))
+#     ) {
+#         failure::type->throw(
+#             "$object does not consume $role"
+#         )
+#     }
+# }
 
 =head2 set_environmental_data
 
