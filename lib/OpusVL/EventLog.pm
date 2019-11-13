@@ -56,6 +56,17 @@ sub provided_services {
     'eventlog'
 }
 
+=head1 CONSTANTS
+
+=head2 $SYSTEM
+
+Use this for your C<event_type> for a system event.
+
+Make sure you read the warnings about using this in
+L<OpusVL::EventLog::Adapter::System>
+
+=cut
+
 # No need to construct an object
 our $SYSTEM = 'OpusVL::EventLog::Adapter::System';
 

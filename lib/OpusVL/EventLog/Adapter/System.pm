@@ -3,9 +3,9 @@ package OpusVL::EventLog::Adapter::System;
 # ABSTRACT: Adapter that always identifies system events
 our $VERSION = '1';
 use Moose;
-with 'OpusVL::EventLog::Role::Adapter';
+with 'OpusVL::FB11::Role::Object::Identifiable';
 
-sub get_identifier {
+sub fb11_unique_identifier {
     { object_type => undef }
 }
 
@@ -18,7 +18,7 @@ instead of the events recorded against a specific object.
 
 It will always be available as C<$OpusVL::EventLog::SYSTEM>.
 
-=head2 SYNOPSIS
+=head1 SYNOPSIS
 
     OpusVL::FB11::Hive
         ->service('eventlog')
@@ -27,3 +27,16 @@ It will always be available as C<$OpusVL::EventLog::SYSTEM>.
     OpusVL::FB11::Hive
         ->service('eventlog')
         ->add_event($OpusVL::EventLog::SYSTEM, { ... });
+
+=head1 WARNINGS
+
+Please be careful when providing types to system events: it is much more likely
+that you provide a type that someone else has used, and thus pollute one another
+with unexpected data in future, if you don't use namespaced type names.
+
+=head1 IMPLEMENTATION DETAILS
+
+This is trivially an adapter that always returns a
+hashref with the undefined value for C<object_type>, and no other
+identification. This allows events to be logged in the system log instead of
+against an object.

@@ -17,10 +17,9 @@ The eventlog service allows you to create and retrieve events against objects in
 the system. A common use of this is to audit changes.
 
 The basic interface into the event log - getting and setting events - requires
-you to identify the object against which the events are to be stored. This is
-done by means of the adapter pattern: pass in an object that implements
-L<OpusVL::EventLog::Role::Adapter>, and we will use it to identify your object
-in our event storage.
+you to identify the object against which the events are to be stored. Pass in an
+object that implements L<OpusVL::FB11::Role::Object::Identifiable>, and we will
+use it to identify your object in our event storage.
 
 This process is similar to L<OpusVL::ObjectParams>, with the principle
 difference being that the event log stores I<multiple> events against an object,
@@ -37,9 +36,8 @@ storage for you.
 System events are created and retrieved simply by providing the special adapter
 stored in C<$OpusVL::EventLog::SYSTEM>.
 
-Please be careful when providing types to system events: it is much more likely
-that you provide a type that someone else has used, and thus pollute one another
-with unexpected data in future, if you don't use namespaced type names.
+Be sure to read L<OpusVL::EventLog::Adapter::System/WARNINGS> before trying to 
+use this.
 
 =head2 Environmental data
 
@@ -237,7 +235,7 @@ sub add_event {
 
     # TODO: validation. We like Params::ValidationCompiler
     $self->__brain->schema->resultset('Event')->create({
-        object_identifier => $args{object}->get_identifier,
+        object_identifier => $args{object}->fb11_unique_identifier,
         payload => $args{payload},
         tags => $tags,
   maybe type => $args{type},

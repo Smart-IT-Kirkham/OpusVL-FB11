@@ -10,7 +10,7 @@ with 'OpusVL::EventLog::Role::Adapter';
 has type => ( is => 'ro' );
 has id => ( is => 'ro', isa => 'HashRef' );
 
-sub get_identifier {
+sub fb11_unique_identifier {
     my $self = shift;
     return {
         type => $self->type,

@@ -56,7 +56,7 @@ sub for_object {
     my $self = shift;
     my $adapter = shift;
 
-    my $identifier = $adapter->get_identifier;
+    my $identifier = $adapter->fb11_unique_identifier;
 
     $self->search({
         object_identifier => {
