@@ -58,7 +58,7 @@ sub provided_services {
 
 =head1 CONSTANTS
 
-=head2 $SYSTEM
+=head2 $OpusVL::EventLog::SYSTEM
 
 Use this for your C<event_type> for a system event.
 
