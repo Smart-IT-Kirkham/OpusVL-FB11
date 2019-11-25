@@ -193,7 +193,7 @@ subtest "Search by data" => sub {
 
         # FIXME: Semantic types are not part of FB11 yet, but when they are,
         # everything should understand what an adapter is
-        user => $tag_adapter->get_identifier
+        user => $tag_adapter->fb11_unique_identifier
     });
 
     $service->add_event(
@@ -220,7 +220,7 @@ subtest "Search by data" => sub {
 
     @events = $service->search_events(
         tags => {
-            user => $tag_adapter->get_identifier
+            user => $tag_adapter->fb11_unique_identifier
         }
     );
     is scalar @events, 1, "Found by tag object identifier";
@@ -235,7 +235,7 @@ subtest "Search by data" => sub {
     @events = $service->search_events(
         tags => {
             username => "Testing event",
-            user => $tag_adapter->get_identifier
+            user => $tag_adapter->fb11_unique_identifier
         }
     );
     is scalar @events, 0, "Not found when not present";
