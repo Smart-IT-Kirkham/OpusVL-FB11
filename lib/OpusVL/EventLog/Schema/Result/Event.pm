@@ -101,6 +101,7 @@ sub to_event_hashref {
     my $self = shift;
 
     {
+        message => $self->message,
         payload => $self->payload,
         tags => $self->tags,
         type => $self->type,

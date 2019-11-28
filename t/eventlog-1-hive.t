@@ -67,6 +67,15 @@ subtest "Object log" => sub {
     );
 
     is scalar @events, 1, "1 returned from search_events";
+    ok
+        exists $events[0]->{message},
+        'Returned event has a message key'
+    ;
+    is
+        $events[0]->{message},
+        'Testing event',
+        'Returned event has message we created it with'
+    ;
 };
 
 reset_schema;
