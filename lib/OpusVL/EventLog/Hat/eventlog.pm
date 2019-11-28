@@ -101,6 +101,10 @@ This defines the structure of the hashrefs returned by L</get_events_for>.
 
 =over
 
+=item message
+
+A fixed message for the event to display to users when reading the event log.
+
 =item payload
 
 This is the data you (or someone) sent to the system via L<add_event>. Its
@@ -207,6 +211,9 @@ B<Arguments>: C<%args>
 
 C<object>: Required. Any object that consumes the
 L<OpusVL::EventLog::Role::Adapter> role.
+
+C<message>: Required. A string that will be displayed to users in search results,
+describing what happened with any identifying information.
 
 C<payload>: Required. This is an arbitrary hashref of data describing your
 event.
