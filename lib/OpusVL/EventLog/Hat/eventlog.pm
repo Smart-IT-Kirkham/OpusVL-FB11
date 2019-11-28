@@ -244,6 +244,7 @@ sub add_event {
     # Model::DBSchema.
     $self->__brain->schema->resultset('Event')->create({
         object_identifier => $args{object}->fb11_unique_identifier,
+        message => $args{message},
         payload => $args{payload},
         tags => $tags,
   maybe type => $args{type},

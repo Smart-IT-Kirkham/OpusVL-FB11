@@ -29,9 +29,8 @@ subtest "Syslog" => sub {
 
     $service->add_event(
         object => $OpusVL::EventLog::SYSTEM,
-        payload => {
-            message => "Testing event"
-        },
+        message => "Testing event",
+        payload => {},
         type => 'test'
     );
 
@@ -56,9 +55,8 @@ subtest "Object log" => sub {
 
     $service->add_event(
         object => $adapter,
-        payload => {
-            message => "Testing event"
-        },
+        message => "Testing event",
+        payload => {},
         type => 'test'
     );
 
@@ -88,9 +86,8 @@ subtest "Environmental data" => sub {
 
         $service->add_event(
             object => $adapter,
-            payload => {
-                message => "Testing event"
-            },
+            message => "Testing event",
+            payload => {},
             tags => {
                 ip => '127.0.0.1',
             },
@@ -117,9 +114,8 @@ subtest "Environmental data" => sub {
 
             $service->add_event(
                 object => $adapter,
-                payload => {
-                    message => "Testing event"
-                },
+                message => "Testing event",
+                payload => {},
                 type => 'test'
             );
 
@@ -139,9 +135,8 @@ subtest "Environmental data" => sub {
 
         $service->add_event(
             object => $adapter,
-            payload => {
-                message => "Testing event"
-            },
+            message => "Testing event",
+            payload => {},
             type => 'test'
         );
 
@@ -158,9 +153,8 @@ subtest "Environmental data" => sub {
 
     $service->add_event(
         object => $adapter,
-        payload => {
-            message => "Testing event"
-        },
+        message => "Testing event",
+        payload => {},
         type => 'test'
     );
     is Event->count, 4, "4 events in table";
@@ -198,8 +192,8 @@ subtest "Search by data" => sub {
 
     $service->add_event(
         object => $adapter,
+        message => "Testing event",
         payload => {
-            message => "Testing event",
             data => "Discoverable data",
         },
         tags => {
@@ -214,7 +208,7 @@ subtest "Search by data" => sub {
     is scalar @events, 1, "Found by env data";
 
     @events = $service->search_events(
-        payload => { message => "Testing event" }
+        payload => { data => "Discoverable data" }
     );
     is scalar @events, 1, "Found by payload data";
 

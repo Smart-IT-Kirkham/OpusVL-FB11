@@ -71,6 +71,11 @@ column tags => {
     serializer_class => 'JSON',
 };
 
+column message => {
+    data_type   => 'text',
+    is_nullable => 0,
+};
+
 column type => {
     data_type => 'text',
     is_nullable => 1,
