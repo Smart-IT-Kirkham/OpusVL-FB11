@@ -79,7 +79,7 @@ my $appfile = YAML::Tiny->read($ENV{FB11_APPFILE})->[0];
 my $default_command_from_yaml =
     $appfile
     ->{apps}
-    ->{$appname}
+    ->{$ENV{FB11_APP}}
     ->{default_command};
 
 my @cmd;
