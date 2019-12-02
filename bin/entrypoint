@@ -74,8 +74,9 @@ if (not $ENV{PSGI}) {
     die "$error\n";
 }
 
+use YAML ();
 # TODO read $appfile once
-my $appfile = YAML::Tiny->read($ENV{FB11_APPFILE})->[0];
+my $appfile = YAML::LoadFile($ENV{FB11_APPFILE});
 my $default_command_from_yaml =
     $appfile
     ->{apps}
