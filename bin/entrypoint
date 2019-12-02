@@ -73,44 +73,59 @@ if (not $ENV{PSGI}) {
     die "$error\n";
 }
 
-my @cmd;
-
-my $PORT = $ENV{FB11_PORT} || 5000;
-
-# in DEV_MODE we ignore MEMORY_LIMIT and WORKERS
-if ($ENV{DEV_MODE}) {
-    push @cmd, qw(/opt/perl5/bin/plackup --port), $PORT;
-
-    if ($ENV{DEBUG_CONSOLE} or -t STDOUT) {
-        unshift @cmd, qw(/opt/perl5/bin/perl -d);
-    }
-}
-else {
-    push @cmd, qw(/opt/perl5/bin/starman --server Martian --listen), ":$PORT";
-
-    if ($ENV{MEMORY_LIMIT}) {
-        push @cmd, '--memory-limit', $ENV{MEMORY_LIMIT};
-    }
-
-    if ($ENV{WORKERS}) {
-        push @cmd, '--workers', $ENV{WORKERS};
-    }
-
-    if ($ENV{PRELOAD}) {
-        push @cmd, '--preload-app'
-    }
-
-    if ($ENV{STACKTRACE}) {
-        unshift @cmd, qw(/opt/perl5/bin/perl -d:Confess);
-    }
-
-    # this is 2>&1, which we do for not-dev-mode
-    open STDERR, '>&', STDOUT;
-}
-
-push @cmd, $ENV{PSGI};
+# TODO read $appfile once
+my $appfile = YAML::Tiny->read($ENV{FB11_APPFILE})->[0];
+my $default_command_from_yaml =
+    $appfile
+    ->{apps}
+    ->{$appname}
+    ->{default_command};
+my @cmd =
+    defined($default_command_from_yaml)
+    ? %{$default_command_from_yaml}
+    : run_psgi_cmdline();
 
 exec qw(gosu fb11), @cmd;
+
+sub run_psgi_cmdline {
+    my @cmd;
+
+    my $PORT = $ENV{FB11_PORT} || 5000;
+
+    # in DEV_MODE we ignore MEMORY_LIMIT and WORKERS
+    if ($ENV{DEV_MODE}) {
+        push @cmd, qw(/opt/perl5/bin/plackup --port), $PORT;
+
+        if ($ENV{DEBUG_CONSOLE} or -t STDOUT) {
+            unshift @cmd, qw(/opt/perl5/bin/perl -d);
+        }
+    }
+    else {
+        push @cmd, qw(/opt/perl5/bin/starman --server Martian --listen), ":$PORT";
+
+        if ($ENV{MEMORY_LIMIT}) {
+            push @cmd, '--memory-limit', $ENV{MEMORY_LIMIT};
+        }
+
+        if ($ENV{WORKERS}) {
+            push @cmd, '--workers', $ENV{WORKERS};
+        }
+
+        if ($ENV{PRELOAD}) {
+            push @cmd, '--preload-app'
+        }
+
+        if ($ENV{STACKTRACE}) {
+            unshift @cmd, qw(/opt/perl5/bin/perl -d:Confess);
+        }
+
+        # this is 2>&1, which we do for not-dev-mode
+        open STDERR, '>&', STDOUT;
+    }
+
+    push @cmd, $ENV{PSGI};
+    return @cmd
+}
 
 sub add_project_to_perl5lib {
     my $dir = dir(shift);
