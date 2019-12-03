@@ -434,8 +434,9 @@ sub service {
     failure::fb11::hive::no_service->throw({
         msg => "Nothing provides the service $service_name",
         payload => {
-            service => $service_name
-        }
+            service => $service_name,
+        },
+        trace   => failure->confess_trace,
     })
         unless $brain;
 
