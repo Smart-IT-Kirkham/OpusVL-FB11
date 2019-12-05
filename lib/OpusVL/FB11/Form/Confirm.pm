@@ -1,5 +1,7 @@
 package OpusVL::FB11::Form::Confirm;
 
+our $VERSION = '1';
+
 use OpusVL::FB11::Plugin::FormHandler;
 
 has_field 'submitok'   => (

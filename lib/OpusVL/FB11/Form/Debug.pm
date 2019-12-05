@@ -2,6 +2,8 @@ package OpusVL::FB11::Form::Debug;
 
 # ABSTRACT: A form for the debug page
 
+our $VERSION = '1';
+
 use OpusVL::FB11::Plugin::FormHandler;
 
 has '+http_method' => (

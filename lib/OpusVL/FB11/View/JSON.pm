@@ -1,4 +1,7 @@
 package OpusVL::FB11::View::JSON;
+
+our $VERSION = '1';
+
 use base qw( Catalyst::View::JSON );
 
 =head1 NAME

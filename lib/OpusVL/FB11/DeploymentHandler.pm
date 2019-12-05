@@ -1,5 +1,7 @@
 package OpusVL::FB11::DeploymentHandler;
 
+our $VERSION = '1';
+
 use Moo;
 
 extends 'DBIx::Class::DeploymentHandler::Dad';

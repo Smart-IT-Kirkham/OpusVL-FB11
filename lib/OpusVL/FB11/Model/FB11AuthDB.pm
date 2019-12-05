@@ -1,5 +1,7 @@
 package OpusVL::FB11::Model::FB11AuthDB;
 
+our $VERSION = '1';
+
 use Moose;
 use OpusVL::FB11::Hive;
 extends 'Catalyst::Model::DBIC::Schema';

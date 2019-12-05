@@ -1,5 +1,7 @@
 package OpusVL::FB11::Plugin::FormHandler;
 
+our $VERSION = '1';
+
 use warnings;
 use strict;
 use Import::Into;

@@ -1,5 +1,7 @@
 package OpusVL::FB11::FormHandler::Trait::Field::DateTime;
 
+our $VERSION = '1';
+
 use Moose::Role;
 use Data::Munge qw/elem/;
 use DateTime;

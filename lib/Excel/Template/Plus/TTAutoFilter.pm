@@ -1,5 +1,7 @@
 package Excel::Template::Plus::TTAutoFilter;
 
+our $VERSION = '1';
+
 use Moose;
 extends 'Excel::Template::Plus::TT';
 

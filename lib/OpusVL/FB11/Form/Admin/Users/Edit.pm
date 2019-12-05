@@ -1,5 +1,7 @@
 package OpusVL::FB11::Form::Admin::Users::Edit;
 
+our $VERSION = '1';
+
 use OpusVL::FB11::Plugin::FormHandler;
 with 'HTML::FormHandler::TraitFor::Model::DBIC';
 

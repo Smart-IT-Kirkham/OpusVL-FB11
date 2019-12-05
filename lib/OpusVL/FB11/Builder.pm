@@ -1,5 +1,7 @@
 package OpusVL::FB11::Builder;
 
+our $VERSION = '1';
+
 =head1 NAME
 
 OpusVL::FB11::Builder - L<CatalystX::AppBuilder> connector for FB11 apps.

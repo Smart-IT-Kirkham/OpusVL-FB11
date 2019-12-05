@@ -3,6 +3,8 @@ package OpusVL::FB11::Auth::Brain::Hat::auth;
 # DEBT: is a hack to make TokenProcessor work, but a hack in the right
 # direction, I hope
 
+our $VERSION = '1';
+
 use Moose;
 with 'OpusVL::FB11::Role::Hat';
 

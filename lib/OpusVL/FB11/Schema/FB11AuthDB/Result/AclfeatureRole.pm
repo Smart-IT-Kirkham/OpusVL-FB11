@@ -1,5 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::AclfeatureRole;
 
+our $VERSION = '1';
+
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 

@@ -1,6 +1,8 @@
 package OpusVL::FB11::RolesFor::Schema::LDAPAuth;
 # FIXME: should probably rename this class.
 
+our $VERSION = '1';
+
 use namespace::autoclean;
 use Moose::Role;
 

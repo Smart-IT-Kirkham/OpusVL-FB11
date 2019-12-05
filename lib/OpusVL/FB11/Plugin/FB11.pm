@@ -1,5 +1,7 @@
 package OpusVL::FB11::Plugin::FB11;
 
+our $VERSION = '1';
+
 =head1 NAME
 
     OpusVL::FB11::Plugin::FB11 - Common functions to get OpusVL::FB11 working.

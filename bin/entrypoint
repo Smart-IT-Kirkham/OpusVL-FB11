@@ -1,5 +1,7 @@
 #!/opt/perl5/bin/perl
 
+our $VERSION = '1';
+
 use strict;
 use warnings;
 use v5.20;

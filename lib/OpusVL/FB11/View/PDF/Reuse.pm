@@ -1,5 +1,7 @@
 package OpusVL::FB11::View::PDF::Reuse;
 
+our $VERSION = '1';
+
 use strict;
 use base 'Catalyst::View::PDF::Reuse';
 

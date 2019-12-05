@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::Controller::GUI;
 
+our $VERSION = '1';
+
 =head1 NAME
 
     OpusVL::FB11::RolesFor::Controller::GUI - Role for Controllers wanting to interact with FB11

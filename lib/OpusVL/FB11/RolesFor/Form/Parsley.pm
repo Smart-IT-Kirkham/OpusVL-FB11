@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::Form::Parsley;
 
+our $VERSION = '1';
+
 use Moose::Role;
 
 around form_element_class => sub {

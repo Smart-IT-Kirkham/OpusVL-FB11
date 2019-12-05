@@ -1,4 +1,7 @@
 package OpusVL::FB11::Role::Hat::auth;
+
+our $VERSION = '1';
+
 use Moose::Role;
 with 'OpusVL::FB11::Role::Hat';
 

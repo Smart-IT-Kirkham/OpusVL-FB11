@@ -1,5 +1,7 @@
 package OpusVL::FB11::Plugin::FB11::REST;
 
+our $VERSION = '1';
+
 use Moose;
 extends 'OpusVL::FB11::Plugin::FB11';
 

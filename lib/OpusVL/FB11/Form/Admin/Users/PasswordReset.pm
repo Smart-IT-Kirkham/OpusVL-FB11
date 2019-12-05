@@ -2,6 +2,8 @@ package OpusVL::FB11::Form::Admin::Users::PasswordReset;
 
 # ABSTRACT: Defines the "change your password" form
 
+our $VERSION = '1';
+
 use OpusVL::FB11::Plugin::FormHandler;
 with 'OpusVL::FB11::Form::Role::Users';
 

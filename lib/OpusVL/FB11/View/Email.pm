@@ -1,5 +1,7 @@
 package OpusVL::FB11::View::Email;
 
+our $VERSION = '1';
+
 use strict;
 use base 'Catalyst::View::Email';
 

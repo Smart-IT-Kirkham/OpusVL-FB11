@@ -1,4 +1,7 @@
 package OpusVL::FB11::Form::Access::RoleManagement;
+
+our $VERSION = '1';
+
 use OpusVL::FB11::Plugin::FormHandler;
 
 has_field 'can_change_any_role'   => ( type => 'Boolean', label => 'Can change any role' );
