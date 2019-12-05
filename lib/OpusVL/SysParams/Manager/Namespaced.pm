@@ -1,7 +1,13 @@
 package OpusVL::SysParams::Manager::Namespaced;
 
 use v5.24;
+use strict;
+use warnings;
+use feature 'signatures';
+no warnings 'experimental::signatures';
+
 use Moose;
+use failures qw<opusvl::sysparams::no_such_param>;
 use PerlX::Maybe;
 with 'OpusVL::SysParams::Role::Manager';
 
@@ -65,10 +71,21 @@ sub value_of {
     my $self = shift;
     my $param = shift;
 
-    my $p = $self->_rs->find_by_name($param)
-    or return;
-
-    $p->value;
+    if (my $p = $self->_rs->find_by_name($param))
+    {
+        return $p->value
+    }
+    else
+    {
+        failure::opusvl::sysparams::no_such_param
+        ->throw({
+            msg => sprintf(
+                "parameter %s not found in store",
+                $self->_namespace_behaviour->full_param_name($param)
+            ),
+            trace => failure->confess_trace,
+        })
+    }
 }
 
 sub all_params {
@@ -117,13 +134,54 @@ sub set_default {
 
 sub _rs {
     my $self = shift;
-    my $rs = $self->schema->resultset('SysParam');
+    return $self->_namespace_behaviour->resultset($self->schema);
+}
 
-    if ($self->has_namespace) {
-        return $rs->with_namespace($self->namespace)
+sub _namespace_behaviour($self)
+{
+    $self->has_namespace
+    ? _Namespace->new(namespace => $self->namespace)
+    : _NullNamespace->new()
+
+    # If we find more behaviour varies with it, add methods to the
+    # _Namespace and _NullNamespace classes
+    #
+    # TODO do we ever have any non-namespaced sysparams now?
+    #   If not we can remove this and make namespace attribute required
+}
+
+
+BEGIN {
+    # TODO give these classes files and a Perl namespace of their own
+    package _Namespace {
+        use Moose;
+        has namespace => (
+            is => 'ro',
+            required => 1,
+            isa => 'Str',
+        );
+
+        sub full_param_name($self, $param)
+        {
+            $self->namespace . '::' . $param
+        }
+
+        sub resultset($self, $schema)
+        {
+            $schema->resultset('SysParam')->with_namespace($self->namespace)
+        }
     }
 
-    return $rs;
+    package _NullNamespace {
+        use Moose;
+        sub full_param_name($self, $param)
+        {
+            $param
+        }
+        sub resultset($self, $schema) {
+            $schema->resultset('SysParam')
+        }
+    }
 }
 
 1;
