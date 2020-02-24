@@ -1,7 +1,0 @@
-
-[% META appkitfeature_tablesorter = 1 %]
-
-<h1>Events</h1>
-
-[% PROCESS fb11/audittrail/events/event_search.tt %]
-

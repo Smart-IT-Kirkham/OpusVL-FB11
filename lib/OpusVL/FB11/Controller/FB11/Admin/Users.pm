@@ -9,6 +9,7 @@ use List::Util qw/pairkeys/;
 
 use OpusVL::FB11::Form;
 use OpusVL::FB11::Hive;
+use OpusVL::ObjectParams::Adapter::Static;
 
 BEGIN { extends 'Catalyst::Controller'; };
 with 'OpusVL::FB11::RolesFor::Controller::GUI';
@@ -120,107 +121,41 @@ sub show_user
     : Args(0)
 {
     my ( $self, $c ) = @_;
-    my $form = $self->user_role_form;
-    my $upload_form = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
-    $c->stash->{form} = $form;
-    $c->stash->{upload_form} = $upload_form;
-    push @{ $c->stash->{breadcrumbs} }, {
-        name    => $c->stash->{thisuser}->username,
-        url     => $c->uri_for($c->controller('FB11::Admin::Access')->action_for('show_user'), [ $c->stash->{thisuser}->id ])
-    };
+    my $user = $c->stash->{thisuser};
+    my $upload_form = $c->stash->{upload_form} = $self->form($c, '+OpusVL::FB11::Form::UploadAvatar');
+
+    my $form_config = $self->_build_object_params_fields($c->stash->{thisuser});
+    my $init_obj = delete $form_config->{init_obj} // {};
 
     my @options;
     my @selected;
     for my $role ($c->user->roles_modifiable) {
-        my $opts = {
-            value => $role,
-            label => $role,
-        };
-
         if (elem $role, [$c->stash->{thisuser}->role_names]) {
             push @selected, $role,
         }
 
-        push @options, $opts;
+        push @options, $role, $role;
     }
+    $init_obj->{user_roles} = \@selected;
 
+    my $form = $c->stash->{form} = $self->user_role_form(%$form_config);
+
+    # You can't put this in form_config without redefining the entire field
     $form->field('user_roles')->options(\@options);
     $form->process(
-        defaults => { user_roles => \@selected },
+        init_object => $init_obj,
         params => $c->req->params,
         posted => !! $c->req->body_params->{submit_roles}
     );
     $upload_form->process($c->req->params);
-
-    # TODO - this is probably more useful done elsewhere
-    my $params_form_config = {};
-    HAT:
-    for my $hat (OpusVL::FB11::Hive->hats('parameters')) {
-        if (elem 'OpusVL::FB11::Schema::FB11AuthDB::Result::User', [$hat->get_augmented_classes]) {
-            my $schema =  $hat->get_parameter_schema;
-            next HAT if not $schema or not %$schema;
-
-            my $field_config = OpusVL::FB11::Form->openapi_to_formhandler($schema);
-            my $fieldset = {
-                name => $schema->{'x-namespace'},
-                tag => 'fieldset',
-                label => $schema->{title},
-                render_list => [ pairkeys @$field_config ],
-            };
-
-            push $params_form_config->{field_list}->@*, @$field_config;
-            push $params_form_config->{block_list}->@*, $fieldset;
-            push $params_form_config->{render_list}->@*, $fieldset->{name};
-            $params_form_config->{defaults} //= {};
-            $params_form_config->{defaults} = {
-                $params_form_config->{defaults}->%*,
-                OpusVL::FB11::Form->openapi_to_init_object(
-                    $schema,
-                    $hat->get_augmented_data($c->stash->{thisuser})
-                )
-                ->%*
-            };
-        }
-    }
-
-    if (%$params_form_config) {
-        my $defaults = delete $params_form_config->{defaults};
-        push $params_form_config->{field_list}->@*, (
-            submit_params => 'Submit'
-        );
-        push $params_form_config->{render_list}->@*, 'submit_params';
-
-        my $params_form = $c->stash->{params_form} = OpusVL::FB11::Form->new($params_form_config);
-
-        $params_form->process(
-            defaults => $defaults,
-            params => $c->req->params,
-            posted => !! $c->req->body_params->{submit_params},
-        );
-
-        if ($params_form->validated) {
-            for my $hat (OpusVL::FB11::Hive->hats('parameters')) {
-                my $schema =  $hat->get_parameter_schema;
-                if (elem 'OpusVL::FB11::Schema::FB11AuthDB::Result::User', [$hat->get_augmented_classes]) {
-                    $hat->set_augmented_data(
-                        $c->stash->{thisuser},
-                        $params_form->params_back_to_openapi( $schema )
-                    )
-                }
-            }
-
-            $c->flash->{status_msg} = "Successfully updated parameters";
-            $c->res->redirect($c->req->uri);
-        }
-    }
 
     if (my $upload = $c->req->upload('file')) {
         my @params = ( file => $upload );
         $upload_form->process(params => { @params });
 
         if ($upload_form->validated) {
-            $c->stash->{thisuser}->get_or_default_avatar->update({
-                user_id   => $c->stash->{thisuser}->id,
+            $user->get_or_default_avatar->update({
+                user_id   => $user->id,
                 mime_type => $upload->type,
                 data      => $upload->slurp,
             });
@@ -231,23 +166,24 @@ sub show_user
 
     if ($form->validated) {
         my $user_roles = $form->field('user_roles')->value;
-        if (@$user_roles) {
-            foreach my $role(@$user_roles) {
-                my $r = $c->model('FB11AuthDB::Role')->find({ role => $role });
-                try {
-                    $c->stash->{thisuser}->add_to_users_roles({ role_id => $r->id });
-                }
-                catch {
-                    die $_ unless /duplicate key/
-                }
+        for my $role(@$user_roles) {
+            my $r = $c->model('FB11AuthDB::Role')->find({ role => $role });
+            try {
+                $user->add_to_users_roles({ role_id => $r->id });
             }
-
-            $c->stash->{thisuser}->search_related('users_roles',
-                { "role.role" => { 'NOT IN' => $user_roles } },
-                { join => "role" }
-            )->delete;
-            $c->stash->{status_msg} = "User Roles updated";
+            catch {
+                die $_ unless /duplicate key/
+            }
         }
+
+        $user->search_related('users_roles',
+            { "role.role" => { 'NOT IN' => $user_roles } },
+            { join => "role" }
+        )->delete;
+
+        $self->_unpack_params_data($user, $form);
+
+        $c->stash->{status_msg} = "User updated";
     }
 }
 
@@ -418,7 +354,97 @@ sub delete_user
     }
 }
 
+sub _extension_schemata {
+    my $self = shift;
+    my $user = shift;
 
+    my $params_adapter = $self->_params_adapter($user);
+    my $params_service = OpusVL::FB11::Hive->service('objectparams');
+
+    $params_service->get_form_schemas_for(type => 'fb11core::user');
+}
+
+# TODO: This should be done by the User object, which could be achieved simply
+# by implementing a role that knows how to make an adapter for DBIC classes. The
+# User object *might* think its PK is something other than its email - be wary
+# of that.
+sub _params_adapter {
+    my $self = shift;
+    my $user = shift;
+    # NOTE: I am keying a user on their email address because the type
+    # fb11core::user should define a key and email should be it
+    OpusVL::ObjectParams::Adapter::Static->new({
+        id => { email => $user->email },
+        type => 'fb11core::user'
+    });
+}
+
+# Gets all the objectparams::extendee schemas and returns a hash to give to the
+# form constructor.
+sub _build_object_params_fields {
+    my $self = shift;
+    my $user = shift;
+
+    my $params_service = OpusVL::FB11::Hive->service('objectparams');
+    my $params_adapter = $self->_params_adapter($user);
+    my $params_form_config = {};
+    my $extension_schemata = $self->_extension_schemata($user);
+
+    for my $extender (keys %$extension_schemata) {
+        my $schema = $extension_schemata->{$extender};
+        my $field_config = OpusVL::FB11::Form->openapi_to_field_list($schema);
+        my $extension_data = $params_service->get_parameters_for(
+            object => $params_adapter,
+            extender => $extender,
+        );
+
+        my $fieldset = {
+            name => $schema->{'x-namespace'},
+            tag => 'fieldset',
+            label => $schema->{title},
+            render_list => [ pairkeys @$field_config ],
+        };
+
+        push $params_form_config->{field_list}->@*, @$field_config;
+        push $params_form_config->{block_list}->@*, $fieldset;
+        push $params_form_config->{render_list}->@*, $fieldset->{name};
+
+        $params_form_config->{init_obj} //= {};
+        if ($extension_data) {
+            $params_form_config->{init_obj} = {
+                $params_form_config->{init_obj}->%*,
+                OpusVL::FB11::Form->openapi_to_init_object(
+                    $schema,
+                    $extension_data
+                )
+                ->%*
+            };
+        }
+    }
+
+    return $params_form_config;
+}
+
+# De-namespace the form data and send it to its owners. Pass form object
+sub _unpack_params_data {
+    my $self = shift;
+    my $user = shift;
+    my $form = shift;
+
+    my $params_service = OpusVL::FB11::Hive->service('objectparams');
+    my $params_adapter = $self->_params_adapter($user);
+    my $extension_schemata = $self->_extension_schemata($user);
+
+    for my $extender (keys %$extension_schemata) {
+        my $schema = $extension_schemata->{$extender};
+
+        $params_service->set_parameters_for(
+            object => $params_adapter,
+            extender => $extender,
+            parameters => $form->values_for_openapi_schema($schema)
+        )
+    }
+}
 =head1 COPYRIGHT and LICENSE
 
 Copyright (C) 2010 OpusVL

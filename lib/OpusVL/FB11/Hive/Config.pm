@@ -54,7 +54,7 @@ sub configure_hive {
                 });
 
                 use_package_optimistically($b_conf->{class});
-                my $br = $b_conf->{class}->new($b_conf->{constructor} // ());
+                my $br = $b_conf->{class}->new( $b_conf->{constructor} || {} );
                 $hive = $hive->with_brain_registered($br);
             }
             catch {

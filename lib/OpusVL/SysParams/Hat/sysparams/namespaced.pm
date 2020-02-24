@@ -13,6 +13,16 @@ sub for_component {
     OpusVL::SysParams::Reader->new({
         manager => OpusVL::SysParams::Manager::Namespaced->new({
             namespace => $_[1],
+            schema => $_[0]->__brain->schema,
+            __brain => $_[0]->__brain
+        })
+    });
+}
+
+sub for_all_components {
+    OpusVL::SysParams::Reader->new({
+        manager => OpusVL::SysParams::Manager::Namespaced->new({
+            schema => $_[0]->__brain->schema,
             __brain => $_[0]->__brain
         })
     });

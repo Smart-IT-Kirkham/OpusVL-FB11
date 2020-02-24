@@ -1,0 +1,58 @@
+---
+schema:
+  procedures: {}
+  tables:
+    custom_params:
+      constraints:
+        - deferrable: 1
+          expression: ''
+          fields:
+            - type
+          match_type: ''
+          name: ''
+          on_delete: ''
+          on_update: ''
+          options: []
+          reference_fields: []
+          reference_table: ''
+          type: PRIMARY KEY
+      fields:
+        schema:
+          data_type: jsonb
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 0
+          is_unique: 0
+          name: schema
+          order: 2
+          size:
+            - 0
+        type:
+          data_type: text
+          default_value: ~
+          is_nullable: 0
+          is_primary_key: 1
+          is_unique: 0
+          name: type
+          order: 1
+          size:
+            - 0
+      indices: []
+      name: custom_params
+      options: []
+      order: 1
+  triggers: {}
+  views: {}
+translator:
+  add_drop_table: 0
+  filename: ~
+  no_comments: 0
+  parser_args:
+    sources:
+      - CustomParams
+  parser_type: SQL::Translator::Parser::DBIx::Class
+  producer_args: {}
+  producer_type: SQL::Translator::Producer::YAML
+  show_warnings: 0
+  trace: 0
+  version: 0.11024

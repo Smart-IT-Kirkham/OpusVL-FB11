@@ -1,10 +1,15 @@
+# FIXME: FB11 won't run without a cache, so we prescribe one here.
+requires 'Cache::Redis';
+
+requires 'Catalyst::Model::Adaptor';
 requires 'Config::General';
-requires 'Config::JFDI';
+requires 'Config::ZOMG';
 requires 'Cpanel::JSON::XS';
 requires 'Crypt::Eksblowfish::Bcrypt';
 requires 'Data::Munge';
 requires 'Data::Visitor::Tiny';
 requires 'DateTime';
+requires 'DateTime::Format::ISO8601';
 requires 'DateTime::Format::Pg';
 requires 'DBIx::Class::EncodedColumn::Crypt::Eksblowfish::Bcrypt';
 requires 'DBIx::Class::InflateColumn::Serializer';
@@ -106,5 +111,10 @@ requires 'HTML::FormHandler::TraitFor::Model::DBIC';
 
 requires 'OpusVL::AppKit::Schema::AppKitAuthDB';
 requires 'OpusVL::DBIC::Helper';
+
+# Audit Trail - Try removing these when we rewrite it
+requires 'DBIx::Class::Helper::ResultSet::SetOperations';
+requires 'MooseX::ClassAttribute';
+requires 'Exporter::Easy';
 
 test_requires 'Test::Postgresql58';

@@ -2,9 +2,10 @@ FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11
 
 FROM FB11 AS FB11-layer0
 
-# Do some checks no point continuing otherwise
-ARG version
-RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
+# DEBT a hack to work around fact 'stable' has moved to buster but our base images haven't
+RUN sed -i 's/stable/stretch/g' /etc/apt/sources.list
+# Following is due to Permission Denied removing lockfiles - perhaps corrupted caches from parent image?
+RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Re add in the neccesary packages for postgres
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(cat /etc/os-tag)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
@@ -20,6 +21,13 @@ ARG PG_VERSION=postgresql-server-dev-10
 # Add Postgres
 RUN apt-get update \
     && apt-get -y install build-essential libpq-dev postgresql-10
+
+# Do some checks no point continuing otherwise
+# Do this after apt-get or we will never cache the apt-get
+ARG version
+RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
+ARG gitrev
+RUN if [ -z "$gitrev" ]; then echo "gitrev not provided"; exit 2; fi;
 
 # Finally install the FB11 tarball, use the OpusVL backing mirror
 # We CANNOT run the tests right now. Test::Postgresql58 REFUSES to run as root.
@@ -48,10 +56,6 @@ USER root
 FROM FB11 AS FB11-Final
 
 # Arguments
-ARG version
-RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
-ARG gitrev
-RUN if [ -z "$gitrev" ]; then echo "gitrev not provided"; exit 2; fi;
 RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
 
 # Poison path so we can use our version of perl
@@ -70,6 +74,9 @@ fi
 # Echo the version to the root of the file system
 RUN echo OpusVL-FB11@$version >> /version \
     && useradd -rs /bin/false fb11
+
+# There is now a default PSGI you can rely on
+ENV PSGI /opt/perl5/bin/fb11.psgi
 
 # We intentionally leave the USER as root, and drop privs in the entrypoint.
 # This lets us (and derived images) run initialisation as root without having to

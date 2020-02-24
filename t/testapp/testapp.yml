@@ -1,0 +1,98 @@
+# This is the main way we create and run an FB11 app: by configuring the Hive.
+# The Catalyst app itself still needs configuration so we just merge these
+# together. You can have separate files if you really want.
+#
+# The core FB11 PSGI file looks for the environment variables FB11_HIVE_CONFIG
+# and FB11_HIVE_CONFIG_PATH. The latter of these is kind of like an xpath and
+# locates the config section within the file
+#
+# Have a look at the docker-compose.yml that comes along with this test app.
+hive:
+  # brains is an array of constructor data. Not all brains accept constructor
+  # data besides the brain class itself.
+  brains:
+    - class: TestApp::Brain
+
+    # The sysparams brain needs DBIC connection info. In the future we would
+    # prefer to have a DB connection service, but the way DBIC works makes this
+    # impossible in the short term.
+    #
+    # We use the standard environment variables to define the connection
+    # parameters so you don't have to change this file; just change your env
+    - class: OpusVL::SysParams
+      constructor:
+        connect_info: &DB
+          - dbi:Pg:dbname=__ENV(FB11_DB_NAME)__;host=__ENV(FB11_DB_HOST)__
+          - __ENV(FB11_DB_USER)__
+          - __ENV(FB11_DB_PASSWORD)__
+
+    # The Auth brain currently handles the deployment of all databases because
+    # it is patient zero for that process. We'd like to separate this at some
+    # point, which shouldn't be too hard, but we just haven't made one yet.
+    - class: OpusVL::FB11::Auth::Brain
+      constructor:
+        connect_info: *DB
+
+    # ObjectParams is a service that allows Brains to say they are receptive to
+    # their objects being extended, and other Brains to provide extensions to
+    # them.
+    - class: OpusVL::ObjectParams
+      constructor:
+        connect_info: *DB
+
+    # CustomParams is a service that hooks into ObjectParams by allowing end
+    # users to define extended data through ObjectParams, rather than requiring
+    # a developer to define the schema.
+    - class: OpusVL::CustomParams
+      constructor:
+        connect_info: *DB
+
+    # EventLog is a service similar to ObjectParams except the data we store
+    # against the object are specifically intended to be considered events. It
+    # also allows for system events.
+    - class: OpusVL::EventLog
+      constructor:
+        connect_info: *DB
+
+  # services is an object mapping the service name to the brain providing it.
+  # At this stage, you need to know the short name of the brains, which will be
+  # documented by them.
+  services:
+    # This service handles all schemata with DeploymentHandler migrations
+    dbicdh::manager:
+      brain: fb11-auth
+    # This service is used by the core PSGI to run your app
+    fb11::app:
+      brain: testapp
+    # This service allows other brains to define and later access customisable
+    # parameters
+    sysparams:
+      brain: sysparams
+    # This service allows the end user to administrate the sysparams. In order
+    # to get the UI to do that, you have to add the FB11X component to the app
+    # builder.
+    sysparams::management:
+      brain: sysparams
+    eventlog:
+      brain: event-log
+    objectparams:
+      brain: objectparams
+    customparams:
+      brain: customparams
+
+# TestApp inherits from FB11, which is still fundamentally a Catalyst app.
+# The connection params are the same as we set up in the hive, so we just link.
+#
+# The Catalyst app requires a postgres connection for auth.
+Model::FB11AuthDB:
+  connect_info: *DB
+
+# FB11 currently doesn't work without cache - it won't stay logged in! We prefer
+# Redis because it's so much easier to install and set up than memcached ever
+# was. You will need Cache::Redis for this, and then you can set FB11_CACHE_HOST
+# to something you have redis running on.
+Plugin::Cache:
+  backend:
+    class: Cache::Redis
+    server: __ENV(FB11_CACHE_HOST)__
+    namespace: 'testappcache:'

@@ -47,7 +47,7 @@ small data items that configure system behaviour.
         }
     });
 
-    OpusVL::FB11::Hive->service('sysparams')->for_component('myapp')->get('some.key');
+    OpusVL::FB11::Hive->service('sysparams')->for_component('myapp')->value_of('some.key');
 
 =head1 SERVICES
 
@@ -82,6 +82,9 @@ sub hats {
     },
     'sysparams::management' => {
         class => 'sysparams::management::namespaced'
+    },
+    'dbicdh::consumer' => {
+        class => '+OpusVL::FB11::Hat::dbicdh::consumer::is_brain',
     },
 }
 
@@ -121,4 +124,7 @@ sub hive_init {
     $guard->commit;
 }
 
+sub dependencies {
+    services => ['dbicdh::manager']
+}
 1;

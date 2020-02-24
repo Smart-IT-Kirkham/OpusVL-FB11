@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User;
 
+# FIXME: Literally only OpusVL::Schema::FB11AuthDB::Result::User consumes this
+# role. Why does it even exist?
 use strict;
 use Moose::Role;
 use List::Util qw/any/;

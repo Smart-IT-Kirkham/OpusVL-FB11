@@ -1,0 +1,138 @@
+[% form.render_start | none %]
+  <div class="fb11-card records records-fields">
+    <fieldset>
+      <legend>Form Fields</legend>
+      [% FOREACH field IN form.field('fields').fields %]
+        <div class="row record record-field">
+          <div class="col-md-4">
+            [% field.field('label').render | none %]
+          </div>
+          <div class="col-md-3">
+            [% field.field('arity').render | none %]
+          </div>
+          <div class="col-md-4">
+            [% field.field('format').render | none %]
+          </div>
+          <div class="col-md-1">
+            <label class="control-label">&nbsp;</label>
+            <a href="#" class="delete-row btn btn-block btn-danger
+              [% IF form.field('fields').fields.size == 1 %] 
+                disabled
+              [% END %]
+              "><i
+                class="fa fa-times"></i>
+            </a>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group field field-options data-text">
+              <label>Options</label>
+              [% FOREACH option IN field.field('options').fields %]
+                [% option.render | none %]
+              [% END %]
+            </div>
+          </div>
+        </div>
+      [% END %]
+      <div class="row">
+        <div class="col-md-1 col-md-offset-11">
+          <label class="control-label">&nbsp;</label>
+          <a href="#" class="add-row btn btn-block btn-primary"><i class="fa fa-plus"></i></a>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  [% form.field('submit_button').render | none %]
+[% form.render_end | none %]
+
+<script type="text/javascript">
+$(function() {
+    function increment_field_number(n) {
+      if (n === undefined) { n = 1; }
+      return function (_,attr) {
+        if (attr === undefined) { return; }
+        var i = 0;
+        return attr.replace(/\d+/g, function(m) {
+          i++;
+          return i == n ? parseInt(m) + 1 : m
+        });
+      };
+    };
+    $('.add-row').click(function (e) {
+        var $this = $(this);
+        var $row = $this.closest('.row').prev();
+        var $clone = $row.clone();
+
+        // Apparently jQuery doesn't copy select values? :/
+        var selects = $row.find("select");
+        $(selects).each(function(i) {
+            $clone.find("select").eq(i).val($(this).val());
+        });
+
+        // If we append the clone and change the button we clicked on to be a
+        // delete button, the delete handler fires immediately. So we use the
+        // clone as the original.
+        $row.before($clone);
+
+        $row.find(':input')
+          .attr('name', increment_field_number())
+          .attr('id', increment_field_number());
+
+        $row.find(':input:not(:radio,:checkbox)').val('');
+        $row.find(':radio,:checkbox').attr('checked', false);
+
+        $row.find('label').attr('for', increment_field_number());
+
+        // If we clone a select field, we get the same number of option
+        // thingies. We want 1.
+        $row.find('.field-options .form-group:not(:eq(0))').remove();
+        show_constraints_or_options.call($row);
+
+        $clone.find('.add-row')
+          .removeClass('btn-primary').addClass('btn-danger')
+          .removeClass('add-row').addClass('delete-row')
+          .find('i').removeClass('fa-plus').addClass('fa-times');
+
+        $this.closest('fieldset').find('.btn.disabled').removeClass('disabled');
+        e.preventDefault();
+    });
+
+    $(document).on('click', '.delete-row', function(e) {
+        var $this = $(this);
+        var $fieldset = $this.closest('fieldset');
+        $this.closest('.row').remove();
+
+        if ($fieldset.find('.row.record').length == 1) {
+          $fieldset.find('.btn.delete-row').addClass('disabled');
+        }
+        e.preventDefault();
+    });
+
+    $(document).on('input', '.field-options .form-group:last-child input', function() {
+        var $input = $(this).closest('.form-group');
+        var $clone = $input.clone()
+        $clone.insertAfter($input);
+        $clone.find('input').val('')
+          .attr('name', increment_field_number(2))
+          .attr('id', increment_field_number(2));
+    });
+
+    (function(){
+      var trigger_elems = '.field-format,.field-arity :input';
+      $(document).on('change', trigger_elems, function() {
+          var $record = $(this).closest('.record');
+          var format = $record.find('.field-format').val();
+          var arity = $record.find('.field-arity :input:checked').val();
+          if (format === 'enum'
+              || (format === 'boolean' && arity === 'multi')) {
+
+            $record.find('.field-options').show();
+          }
+          else {
+            $record.find('.field-options').hide();
+          }
+      });
+
+      $(trigger_elems).trigger('change');
+    })();
+});
+</script>

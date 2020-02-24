@@ -3,7 +3,6 @@ use Moose;
 use v5.24;
 
 use Carp;
-use Class::Load qw/load_class/;
 use Config::Any;
 use Data::Munge qw/elem/;
 use List::Gather;
@@ -188,7 +187,7 @@ B<Arguments>: C<OpusVL::FB11::Role::Brain $brain>
 
 Returns a clone of the hive with this brain registered. Dies with
 C<failure::fb11::hive::conflict::brain> if there is already a brain registered
-with the same L<OpusVL::FB11::Role::Brain/short_name|short_name>.
+with the same L<short_name|OpusVL::FB11::Role::Brain/short_name>.
 
 =cut
 
@@ -301,8 +300,8 @@ sub check {
     for my $brain_name ($self->_brain_names) {
         my $brain = $self->_brain($brain_name);
 
-        my $deps = $brain->dependencies;
-        for my $dep_name (( $deps->{brains} // [] )->@*) {
+        my %deps = $brain->dependencies;
+        for my $dep_name (( $deps{brains} // [] )->@*) {
             try {
                 $self->_brain($dep_name);
             }
@@ -320,7 +319,7 @@ sub check {
             };
         }
 
-        for my $service (( $deps->{services} // [] )->@*) {
+        for my $service (( $deps{services} // [] )->@*) {
             try {
                 $self->service($service)
             }
@@ -332,6 +331,7 @@ sub check {
                     });
                     push @problems, $_;
                 }
+                else { die $_ }
             }
         }
     }
@@ -442,6 +442,13 @@ sub service {
     return $self->hat($brain, $service_name);
 }
 
+
+# Dependency philosophy:
+# 1) This algorithm won't initialise a brain twice
+# 2) If brain X has dependencies, we initialise those first
+# 3) If brain X is a dependency of Y, and we do X first, that's what we want
+# So we just make sure to init all dependencies of the current brain first.
+
 sub _pre_hive_init_brain {
     my $self = shift;
     my $brain_name = shift;
@@ -450,7 +457,17 @@ sub _pre_hive_init_brain {
     # But a brain should probably also check this itself, because init is a
     # public interface to brains, so they can be initialised without us knowing.
     return if $self->_brain_initialised->{$brain_name}->{pre_hive_init};
-    $self->_brain($brain_name)->pre_hive_init;
+
+    my $brain = $self->_brain($brain_name);
+    my $deps = {$brain->dependencies};
+    if (my $b_deps = $deps->{brains}){
+        $self->_pre_hive_init_brain($_) for @$b_deps;
+    }
+    if (my $s_deps = $deps->{services}) {
+        $self->_pre_hive_init_brain($self->_service($_)) for @$s_deps;
+    }
+
+    $brain->pre_hive_init;
     $self->_brain_initialised->{$brain_name}->{pre_hive_init} = 1;
     $self;
 }
@@ -464,7 +481,17 @@ sub _hive_init_brain {
     # It might be sensible to define these as private methods that should only
     # ever be called from the hive or from tests.
     return if $self->_brain_initialised->{$brain_name}->{hive_init};
-    $self->_brain($brain_name)->hive_init($self);
+
+    my $brain = $self->_brain($brain_name);
+    my $deps = {$brain->dependencies};
+    if (my $b_deps = $deps->{brains}) {
+        $self->_hive_init_brain($_) for @$b_deps;
+    }
+    if (my $s_deps = $deps->{services}) {
+        $self->_hive_init_brain($self->_service($_)) for @$s_deps;
+    }
+
+    $brain->hive_init($self);
     $self->_brain_initialised->{$brain_name}->{hive_init} = 1;
     $self;
 }

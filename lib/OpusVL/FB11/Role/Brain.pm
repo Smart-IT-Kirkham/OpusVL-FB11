@@ -6,6 +6,7 @@ use OpusVL::FB11::Hive;
 use Moose::Role;
 use Module::Runtime 'use_package_optimistically';
 use Data::Munge qw<elem>;
+use Scalar::IfDefined qw/lifdef/;
 use v5.24;
 
 =head1 DESCRIPTION
@@ -43,7 +44,8 @@ default implementation of this is empty.
                 class => '+OpusVL::FB11::Hat::dbic_schema::is_brain'
             },
             new_hat_type => {
-                class => 'hat_for_new_type'
+                class => 'class_of_new_hat_type',
+                constructor => { ... }
             }
         )
     }
@@ -73,6 +75,10 @@ With the Brain itself being C<MyApp::Brain>, the above example would look for
 C<MyApp::Brain::Hat::parameters>, C<OpusVL::FB11::Hat::dbic_schema::is_brain>,
 and C<MyApp::Brain::Hat::hat_for_new_hat_type>.
 
+The hashref with C<class> in it may also contain the key C<constructor>. This
+hashref will be passed to the C<new> method on the class, irrespective of
+whether the class was discovered from this hashref or from the default lookup.
+
 =head2 Services
 
 A I<service> is used to identify a brain as the thing that provides I<active>
@@ -91,7 +97,7 @@ In practice, it is usually better to have some hats for identification purposes
 and some hats for providing services, and not to combine the roles into a single
 hat.
 
-=head1 METHODS
+=head1 PROPERTIES
 
 =head2 short_name
 
@@ -111,6 +117,8 @@ if necessary (since it is now a constructor parameter).
 =cut
 
 requires 'short_name';
+
+=head1 METHODS
 
 =head2 hats
 
@@ -152,7 +160,10 @@ sub _construct_hat {
     }
 
     use_package_optimistically($actual_class);
-    return $actual_class->new({__brain => $self});
+    return $actual_class->new({
+        __brain => $self,
+        lifdef {%$_} $config{$hat_name}->{constructor}
+    });
 }
 
 sub _hat_names {
@@ -231,7 +242,7 @@ sub hive_init {}
 
 =head2 dependencies
 
-Returns zero, one, or two arrayrefs of dependencies, in a hashref.
+Returns zero, one, or two arrayrefs of dependencies, in a hash-shaped list.
 L<OpusVL::FB11::Hive/check> will use this list to check consistency.
 
 The hashref can contain C<services> and/or C<brains>. C<brains> uses the
@@ -242,7 +253,7 @@ It is recommended that you rely on services rather than brains, but within a
 self-contained system you can use the C<brains> key to maintain a sort of ersatz
 compile-time checking.
 
-    {
+    sub dependencies {
         brains => [
             'my-data-model'
         ],
@@ -253,5 +264,5 @@ compile-time checking.
 
 =cut
 
-sub dependencies {+{}}
+sub dependencies {}
 1;

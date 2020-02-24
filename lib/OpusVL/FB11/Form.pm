@@ -2,6 +2,8 @@ package OpusVL::FB11::Form;
 
 use v5.24;
 use OpusVL::FB11::Plugin::FormHandler;
+use Data::Munge qw/elem/;
+use PerlX::Maybe;
 
 our $VERSION = '0.043';
 
@@ -21,7 +23,7 @@ It also has class methods for constructing forms.
 B<Arguments>: C<%$schema>, C<%$hfh_args>?
 
 Creates a new form from an OpenAPI schema object. This just defers to
-L</openapi_to_formhandler> and uses the result as the C<field_list> of a new
+L</openapi_to_field_list> and uses the result as the C<field_list> of a new
 form.
 
 You can also supply the rest of the options to HTML::FormHandler->new in the
@@ -35,7 +37,7 @@ sub new_from_openapi {
     my $schema = shift;
     my $hfh_args = shift || {};
 
-    my $field_list = $class->openapi_to_formhandler($schema);
+    my $field_list = $class->openapi_to_field_list($schema);
 
     if (my $to_merge = $hfh_args->{field_list}) {
         $field_list = [ @$to_merge, @$field_list ];
@@ -46,7 +48,7 @@ sub new_from_openapi {
     return $class->new($hfh_args);
 }
 
-=head2 openapi_to_formhandler
+=head2 openapi_to_field_list
 
 B<Arguments>: C<%$openapi_schema>
 
@@ -56,7 +58,7 @@ Converts the OpenAPI Schema object into a FormHandler field definition arrayref.
 
 =cut
 
-sub openapi_to_formhandler {
+sub openapi_to_field_list {
     my $class = shift;
     my $schema = shift;
 
@@ -68,19 +70,28 @@ sub openapi_to_formhandler {
     my $formhandler = [];
 
     my $order = $schema->{'x-field-order'} // [ sort keys $schema->{properties}->%* ];
+    my $required = $schema->{required} // [];
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     for my $field (@$order) {
         my $def = $schema->{properties}->{$field};
 
         # TODO validation
         my %field = (
-            label => $def->{title} // $field
+            label => $def->{title} // $field,
+      maybe default => $def->{default},
+      maybe readonly => $def->{'x-readonly'},
         );
 
-        if (my $options = $def->{'x-options'}) {
+        if (elem $field, $required) {
+            $field{required} = 1;
+        }
+
+        if ($def->{'x-hidden'}) {
+            $field{type} = 'Hidden';
+        }
+        elsif (my $options = $def->{'x-options'}) {
             $field{type} = 'Select';
             $field{options} = $options;
             if ($def->{type} eq 'array') {
@@ -105,7 +116,7 @@ sub openapi_to_formhandler {
             $field{multiple} = 1;
         }
 
-        push @$formhandler, ( $namespace . _to_field_name($field) => \%field )
+        push @$formhandler, ( _with_namespace($namespace, _to_field_name($field)) => \%field )
     }
 
     return $formhandler;
@@ -115,7 +126,7 @@ sub openapi_to_formhandler {
 
 B<Arguments>: C<%$openapi_schema>, C<%$init_object>
 
-Given the same schema you might pass to L</openapi_to_formhandler>, converts an
+Given the same schema you might pass to L</openapi_to_field_list>, converts an
 object that conforms to that schema into an object that can be used as the
 C<init_object> for a FormHandler form.
 
@@ -131,11 +142,10 @@ sub openapi_to_init_object {
     my $output_object = shift;
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     return {
         map {
-            $namespace . _to_field_name($_) => $init_object->{$_}
+            _with_namespace($namespace, _to_field_name($_)) => $init_object->{$_}
         }
         keys %$init_object
     }
@@ -145,7 +155,7 @@ sub openapi_to_init_object {
 
 Intended to be run on the object, not the class
 
-=head2 params_back_to_openapi
+=head2 values_for_openapi_schema
 
 B<Arguments>: C<%$openapi_schema>
 
@@ -161,17 +171,16 @@ responsibility of the schema creator.
 
 =cut
 
-sub params_back_to_openapi {
+sub values_for_openapi_schema {
     my $self = shift;
     my $schema = shift;
 
     my $namespace = $schema->{'x-namespace'} // '';
-    $namespace .= '_' if $namespace;
 
     my $ret = {};
 
     for my $field (keys $schema->{properties}->%*) {
-        my $form_field = $namespace . _to_field_name($field);
+        my $form_field = _with_namespace($namespace, _to_field_name($field));
 
         my $value = $self->field($form_field)->value;
 
@@ -186,6 +195,18 @@ sub params_back_to_openapi {
     return $ret;
 }
 
+# Adds the namespace to the field. This lets us change in a single place how
+# namespaces are represented.
+# TODO we should formalise namespaces, but I don't know how yet.
+sub _with_namespace {
+    my $namespace = shift;
+    my $field_name = shift;
+
+    return $field_name if not $namespace;
+
+    return $namespace . '::' . $field_name
+}
+
 # sanitises the field name into lowercase_underscore
 sub _to_field_name {
     my $badname = shift;
@@ -193,19 +214,20 @@ sub _to_field_name {
 }
 
 # Returns an appropriate FormHandler field type for the OpenAPI type
-{
-    my %mapping = (
+sub _to_field_type {
+    state %mapping = (
         string => 'Text',
         array => 'Select',
-        number => 'Number',
         boolean => 'Checkbox',
+        # FIXME This field type doesn't exist.
+        # We will have to use the format information to know which type to use.
+        # This is the point at which we make a proper class structure for it.
+        # number => 'Number',
     );
 
-    sub _to_field_type {
-        my $openapi_name = shift;
-        # TODO
-        return $mapping{$openapi_name} || die "I don't know how to render $openapi_name";
-    }
+    my $openapi_name = shift;
+    # TODO
+    return $mapping{$openapi_name} || die "I don't know how to render $openapi_name";
 }
 
 1;

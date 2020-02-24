@@ -25,6 +25,7 @@ rc: docker
 	docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:v$(rcversion)
 	git tag v$(rcversion)
 	docker push quay.io/opusvl/fb11:v$(rcversion)
+	git push origin v$(rcversion)
 release:
 	- @echo "If this fails, make sure you pushed the last image you built"
 	docker pull quay.io/opusvl/fb11:v$(lastrcversion)

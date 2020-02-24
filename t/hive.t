@@ -9,7 +9,6 @@ my $hive = 'OpusVL::FB11::Hive';
 #      I'm not keen on brains registering themselves magically, but apparently that's just temporary
 #      until we teach FB11 how to init correctly
 $hive->register_brain($brain);
-$DB::single=1;
 $hive->register_brain(Test::Brain2->new);
 $hive->set_service('TEST::hat1', 'TEST::brain1');
 

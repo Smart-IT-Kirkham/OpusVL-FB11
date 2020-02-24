@@ -3,3 +3,4 @@ tags
 *.swp
 .DS_Store
 OpusVL-FB11-*
+/docker-compose.yml

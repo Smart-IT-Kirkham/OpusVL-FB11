@@ -164,11 +164,14 @@ sub set_default {
     my $name = shift;
     my $data = shift;
 
-    # The wrapped value and data_type setter in the Result class is not used by
+    # You can define a string but we will always turn it into object format.
+    unless (ref $data->{data_type}) {
+        $data->{data_type} = { type => $data->{data_type} }
+    }
+
+    # The wrapped value setter in the Result class is not used by
     # find_or_create. This seems the easiest place to do this.
     $data->{value} = { value => $data->{value} };
-
-    $data->{data_type} = { value => $data->{data_type} };
 
     my $param = $self->find_or_create({
         name => $self->_namespaced_name($name),
