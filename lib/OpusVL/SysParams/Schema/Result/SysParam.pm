@@ -2,6 +2,7 @@ package OpusVL::SysParams::Schema::Result::SysParam;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 our $VERSION = '1';
 # ABSTRACT: Defines the storage for system parameters

@@ -5,6 +5,7 @@ our $VERSION = '1';
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 use parent qw/DBIx::Class::Schema/;
 
 __PACKAGE__->load_namespaces;

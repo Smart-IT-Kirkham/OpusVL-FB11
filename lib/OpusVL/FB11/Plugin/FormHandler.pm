@@ -3,6 +3,7 @@ package OpusVL::FB11::Plugin::FormHandler;
 our $VERSION = '1';
 
 use warnings;
+no warnings 'experimental::signatures';;
 use strict;
 use Import::Into;
 use HTML::FormHandler::Moose ();

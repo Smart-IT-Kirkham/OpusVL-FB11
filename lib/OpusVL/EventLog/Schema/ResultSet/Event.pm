@@ -3,6 +3,7 @@ package OpusVL::EventLog::Schema::ResultSet::Event;
 use v5.24;
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 # ABSTRACT: Packaged queries for events
 our $VERSION = '1';

@@ -4,6 +4,7 @@ our $VERSION = '1';
 
 use v5.24;
 use warnings;
+no warnings 'experimental::signatures';;
 use parent 'DBIx::Class::ResultSet';
 
 __PACKAGE__->load_components(

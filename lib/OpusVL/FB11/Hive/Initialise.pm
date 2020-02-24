@@ -9,6 +9,7 @@ our $VERSION = '1';
 use v5.20;
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 use OpusVL::FB11::Hive;
 use OpusVL::FB11::Utils qw/load_config getenv_or_throw/;
