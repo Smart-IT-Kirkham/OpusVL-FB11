@@ -2,6 +2,7 @@ package TestApp::Builder;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 use Moose;
 extends 'OpusVL::FB11::Builder';

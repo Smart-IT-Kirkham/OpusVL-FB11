@@ -3,6 +3,7 @@ package OpusVL::FB11::Plugin::FB11ControllerSorter;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 use Moose::Role;
 use namespace::autoclean;

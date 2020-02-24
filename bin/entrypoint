@@ -4,6 +4,7 @@ our $VERSION = '1';
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 use v5.20;
 use Path::Class;
 use YAML ();

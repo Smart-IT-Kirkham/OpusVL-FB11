@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
 use warnings;
+no warnings 'experimental::signatures';;
 use strict;
 use IO::Socket;
 

@@ -2,6 +2,7 @@ package OpusVL::FB11::Hive;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 use v5.24;
 
 use OpusVL::FB11::Hive::Instance;

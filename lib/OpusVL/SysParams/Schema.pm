@@ -2,6 +2,7 @@ package OpusVL::SysParams::Schema;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 # ABSTRACT: DBIC schema to store sysparams
 

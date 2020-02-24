@@ -2,6 +2,7 @@ package OpusVL::FB11X::SysParams::Form::Parameter;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 our $VERSION = '1';
 

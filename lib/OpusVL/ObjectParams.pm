@@ -2,6 +2,7 @@ package OpusVL::ObjectParams;
 
 use v5.24;
 use warnings;
+no warnings 'experimental::signatures';;
 use strict;
 
 use Moose;
