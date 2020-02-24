@@ -1,10 +1,12 @@
 package OpusVL::EventLog::Hat::eventlog;
 
 # ABSTRACT: Implements the eventlog service
-our $VERSION = '0';
+our $VERSION = '1';
 
 use PerlX::Maybe;
 use Scope::Guard 'guard';
+
+use failures qw/type/;
 
 use Moose;
 with 'OpusVL::FB11::Role::Hat';
@@ -17,10 +19,9 @@ The eventlog service allows you to create and retrieve events against objects in
 the system. A common use of this is to audit changes.
 
 The basic interface into the event log - getting and setting events - requires
-you to identify the object against which the events are to be stored. This is
-done by means of the adapter pattern: pass in an object that implements
-L<OpusVL::EventLog::Role::Adapter>, and we will use it to identify your object
-in our event storage.
+you to identify the object against which the events are to be stored. Pass in an
+object that implements L<OpusVL::FB11::Role::Object::Identifiable>, and we will
+use it to identify your object in our event storage.
 
 This process is similar to L<OpusVL::ObjectParams>, with the principle
 difference being that the event log stores I<multiple> events against an object,
@@ -37,9 +38,8 @@ storage for you.
 System events are created and retrieved simply by providing the special adapter
 stored in C<$OpusVL::EventLog::SYSTEM>.
 
-Please be careful when providing types to system events: it is much more likely
-that you provide a type that someone else has used, and thus pollute one another
-with unexpected data in future, if you don't use namespaced type names.
+Be sure to read L<OpusVL::EventLog::Adapter::System/WARNINGS> before trying to 
+use this.
 
 =head2 Environmental data
 
@@ -100,6 +100,10 @@ support user search is done bespoke per system.
 This defines the structure of the hashrefs returned by L</get_events_for>.
 
 =over
+
+=item message
+
+A fixed message for the event to display to users when reading the event log.
 
 =item payload
 
@@ -208,6 +212,9 @@ B<Arguments>: C<%args>
 C<object>: Required. Any object that consumes the
 L<OpusVL::EventLog::Role::Adapter> role.
 
+C<message>: Required. A string that will be displayed to users in search results,
+describing what happened with any identifying information.
+
 C<payload>: Required. This is an arbitrary hashref of data describing your
 event.
 
@@ -236,13 +243,21 @@ sub add_event {
     };
 
     # TODO: validation. We like Params::ValidationCompiler
+    # DEBT Cannot assert $object->DOES('OpusVL::FB11::Role::Object::Identifiable')
+    # because Catalyst (or Catalyst::AppBuilder) appears to copy classes to a different name,
+    # and Moose's 'DOES' method doesn't see the new name.
+    # For example, AppName::DB::Schema::Result::Bar becomes
+    # AppName::Model::DBSchema::Bar when registered in the usual way as
+    # Model::DBSchema.
     $self->__brain->schema->resultset('Event')->create({
-        object_identifier => $args{object}->get_identifier,
+        object_identifier => $args{object}->fb11_unique_identifier,
+        message => $args{message},
         payload => $args{payload},
         tags => $tags,
   maybe type => $args{type},
     })
 }
+
 
 =head2 set_environmental_data
 

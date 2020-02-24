@@ -1,5 +1,7 @@
 package OpusVL::FB11::Controller::FB11::Ajax::Core;
 
+our $VERSION = '1';
+
 use Moose;
 use Cpanel::JSON::XS 'encode_json';
 use namespace::autoclean;

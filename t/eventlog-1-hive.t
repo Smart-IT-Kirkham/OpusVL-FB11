@@ -29,9 +29,8 @@ subtest "Syslog" => sub {
 
     $service->add_event(
         object => $OpusVL::EventLog::SYSTEM,
-        payload => {
-            message => "Testing event"
-        },
+        message => "Testing event",
+        payload => {},
         type => 'test'
     );
 
@@ -56,9 +55,8 @@ subtest "Object log" => sub {
 
     $service->add_event(
         object => $adapter,
-        payload => {
-            message => "Testing event"
-        },
+        message => "Testing event",
+        payload => {},
         type => 'test'
     );
 
@@ -69,6 +67,15 @@ subtest "Object log" => sub {
     );
 
     is scalar @events, 1, "1 returned from search_events";
+    ok
+        exists $events[0]->{message},
+        'Returned event has a message key'
+    ;
+    is
+        $events[0]->{message},
+        'Testing event',
+        'Returned event has message we created it with'
+    ;
 };
 
 reset_schema;
@@ -88,9 +95,8 @@ subtest "Environmental data" => sub {
 
         $service->add_event(
             object => $adapter,
-            payload => {
-                message => "Testing event"
-            },
+            message => "Testing event",
+            payload => {},
             tags => {
                 ip => '127.0.0.1',
             },
@@ -117,9 +123,8 @@ subtest "Environmental data" => sub {
 
             $service->add_event(
                 object => $adapter,
-                payload => {
-                    message => "Testing event"
-                },
+                message => "Testing event",
+                payload => {},
                 type => 'test'
             );
 
@@ -139,9 +144,8 @@ subtest "Environmental data" => sub {
 
         $service->add_event(
             object => $adapter,
-            payload => {
-                message => "Testing event"
-            },
+            message => "Testing event",
+            payload => {},
             type => 'test'
         );
 
@@ -158,9 +162,8 @@ subtest "Environmental data" => sub {
 
     $service->add_event(
         object => $adapter,
-        payload => {
-            message => "Testing event"
-        },
+        message => "Testing event",
+        payload => {},
         type => 'test'
     );
     is Event->count, 4, "4 events in table";
@@ -193,13 +196,13 @@ subtest "Search by data" => sub {
 
         # FIXME: Semantic types are not part of FB11 yet, but when they are,
         # everything should understand what an adapter is
-        user => $tag_adapter->get_identifier
+        user => $tag_adapter->fb11_unique_identifier
     });
 
     $service->add_event(
         object => $adapter,
+        message => "Testing event",
         payload => {
-            message => "Testing event",
             data => "Discoverable data",
         },
         tags => {
@@ -214,13 +217,13 @@ subtest "Search by data" => sub {
     is scalar @events, 1, "Found by env data";
 
     @events = $service->search_events(
-        payload => { message => "Testing event" }
+        payload => { data => "Discoverable data" }
     );
     is scalar @events, 1, "Found by payload data";
 
     @events = $service->search_events(
         tags => {
-            user => $tag_adapter->get_identifier
+            user => $tag_adapter->fb11_unique_identifier
         }
     );
     is scalar @events, 1, "Found by tag object identifier";
@@ -235,7 +238,7 @@ subtest "Search by data" => sub {
     @events = $service->search_events(
         tags => {
             username => "Testing event",
-            user => $tag_adapter->get_identifier
+            user => $tag_adapter->fb11_unique_identifier
         }
     );
     is scalar @events, 0, "Not found when not present";

@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::Schema::DataInitialisation;
 
+our $VERSION = '1';
+
 use Moose::Role;
 
 sub deploy_with_data

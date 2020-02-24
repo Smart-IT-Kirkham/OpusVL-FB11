@@ -1,5 +1,7 @@
 package OpusVL::FB11::Controller::Root;
 
+our $VERSION = '1';
+
 =head1 NAME
 
     OpusVL::FB11::Controller::Root - Root Controller for OpusVL::FB11

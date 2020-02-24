@@ -7,8 +7,7 @@ use warnings;
 use Moose::Role;
 use namespace::autoclean;
 
-use vars qw($VERSION);
-$VERSION = '1.000';
+our $VERSION = '1';
 
 # this plugin takes the fb11_app_order config setting and sets it against the controllers.
 

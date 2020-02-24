@@ -1,7 +1,7 @@
 package OpusVL::FB11X::SysParams::Controller::SysParams;
 
 # ABSTRACT: Lists sysparams and allows editing
-our $VERSION = '0';
+our $VERSION = '1';
 
 use strict;
 use Moose;

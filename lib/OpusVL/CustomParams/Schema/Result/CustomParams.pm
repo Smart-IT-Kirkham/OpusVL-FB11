@@ -5,7 +5,7 @@ use warnings;
 use DBIx::Class::Candy;
 
 # ABSTRACT: Stores parameter schemata to supply to ObjectParams
-our $VERSION = '0';
+our $VERSION = '1';
 
 __PACKAGE__->load_components('InflateColumn::Serializer');
 

@@ -1,4 +1,7 @@
 package OpusVL::FB11::View::FB11TT;
+
+our $VERSION = '1';
+
 use URL::Encode;
 
 =head1 NAME

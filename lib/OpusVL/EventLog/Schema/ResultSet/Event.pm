@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 # ABSTRACT: Packaged queries for events
-our $VERSION = '0';
+our $VERSION = '1';
 
 use Moose;
 use MooseX::NonMoose;
@@ -56,7 +56,7 @@ sub for_object {
     my $self = shift;
     my $adapter = shift;
 
-    my $identifier = $adapter->get_identifier;
+    my $identifier = $adapter->fb11_unique_identifier;
 
     $self->search({
         object_identifier => {

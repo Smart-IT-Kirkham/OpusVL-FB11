@@ -5,6 +5,8 @@ with "OpusVL::FB11::Role::Hat";
 
 # ABSTRACT: Defines a sysparams hat.
 
+our $VERSION = '1';
+
 =head1 DESCRIPTION
 
 The core behaviour for sysparams is that each parameter will be stored the same

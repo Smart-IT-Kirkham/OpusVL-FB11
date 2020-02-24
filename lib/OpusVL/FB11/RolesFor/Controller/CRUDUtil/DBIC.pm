@@ -1,4 +1,7 @@
 package OpusVL::FB11::RolesFor::Controller::CRUDUtil::DBIC;
+
+our $VERSION = '1';
+
 use strict;
 use warnings;
 use Moose::Role;

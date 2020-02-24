@@ -1,5 +1,7 @@
 package OpusVL::FB11::View::SimpleXML;
 
+our $VERSION = '1';
+
 =head1 NAME
 
     OpusVL::FB11::View::SimpleXML - Simple XML view for OpusVL::FB11

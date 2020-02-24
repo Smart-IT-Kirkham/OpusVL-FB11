@@ -4,3 +4,4 @@ tags
 .DS_Store
 OpusVL-FB11-*
 /docker-compose.yml
+**/.vstags

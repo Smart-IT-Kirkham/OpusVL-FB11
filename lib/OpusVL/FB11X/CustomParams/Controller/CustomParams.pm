@@ -1,7 +1,7 @@
 package OpusVL::FB11X::CustomParams::Controller::CustomParams;
 
 # ABSTRACT: Allows editing of (basic) ObjectParams schemata
-our $VERSION = '0';
+our $VERSION = '1';
 
 use strict;
 use Moose;

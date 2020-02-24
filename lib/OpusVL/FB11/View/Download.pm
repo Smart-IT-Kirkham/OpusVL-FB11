@@ -1,4 +1,7 @@
 package OpusVL::FB11::View::Download;
+
+our $VERSION = '1';
+
 use base qw( Catalyst::View::Download );
 
 =head1 COPYRIGHT and LICENSE

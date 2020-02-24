@@ -1,5 +1,7 @@
 package OpusVL::FB11::TraitFor::Controller::Login::SetHomePageFlag;
 
+our $VERSION = '1';
+
 use MooseX::MethodAttributes::Role;
 use namespace::autoclean;
 

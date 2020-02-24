@@ -1,4 +1,7 @@
 package OpusVL::ObjectParams::Schema::ResultSet::Storage;
+
+our $VERSION = '1';
+
 use v5.24;
 use warnings;
 use parent 'DBIx::Class::ResultSet';

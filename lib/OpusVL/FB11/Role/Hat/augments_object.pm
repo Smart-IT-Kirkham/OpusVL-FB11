@@ -6,6 +6,8 @@ with "OpusVL::FB11::Role::Hat";
 
 # ABSTRACT: Tells other components that this one may augment an object
 
+our $VERSION = '1';
+
 my %cache;
 
 requires 'augment';

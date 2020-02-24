@@ -5,6 +5,8 @@ with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Identifies a Brain that can have extensions
 
+our $VERSION = '1';
+
 =head1 DESCRIPTION
 
 Wear this hat to tell other Brains that your objects can be extended. This is

@@ -1,5 +1,7 @@
 package OpusVL::FB11::Plugin::FB11::Node;
 
+our $VERSION = '1';
+
 =head1 NAME
 
 OpusVL::FB11::Plugin::FB11::Node - Represents a node in the access tree

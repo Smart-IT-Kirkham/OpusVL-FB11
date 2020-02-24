@@ -1,7 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::Aclrule;
 
 # ABSTRACT: Part of the home-grown ACL that is bad
-our $VERSION = '0';
+our $VERSION = '1';
 
 use strict;
 use warnings;

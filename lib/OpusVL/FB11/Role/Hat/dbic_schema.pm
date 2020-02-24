@@ -2,6 +2,8 @@ package OpusVL::FB11::Role::Hat::dbic_schema;
 
 # ABSTRACT: A brain wearing this hat can provide a DBIC schema
 
+our $VERSION = '1';
+
 use Moose::Role;
 with "OpusVL::FB11::Role::Hat";
 

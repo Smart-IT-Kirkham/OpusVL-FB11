@@ -5,7 +5,7 @@ use warnings;
 
 # ABSTRACT: DBIC schema to store sysparams
 
-our $VERSION = '0';
+our $VERSION = '1';
 
 =head1 DESCRIPTION
 

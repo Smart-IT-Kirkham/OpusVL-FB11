@@ -1,7 +1,7 @@
 package OpusVL::FB11::View::Excel;
 
 # ABSTRACT: Slightly tweaked Catalyst::View::Excel::Template::Plus
-our $VERSION = '0';
+our $VERSION = '1';
 
 =encoding utf8
 

@@ -5,7 +5,7 @@ use warnings;
 use DBIx::Class::Candy;
 
 # ABSTRACT: Stores parameters in a naïve way
-our $VERSION = '0';
+our $VERSION = '1';
 
 =head1 DESCRIPTION
 
@@ -71,6 +71,11 @@ column tags => {
     serializer_class => 'JSON',
 };
 
+column message => {
+    data_type   => 'text',
+    is_nullable => 0,
+};
+
 column type => {
     data_type => 'text',
     is_nullable => 1,
@@ -96,6 +101,7 @@ sub to_event_hashref {
     my $self = shift;
 
     {
+        message => $self->message,
         payload => $self->payload,
         tags => $self->tags,
         type => $self->type,
