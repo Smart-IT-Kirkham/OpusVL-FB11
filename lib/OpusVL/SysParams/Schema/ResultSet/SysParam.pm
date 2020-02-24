@@ -2,6 +2,7 @@ package OpusVL::SysParams::Schema::ResultSet::SysParam;
 use v5.24;
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 our $VERSION = '1';
 

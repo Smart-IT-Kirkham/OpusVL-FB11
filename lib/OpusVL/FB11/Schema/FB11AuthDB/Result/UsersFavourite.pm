@@ -14,6 +14,7 @@ OpusVL::FB11::Schema::Result::UsersFavourite
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 use base 'DBIx::Class::Core';
 

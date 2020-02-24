@@ -2,6 +2,7 @@ package OpusVL::EventLog::Schema::Result::Event;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 use DBIx::Class::Candy;
 
 # ABSTRACT: Stores parameters in a naïve way

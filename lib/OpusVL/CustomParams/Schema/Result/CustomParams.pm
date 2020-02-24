@@ -2,6 +2,7 @@ package OpusVL::CustomParams::Schema::Result::CustomParams;
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 use DBIx::Class::Candy;
 
 # ABSTRACT: Stores parameter schemata to supply to ObjectParams

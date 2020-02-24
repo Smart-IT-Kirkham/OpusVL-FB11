@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 use OpusVL::FB11::Hive::Initialise qw<configure_and_initialise_global_hive>;
 

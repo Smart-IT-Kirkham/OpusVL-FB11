@@ -5,6 +5,7 @@ our $VERSION = '1';
 
 use strict;
 use warnings;
+no warnings 'experimental::signatures';;
 
 use base 'DBIx::Class::Core';
 

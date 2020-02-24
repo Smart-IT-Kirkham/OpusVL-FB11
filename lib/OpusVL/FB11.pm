@@ -13,6 +13,7 @@ OpusVL::FB11 - Catalyst based application
         package MyApp;
         use strict;
         use warnings;
+no warnings 'experimental::signatures';;
         use MyApp::Builder;
         
         MyApp::Builder->new(appname => __PACKAGE__)->bootstrap;
