@@ -1,5 +1,7 @@
 package OpusVL::FB11::View::DownloadFile;
 
+our $VERSION = '1';
+
 use Moose;
 
 use namespace::autoclean;

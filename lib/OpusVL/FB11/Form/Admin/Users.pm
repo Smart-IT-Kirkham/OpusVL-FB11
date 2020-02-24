@@ -1,5 +1,7 @@
 package OpusVL::FB11::Form::Admin::Users;
 
+our $VERSION = '1';
+
 use HTML::FormHandler::Moose;
 extends 'OpusVL::FB11::Form';
 

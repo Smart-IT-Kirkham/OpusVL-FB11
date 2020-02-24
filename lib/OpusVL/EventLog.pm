@@ -1,7 +1,7 @@
 package OpusVL::EventLog;
 
 # ABSTRACT: Simple interface to log events against data or the system
-our $VERSION = '0';
+our $VERSION = '1';
 use Moose;
 use OpusVL::EventLog::Schema;
 use OpusVL::EventLog::Adapter::System;
@@ -55,6 +55,17 @@ sub hats {
 sub provided_services {
     'eventlog'
 }
+
+=head1 CONSTANTS
+
+=head2 $OpusVL::EventLog::SYSTEM
+
+Use this for your C<event_type> for a system event.
+
+Make sure you read the warnings about using this in
+L<OpusVL::EventLog::Adapter::System>
+
+=cut
 
 # No need to construct an object
 our $SYSTEM = 'OpusVL::EventLog::Adapter::System';

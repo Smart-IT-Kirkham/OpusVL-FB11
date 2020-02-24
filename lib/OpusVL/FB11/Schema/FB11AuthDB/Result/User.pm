@@ -9,7 +9,7 @@ use Try::Tiny;
 extends 'DBIx::Class::Core';
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
 
-our $VERSION = '0.043';
+our $VERSION = '1';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
 __PACKAGE__->table("users");
@@ -152,6 +152,7 @@ after 'insert' => sub {
     $event_log->add_event(
         object => $self->_eventlog_adapter,
         type => 'creation',
+        message => 'User created',
         # Hmm... the first event I ever write doesn't need a payload.
         # Is this an exception or an invalidation of it being required?
         payload => {}
@@ -174,6 +175,7 @@ before delete => sub {
     $event_log->add_event(
         object => $self->_eventlog_adapter,
         type => 'deletion',
+        message => 'User deleted',
         # The second event I write also needs no payload... Mind you, much of
         # its payload will be set in the environmental data. Maybe I just can't
         # think of any right now

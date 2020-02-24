@@ -8,6 +8,8 @@ with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Defines the required methods for a parameters service provider
 
+our $VERSION = '1';
+
 =head1 DESCRIPTION
 
 For a class to be a provider of the C<parameters> service it must conform to

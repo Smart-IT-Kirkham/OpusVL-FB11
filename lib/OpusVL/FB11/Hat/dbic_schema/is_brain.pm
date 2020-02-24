@@ -1,6 +1,9 @@
 package OpusVL::FB11::Hat::dbic_schema::is_brain;
 
 # ABSTRACT: a dbic_schema hat where the brain is the schema
+
+our $VERSION = '1';
+
 use Moose;
 with "OpusVL::FB11::Role::Hat::dbic_schema";
 

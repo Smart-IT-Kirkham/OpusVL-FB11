@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::UserSetupResultSet;
 
+our $VERSION = '1';
+
 =head1 NAME
 
     OpusVL::FB11::RolesFor::UserSetupResultSet

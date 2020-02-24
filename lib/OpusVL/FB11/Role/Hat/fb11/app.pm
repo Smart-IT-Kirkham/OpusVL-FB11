@@ -1,7 +1,7 @@
 package OpusVL::FB11::Role::Hat::fb11::app;
 
 # ABSTRACT: Defines a hat that provides webapp behaviour
-our $VERSION = '0';
+our $VERSION = '1';
 
 use Moose::Role;
 with 'OpusVL::FB11::Role::Hat';

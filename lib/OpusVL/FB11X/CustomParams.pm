@@ -5,7 +5,7 @@ use namespace::autoclean;
 
 with 'OpusVL::FB11::RolesFor::Plugin';
 
-our $VERSION = '0.043';
+our $VERSION = '1';
 # ABSTRACT: UI Module for defining ObjectParams schemata.
 
 =head1 DESCRIPTION

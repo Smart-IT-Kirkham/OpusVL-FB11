@@ -46,6 +46,7 @@ requires 'Try::Tiny';
 requires 'Template::AutoFilter';
 requires 'Template::Alloy' => '1.020';
 requires 'URL::Encode';
+requires 'YAML';
 requires 'YAML::Tiny';
 requires 'XML::Simple';
 

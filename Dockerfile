@@ -2,6 +2,8 @@ FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11
 
 FROM FB11 AS FB11-layer0
 
+ENV PERL_CPANM_OPT "--mirror http://cpan.opusvl.com --mirror-only"
+
 # DEBT a hack to work around fact 'stable' has moved to buster but our base images haven't
 RUN sed -i 's/stable/stretch/g' /etc/apt/sources.list
 # Following is due to Permission Denied removing lockfiles - perhaps corrupted caches from parent image?
@@ -10,6 +12,8 @@ RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
 # Re add in the neccesary packages for postgres
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ $(cat /etc/os-tag)-pgdg main" > /etc/apt/sources.list.d/pgdg.list
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+
+
 
 #
 # Add in development libraries
@@ -29,25 +33,45 @@ RUN if [ -z "$version" ]; then echo "Version not provided"; exit 1; fi;
 ARG gitrev
 RUN if [ -z "$gitrev" ]; then echo "gitrev not provided"; exit 2; fi;
 
-# Finally install the FB11 tarball, use the OpusVL backing mirror
-# We CANNOT run the tests right now. Test::Postgresql58 REFUSES to run as root.
-# Test::PostgreSQL itself seems to work fine as root but we are not given the
-# option to use that.
-# To run the tests as user we need a user whose home directory exists and can be
-# written to by cpanm, (it wants /home/user/.cpanm)
 
-# Until I fixed it :D ^
-COPY OpusVL-FB11-$version.tar.gz .
-RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz ||:
 
-RUN useradd -rs /bin/false -d /tmp -g 0 testuser
+#
+# Base libs required to test postgresql (special case)
+#
+
+# Lets make this install and test correctly (Add in the base requirements for 
+# Test Postgresql)
+RUN /opt/perl5/bin/cpanm Class::Accessor::Lite DBI File::Temp Cwd POSIX DBD::Pg
+
+# We have to set more leniant permissiones for this one ...
 RUN chmod -R 775 /opt
-USER testuser
-RUN /opt/perl5/bin/cpanm -M http://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
-    || ( cat /tmp/.cpanm/work/*/build.log && exit 1 )
 
-# Swap back to root incase we add anything else
+# Copy in the latest fb11
+COPY OpusVL-FB11-$version.tar.gz .
+
+# Now lets create a test user for this stupid module
+RUN useradd -rs /bin/false -d /tmp -g 0 testuser
+USER testuser
+ENV USER=testuser
+
+# And this should work, or I am going to hunt down coli...
+RUN /opt/perl5/bin/cpanm Test::Postgresql58
+
+# Install flexibase
+
+# Install all deps first (for testing, may not be required)
+RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz 
+
+# Install install the end product
+RUN /opt/perl5/bin/cpanm ./OpusVL-FB11-$version.tar.gz \
+    || ( >&2 cat /tmp/.cpanm/work/*/build.log && exit 1 )
+
+# Now lets tidy up
 USER root
+ENV USER=root
+RUN userdel testuser
+
+
 
 #
 # Clean up the final image

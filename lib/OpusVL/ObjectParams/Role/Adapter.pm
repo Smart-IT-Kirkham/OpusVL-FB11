@@ -1,7 +1,7 @@
 package OpusVL::ObjectParams::Role::Adapter;
 
-# ABSTRACT: Defines the interface we use to identify an object
-our $VERSION = '0';
+# ABSTRACT: Deprecated please use OpusVL::FB11::Role::Object::Identifiable instead.
+our $VERSION = '1';
 
 use Moose::Role;
 
@@ -18,7 +18,7 @@ that we can all work with.
 
 =head1 REQUIRED METHODS
 
-FIXME: This might as well just be get_identifier, per EventLog's adapter.
+FIXME: This might as well just be fb11_unique_identifier, per EventLog's adapter.
 
 =head2 type
 

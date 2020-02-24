@@ -8,7 +8,7 @@ use Moose;
 use OpusVL::ObjectParams::Schema;
 
 # ABSTRACT: Module to handle extensions to others' core data.
-our $VERSION = '0';
+our $VERSION = '1';
 
 =head1 DESCRIPTION
 

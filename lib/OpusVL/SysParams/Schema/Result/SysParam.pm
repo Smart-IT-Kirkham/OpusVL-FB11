@@ -3,7 +3,7 @@ package OpusVL::SysParams::Schema::Result::SysParam;
 use strict;
 use warnings;
 
-our $VERSION = '0';
+our $VERSION = '1';
 # ABSTRACT: Defines the storage for system parameters
 
 use Moose;

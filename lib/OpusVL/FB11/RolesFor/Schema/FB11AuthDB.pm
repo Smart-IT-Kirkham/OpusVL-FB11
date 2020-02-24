@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::Schema::FB11AuthDB;
 
+our $VERSION = '1';
+
 =head1 NAME
 
 OpusVL::FB11::RolesFor::Schema::FB11AuthDB

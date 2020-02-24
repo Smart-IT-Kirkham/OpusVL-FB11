@@ -2,6 +2,8 @@ package OpusVL::FB11::Role::Hat::parameters_owner;
 
 # ABSTRACT: Defines an interface for a Brain to say it has parameter owners
 
+our $VERSION = '1';
+
 # TODO: This is an example so I don't really know what it would do.
 # We would attach it to OpusVL::FB11::Parameters but that doesn't exist yet.
 # That is probably what we would use to develop this interface.

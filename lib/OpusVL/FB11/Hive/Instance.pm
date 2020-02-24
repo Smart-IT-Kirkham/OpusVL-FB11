@@ -20,7 +20,7 @@ use failures qw/
     fb11::hive::init
 /;
 
-our $VERSION = '0.043';
+our $VERSION = '1';
 
 # ABSTRACT: Backing object for L<OpusVL::FB11::Hive>
 
@@ -434,8 +434,9 @@ sub service {
     failure::fb11::hive::no_service->throw({
         msg => "Nothing provides the service $service_name",
         payload => {
-            service => $service_name
-        }
+            service => $service_name,
+        },
+        trace   => failure->confess_trace,
     })
         unless $brain;
 

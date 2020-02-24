@@ -1,5 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::ResultSet::User;
 
+our $VERSION = '1';
+
 use strict;
 use warnings;
 

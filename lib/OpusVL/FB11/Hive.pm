@@ -13,6 +13,8 @@ use failures qw/
 
 # ABSTRACT: Registers units of behaviour so they can communicate
 
+our $VERSION = '1';
+
 =head1 DESCRIPTION
 
 The Hive is a repository for L<Brains|OpusVL::FB11::Role::Brain>. It can

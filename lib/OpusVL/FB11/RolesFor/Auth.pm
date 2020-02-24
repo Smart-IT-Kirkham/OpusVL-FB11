@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::Auth;
 
+our $VERSION = '1';
+
 use Moose::Role;
 
 requires 'check_password';

@@ -1,5 +1,7 @@
 package OpusVL::FB11::RolesFor::Model::LDAPAuth;
 
+our $VERSION = '1';
+
 use namespace::autoclean;
 use Moose::Role;
 use OpusVL::FB11::LDAPAuth;

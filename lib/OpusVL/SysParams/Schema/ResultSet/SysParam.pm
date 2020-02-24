@@ -3,7 +3,7 @@ use v5.24;
 use strict;
 use warnings;
 
-our $VERSION = '0';
+our $VERSION = '1';
 
 # ABSTRACT: Formalises and simplifies sysparam naming behaviour
 

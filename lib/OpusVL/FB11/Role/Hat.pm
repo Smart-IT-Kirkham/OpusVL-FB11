@@ -1,5 +1,7 @@
 package OpusVL::FB11::Role::Hat;
 
+our $VERSION = '1';
+
 use Moose::Role;
 
 has __brain => (

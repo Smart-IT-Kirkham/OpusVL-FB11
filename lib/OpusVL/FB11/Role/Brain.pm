@@ -2,6 +2,8 @@ package OpusVL::FB11::Role::Brain;
 
 # ABSTRACT: Define a package as the "brain" of a component
 
+our $VERSION = '1';
+
 use OpusVL::FB11::Hive;
 use Moose::Role;
 use Module::Runtime 'use_package_optimistically';

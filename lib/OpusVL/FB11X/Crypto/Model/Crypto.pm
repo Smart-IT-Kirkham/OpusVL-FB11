@@ -1,5 +1,7 @@
 package OpusVL::FB11X::Crypto::Model::Crypto;
 
+our $VERSION = '1';
+
 use Moose;
 use OpusVL::FB11::Hive;
 extends 'Catalyst::Model::Adaptor';

@@ -1,5 +1,7 @@
 package OpusVL::FB11::Controller::FB11::Admin::Users;
 
+our $VERSION = '1';
+
 use Moose;
 use namespace::autoclean;
 use String::MkPasswd qw/mkpasswd/;

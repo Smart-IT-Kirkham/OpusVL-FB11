@@ -37,7 +37,7 @@ has schema          => (is => 'rw');
 has holidays => (isa => 'ArrayRef', is => 'ro', required => 1);
 has _holiday_map => (isa => 'HashRef', is => 'ro', lazy => 1, builder => '_build_holiday_map');
 
-our $VERSION = '0.043';
+our $VERSION = '1';
 
 # ABSTRACT: Various utils with nowhere to live
 

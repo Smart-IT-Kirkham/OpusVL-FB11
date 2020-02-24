@@ -2,6 +2,8 @@ package OpusVL::FB11::Role::Hat::audit_trail;
 
 # ABSTRACT: STUB hat for audit events
 
+our $VERSION = '1';
+
 =head1 METHODS
 
 =head2 events

@@ -1,5 +1,7 @@
 package OpusVL::FB11::Form::Role::Users;
 
+our $VERSION = '1';
+
 use Moose::Role;
 
 sub validate_username {
