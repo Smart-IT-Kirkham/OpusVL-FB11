@@ -1,5 +1,9 @@
 {{ $NEXT }}
 
+1         2020-04-03 10:41:25+01:00 Europe/London
+
+    - Synced the develop and master branches
+
 0.042     2019-03-18 10:35:26+00:00 Europe/London
 
   - Fix to DeploymentHandler following upstream changes.
