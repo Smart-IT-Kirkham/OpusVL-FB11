@@ -5,7 +5,7 @@ use Moose;
 use OpusVL::SysParams::Manager::Namespaced;
 with 'OpusVL::FB11::Role::Hat::sysparams::management';
 
-our $VERSION = '1';
+our $VERSION = '2';
 # ABSTRACT: Creates interfaces to read and write sysparams.
 
 =head1 DESCRIPTION

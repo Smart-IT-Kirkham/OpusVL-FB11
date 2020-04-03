@@ -1,6 +1,6 @@
 package OpusVL::FB11::Role::Hat;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose::Role;
 

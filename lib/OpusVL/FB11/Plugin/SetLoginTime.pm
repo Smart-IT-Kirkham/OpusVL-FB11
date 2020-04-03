@@ -1,6 +1,6 @@
 package OpusVL::FB11::Plugin::SetLoginTime;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose::Role;
 use namespace::autoclean;

@@ -1,6 +1,6 @@
 package OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::Aclrule;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use Moose::Role;

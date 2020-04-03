@@ -1,6 +1,6 @@
 package OpusVL::FB11::RolesFor::Controller::GUI;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 NAME
 

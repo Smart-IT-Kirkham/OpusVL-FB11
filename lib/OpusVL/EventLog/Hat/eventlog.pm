@@ -1,7 +1,7 @@
 package OpusVL::EventLog::Hat::eventlog;
 
 # ABSTRACT: Implements the eventlog service
-our $VERSION = '1';
+our $VERSION = '2';
 
 use PerlX::Maybe;
 use Scope::Guard 'guard';

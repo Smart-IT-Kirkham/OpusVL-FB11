@@ -2,7 +2,7 @@ package OpusVL::CustomParams::Hat::customparams;
 use OpusVL::FB11::Hive;
 
 # ABSTRACT: Management interface for customparams
-our $VERSION = '1';
+our $VERSION = '2';
 
 use v5.24;
 use Moose;

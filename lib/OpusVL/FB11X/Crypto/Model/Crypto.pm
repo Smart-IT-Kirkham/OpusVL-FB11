@@ -1,6 +1,6 @@
 package OpusVL::FB11X::Crypto::Model::Crypto;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 use OpusVL::FB11::Hive;

@@ -1,6 +1,6 @@
 package OpusVL::FB11::Plugin::FormHandler;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use warnings;
 no warnings 'experimental::signatures';;

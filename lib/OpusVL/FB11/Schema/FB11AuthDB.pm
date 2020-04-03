@@ -3,7 +3,7 @@ package OpusVL::FB11::Schema::FB11AuthDB;
 use strict;
 use warnings;
 no warnings 'experimental::signatures';;
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 extends 'DBIx::Class::Schema';

@@ -1,7 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::UsersParameter;
 
 # ABSTRACT: DEPRECATED - Part of the legacy user parameters stuff
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use warnings;

@@ -5,7 +5,7 @@ with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Identifies a Brain that can have extensions
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 

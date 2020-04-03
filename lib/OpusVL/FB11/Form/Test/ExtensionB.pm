@@ -1,6 +1,6 @@
 package OpusVL::FB11::Form::Test::ExtensionB;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use OpusVL::FB11::Plugin::FormHandler;
 with 'HTML::FormHandler::TraitFor::Model::DBIC';

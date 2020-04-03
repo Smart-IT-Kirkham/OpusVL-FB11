@@ -21,7 +21,7 @@ with 'OpusVL::FB11::Role::Brain';
 
 # ABSTRACT: Module to handle system wide parameters
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 

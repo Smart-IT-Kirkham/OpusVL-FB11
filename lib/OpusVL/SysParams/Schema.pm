@@ -6,7 +6,7 @@ no warnings 'experimental::signatures';;
 
 # ABSTRACT: DBIC schema to store sysparams
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 

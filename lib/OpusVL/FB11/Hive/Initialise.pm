@@ -4,7 +4,7 @@ use Exporter::Easy (
     OK => [qw<configure_and_initialise_global_hive>],
 );
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use v5.20;
 use strict;

@@ -6,7 +6,7 @@ use warnings;
 no warnings 'experimental::signatures';;
 
 # ABSTRACT: Packaged queries for events
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 use MooseX::NonMoose;

@@ -1,7 +1,7 @@
 package OpusVL::ObjectParams::Role::Adapter;
 
 # ABSTRACT: Deprecated please use OpusVL::FB11::Role::Object::Identifiable instead.
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose::Role;
 

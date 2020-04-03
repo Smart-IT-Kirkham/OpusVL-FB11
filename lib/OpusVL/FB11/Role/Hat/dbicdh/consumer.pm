@@ -1,7 +1,7 @@
 package OpusVL::FB11::Role::Hat::dbicdh::consumer;
 
 # ABSTRACT: Wear one of these hats to be auto-deployed by DH
-our $VERSION = '1';
+our $VERSION = '2';
 
 use v5.24;
 use Moose::Role;

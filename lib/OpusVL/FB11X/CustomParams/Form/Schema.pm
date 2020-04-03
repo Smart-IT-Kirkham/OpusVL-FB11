@@ -2,7 +2,7 @@ package OpusVL::FB11X::CustomParams::Form::Schema;
 
 # ABSTRACT: Form to create and edit parameter schema
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use v5.24;
 use Switch::Plain;

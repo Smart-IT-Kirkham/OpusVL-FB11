@@ -1,7 +1,7 @@
 package OpusVL::FB11::Auth::Brain::Hat::dbicdh::manager;
 
 # ABSTRACT: Default DBIDCH manager
-our $VERSION = '1';
+our $VERSION = '2';
 
 use v5.24;
 use File::ShareDir 'module_dir';

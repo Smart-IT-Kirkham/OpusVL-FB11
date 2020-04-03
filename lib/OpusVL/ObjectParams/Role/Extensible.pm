@@ -1,7 +1,7 @@
 package OpusVL::ObjectParams::Role::Extensible;
 
 # ABSTRACT: Attach to classes to make their objects extensible
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose::Role;
 

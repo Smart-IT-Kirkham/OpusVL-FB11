@@ -2,7 +2,7 @@ package OpusVL::SysParams::Role::Hat::sysparams::consumer;
 
 # ABSTRACT: Defines a Hat that has a sysparams spec for us
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose::Role;
 with 'OpusVL::FB11::Role::Hat';

@@ -5,7 +5,7 @@ with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Provides encryption utilities
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 requires qw/encrypt encrypt_deterministic decrypt/;
 

@@ -1,7 +1,7 @@
 package OpusVL::FB11::Auth::Brain;
 
 # ABSTRACT: This Brain interfaces with the FB11AuthDB schema
-our $VERSION = '1';
+our $VERSION = '2';
 
 use v5.24;
 use Moose;

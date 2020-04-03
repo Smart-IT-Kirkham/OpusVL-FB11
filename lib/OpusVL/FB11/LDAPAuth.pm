@@ -1,6 +1,6 @@
 package OpusVL::FB11::LDAPAuth;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 with 'OpusVL::FB11::RolesFor::Auth';

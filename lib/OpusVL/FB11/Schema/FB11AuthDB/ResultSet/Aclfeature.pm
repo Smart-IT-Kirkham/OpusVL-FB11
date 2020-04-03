@@ -1,6 +1,6 @@
 package OpusVL::FB11::Schema::FB11AuthDB::ResultSet::Aclfeature;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use warnings;

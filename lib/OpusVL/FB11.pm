@@ -81,7 +81,7 @@ use warnings;
 use OpusVL::FB11::Builder;
 use OpusVL::FB11::Hive;
 use Moose;
-our $VERSION = '1';
+our $VERSION = '2';
 
 ##################################################################################################################################
 # main #

@@ -6,7 +6,7 @@ no warnings 'experimental::signatures';;
 use DBIx::Class::Candy;
 
 # ABSTRACT: Stores parameters in a naïve way
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 

@@ -1,7 +1,7 @@
 package OpusVL::FB11::Hat::fb11::simple_app;
 
 # ABSTRACT: A Hat for a simple FB11 app
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 use Module::Runtime qw/use_module/;

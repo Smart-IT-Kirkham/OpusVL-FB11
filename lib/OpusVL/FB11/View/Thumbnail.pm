@@ -1,6 +1,6 @@
 package OpusVL::FB11::View::Thumbnail;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use base 'Catalyst::View::Thumbnail';
 

@@ -2,7 +2,7 @@ package OpusVL::FB11::Role::Object::Identifiable;
 
 # ABSTRACT: Adapts arbitrary data for event storage
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use warnings;

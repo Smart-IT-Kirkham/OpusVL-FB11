@@ -2,7 +2,7 @@ package OpusVL::ObjectParams::Adapter::Static;
 
 # ABSTRACT: An Adapter whose properties are not computed
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 

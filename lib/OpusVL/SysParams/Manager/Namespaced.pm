@@ -11,7 +11,7 @@ use failures qw<opusvl::sysparams::no_such_param>;
 use PerlX::Maybe;
 with 'OpusVL::SysParams::Role::Manager';
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 # ABSTRACT: Provides a management interface into namespaced sysparams
 

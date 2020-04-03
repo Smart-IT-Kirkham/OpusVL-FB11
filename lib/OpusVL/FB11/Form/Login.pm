@@ -1,6 +1,6 @@
 package OpusVL::FB11::Form::Login;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use OpusVL::FB11::Plugin::FormHandler;
 use CatalystX::SimpleLogin::Form::Login;

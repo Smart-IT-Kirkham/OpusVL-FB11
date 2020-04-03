@@ -8,7 +8,7 @@ with 'OpusVL::FB11::Role::Hat';
 
 # ABSTRACT: Defines the required methods for a parameters service provider
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 

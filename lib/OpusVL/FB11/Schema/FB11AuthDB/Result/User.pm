@@ -9,7 +9,7 @@ use Try::Tiny;
 extends 'DBIx::Class::Core';
 with 'OpusVL::FB11::RolesFor::Schema::FB11AuthDB::Result::User';
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
 __PACKAGE__->table("users");

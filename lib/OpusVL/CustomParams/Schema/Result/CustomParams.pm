@@ -6,7 +6,7 @@ no warnings 'experimental::signatures';;
 use DBIx::Class::Candy;
 
 # ABSTRACT: Stores parameter schemata to supply to ObjectParams
-our $VERSION = '1';
+our $VERSION = '2';
 
 __PACKAGE__->load_components('InflateColumn::Serializer');
 

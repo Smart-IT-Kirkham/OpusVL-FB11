@@ -12,7 +12,7 @@ use List::Gather;
 use failures qw/objectparams::unknownextender/;
 
 # ABSTRACT: Service to find extra parameters for named objects
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 

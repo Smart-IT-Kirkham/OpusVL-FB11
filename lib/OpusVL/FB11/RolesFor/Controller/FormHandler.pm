@@ -1,6 +1,6 @@
 package OpusVL::FB11::RolesFor::Controller::FormHandler;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose::Role;
 use Module::Runtime qw/require_module/;

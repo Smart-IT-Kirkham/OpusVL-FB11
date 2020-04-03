@@ -1,6 +1,6 @@
 package OpusVL::FB11::View::JSON;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use base qw( Catalyst::View::JSON );
 

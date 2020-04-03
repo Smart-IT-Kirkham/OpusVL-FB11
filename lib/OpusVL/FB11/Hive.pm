@@ -14,7 +14,7 @@ use failures qw/
 
 # ABSTRACT: Registers units of behaviour so they can communicate
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 

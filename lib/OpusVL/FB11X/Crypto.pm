@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 with 'OpusVL::FB11::RolesFor::Plugin';
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 after 'setup_components' => sub {
     my $class = shift;

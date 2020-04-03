@@ -5,7 +5,7 @@ use namespace::autoclean;
 
 with 'OpusVL::FB11::RolesFor::Plugin';
 
-our $VERSION = '1';
+our $VERSION = '2';
 # ABSTRACT: UI Module for setting the SysParams.
 
 =head1 DESCRIPTION

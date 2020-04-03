@@ -1,6 +1,6 @@
 package OpusVL::SysParams::Hat::sysparams::namespaced;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 # ABSTRACT: Uses the component name as a namespace for parameters
 

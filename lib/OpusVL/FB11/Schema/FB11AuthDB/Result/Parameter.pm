@@ -1,7 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::Parameter;
 
 # ABSTRACT: DEPRECATED - Legacy way of adding flexible parameters to users
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use warnings;

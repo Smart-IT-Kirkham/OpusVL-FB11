@@ -1,6 +1,6 @@
 package OpusVL::FB11::View::DownloadFile;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 

@@ -1,7 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::UsersData;
 
 # ABSTRACT: DEPRECATED - Another deprecated way of adding data to users
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use warnings;

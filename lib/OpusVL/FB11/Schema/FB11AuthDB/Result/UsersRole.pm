@@ -1,7 +1,7 @@
 package OpusVL::FB11::Schema::FB11AuthDB::Result::UsersRole;
 
 # ABSTRACT: Joiner table between user and role
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use warnings;

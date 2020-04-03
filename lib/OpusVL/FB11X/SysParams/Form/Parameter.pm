@@ -4,7 +4,7 @@ use strict;
 use warnings;
 no warnings 'experimental::signatures';;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 # ABSTRACT: A form to set the value of a parameter
 

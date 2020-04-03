@@ -8,7 +8,7 @@ no warnings 'experimental::signatures';;
 use Moose::Role;
 use namespace::autoclean;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 # this plugin takes the fb11_app_order config setting and sets it against the controllers.
 

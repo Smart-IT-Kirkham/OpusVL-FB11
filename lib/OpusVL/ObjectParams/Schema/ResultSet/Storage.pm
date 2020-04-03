@@ -1,6 +1,6 @@
 package OpusVL::ObjectParams::Schema::ResultSet::Storage;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use v5.24;
 use warnings;

@@ -1,7 +1,7 @@
 package OpusVL::ObjectParams::Hat::objectparams::storage;
 
 # ABSTRACT: Stores your params so you don't have to
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 with 'OpusVL::FB11::Role::Hat';

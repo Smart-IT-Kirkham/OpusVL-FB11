@@ -1,6 +1,6 @@
 package OpusVL::FB11::RolesFor::Form::Parsley;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose::Role;
 

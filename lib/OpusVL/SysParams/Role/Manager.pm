@@ -2,7 +2,7 @@ package OpusVL::SysParams::Role::Manager;
 
 #ABSTRACT: defines the interface for sysparams management strategies
 
-our $VERSION = '1';
+our $VERSION = '2';
 use Moose::Role;
 
 =head1 DESCRIPTION

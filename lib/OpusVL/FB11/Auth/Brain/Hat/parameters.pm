@@ -17,7 +17,7 @@ This will only really work if the brain that wears it is the FB11AuthDB itself.
 # FIXME - This class is an implementation of CUSTOM parameters, which needs to
 # be rewritten. That can be done in terms of ObjectParameters, which has already
 # been rewritten. So we can't support this role just yet.
-our $VERSION = '1';
+our $VERSION = '2';
 
 die "Cannot use ". __PACKAGE__ . " for now.";
 

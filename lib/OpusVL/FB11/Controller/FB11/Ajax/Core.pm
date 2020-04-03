@@ -1,6 +1,6 @@
 package OpusVL::FB11::Controller::FB11::Ajax::Core;
 
-our $VERSION = '1';
+our $VERSION = '2';
 
 use Moose;
 use Cpanel::JSON::XS 'encode_json';

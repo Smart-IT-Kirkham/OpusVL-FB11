@@ -1,7 +1,7 @@
 package OpusVL::CustomParams::Schema;
 
 # ABSTRACT: Stores schemata to supply to ObjectParams
-our $VERSION = '1';
+our $VERSION = '2';
 
 use strict;
 use warnings;

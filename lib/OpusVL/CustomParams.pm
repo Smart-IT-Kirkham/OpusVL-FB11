@@ -1,7 +1,7 @@
 package OpusVL::CustomParams;
 
 # ABSTRACT: Supplies schemas to ObjectParams out of a database
-our $VERSION = '1';
+our $VERSION = '2';
 
 =head1 DESCRIPTION
 
