@@ -1,11 +1,24 @@
-FROM quay.io/opusvl/opusvl-perl-base:release-3 AS FB11
+FROM registry.deploy.opusvl.net/opusvl/opusvl-perl-base:release-3 AS FB11
 
 FROM FB11 AS FB11-layer0
 
-ENV PERL_CPANM_OPT "--mirror http://cpan.opusvl.com --mirror-only"
+#ENV PERL_CPANM_OPT "--mirror http://www.opusvl.com --mirror-only"
 
-# DEBT a hack to work around fact 'stable' has moved to buster but our base images haven't
-RUN sed -i 's/stable/stretch/g' /etc/apt/sources.list
+ENV DEBIAN_FRONTEND=noninteractive
+
+#
+# Update the Base OS as far as possible
+#
+
+RUN apt-get -y clean \
+    && apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get -y dist-upgrade
+
+# Target buster rather than stretch
+RUN sed -i 's/stretch/buster/g' /etc/apt/sources.list \
+    && echo "buster" > /etc/os-tag
+
 # Following is due to Permission Denied removing lockfiles - perhaps corrupted caches from parent image?
 RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
@@ -20,11 +33,14 @@ RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-k
 #
 
 # Which postgres version are we targetting (add this to /etc)
-ARG PG_VERSION=postgresql-server-dev-10
+ARG PG_VERSION=postgresql-server-dev-11
 
 # Add Postgres
-RUN apt-get update \
-    && apt-get -y install build-essential libpq-dev postgresql-10
+RUN apt-get -y clean \
+    && apt-get -y update \
+    && apt-get -y upgrade \
+    && apt-get -y install aptitude \
+    && aptitude -y install build-essential libpq-dev postgresql-11
 
 # Do some checks no point continuing otherwise
 # Do this after apt-get or we will never cache the apt-get
@@ -60,7 +76,8 @@ RUN /opt/perl5/bin/cpanm Test::Postgresql58
 # Install flexibase
 
 # Install all deps first (for testing, may not be required)
-RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz 
+RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz \
+    || ( >&2 cat /tmp/.cpanm/work/*/build.log && exit 1 )
 
 # Install install the end product
 RUN /opt/perl5/bin/cpanm ./OpusVL-FB11-$version.tar.gz \
