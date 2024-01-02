@@ -1,4 +1,4 @@
-FROM registry.deploy.opusvl.net/opusvl/opusvl-perl-base:release-3 AS FB11
+FROM registry.smart-ltd.co.uk/bca/opusvl-perl-base:release-3 AS fb11
 
 FROM fb11 AS fb11-layer0
 
