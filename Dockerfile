@@ -1,6 +1,6 @@
 FROM registry.deploy.opusvl.net/opusvl/opusvl-perl-base:release-3 AS FB11
 
-FROM FB11 AS FB11-layer0
+FROM fb11 AS fb11-layer0
 
 #ENV PERL_CPANM_OPT "--mirror http://www.opusvl.com --mirror-only"
 
@@ -94,7 +94,7 @@ RUN userdel testuser
 # Clean up the final image
 #
 
-FROM FB11 AS FB11-Final
+FROM fb11 AS fb11-final
 
 # Arguments
 RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
@@ -103,7 +103,7 @@ RUN echo "$gitrev" > /root/OpusVL-FB11-gitrev
 ENV PATH="/opt/perl5/bin:$PATH"
 
 # Copy all the old opt to the new opt
-COPY --from=FB11-layer0 /opt /opt
+COPY --from=fb11-layer0 /opt /opt
 
 # Copy in vendor specific riles
 COPY vendor/* /root/vendor/
