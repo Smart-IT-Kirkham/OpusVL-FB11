@@ -20,17 +20,17 @@ docker: dist
 	docker build $(NOCACHE) \
 		--build-arg version=`dzil distversion` \
 		--build-arg gitrev="`set -x ; git rev-parse HEAD ; git status ; git diff`" \
-		-t quay.io/opusvl/fb11:latest .
+		-t registry.smart-ltd.co.uk/bca/fb11:latest .
 rc: docker
-	docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:v$(rcversion)
+	docker tag registry.smart-ltd.co.uk/bca/fb11:latest registry.smart-ltd.co.uk/bca/fb11:v$(rcversion)
 	git tag v$(rcversion)
-	docker push quay.io/opusvl/fb11:v$(rcversion)
+	docker push registry.smart-ltd.co.uk/bca/fb11:v$(rcversion)
 	git push origin v$(rcversion)
 release:
 	- @echo "If this fails, make sure you pushed the last image you built"
-	docker pull quay.io/opusvl/fb11:v$(lastrcversion)
-	@[ `docker run --rm -u root quay.io/opusvl/fb11:v$(lastrcversion) head -n1 /root/OpusVL-FB11-gitrev` = `git rev-parse HEAD` ] \
+	docker pull registry.smart-ltd.co.uk/bca/fb11:v$(lastrcversion)
+	@[ `docker run --rm -u root registry.smart-ltd.co.uk/bca/fb11:v$(lastrcversion) head -n1 /root/OpusVL-FB11-gitrev` = `git rev-parse HEAD` ] \
 		|| echo "Ensure your git repository is on the commit from which the latest image was built (or rebuild and retest)."
 	dzil release
-	- docker tag quay.io/opusvl/fb11:latest quay.io/opusvl/fb11:v$(version)
-	- docker push quay.io/opusvl/fb11:v$(version)
+	- docker tag registry.smart-ltd.co.uk/bca/fb11:latest registry.smart-ltd.co.uk/bca/fb11:v$(version)
+	- docker push registry.smart-ltd.co.uk/bca/fb11:v$(version)
