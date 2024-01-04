@@ -95,13 +95,14 @@ ENV USER=testuser
 RUN /opt/perl5/bin/cpanm Test::Postgresql58
 
 # Install flexibase
+# Needs -Mhttps://cpan.opusvl.com because of (at least) OpusVL::DBIC::Helper
 
 # Install all deps first (for testing, may not be required)
-RUN /opt/perl5/bin/cpanm --installdeps ./OpusVL-FB11-$version.tar.gz \
+RUN /opt/perl5/bin/cpanm -Mhttps://cpan.opusvl.com --installdeps ./OpusVL-FB11-$version.tar.gz \
     || ( >&2 cat /tmp/.cpanm/work/*/build.log && exit 1 )
 
 # Install install the end product
-RUN /opt/perl5/bin/cpanm ./OpusVL-FB11-$version.tar.gz \
+RUN /opt/perl5/bin/cpanm -Mhttps://cpan.opusvl.com ./OpusVL-FB11-$version.tar.gz \
     || ( >&2 cat /tmp/.cpanm/work/*/build.log && exit 1 )
 
 # Now lets tidy up
