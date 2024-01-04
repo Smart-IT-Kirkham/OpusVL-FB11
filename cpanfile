@@ -53,8 +53,8 @@ requires 'XML::Simple';
 requires 'DBD::Pg';
 
 # This is vendored in because of a patch to make WithSchema work
-requires 'DBIx::Class::DeploymentHandler' => "0.002230";
-requires 'DBIx::Class::DeploymentHandler::VersionStorage::WithSchema' => "0.003";
+requires 'DBIx::Class::DeploymentHandler' => "0.002233";
+requires 'DBIx::Class::DeploymentHandler::VersionStorage::WithSchema' => "0.005";
 
 # Base Catalyst components
 requires 'Catalyst::Runtime' => '5.90051';

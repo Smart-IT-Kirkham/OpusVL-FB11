@@ -71,6 +71,18 @@ RUN : \
     && apt-get -y install build-essential libexpat1-dev \
     && apt-get -y clean
 
+# Install "vendored-in" packages that need to be installed before FB11
+COPY vendor-preinstall/* /tmp/vendor-preinstall/
+RUN if [ -n "$(ls /tmp/vendor-preinstall/*.tar.gz)" ]; then \
+    if /opt/perl5/bin/cpanm /tmp/vendor-preinstall/*.tar.gz; then \
+        rm -rf /tmp/vendor-preinstall; \
+    else \
+        cat /root/.cpanm/work/*/build.log >&2 ; \
+        exit 1 ; \
+    fi; \
+fi
+# ^ Remember this becomes one line passed to the shell so everything needs
+# ^ a command separator (&&, || or ;) after it, including flow control
 
 #
 # Base libs required to test postgresql (special case)
