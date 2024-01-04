@@ -1,36 +1,8 @@
-#FROM registry.smart-ltd.co.uk/bca/opusvl-perl-base:release-3 AS fb11
 FROM registry.smart-ltd.co.uk/bca/base-perl-5.38:20240104-095518 AS fb11
 
 FROM fb11 AS fb11-layer0
 
-#ENV PERL_CPANM_OPT "--mirror http://www.opusvl.com --mirror-only"
-
 ENV DEBIAN_FRONTEND=noninteractive
-
-#
-# Update the Base OS as far as possible
-#
-
-#COPY sources.list /etc/apt/sources.list
-#RUN rm /etc/apt/sources.list.d/pgdg.list
-#    # ^ Chicken and egg - to use the pgdg.list we need apt-transport-https
-#RUN :\
-#    && apt-get update \
-#    && apt-get -y install apt-transport-https \
-#    && apt-get clean
-#COPY pgdg.list /etc/apt/sources.list.d/pgdg.list
-#
-#RUN apt-get -y clean \
-#    && apt-get -y update \
-#    && apt-get -y upgrade \
-#    && apt-get -y dist-upgrade
-
-# # Target buster rather than stretch
-# RUN sed -i 's/stretch/buster/g' /etc/apt/sources.list \
-#     && echo "buster" > /etc/os-tag
-
-# # Following is due to Permission Denied removing lockfiles - perhaps corrupted caches from parent image?
-# RUN rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # # Re add in the neccesary packages for postgres
 RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ bookworm-pgdg main" > /etc/apt/sources.list.d/pgdg.list
@@ -39,8 +11,6 @@ RUN : \
         | gpg --dearmor --yes --output /etc/apt/trusted.gpg.d/pgdg.gpg \
     && :
 
-
-#ADD pgdg.list /etc/apt/sources.list.d/pgdg.list
 
 #
 # Add in development libraries
@@ -53,7 +23,6 @@ ARG PG_VERSION=postgresql-server-dev-10
 RUN apt-get -y clean \
     && apt-get -y update \
     && apt-get -y upgrade \
-    #&& apt-get -y install aptitude \
     && apt-get -y install build-essential libpq-dev postgresql-10
 
 # Do some checks no point continuing otherwise
