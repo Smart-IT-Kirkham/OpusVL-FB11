@@ -122,6 +122,12 @@ USER root
 ENV USER=root
 RUN userdel testuser
 
+# Remove the server from the final image, just keep the client programs and libs
+RUN : \
+    && apt-get update \
+    && apt-get -y install postgresql-client-10 \
+    && apt-get -y autoremove postgresql-10 \
+    && apt-get -y clean
 
 
 #
