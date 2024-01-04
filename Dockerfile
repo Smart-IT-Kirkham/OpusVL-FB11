@@ -141,8 +141,13 @@ RUN echo OpusVL-FB11@$version >> /version \
 # There is now a default PSGI you can rely on
 ENV PSGI /opt/perl5/bin/fb11.psgi
 
+COPY dumb-init_1.2.1_amd64 /usr/local/bin/dumb-init
+RUN : \
+    && chown root:root /usr/local/bin/dumb-init \
+    && chmod u=rwx,go=rx /usr/local/bin/dumb-init \
+    && :
+
 # We intentionally leave the USER as root, and drop privs in the entrypoint.
 # This lets us (and derived images) run initialisation as root without having to
 # worry about running the app as a privileged user
-#ENTRYPOINT [ "/usr/local/bin/dumb-init", "--", "/opt/perl5/bin/entrypoint" ]
-ENTRYPOINT ["/opt/perl5/bin/entrypoint"]
+ENTRYPOINT [ "/usr/local/bin/dumb-init", "--", "/opt/perl5/bin/entrypoint" ]
